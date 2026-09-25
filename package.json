@@ -5,7 +5,10 @@
   "scripts": {
     "preinstall": "node scripts/only-pnpm.js",
     "start": "cross-env APP_VARIANT=development NODE_ENV=development expo start",
+    "start:tunnel": "cross-env APP_VARIANT=development NODE_ENV=development expo start --tunnel",
+    "start:local": "cross-env APP_VARIANT=development NODE_ENV=development expo start --lan",
     "start:prod": "cross-env APP_VARIANT=production NODE_ENV=production expo start",
+    "start:tunnel:prod": "cross-env APP_VARIANT=production NODE_ENV=production expo start --tunnel",
     "android": "cross-env APP_VARIANT=development expo run:android",
     "ios": "cross-env APP_VARIANT=development expo run:ios",
     "lint": "expo lint",
