@@ -10,3 +10,10 @@ allowBuilds:
   # Su script solo es un plan B si falta el binario precompilado, que ya llega
   # como dependencia opcional (@unrs/resolver-binding-*).
   unrs-resolver: false
+
+# Versiones que marca Expo 57 para dependencias que otros paquetes piden con
+# rango abierto (`*`). Sin esto pnpm instala la última y choca con Expo.
+# Al subir de SDK, se actualizan con la lista de expo/bundledNativeModules.json.
+overrides:
+  react-native-worklets: 0.10.1
+  "@react-native/metro-config": 0.86.3

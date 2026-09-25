@@ -2,6 +2,8 @@
 
 App móvil Expo / React Native para profesores de Playtopia. Hermana de `D:\playtopia\PlaytopiaAppStudent`: ante la duda sobre cómo se resuelve algo de infraestructura, mira cómo lo hace esa app y aplícalo con la estructura de este repo.
 
+**SDK:** este repo usa **Expo SDK 57** (React Native 0.86, React 19.2); la appStudent sigue en el SDK 54. Al traer una pieza de allí, comprueba en `https://docs.expo.dev/versions/v57.0.0/` que las APIs de Expo que usa no han cambiado. Las dependencias nativas se instalan con la versión de la lista oficial del SDK (`expo/bundledNativeModules.json`).
+
 Detalle completo de cada regla: [`docs/GUIA_APP_PROFESOR.md`](./docs/GUIA_APP_PROFESOR.md).
 
 **Idioma:** responde, comenta el código y escribe los commits en español.

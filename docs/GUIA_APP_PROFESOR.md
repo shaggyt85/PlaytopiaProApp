@@ -32,7 +32,7 @@ Esta guía es la referencia de **cómo se trabaja** en este repo. El resumen acc
 
 | Pieza | Versión / herramienta |
 |---|---|
-| Framework | Expo ~54, React Native 0.81, React 19.1, New Architecture |
+| Framework | Expo SDK 57, React Native 0.86, React 19.2, New Architecture. Se prueba con Expo Go (que solo abre el último SDK) o con development build |
 | Navegación | expo-router 6 |
 | Datos de servidor | TanStack Query 5 + axios |
 | Contratos y validación | Zod 4 |
@@ -43,7 +43,7 @@ Esta guía es la referencia de **cómo se trabaja** en este repo. El resumen acc
 | Observabilidad | Sentry |
 | Actualizaciones | expo-updates (OTA), `runtimeVersion` con policy `fingerprint` |
 | Tests | Jest (jest-expo) + Testing Library |
-| Lenguaje | TypeScript `strict` |
+| Lenguaje | TypeScript 6 `strict` (sin `baseUrl`: `paths` relativos) |
 | Gestor de paquetes | **pnpm 11**, versión fijada en `packageManager` de `package.json` |
 
 Sobre pnpm: `scripts/only-pnpm.js` corta cualquier instalación que no sea con pnpm. La versión exacta se fija en `packageManager` porque EAS Build y corepack instalan la que declara ese campo; tiene que coincidir con la que usa el equipo en local.
@@ -585,7 +585,7 @@ Un cambio no está terminado hasta que cumple todo esto:
 
 ## 17. Arranque del repo: de cero, trayendo solo lo necesario
 
-La app **no es una copia de la appStudent**. Parte de un proyecto Expo en blanco (plantilla `blank-typescript`, SDK 54) con la estructura de la [sección 2](#2-estructura-de-carpetas), y de la appStudent se trae **solo lo que hace falta, pieza a pieza**, ya colocado en su sitio y adaptado a profesor. Nada se trae "por si acaso".
+La app **no es una copia de la appStudent**. Parte de un proyecto Expo en blanco (plantilla `blank-typescript`, SDK 57) con la estructura de la [sección 2](#2-estructura-de-carpetas), y de la appStudent se trae **solo lo que hace falta, pieza a pieza**, ya colocado en su sitio y adaptado a profesor. Nada se trae "por si acaso".
 
 ### Pasos
 
@@ -604,7 +604,7 @@ La app **no es una copia de la appStudent**. Parte de un proyecto Expo en blanco
 
 ### Mapa: de dónde sale cada pieza que se trae
 
-Cada fila se trae **solo cuando una pantalla la necesita**, revisada y adaptada, no copiada a ciegas.
+Cada fila se trae **solo cuando una pantalla la necesita**, revisada y adaptada, no copiada a ciegas. La appStudent está en el SDK 54 y esta app en el 57: al traer una pieza, se revisan en la documentación del SDK 57 las APIs de Expo que usa.
 
 | appStudent | app Profesor |
 |---|---|
