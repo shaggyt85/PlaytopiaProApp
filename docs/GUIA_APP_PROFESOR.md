@@ -22,7 +22,7 @@ Esta guía es la referencia de **cómo se trabaja** en este repo. El resumen acc
 14. [Versionado (Android e iOS)](#14-versionado-android-e-ios)
 15. [Flujo de Git](#15-flujo-de-git)
 16. [Definition of Done](#16-definition-of-done)
-17. [Arranque del repo desde la appStudent](#17-arranque-del-repo-desde-la-appstudent)
+17. [Arranque del repo: de cero, trayendo solo lo necesario](#17-arranque-del-repo-de-cero-trayendo-solo-lo-necesario)
 18. [Receta: crear una pantalla nueva](#18-receta-crear-una-pantalla-nueva)
 19. [Publicación](#19-publicación)
 
@@ -579,26 +579,28 @@ Un cambio no está terminado hasta que cumple todo esto:
 
 ---
 
-## 17. Arranque del repo desde la appStudent
+## 17. Arranque del repo: de cero, trayendo solo lo necesario
 
-La app arranca **copiando la appStudent y reorganizándola** en la estructura de la [sección 2](#2-estructura-de-carpetas).
+La app **no es una copia de la appStudent**. Parte de un proyecto Expo en blanco (plantilla `blank-typescript`, SDK 54) con la estructura de la [sección 2](#2-estructura-de-carpetas), y de la appStudent se trae **solo lo que hace falta, pieza a pieza**, ya colocado en su sitio y adaptado a profesor. Nada se trae "por si acaso".
 
 ### Pasos
 
-1. Copiar la appStudent **sin**: `.git`, `node_modules`, `.expo`, `dist`, `coverage`, `android/`, `ios/`, ficheros `.env*` (salvo `.env.example`), `pnpm-lock.yaml`, `google-services.json` y logs de build.
-2. Identidad nueva en `app.config.js`: `name` (`Playtopia Pro` / `Playtopia Pro DEV`), `slug`, `scheme`, `bundleIdentifier` y `package` (con sufijo `.dev` en desarrollo), iconos, splash, textos de permisos y `version: "1.0.0"`.
-3. `eas init` para un proyecto EAS nuevo. En `eas.json`, mismos perfiles (development, preview, production, production-apk) y canales, con el `ascAppId` de la app nueva.
-4. Firebase y Sentry: proyectos nuevos; credenciales por variables de EAS.
-5. `package.json`: `name`, `version: "1.0.0"` y `packageManager` con la versión de pnpm 11 del equipo. `pnpm install` genera el lock nuevo. Quitar dependencias que no use el profesor (por ejemplo Stripe, si no cobra).
-6. `.env.example` con las variables de la [sección 5](#5-secretos-y-variables-de-entorno).
-7. Reubicar el código reutilizable según el mapa y borrar las pantallas de alumno con sus tests y claves de i18n.
+1. Proyecto Expo en blanco con TypeScript, `expo-router` con las rutas en `src/app/` y las carpetas vacías de `src/features/` y `src/shared/<tipo>/`.
+2. `package.json`: `name`, `version: "1.0.0"` y `packageManager` con la versión de pnpm 11 del equipo. `pnpm install` genera el lock.
+3. Identidad en `app.config.js`: `name` (`Playtopia Pro` / `Playtopia Pro DEV`), `slug`, `scheme`, `bundleIdentifier` y `package` (con sufijo `.dev` en desarrollo), iconos, splash, textos de permisos y `version: "1.0.0"`.
+4. `.gitignore`, `.env.example` con las variables de la [sección 5](#5-secretos-y-variables-de-entorno), alias `@/`, Jest con el espejo `__tests__/` y ESLint.
+5. `shared/` base, trayendo cada pieza cuando se necesita (ver mapa).
+6. Pantallas base, una feature cada una, con sus tests.
+7. `eas init` para un proyecto EAS nuevo, con los perfiles development, preview, production y production-apk y sus canales. Firebase y Sentry nuevos, con credenciales por variables de EAS.
 
-### Se conservan tal cual (en la raíz)
+### Piezas de la raíz que se traen
 
 - `.gitattributes`: en este repo git no convierte finales de línea; el fingerprint de `runtimeVersion` depende de ello.
-- `scripts/verificar-antes-de-publicar.mjs` y `scripts/only-pnpm.js`.
+- `scripts/verificar-antes-de-publicar.mjs` y `scripts/only-pnpm.js`, cuando se configure la publicación y pnpm.
 
-### Mapa: de la appStudent a la estructura nueva
+### Mapa: de dónde sale cada pieza que se trae
+
+Cada fila se trae **solo cuando una pantalla la necesita**, revisada y adaptada, no copiada a ciegas.
 
 | appStudent | app Profesor |
 |---|---|
@@ -614,7 +616,7 @@ La app arranca **copiando la appStudent y reorganizándola** en la estructura de
 | `features/register`, `utils/registrationToken.ts`, `config/security` (adaptados a profesor) | `features/sign-up/` (la firma en `services/`, la variable en `shared/config/env.ts`) |
 | `features/password-recovery`, `services/PasswordRecovery`, `schemas/password-recovery` | `features/password-recovery/` (con `scope: "teacher"`) |
 | `services/notification/installationId.ts`, `notificationService.ts` | `features/notifications/services/` (o `shared/services/` si lo usa también el login) |
-| Pantallas de alumno (pagos, inscripciones, clubes, recuperaciones…) | **no se copian** |
+| Pantallas de alumno (pagos, inscripciones, clubes, recuperaciones…) | **no se traen** |
 
 ---
 
