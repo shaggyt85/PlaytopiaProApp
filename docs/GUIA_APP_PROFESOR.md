@@ -48,6 +48,10 @@ Esta guía es la referencia de **cómo se trabaja** en este repo. El resumen acc
 
 Sobre pnpm: `scripts/only-pnpm.js` corta cualquier instalación que no sea con pnpm. La versión exacta se fija en `packageManager` porque EAS Build y corepack instalan la que declara ese campo; tiene que coincidir con la que usa el equipo en local.
 
+Los ajustes de pnpm 11 van en `pnpm-workspace.yaml` (ya no se leen de `.npmrc`):
+- `nodeLinker: hoisted`: `node_modules` en plano, como espera el autolinking nativo de React Native.
+- `allowBuilds`: aquí se aprueba (`true`) o se deniega (`false`) cada dependencia con script de instalación. Una dependencia nueva con script para la instalación hasta que se decide. Los ajustes de pnpm 11 van en `pnpm-workspace.yaml` (ya no se leen de `.npmrc`): `nodeLinker: hoisted`, para que `node_modules` quede en plano como espera el autolinking nativo, y `allowBuilds`, donde se aprueba (`true`) o se deniega (`false`) cada dependencia con script de instalación. Una dependencia nueva con script para la instalación hasta que se decide.
+
 ---
 
 ## 2. Estructura de carpetas
@@ -567,7 +571,7 @@ Hay **dos números**, y cada uno se gestiona de una forma. Aplican igual en Andr
 Un cambio no está terminado hasta que cumple todo esto:
 
 - [ ] Estructura respetada: todo dentro de su feature, lo compartido en `shared/<tipo>/`, sin imports entre features.
-- [ ] `npx tsc --noEmit` y `pnpm lint` sin errores.
+- [ ] `pnpm typecheck` (app y tests) y `pnpm lint` sin errores.
 - [ ] Tests en la ruta espejo, pasando con `pnpm test`.
 - [ ] Textos en los 6 idiomas; ninguno hardcodeado.
 - [ ] Contrato comprobado en Scalar, o mock + petición en `docs/endpoints-pendientes/`; tabla de endpoints actualizada.

@@ -13,7 +13,7 @@ pnpm install            # solo pnpm (pnpm 11, fijado en packageManager)
 pnpm start              # desarrollo contra core-dev
 pnpm test               # Jest
 pnpm lint
-npx tsc --noEmit
+pnpm typecheck          # tsc de la app y de __tests__
 pnpm verificar:ota      # obligatorio antes de cualquier eas update
 ```
 
@@ -85,7 +85,7 @@ docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 ## Definition of Done
 
 - [ ] Estructura respetada: todo en su feature, lo compartido en `shared/<tipo>/`, sin imports entre features.
-- [ ] `npx tsc --noEmit` y `pnpm lint` sin errores.
+- [ ] `pnpm typecheck` (app y tests) y `pnpm lint` sin errores.
 - [ ] Tests en la ruta espejo, pasando.
 - [ ] Textos en los 6 idiomas; ninguno hardcodeado.
 - [ ] Contrato comprobado en Scalar, o mock + petición en `docs/endpoints-pendientes/`; tabla de endpoints actualizada.

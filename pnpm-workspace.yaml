@@ -1,0 +1,12 @@
+# Ajustes de pnpm 11 (ya no se leen de .npmrc).
+
+# node_modules en plano, como npm: es la disposición que espera el autolinking
+# nativo de React Native y la que se usa en los builds de EAS.
+nodeLinker: hoisted
+
+# pnpm 11 no ejecuta scripts de instalación de dependencias sin aprobarlos aquí.
+# Un paquete nuevo con script para la instalación hasta que se decide true/false.
+allowBuilds:
+  # Su script solo es un plan B si falta el binario precompilado, que ya llega
+  # como dependencia opcional (@unrs/resolver-binding-*).
+  unrs-resolver: false
