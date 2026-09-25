@@ -30,8 +30,19 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
-.env*.local
+# Variables de entorno: ningún secreto al repo. Solo se sube la plantilla.
+.env
+.env.*
+!.env.example
+
+# Credenciales: se gestionan en EAS, nunca en el repo
+google-services.json
+GoogleService-Info.plist
+*.keystore
+credentials.json
+
+# Tests
+coverage/
 
 # typescript
 *.tsbuildinfo
