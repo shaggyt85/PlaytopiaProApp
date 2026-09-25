@@ -2,7 +2,7 @@
 
 App móvil Expo / React Native para profesores de Playtopia. Hermana de `D:\playtopia\PlaytopiaAppStudent`: ante la duda sobre cómo se resuelve algo de infraestructura, mira cómo lo hace esa app y aplícalo con la estructura de este repo.
 
-Detalle completo de cada regla: [`GUIA_APP_PROFESOR.md`](./GUIA_APP_PROFESOR.md).
+Detalle completo de cada regla: [`docs/GUIA_APP_PROFESOR.md`](./docs/GUIA_APP_PROFESOR.md).
 
 **Idioma:** responde, comenta el código y escribe los commits en español.
 
@@ -32,7 +32,7 @@ src/
   features/<pantalla>/ components/ hooks/ services/ schemas/ [store/] <X>Screen.tsx index.ts
   shared/              components/ hooks/ services/ schemas/ store/ locales/ config/ utils/
 __tests__/             espejo de src/ (+ helpers/, setup/)
-docs/endpoints-pendientes/
+docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 ```
 
 1. Una feature = una pantalla, con todo lo suyo dentro.

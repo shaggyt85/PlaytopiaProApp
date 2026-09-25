@@ -2,7 +2,7 @@
 
 App móvil para los profesores de Playtopia (repo `PlaytopiaAppPro`), hermana de la app de alumnos (`PlaytopiaAppStudent`). Comparte stack, backend (Core_Playtopia) e infraestructura; tiene su propia estructura por features y sus propias pantallas.
 
-Esta guía es la referencia de **cómo se trabaja** en este repo. El resumen accionable para Claude Code está en [`CLAUDE.md`](./CLAUDE.md).
+Esta guía es la referencia de **cómo se trabaja** en este repo. El resumen accionable para Claude Code está en [`CLAUDE.md`](../CLAUDE.md), en la raíz del repo.
 
 ## Índice
 
@@ -99,6 +99,7 @@ __tests__/               espejo de src/
   setup/                 setup común de Jest
 __mocks__/               mocks de módulos nativos
 docs/
+  GUIA_APP_PROFESOR.md   esta guía
   endpoints-pendientes/  una petición a Core por endpoint que falta
 assets/
 scripts/
