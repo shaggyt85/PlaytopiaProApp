@@ -1,0 +1,12 @@
+# En este repo git NO convierte finales de línea: ni al commitear ni al hacer
+# checkout, en ninguna máquina y con cualquier valor de `core.autocrlf`.
+# Lo que se commitea es lo que recibe todo el mundo, byte a byte, incluido el
+# servidor de EAS Build.
+#
+# Motivo: `runtimeVersion` usa `policy: "fingerprint"` (app.config.js), y
+# @expo/fingerprint hashea ficheros tal como están en disco. Un cambio de LF a
+# CRLF en cualquiera de ellos cambia el hash, y un `eas update` publicado con un
+# runtime que ningún binario tiene no le llega a nadie, sin dar ningún error.
+#
+# No toques esta regla.
+* -text
