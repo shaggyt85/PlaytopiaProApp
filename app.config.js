@@ -20,6 +20,8 @@ export default {
     slug: "playtopia-app-pro",
     version: "1.0.0",
     scheme: IS_DEV ? "playtopia-pro-dev" : "playtopia-pro",
+    // Vertical en móvil. En tablets y plegables Android 16 (targetSdk 36) ignora
+    // el bloqueo: las pantallas se diseñan responsive (guía §13).
     orientation: "portrait",
     icon: icon("ios-light"),
     userInterfaceStyle: "automatic",
@@ -45,7 +47,6 @@ export default {
         foregroundImage: icon("adaptive-icon"),
         backgroundColor: "#000000",
       },
-      edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
     },
     plugins: [
@@ -60,6 +61,21 @@ export default {
             image: "./assets/app_icons/splash-icon-dark.png",
           },
           imageWidth: 200,
+        },
+      ],
+      [
+        "expo-build-properties",
+        {
+          // R8 en release: ofusca y elimina código y recursos sin usar. Google Play
+          // lo exige (optimización DEX). Si una librería nativa se rompe en
+          // release, sus reglas van en android.extraProguardRules.
+          //
+          // minSdk, targetSdk, compileSdk y el mínimo de iOS no se fijan aquí:
+          // se usan los del SDK para que se actualicen al subir de versión.
+          android: {
+            enableMinifyInReleaseBuilds: true,
+            enableShrinkResourcesInReleaseBuilds: true,
+          },
         },
       ],
     ],

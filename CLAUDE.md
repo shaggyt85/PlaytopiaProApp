@@ -67,6 +67,7 @@ docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 - **i18n:** todo texto visible en `shared/locales/`, en los 6 idiomas (es, en, pt, ca, de, fr).
 - **Tema:** colores y tamaños solo desde los tokens de `shared/config/theme`; claro y oscuro.
 - **Versionado:** versión SemVer manual en `app.config.js` y `package.json`, igual en Android e iOS. El build (`versionCode` / `buildNumber`) lo sube EAS: no lo toques. Un OTA no cambia la versión.
+- **Plataforma:** R8 activo en release de Android (`expo-build-properties`); si una librería nativa se rompe en release, reglas en `extraProguardRules`. Mínimos de Android/iOS: los del SDK, no se fijan a mano. Vertical en móvil, pero pantallas responsive (Android 16 deja girar en tablets). Edge-to-edge obligatorio: usa safe areas, no las APIs antiguas de barra de estado.
 - **Finales de línea:** no toques `.gitattributes`; git no convierte finales de línea en este repo (el fingerprint depende de ello).
 
 ## Receta: pantalla nueva

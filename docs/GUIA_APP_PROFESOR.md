@@ -45,6 +45,7 @@ Esta guía es la referencia de **cómo se trabaja** en este repo. El resumen acc
 | Tests | Jest (jest-expo) + Testing Library |
 | Lenguaje | TypeScript 6 `strict` (sin `baseUrl`: `paths` relativos) |
 | Gestor de paquetes | **pnpm 11**, versión fijada en `packageManager` de `package.json` |
+| Mínimos de plataforma | Los del SDK, sin fijar a mano: hoy Android minSdk 24, target/compile 36; iOS 16.4. Se actualizan solos al subir de SDK; solo se fijan en `expo-build-properties` si una librería lo exige |
 
 Sobre pnpm: `scripts/only-pnpm.js` corta cualquier instalación que no sea con pnpm. La versión exacta se fija en `packageManager` porque EAS Build y corepack instalan la que declara ese campo; tiene que coincidir con la que usa el equipo en local.
 
@@ -519,6 +520,8 @@ Siempre en la ruta espejo de `__tests__/`, con Jest y Testing Library.
 - Los componentes base (`Button`, `Card`, `Input`, `Text`, estados de carga, vacío y error) viven en `shared/components/`; las pantallas los componen.
 - Estilos en `<Comp>.styles.ts` junto al componente, generados a partir del tema.
 - Accesibilidad mínima: `accessibilityLabel` en los controles, áreas táctiles de al menos 44 px y contraste suficiente en los dos temas.
+- **Responsive:** la app está bloqueada en vertical (`orientation: "portrait"`), pero en tablets y plegables Android 16 (targetSdk 36) ignora el bloqueo. Las pantallas no dependen de un ancho fijo: `flex`, `useWindowDimensions` y anchos máximos para que en pantalla grande o en horizontal no se rompan.
+- **Edge-to-edge:** en Android 16 es obligatorio; el contenido respeta las zonas seguras con `react-native-safe-area-context`. No se usan las APIs antiguas de color o translucidez de la barra de estado.
 
 ---
 
@@ -646,6 +649,8 @@ Si algo pasa a usarse en una segunda pantalla, se mueve a `shared/<su tipo>/` y 
 ---
 
 ## 19. Publicación
+
+**R8 (Android):** `expo-build-properties` activa `enableMinifyInReleaseBuilds` y `enableShrinkResourcesInReleaseBuilds`. Solo afecta a los builds de release: ofusca y elimina código y recursos sin usar, que es lo que Google Play mide como "optimización de código DEX" (por debajo del 25 % en ofuscación limita la visibilidad de la app). Cada librería nativa nueva se valida en el siguiente build de release; si R8 la rompe, sus reglas van en `android.extraProguardRules`. El `mapping.txt` se sube a Play y a Sentry cuando se configuren.
 
 | Comando | Para qué |
 |---|---|
