@@ -1,3 +1,4 @@
+import { isRefreshRejected, type SessionTokens } from "./tokenRefresh";
 import type { ITokenStorage } from "./tokenStorage";
 
 /**
@@ -12,11 +13,6 @@ export type RefreshResult =
   | { ok: true; accessToken: string }
   | { ok: false; reason: "rechazado" | "sin_respuesta" };
 
-export interface RefreshedTokens {
-  access_token: string;
-  refresh_token: string;
-}
-
 /**
  * Crea la función que renueva la sesión con el refresh token.
  *
@@ -27,7 +23,7 @@ export interface RefreshedTokens {
  */
 export function createSessionRefresher(deps: {
   tokens: ITokenStorage;
-  requestRefresh: (refreshToken: string) => Promise<RefreshedTokens>;
+  requestRefresh: (refreshToken: string) => Promise<SessionTokens>;
 }): () => Promise<RefreshResult> {
   let inFlight: Promise<RefreshResult> | null = null;
 
@@ -43,11 +39,7 @@ export function createSessionRefresher(deps: {
       );
       return { ok: true, accessToken: refreshed.access_token };
     } catch (error) {
-      const status = (error as { response?: { status?: number } })?.response
-        ?.status;
-      const rechazado =
-        typeof status === "number" && status >= 400 && status < 500;
-      return { ok: false, reason: rechazado ? "rechazado" : "sin_respuesta" };
+      return { ok: false, reason: isRefreshRejected(error) ? "rechazado" : "sin_respuesta" };
     }
   };
 

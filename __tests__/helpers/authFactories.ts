@@ -1,9 +1,14 @@
 import { TERMS_VERSION } from "@/features/auth/schemas/signUp.schema";
 import type { TeacherTerms } from "@/features/auth/schemas/terms.schema";
 
-/** Respuesta de `POST /api/auth/login/teacher` del profesor 42 de la escuela 7. */
+import { createTestJwt, teacherClaims } from "./jwt";
+
+/**
+ * Respuesta de `POST /api/auth/login/teacher` del profesor 42 de la escuela 7.
+ * El access token es un JWT de verdad: de él sale quién es el profesor.
+ */
 export const signInTokens = {
-  access_token: "acceso",
+  access_token: createTestJwt(teacherClaims()),
   refresh_token: "refresco",
   id: 42,
   role_id: 4,

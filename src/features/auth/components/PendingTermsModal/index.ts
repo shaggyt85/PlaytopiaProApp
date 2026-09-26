@@ -1,0 +1,1 @@
+export { PendingTermsModal } from "./PendingTermsModal";

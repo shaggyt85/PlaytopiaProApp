@@ -58,7 +58,7 @@ describe("PasswordScreen", () => {
     expect(screen.getByText("ana@club.com")).toBeTruthy();
     entrar("secreta");
 
-    await waitFor(() => expect(session.start).toHaveBeenCalledWith("acceso", "refresco"));
+    await waitFor(() => expect(session.start).toHaveBeenCalledWith(tokens.access_token, "refresco"));
     expect(signInService.signIn).toHaveBeenCalledWith({
       username: "ana@club.com",
       password: "secreta",
@@ -74,7 +74,7 @@ describe("PasswordScreen", () => {
     entrar("secreta");
 
     await screen.findByText("Términos y Condiciones");
-    expect(session.saveTokens).toHaveBeenCalledWith("acceso", "refresco");
+    expect(session.saveTokens).toHaveBeenCalledWith(tokens.access_token, "refresco");
     expect(session.start).not.toHaveBeenCalled();
 
     await act(async () => {
@@ -82,7 +82,7 @@ describe("PasswordScreen", () => {
     });
 
     expect(termsService.acceptTerms).toHaveBeenCalledWith(42, TERMS_VERSION);
-    expect(session.start).toHaveBeenCalledWith("acceso", "refresco");
+    expect(session.start).toHaveBeenCalledWith(tokens.access_token, "refresco");
   });
 
   it("si cierra el modal sin aceptar, no entra y se borran los tokens", async () => {
