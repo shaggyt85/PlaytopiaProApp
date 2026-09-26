@@ -4,6 +4,7 @@ import { useEffect, type ReactNode } from "react";
 import { queryClient as appQueryClient } from "@/shared/config/queryClient";
 import { setupQueryManagers } from "@/shared/config/queryManagers";
 import { onSessionExpired } from "@/shared/services/httpClient";
+import { session } from "@/shared/services/session";
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -18,11 +19,13 @@ interface AppProvidersProps {
 export function AppProviders({ children, client = appQueryClient }: AppProvidersProps) {
   useEffect(() => setupQueryManagers(), []);
 
-  // Cuando Core da la sesión por muerta, fuera los datos del profesor de la
-  // memoria. La vuelta al login se engancha con los guards de navegación.
+  // Cuando Core da la sesión por muerta se cierra en su único sitio: tokens,
+  // caché y estado. Los guards del layout llevan entonces al login.
   useEffect(() => {
-    onSessionExpired(() => client.clear());
-  }, [client]);
+    onSessionExpired(() => {
+      session.end();
+    });
+  }, []);
 
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 }

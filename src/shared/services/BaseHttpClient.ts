@@ -103,7 +103,8 @@ export class BaseHttpClient implements IHttpClient {
 
       if (refresh.reason === "sin_respuesta") throw HttpError.network();
 
-      await this.tokens.clearTokens();
+      // Solo avisa: cerrar la sesión (tokens, caché, estado) es cosa de
+      // quien escucha, en un único sitio.
       this.sessionExpiredHandler();
     }
 

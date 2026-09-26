@@ -13,7 +13,7 @@ Esta guía es la referencia de **cómo se trabaja** en este repo. El resumen acc
 5. [Secretos y variables de entorno](#5-secretos-y-variables-de-entorno)
 6. [Manejo de errores: RFC 9457](#6-manejo-de-errores-rfc-9457)
 7. [Caché con TanStack Query](#7-caché-con-tanstack-query)
-8. [Sesión, almacenamiento y multi-club](#8-sesión-almacenamiento-y-multi-club)
+8. [Sesión, almacenamiento y sucursales](#8-sesión-almacenamiento-y-sucursales)
 9. [Formularios](#9-formularios)
 10. [Estrategia de tests](#10-estrategia-de-tests)
 11. [Fechas y zona horaria](#11-fechas-y-zona-horaria)
@@ -88,7 +88,7 @@ src/
     hooks/               useNetworkStatus, useAppUpdates…
     services/            httpClient, tokenStorage
     schemas/             schemas comunes (ProblemDetail…)
-    store/               sesión y club activo (Zustand)
+    store/               sesión y sucursal activa (Zustand)
     locales/             diccionario compartido: es, en, pt, ca, de, fr
     config/              env, queryClient, cachePolicies, i18n, theme, sentry
     utils/               logger, fechas, formato, serverClock, imageCache
@@ -122,9 +122,9 @@ scripts/
 7. **Un solo alias**: `@/` apunta a `src/`.
 8. **Estado**:
    - Lo que viene del servidor vive **solo** en TanStack Query. Nunca se copia a Zustand.
-   - Zustand es para estado de UI (filtros, modo edición, pestaña activa). Va en `features/<x>/store/` si lo usa una pantalla y en `shared/store/` si lo usan varias. La sesión y el club activo van en `shared/store/`.
+   - Zustand es para estado de UI (filtros, modo edición, pestaña activa). Va en `features/<x>/store/` si lo usa una pantalla y en `shared/store/` si lo usan varias. La sesión y la sucursal activa van en `shared/store/`.
    - Un store por responsabilidad, con selectores (`useStore((s) => s.campo)`) para no re-renderizar de más.
-   - Solo se persiste con AsyncStorage (`persist` + `createJSONStorage`) lo no sensible que tiene que sobrevivir a reiniciar la app. Los tokens van en SecureStore (ver [sección 8](#8-sesión-almacenamiento-y-multi-club)).
+   - Solo se persiste con AsyncStorage (`persist` + `createJSONStorage`) lo no sensible que tiene que sobrevivir a reiniciar la app. Los tokens van en SecureStore (ver [sección 8](#8-sesión-almacenamiento-y-sucursales)).
 
 ### Tests: espejo de `src/`
 
@@ -398,11 +398,13 @@ useQuery({
 
 ---
 
-## 8. Sesión, almacenamiento y multi-club
+## 8. Sesión, almacenamiento y sucursales
 
 ### Login
 
-- `POST /api/auth/login/teacher` (role_id = 4). Devuelve `access_token`, `refresh_token`, `id`, `role_id` y `db_id`.
+- `POST /api/auth/login/teacher` con cuerpo **`{ username, password }`** (el campo se llama `username`, no `email`). Devuelve `access_token`, `refresh_token`, `id`, `role_id` y `db_id`.
+- **Rol del profesor: `4`** (`ROLES.TEACHER` en `shared/config/roles.ts`, copia de `crates/shared/src/roles.rs`). La fuente de verdad es el claim `RoleId` del JWT; Core responde 403 si no coincide.
+- El access token de las apps móviles **dura 60 minutos**; el refresh token es de un solo uso y Core lo rota.
 - Los tokens se guardan en **SecureStore** mediante `shared/services/tokenStorage`.
 - **Refresh:** lo hace `BaseHttpClient`. Ante un 401 llama una sola vez a `/api/auth/refresh` y reintenta la request original. La promesa de refresh es compartida: el refresh token es de un solo uso y Core lo rota, así que varios 401 a la vez no pueden disparar varios refresh.
   - Refresh rechazado → se cierra la sesión.
@@ -426,7 +428,7 @@ useQuery({
 | Mecanismo | Qué guarda | Dónde vive el código |
 |---|---|---|
 | **SecureStore** (Keychain / Keystore, cifrado por el sistema) | `access_token`, `refresh_token`; credenciales de biometría (email + refresh token) y el flag `biometric_enabled` | `shared/services/tokenStorage`, `features/sign-in/services/biometricService` |
-| **AsyncStorage** (texto plano) | solo datos **no sensibles**: perfil público mínimo (`user_public`), idioma elegido, preferencias de notificaciones (Zustand `persist`), ID de instalación para push, onboarding visto, club activo | el service o store de cada caso |
+| **AsyncStorage** (texto plano) | solo datos **no sensibles**: perfil público mínimo (`user_public`), idioma elegido, preferencias de notificaciones (Zustand `persist`), ID de instalación para push, onboarding visto, sucursal activa | el service o store de cada caso |
 | **Zustand en memoria** (sin persistir) | credenciales temporales tras el login (email + refresh token, caducan a los **60 s**) para activar la biometría sin volver a pedir la contraseña | `shared/store/` |
 | **FileSystem** (`expo-file-system`) | caché de imágenes (avatares) en un directorio propio, con limpieza | `shared/utils/imageCache` |
 
@@ -440,21 +442,26 @@ useQuery({
 - Core rota el refresh token en cada `/auth/refresh`: tras cada refresh correcto **se actualiza también el refresh token guardado para biometría** (`updateRefreshToken`). Si no, la biometría deja de funcionar en la sesión siguiente.
 - Permisos: `NSFaceIDUsageDescription` en iOS, `USE_BIOMETRIC` en Android.
 
+### Estado de la sesión (`shared/services/session.ts`)
+
+- **El token es la única fuente** de quién es el usuario: de sus claims (`decodeSessionClaims`, `shared/utils/jwt.ts`) salen `RoleId`, `UserId` y `DbId`. No se guardan aparte. Los claims se leen sin verificar la firma, solo para decidir la navegación: quien verifica es Core en cada petición.
+- **`ClubId` del JWT no se usa:** Core lo rellena con el `db_id` (la escuela), no con la sucursal.
+- `sessionStore` (Zustand) guarda solo el estado (`checking`, `authenticated`, `anonymous`) y `{ userId, dbId }`. Nunca tokens.
+- **`session.restore()`** al arrancar: manda que haya **refresh token** (el access token lo normal es que esté caducado, dura 60 min) y que el rol sea 4. Si no, se cierra la sesión. Si el Keychain falla, se muestra el login **sin borrar** los tokens.
+- **`session.start(access, refresh)`** tras login o registro: guarda los tokens y abre la sesión si el token es de profesor.
+- **`session.end()`** es el **único sitio** que cierra la sesión: borra los tokens, vacía la caché y deja el estado en `anonymous`. Lo usan el aviso de sesión expirada del cliente HTTP (que solo avisa) y el botón de cerrar sesión. Con biometría y push se ampliará aquí.
+- **`useAppReady()`** es la única puerta de arranque: espera al idioma guardado y a la sesión; hasta entonces sigue el splash nativo.
+
 ### Guards de navegación
 
-- `app/(app)/_layout.tsx` redirige a `(auth)` si no hay sesión válida; `app/(auth)/_layout.tsx` hace lo contrario.
-- Se comprueba además que `role_id` sea 4. Un token de otro rol se trata como sesión inválida.
+- En el layout raíz, con **`Stack.Protected`** de expo-router: con sesión solo existe el grupo `(app)`; sin ella, solo `(auth)`. Una ruta protegida ni se monta sin sesión, y al cerrar la sesión la app vuelve sola al login.
 
-### Logout
+### Escuela y sucursal
 
-Borra los tokens, hace `queryClient.clear()`, resetea los stores de `shared/store/`, borra el perfil público de AsyncStorage y da de baja el token push. Las credenciales de biometría se conservan o se borran según elija el usuario.
-
-### Multi-club
-
-- En Core, la identidad de una sede son **`db_id` + `club_id` juntos**: `club_id` no es único entre escuelas.
-- Si un profesor trabaja en varios clubes, la app mantiene un **club activo** en `shared/store/` (persistido, para que al abrir la app siga el último elegido) y un selector para cambiarlo.
-- **Todas las query keys de datos de club incluyen `db_id` y `club_id`**, así los datos de dos clubes nunca se mezclan en caché. Al cambiar de club no hace falta borrar la caché: las keys ya son otras.
-- La lista de clubes del profesor está **pendiente** en Core: se hace con mock + petición.
+- En Core, **`db_id` es la escuela** (tenant) y **`club_id` una sucursal** de esa escuela. La identidad de una sede son los dos juntos.
+- Si un profesor trabaja en varias sucursales, la app mantiene una **sucursal activa** en `shared/store/` (persistida, para que al abrir la app siga la última elegida) y un selector para cambiarla.
+- **Todas las query keys de datos de sucursal incluyen `db_id` y `club_id`**, así los datos de dos sucursales nunca se mezclan en caché.
+- La lista de sucursales del profesor está **pendiente** en Core: se hace con mock + petición. La zona horaria es por escuela (ver sección 11).
 
 ---
 
@@ -496,7 +503,7 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 | `class_date` + `class_time` (`"2026-09-26"`, `"18:00:00"`) | **Hora de pared del club**, sin zona: las 18:00 en la pista | Se muestra tal cual (`formatClubDate`, `formatClubTime`). **Nunca** se convierte con la zona del móvil |
 | Timestamps e ISO con `Z` (`created_at`, `payment_date`…) | Instante real | Se muestra en la zona del club (`formatInstant`, `toClubTime`) |
 
-- **Zona del club:** es por tenant (`db_id`), un identificador IANA. Core no la expone todavía a la app: se usa `DEFAULT_CLUB_TIMEZONE` (`Europe/Madrid`, el mismo valor por defecto que Core) y está pedida en `docs/endpoints-pendientes/clubs-timezone.md`. Todas las funciones reciben la zona como parámetro: cuando llegue, se pasa la del club activo.
+- **Zona del club:** es por escuela (`db_id`), un identificador IANA. Core no la expone todavía a la app: se usa `DEFAULT_CLUB_TIMEZONE` (`Europe/Madrid`, el mismo valor por defecto que Core) y está pedida en `docs/endpoints-pendientes/clubs-timezone.md`. Todas las funciones reciben la zona como parámetro: cuando llegue, se pasa la de la escuela de la sucursal activa.
 - **"Ahora"** sale de `serverNow()` (`shared/utils/serverClock.ts`): el desfase con la hora del servidor se aprende de la cabecera `Date` de cada respuesta, así un móvil con la hora mal puesta no cambia nada.
 - **¿Ya empezó una clase?** `hasClassStarted(date, time, tz)`: compara `serverNow()` con `clubInstant(date, time, tz)`, que resuelve el cambio de hora igual que Core (hora saltada → la primera que existe; hora repetida → la primera).
 - **`dayjs`** (`shared/config/dayjs.ts`) solo se usa para cálculos con zonas; lo que ve el usuario se formatea con `shared/utils/formatDate.ts` (`Intl` y el idioma activo, nunca un locale fijo). Para pasar de hora de pared a instante no se usa `dayjs.tz()`: se equivoca justo después del cambio de hora, y lo detectó un test.

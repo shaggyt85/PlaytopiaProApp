@@ -12,8 +12,8 @@ import { serverNow } from "./serverClock";
  * - Los instantes (timestamps, ISO con Z) sí se pasan a la zona del club.
  * - "Ahora" sale de `serverNow()`, no del reloj del móvil.
  *
- * La zona se recibe siempre como parámetro (no hay una global): viene del
- * club activo.
+ * La zona se recibe siempre como parámetro (no hay una global). En Core es
+ * por escuela (`db_id`): la de la escuela de la sucursal activa.
  */
 
 /** Zona por defecto de Core (`DEFAULT_TIMEZONE`) mientras no la exponga a la app. */

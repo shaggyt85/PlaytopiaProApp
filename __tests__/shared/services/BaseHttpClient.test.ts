@@ -121,15 +121,14 @@ describe("BaseHttpClient", () => {
     expect(authHeader(calls[1])).toBe("Bearer acceso-nuevo");
   });
 
-  it("si Core rechaza el refresh: borra los tokens y avisa de sesión expirada", async () => {
-    const { client, tokens, sessionExpired } = buildClient({
+  it("si Core rechaza el refresh: avisa de sesión expirada (cerrarla no es cosa del cliente)", async () => {
+    const { client, sessionExpired } = buildClient({
       access: "acceso-caducado",
       refreshResult: { ok: false, reason: "rechazado" },
       handler: () => ({ status: 401, data: {} }),
     });
 
     await expect(client.get("/clases")).rejects.toMatchObject({ status: 401 });
-    expect(tokens.access).toBeNull();
     expect(sessionExpired).toHaveBeenCalledTimes(1);
   });
 

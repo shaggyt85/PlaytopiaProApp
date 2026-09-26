@@ -16,3 +16,8 @@ beforeEach(async () => {
   const { changeLanguage } = require("@/shared/config/i18n");
   await changeLanguage("es");
 });
+
+// Zonas seguras simuladas (mock oficial del paquete).
+jest.mock("react-native-safe-area-context", () =>
+  require("react-native-safe-area-context/jest/mock").default,
+);

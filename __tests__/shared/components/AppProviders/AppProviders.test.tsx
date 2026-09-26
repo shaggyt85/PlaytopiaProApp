@@ -5,9 +5,13 @@ import { Text } from "react-native";
 import { AppProviders } from "@/shared/components/AppProviders";
 import { createQueryClient } from "@/shared/config/queryClient";
 import { onSessionExpired } from "@/shared/services/httpClient";
+import { session } from "@/shared/services/session";
 
 jest.mock("@/shared/services/httpClient", () => ({
   onSessionExpired: jest.fn(),
+}));
+jest.mock("@/shared/services/session", () => ({
+  session: { end: jest.fn() },
 }));
 jest.mock("@/shared/config/queryManagers", () => ({
   setupQueryManagers: jest.fn(() => () => undefined),
@@ -29,18 +33,15 @@ describe("AppProviders", () => {
     expect(screen.getByText("con cliente")).toBeTruthy();
   });
 
-  it("cuando la sesión expira, vacía la caché", () => {
-    const client = createQueryClient();
-    client.setQueryData(["perfil"], { nombre: "Ana" });
-
+  it("cuando la sesión expira, la cierra en su único sitio (session.end)", () => {
     render(
-      <AppProviders client={client}>
+      <AppProviders client={createQueryClient()}>
         <MuestraCliente />
       </AppProviders>,
     );
     const handler = jest.mocked(onSessionExpired).mock.calls.at(-1)?.[0];
     handler?.();
 
-    expect(client.getQueryData(["perfil"])).toBeUndefined();
+    expect(session.end).toHaveBeenCalledTimes(1);
   });
 });

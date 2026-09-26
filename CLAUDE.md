@@ -61,7 +61,8 @@ docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 - **Estado:** servidor solo en TanStack Query; Zustand solo para UI (`features/<x>/store/` o `shared/store/`).
 - **Almacenamiento:** SecureStore para lo que permite actuar como el usuario (tokens, credenciales de biometría). AsyncStorage solo para lo no sensible. Credenciales temporales de biometría en Zustand en memoria, 60 s. Caché de imágenes con FileSystem. La contraseña no se guarda nunca.
 - **Refresh:** único y compartido en `BaseHttpClient` (Core rota el refresh token). Tras cada refresh correcto, actualiza también el refresh token de la biometría.
-- **Multi-club:** la identidad de una sede es `db_id` + `club_id`. Toda query key de datos de club lleva los dos.
+- **Escuela y sucursal:** `db_id` = escuela, `club_id` = sucursal; la sede es `db_id` + `club_id` y toda query key de datos de sucursal lleva los dos. El claim `ClubId` del JWT NO es la sucursal (Core pone ahí el `db_id`).
+- **Sesión:** rol profesor = `ROLES.TEACHER` (4). Quién es el usuario sale de los claims del token (`decodeSessionClaims`), nunca se guarda aparte. Cerrar sesión solo con `session.end()`. Guards con `Stack.Protected` en el layout raíz. Login con `{ username, password }`.
 - **Formularios:** react-hook-form + `zodResolver` sobre el schema del contrato; mensajes como claves de i18n.
 - **Fechas:** `class_date`/`class_time` son hora de pared del club: se muestran tal cual, nunca con la zona del móvil. Los instantes UTC, en la zona del club. "Ahora" = `serverNow()`. Usa `shared/utils/clubClock.ts` y `formatDate.ts`; nunca `toLocaleDateString` ni `dayjs.tz()` para pasar de pared a instante.
 - **i18n:** todo texto visible en `shared/locales/`, en los 6 idiomas (es, en, pt, ca, de, fr). En componentes, `useTranslation()`; las claves están tipadas.
