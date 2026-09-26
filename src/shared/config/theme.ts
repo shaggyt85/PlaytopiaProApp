@@ -19,8 +19,6 @@ const typography = {
   display: { fontSize: 32, fontWeight: "700", letterSpacing: 4 },
   /** Nombre de marca en la cabecera de acceso. */
   brand: { fontSize: 32, fontWeight: "700", letterSpacing: 2 },
-  /** Subtítulo grande (p. ej. "¡Hola de nuevo!"). */
-  heading: { fontSize: 28, fontWeight: "700" },
   title: { fontSize: 24, fontWeight: "700" },
   subtitle: { fontSize: 18, fontWeight: "600" },
   body: { fontSize: 16, fontWeight: "400" },

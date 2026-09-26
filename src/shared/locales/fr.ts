@@ -39,7 +39,6 @@ const fr: Translations = {
       notFound: "E-mail introuvable. Vérifiez votre e-mail ou inscrivez-vous",
     },
     password: {
-      title: "Bon retour !",
       label: "Mot de passe",
       placeholder: "••••••••",
       submit: "Continuer",

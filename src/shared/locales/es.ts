@@ -41,7 +41,6 @@ const es = {
       notFound: "Correo no encontrado. Verifica tu correo o regístrate",
     },
     password: {
-      title: "¡Hola de nuevo!",
       label: "Contraseña",
       placeholder: "••••••••",
       submit: "Continuar",

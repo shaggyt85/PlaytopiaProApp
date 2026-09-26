@@ -46,7 +46,7 @@ describe("PasswordScreen", () => {
     jest.mocked(signInService.signIn).mockResolvedValue(tokens);
     renderWithProviders(<PasswordScreen />);
 
-    expect(screen.getByText("¡Hola de nuevo!")).toBeTruthy();
+    expect(screen.queryByText("¡Hola de nuevo!")).toBeNull();
     expect(screen.getByText("ana@club.com")).toBeTruthy();
     entrar("secreta");
 

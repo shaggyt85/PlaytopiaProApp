@@ -39,7 +39,6 @@ const ca: Translations = {
       notFound: "Correu no trobat. Verifica el teu correu o registra't",
     },
     password: {
-      title: "Hola de nou!",
       label: "Contrasenya",
       placeholder: "••••••••",
       submit: "Continuar",

@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Redirect, useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
-import { View } from "react-native";
 
 import { Button } from "@/shared/components/Button";
 import { Text } from "@/shared/components/Text";
@@ -42,14 +41,9 @@ export function PasswordScreen() {
 
   return (
     <AuthLayout showBackButton testID="password-screen">
-      <View>
-        <Text variant="heading" align="center">
-          {t("auth.password.title")}
-        </Text>
-        <Text variant="emphasis" color="primary" align="center">
-          {email}
-        </Text>
-      </View>
+      <Text variant="emphasis" color="primary" align="center">
+        {email}
+      </Text>
 
       <Controller
         control={control}

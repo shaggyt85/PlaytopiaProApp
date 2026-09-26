@@ -39,7 +39,6 @@ const de: Translations = {
       notFound: "E-Mail nicht gefunden. Überprüfen Sie Ihre E-Mail oder registrieren Sie sich",
     },
     password: {
-      title: "Willkommen zurück!",
       label: "Passwort",
       placeholder: "••••••••",
       submit: "Weiter",
