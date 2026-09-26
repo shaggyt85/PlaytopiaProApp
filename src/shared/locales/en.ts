@@ -49,6 +49,17 @@ const en: Translations = {
       show: "Show password",
       hide: "Hide password",
     },
+    signUp: {
+      title: "Sign Up!",
+      firstNameLabel: "First Name",
+      firstNamePlaceholder: "Your first name",
+      lastNameLabel: "Last Name",
+      lastNamePlaceholder: "Your last name",
+      birthdayLabel: "Date of birth",
+      confirmPasswordLabel: "Repeat your password",
+      submit: "Continue",
+      submitting: "Registering...",
+    },
     legal: {
       text: "By signing up you accept our",
       terms: "terms of use",

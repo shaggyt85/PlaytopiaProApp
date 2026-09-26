@@ -3,3 +3,4 @@
 export { ComingSoonScreen } from "./ComingSoonScreen";
 export { PasswordScreen } from "./PasswordScreen";
 export { SignInScreen } from "./SignInScreen";
+export { SignUpScreen } from "./SignUpScreen";

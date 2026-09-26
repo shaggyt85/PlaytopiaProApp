@@ -49,6 +49,17 @@ const fr: Translations = {
       show: "Afficher le mot de passe",
       hide: "Masquer le mot de passe",
     },
+    signUp: {
+      title: "Inscrivez-vous !",
+      firstNameLabel: "Prénom",
+      firstNamePlaceholder: "Votre prénom",
+      lastNameLabel: "Nom de famille",
+      lastNamePlaceholder: "Votre nom de famille",
+      birthdayLabel: "Date de naissance",
+      confirmPasswordLabel: "Répétez votre mot de passe",
+      submit: "Continuer",
+      submitting: "Inscription en cours...",
+    },
     legal: {
       text: "En vous inscrivant, vous acceptez nos",
       terms: "conditions d'utilisation",

@@ -15,6 +15,8 @@ interface AuthLayoutProps {
   subtitle?: string;
   /** Muestra el botón de volver (todas menos la primera pantalla). */
   showBackButton?: boolean;
+  /** Cabecera con logo y versión. El registro no la lleva, como en la app de alumnos. */
+  showLogo?: boolean;
   testID?: string;
 }
 
@@ -27,6 +29,7 @@ export function AuthLayout({
   children,
   subtitle,
   showBackButton = false,
+  showLogo = true,
   testID,
 }: AuthLayoutProps) {
   const styles = useStyles();
@@ -40,7 +43,7 @@ export function AuthLayout({
         >
           <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
             <View style={styles.content}>
-              <LogoSection subtitle={subtitle} />
+              {showLogo ? <LogoSection subtitle={subtitle} /> : null}
               {children}
             </View>
           </ScrollView>

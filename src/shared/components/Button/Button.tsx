@@ -8,7 +8,7 @@ import { useTheme } from "@/shared/hooks/useTheme";
 
 import { useStyles } from "./Button.styles";
 
-export type ButtonVariant = "primary" | "secondary" | "link";
+export type ButtonVariant = "primary" | "solid" | "secondary" | "link";
 
 export interface ButtonProps extends Omit<PressableProps, "onPress" | "children"> {
   title: string;
@@ -21,6 +21,7 @@ export interface ButtonProps extends Omit<PressableProps, "onPress" | "children"
 /**
  * Botón de Playtopia (el mismo que la app de alumnos):
  * - `primary`: píldora con el degradado de marca; gris si no se puede pulsar.
+ * - `solid`: píldora violeta lisa, la del registro; apagada si no se puede pulsar.
  * - `secondary`: píldora con borde.
  * - `link`: texto subrayado ("¿Has olvidado tu contraseña?").
  *
@@ -60,7 +61,15 @@ export function Button({
   };
 
   const textColor: ThemeColor =
-    variant === "primary" ? "onPrimary" : variant === "link" ? "link" : "primary";
+    variant === "primary"
+      ? "onPrimary"
+      : variant === "solid"
+        ? inactive
+          ? "textSecondary"
+          : "onPrimary"
+        : variant === "link"
+          ? "link"
+          : "primary";
 
   const label = (
     <>
@@ -96,7 +105,15 @@ export function Button({
           {label}
         </LinearGradient>
       ) : (
-        <View style={variant === "secondary" ? [styles.body, styles.secondary] : styles.link}>
+        <View
+          style={
+            variant === "solid"
+              ? [styles.body, styles.solid, inactive && styles.solidInactive]
+              : variant === "secondary"
+                ? [styles.body, styles.secondary]
+                : styles.link
+          }
+        >
           {label}
         </View>
       )}

@@ -49,6 +49,17 @@ const ca: Translations = {
       show: "Mostrar contrasenya",
       hide: "Amagar contrasenya",
     },
+    signUp: {
+      title: "Registra't!",
+      firstNameLabel: "Nom",
+      firstNamePlaceholder: "El teu nom",
+      lastNameLabel: "Cognoms",
+      lastNamePlaceholder: "El teu cognom",
+      birthdayLabel: "Data de naixement",
+      confirmPasswordLabel: "Repeteix la teva contrasenya",
+      submit: "Continuar",
+      submitting: "Registrant...",
+    },
     legal: {
       text: "En registrar-te acceptes les nostres",
       terms: "condicions d'ús",

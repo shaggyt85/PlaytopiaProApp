@@ -51,6 +51,17 @@ const es = {
       show: "Mostrar contraseña",
       hide: "Ocultar contraseña",
     },
+    signUp: {
+      title: "¡Regístrate!",
+      firstNameLabel: "Nombre",
+      firstNamePlaceholder: "Tu nombre",
+      lastNameLabel: "Apellidos",
+      lastNamePlaceholder: "Tu apellido",
+      birthdayLabel: "Fecha de nacimiento",
+      confirmPasswordLabel: "Repetir tu contraseña",
+      submit: "Continuar",
+      submitting: "Registrando...",
+    },
     legal: {
       text: "Al registrarte aceptas nuestras",
       terms: "condiciones de uso",

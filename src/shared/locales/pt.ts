@@ -49,6 +49,17 @@ const pt: Translations = {
       show: "Mostrar senha",
       hide: "Ocultar senha",
     },
+    signUp: {
+      title: "Cadastre-se!",
+      firstNameLabel: "Nome",
+      firstNamePlaceholder: "Seu nome",
+      lastNameLabel: "Sobrenome",
+      lastNamePlaceholder: "Seu sobrenome",
+      birthdayLabel: "Data de nascimento",
+      confirmPasswordLabel: "Repita sua senha",
+      submit: "Continuar",
+      submitting: "Registrando...",
+    },
     legal: {
       text: "Ao se cadastrar você aceita nossos",
       terms: "termos de uso",

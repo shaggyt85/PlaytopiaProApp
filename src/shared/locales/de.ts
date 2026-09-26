@@ -49,6 +49,17 @@ const de: Translations = {
       show: "Passwort anzeigen",
       hide: "Passwort verbergen",
     },
+    signUp: {
+      title: "Registrieren Sie sich!",
+      firstNameLabel: "Vorname",
+      firstNamePlaceholder: "Ihr Vorname",
+      lastNameLabel: "Nachname",
+      lastNamePlaceholder: "Ihr Nachname",
+      birthdayLabel: "Geburtsdatum",
+      confirmPasswordLabel: "Passwort wiederholen",
+      submit: "Weiter",
+      submitting: "Registrierung läuft...",
+    },
     legal: {
       text: "Mit der Registrierung akzeptieren Sie unsere",
       terms: "Nutzungsbedingungen",

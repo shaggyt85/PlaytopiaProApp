@@ -7,9 +7,8 @@ import { z } from "zod";
 // valores públicos. Los secretos de verdad viven en EAS, no en la app.
 const envSchema = z.object({
   EXPO_PUBLIC_API_BASE_URL: z.url(),
-  // Firma HMAC del registro. Opcional hasta que exista la pantalla sign-up;
-  // entonces pasa a obligatoria.
-  EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET: z.string().min(1).optional(),
+  // Firma HMAC del registro (registration_token). Sin ella no hay alta.
+  EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET: z.string().min(1),
   EXPO_PUBLIC_TOKEN_SKEW_SECONDS: z.coerce
     .number()
     .int()

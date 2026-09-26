@@ -20,7 +20,7 @@ const toBase64Url = (base64: string) =>
  * porque Core rechaza el token si se aparta más de `TOKEN_SKEW_SECONDS`.
  */
 export function createRegistrationToken(
-  secret: string | undefined = env.EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET,
+  secret: string = env.EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET,
   nowSeconds: number = serverNowSeconds(),
 ): string {
   if (!secret) {

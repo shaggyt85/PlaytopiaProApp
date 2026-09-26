@@ -73,6 +73,8 @@ export const darkTheme = {
     /** Opciones de selección de los formularios (género). */
     option: BRAND.lilac,
     disabled: BRAND.grey,
+    /** Fondo del botón liso cuando no se puede pulsar. */
+    inactive: "#4a4a4a",
     link: BRAND.violet,
   },
   gradients: {
