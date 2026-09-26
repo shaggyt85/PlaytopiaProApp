@@ -33,13 +33,17 @@ Esta guía es la referencia de **cómo se trabaja** en este repo. El resumen acc
 | Pieza | Versión / herramienta |
 |---|---|
 | Framework | Expo SDK 57, React Native 0.86, React 19.2, New Architecture. Se prueba con Expo Go (que solo abre el último SDK) o con development build |
-| Navegación | expo-router 6 |
+| Navegación | expo-router 57 (grupos protegidos con `Stack.Protected`; pestañas con `expo-router/ui`) |
 | Datos de servidor | TanStack Query 5 + axios |
 | Contratos y validación | Zod 4 |
 | Estado de UI | Zustand 5 |
 | Formularios | react-hook-form + `@hookform/resolvers` (zodResolver) |
 | i18n | i18n-js (es, en, pt, ca, de, fr) |
 | Fechas | dayjs (utc, timezone) |
+| Animación | react-native-reanimated 4 (con react-native-worklets) |
+| Gráficos e iconos | react-native-svg; iconos de `@playtopia/icons` (librería propia, repo IconsPlaytopia) |
+| Fuentes | Sora (títulos) e Inter (texto), de `@expo-google-fonts`, cargadas con expo-font |
+| Vibración | expo-haptics |
 | Observabilidad | Sentry |
 | Actualizaciones | expo-updates (OTA), `runtimeVersion` con policy `fingerprint` |
 | Tests | Jest (jest-expo) + Testing Library |
@@ -52,7 +56,8 @@ Sobre pnpm: `scripts/only-pnpm.js` corta cualquier instalación que no sea con p
 Los ajustes de pnpm 11 van en `pnpm-workspace.yaml` (ya no se leen de `.npmrc`):
 - `nodeLinker: hoisted`: `node_modules` en plano, como espera el autolinking nativo de React Native.
 - `allowBuilds`: aquí se aprueba (`true`) o se deniega (`false`) cada dependencia con script de instalación. Una dependencia nueva con script para la instalación hasta que se decide.
-- `minimumReleaseAge` (política de cadena de suministro de pnpm 11, activa por defecto): pnpm no instala versiones publicadas hace muy poco, que es cuando una versión maliciosa todavía no se ha detectado. **No se añaden excepciones** (`minimumReleaseAgeExclude`): si una versión es demasiado reciente, se usa la anterior. Si pnpm añade una excepción por su cuenta, se quita y se reinstala. Los ajustes de pnpm 11 van en `pnpm-workspace.yaml` (ya no se leen de `.npmrc`): `nodeLinker: hoisted`, para que `node_modules` quede en plano como espera el autolinking nativo, y `allowBuilds`, donde se aprueba (`true`) o se deniega (`false`) cada dependencia con script de instalación. Una dependencia nueva con script para la instalación hasta que se decide.
+- `minimumReleaseAge` (política de cadena de suministro de pnpm 11, activa por defecto): pnpm no instala versiones publicadas hace muy poco, que es cuando una versión maliciosa todavía no se ha detectado. **No se añaden excepciones** (`minimumReleaseAgeExclude`): si una versión es demasiado reciente, se usa la anterior. Si pnpm añade una excepción por su cuenta, se quita y se reinstala.
+  - **Única excepción: `@playtopia/icons`**, la librería propia, que se publica desde su propio workflow con procedencia verificada. Va limitada a la versión exacta (`'@playtopia/icons@1.8.0'`) con un comentario, y se actualiza al subir de versión.
 
 ---
 
@@ -65,7 +70,8 @@ src/
   app/                   rutas expo-router, solo montan la pantalla
     _layout.tsx
     (auth)/              sign-in, password, sign-up, password-recovery
-    (app)/               pantallas con sesión (guard en su _layout)
+    (app)/               pantallas con sesión: un Stack con el menú y, encima, los detalles
+      (tabs)/            menú inferior: index (Hoy), calendar, groups, network, profile
   features/
     auth/                = flujo de acceso (varias pantallas)
       components/        AuthLayout, PasswordInput, FormError
@@ -131,140 +137,7 @@ scripts/
 
 A `src/features/auth/hooks/useSignIn.ts` le corresponde `__tests__/features/auth/hooks/useSignIn.test.tsx`. Si se mueve o renombra un archivo, su test se mueve igual. Solo `helpers/` y `setup/` quedan fuera del espejo.
 
-Configuración de Jest: `testMatch` apunta a `__tests__/**/*.test.(ts|tsx)`, `moduleNameMapper` traduce `^@/(.*)# Guía de trabajo — Playtopia Pro (app Profesor)
-
-App móvil para los profesores de Playtopia (repo `PlaytopiaAppPro`), hermana de la app de alumnos (`PlaytopiaAppStudent`). Comparte stack, backend (Core_Playtopia) e infraestructura; tiene su propia estructura por features y sus propias pantallas.
-
-Esta guía es la referencia de **cómo se trabaja** en este repo. El resumen accionable para Claude Code está en [`CLAUDE.md`](../CLAUDE.md), en la raíz del repo.
-
-## Índice
-
-1. [Stack](#1-stack)
-2. [Estructura de carpetas](#2-estructura-de-carpetas)
-3. [Principios: SOLID y DRY](#3-principios-solid-y-dry)
-4. [Endpoints del backend: Scalar de Core](#4-endpoints-del-backend-scalar-de-core)
-5. [Secretos y variables de entorno](#5-secretos-y-variables-de-entorno)
-6. [Manejo de errores: RFC 9457](#6-manejo-de-errores-rfc-9457)
-7. [Caché con TanStack Query](#7-caché-con-tanstack-query)
-8. [Sesión, almacenamiento y sucursales](#8-sesión-almacenamiento-y-sucursales)
-9. [Formularios](#9-formularios)
-10. [Estrategia de tests](#10-estrategia-de-tests)
-11. [Fechas y zona horaria](#11-fechas-y-zona-horaria)
-12. [i18n](#12-i18n)
-13. [Tema y diseño](#13-tema-y-diseño)
-14. [Versionado (Android e iOS)](#14-versionado-android-e-ios)
-15. [Flujo de Git](#15-flujo-de-git)
-16. [Definition of Done](#16-definition-of-done)
-17. [Arranque del repo: de cero, trayendo solo lo necesario](#17-arranque-del-repo-de-cero-trayendo-solo-lo-necesario)
-18. [Receta: crear una pantalla nueva](#18-receta-crear-una-pantalla-nueva)
-19. [Publicación](#19-publicación)
-
----
-
-## 1. Stack
-
-| Pieza | Versión / herramienta |
-|---|---|
-| Framework | Expo SDK 57, React Native 0.86, React 19.2, New Architecture. Se prueba con Expo Go (que solo abre el último SDK) o con development build |
-| Navegación | expo-router 6 |
-| Datos de servidor | TanStack Query 5 + axios |
-| Contratos y validación | Zod 4 |
-| Estado de UI | Zustand 5 |
-| Formularios | react-hook-form + `@hookform/resolvers` (zodResolver) |
-| i18n | i18n-js (es, en, pt, ca, de, fr) |
-| Fechas | dayjs (utc, timezone) |
-| Observabilidad | Sentry |
-| Actualizaciones | expo-updates (OTA), `runtimeVersion` con policy `fingerprint` |
-| Tests | Jest (jest-expo) + Testing Library |
-| Lenguaje | TypeScript 6 `strict` (sin `baseUrl`: `paths` relativos) |
-| Gestor de paquetes | **pnpm 11**, versión fijada en `packageManager` de `package.json` |
-| Mínimos de plataforma | Los del SDK, sin fijar a mano: hoy Android minSdk 24, target/compile 36; iOS 16.4. Se actualizan solos al subir de SDK; solo se fijan en `expo-build-properties` si una librería lo exige |
-
-Sobre pnpm: `scripts/only-pnpm.js` corta cualquier instalación que no sea con pnpm. La versión exacta se fija en `packageManager` porque EAS Build y corepack instalan la que declara ese campo; tiene que coincidir con la que usa el equipo en local.
-
-Los ajustes de pnpm 11 van en `pnpm-workspace.yaml` (ya no se leen de `.npmrc`):
-- `nodeLinker: hoisted`: `node_modules` en plano, como espera el autolinking nativo de React Native.
-- `allowBuilds`: aquí se aprueba (`true`) o se deniega (`false`) cada dependencia con script de instalación. Una dependencia nueva con script para la instalación hasta que se decide.
-- `minimumReleaseAge` (política de cadena de suministro de pnpm 11, activa por defecto): pnpm no instala versiones publicadas hace muy poco, que es cuando una versión maliciosa todavía no se ha detectado. **No se añaden excepciones** (`minimumReleaseAgeExclude`): si una versión es demasiado reciente, se usa la anterior. Si pnpm añade una excepción por su cuenta, se quita y se reinstala. Los ajustes de pnpm 11 van en `pnpm-workspace.yaml` (ya no se leen de `.npmrc`): `nodeLinker: hoisted`, para que `node_modules` quede en plano como espera el autolinking nativo, y `allowBuilds`, donde se aprueba (`true`) o se deniega (`false`) cada dependencia con script de instalación. Una dependencia nueva con script para la instalación hasta que se decide.
-
----
-
-## 2. Estructura de carpetas
-
-**Una feature = una pantalla o un flujo completo de la app** (p. ej. `auth`: email → contraseña → registro / recuperar contraseña → sesión abierta). Dentro lleva todo lo que esa pantalla o flujo necesita. Lo que usan dos o más features va en `shared/`, y nunca como archivo suelto: va en la carpeta de su tipo, igual que dentro de una feature.
-
-```
-src/
-  app/                   rutas expo-router, solo montan la pantalla
-    _layout.tsx
-    (auth)/              sign-in, password, sign-up, password-recovery
-    (app)/               pantallas con sesión (guard en su _layout)
-  features/
-    auth/                = flujo de acceso (varias pantallas)
-      components/        AuthLayout, PasswordInput, FormError
-      hooks/             useCheckEmail, useSignIn…
-      services/          una interfaz por caso de uso
-      schemas/
-      store/             estado del flujo (email entre pasos)
-      SignInScreen.tsx  PasswordScreen.tsx  …
-      index.ts
-    home/                = pantalla Home
-      components/
-      hooks/
-      services/
-      schemas/
-      store/             solo si la pantalla tiene estado de UI propio (Zustand)
-      HomeScreen.tsx
-      index.ts
-    ...                  una carpeta por pantalla o flujo
-  shared/                lo usado por 2 o más features, por tipo
-    components/          Button, ErrorState, LoadingState, Navbar…
-    hooks/               useNetworkStatus, useAppUpdates…
-    services/            httpClient, tokenStorage
-    schemas/             schemas comunes (ProblemDetail…)
-    store/               sesión y sucursal activa (Zustand)
-    locales/             diccionario compartido: es, en, pt, ca, de, fr
-    config/              env, queryClient, cachePolicies, i18n, theme, sentry
-    utils/               logger, fechas, formato, serverClock, imageCache
-__tests__/               espejo de src/
-  features/
-    auth/
-      hooks/useSignIn.test.tsx
-      services/signInService.test.ts
-      SignInScreen.test.tsx
-  shared/
-    services/httpClient.test.ts
-    hooks/useNetworkStatus.test.ts
-  helpers/               renderWithProviders, factories, fixtures
-  setup/                 setup común de Jest
-__mocks__/               mocks de módulos nativos
-docs/
-  GUIA_APP_PROFESOR.md   esta guía
-  endpoints-pendientes/  una petición a Core por endpoint que falta
-assets/
-scripts/
-```
-
-### Reglas
-
-1. **Una feature por pantalla o por flujo.** Dentro van sus `components/`, `hooks/`, `services/` (con sus endpoints y query keys), `schemas/`, `store/` si hace falta, sus `<X>Screen.tsx` e `index.ts`. Un flujo agrupa las pantallas que comparten datos y piezas (como `auth`) para no repartir su lógica entre features.
-2. **No hay carpetas por tipo en la raíz de `src/`** (`src/services/`, `src/hooks/`…). O algo es de una feature, o está en `shared/<tipo>/`.
-3. **`shared/` solo recibe lo que usan dos o más features**, y siempre en la carpeta de su tipo: un componente compartido va a `shared/components/`, un hook a `shared/hooks/`, un service a `shared/services/`, un schema a `shared/schemas/`. No hay archivos sueltos en `shared/`. Mientras algo lo use una sola feature, se queda en ella.
-4. **`shared/` nunca importa de `features/`**, y una feature no importa de otra feature.
-5. **`app/` solo contiene rutas**: importa `<X>Screen` desde el `index.ts` de la feature. Sin lógica.
-6. **Nombres**: carpetas de feature en kebab-case, componentes y pantallas en PascalCase, hooks `useX`, siempre `index.ts`.
-7. **Un solo alias**: `@/` apunta a `src/`.
-8. **Estado**:
-   - Lo que viene del servidor vive **solo** en TanStack Query. Nunca se copia a Zustand.
-   - Zustand es para estado de UI (filtros, modo edición, pestaña activa). Va en `features/<x>/store/` si lo usa una pantalla y en `shared/store/` si lo usan varias. La sesión y la sucursal activa van en `shared/store/`.
-   - Un store por responsabilidad, con selectores (`useStore((s) => s.campo)`) para no re-renderizar de más.
-   - Solo se persiste con AsyncStorage (`persist` + `createJSONStorage`) lo no sensible que tiene que sobrevivir a reiniciar la app. Los tokens van en SecureStore (ver [sección 8](#8-sesión-almacenamiento-y-sucursales)).
-
-### Tests: espejo de `src/`
-
-A `src/features/auth/hooks/useSignIn.ts` le corresponde `__tests__/features/auth/hooks/useSignIn.test.tsx`. Si se mueve o renombra un archivo, su test se mueve igual. Solo `helpers/` y `setup/` quedan fuera del espejo.
-
- a `<rootDir>/src/$1` y `clearMocks` deja los mocks sin llamadas previas en cada test. Helpers comunes: `renderWithProviders`, `createFakeHttpClient`, `createFakeTokenStorage`, `createFakeAdapter`, `createTestJwt`.
+Configuración de Jest: `testMatch` apunta a `__tests__/**/*.test.(ts|tsx)`, `moduleNameMapper` traduce `^@/(.*)$` a `<rootDir>/src/$1` y `clearMocks` deja los mocks sin llamadas previas en cada test. Helpers comunes: `renderWithProviders`, `createFakeHttpClient`, `createFakeTokenStorage`, `createFakeAdapter`, `createTestJwt`.
 
 ### Pantallas iniciales
 
@@ -617,6 +490,16 @@ useQuery({
 
 - En el layout raíz, con **`Stack.Protected`** de expo-router: con sesión solo existe el grupo `(app)`; sin ella, solo `(auth)`. Una ruta protegida ni se monta sin sesión, y al cerrar la sesión la app vuelve sola al login.
 
+### Menú inferior (pestañas)
+
+- **Cinco pestañas:** Hoy (`index`), Agenda (`calendar`), Grupos (`groups`), Red (`network`) y Perfil (`profile`). Las rutas van en inglés, como el resto del código; lo que ve el usuario sale de `tabs.*` en los 6 idiomas (nunca spanglish: «Red», no «Network»).
+- **Una sola lista:** `shared/config/tabs.ts` (`TABS`: nombre, `href`, texto e icono `IconLo…`). La usan la navegación, la barra, el «Próximamente» y los tests. `tabIndexForPath()` da la pestaña de una ruta (el inicio solo con `/`; las demás, también con sus subrutas).
+- **Piezas, en `shared/components/`:** `AppTabs` monta la navegación con `expo-router/ui` (`Tabs`, `TabSlot`, `TabList` y un `TabTrigger` por pestaña: tienen que ir dentro de `TabList`, que es donde `Tabs` los busca); `TabBar`, la píldora de cristal flotante con la gota; `TabButton`, cada pestaña (icono y nombre; vibra al cambiar a otra, no al tocar la activa). La ruta `(tabs)/_layout.tsx` solo reexporta `AppTabs`.
+- **La barra se monta una vez** y queda fija mientras cambia la pantalla de encima. `(app)` sigue siendo un `Stack` con `(tabs)` dentro: las pantallas de detalle se abrirán encima, a pantalla completa y sin barra.
+- **La gota** (degradado de marca bajo la pestaña activa) es un único indicador en `TabBar`: su posición sale de `onLayout` (ancho ÷ número de pestañas) y salta con anticipación, muelle, estela y brillo (valores en `TabBar.animation.ts`). Con «reducir movimiento» va directa.
+- **Hueco bajo la barra:** como flota sobre el contenido, cada pantalla del menú deja abajo `useTabBarInset()` para que no quede nada tapado.
+- **Pestaña sin contenido:** su ruta reexporta `ComingSoonScreen`, que muestra el nombre de la pestaña (de `TABS`, según la ruta) y «Próximamente».
+
 ### Escuela y sucursal
 
 - En Core, **`db_id` es la escuela** (tenant) y **`club_id` una sucursal** de esa escuela. La identidad de una sede son los dos juntos.
@@ -649,7 +532,9 @@ Siempre en la ruta espejo de `__tests__/`, con Jest y Testing Library.
 | `<X>Screen` | integración: con el service mockeado, la pantalla muestra datos, vacío y error |
 | funciones puras | casos límite |
 
-- Todo lo común vive en `__tests__/helpers/`: `renderWithProviders` (QueryClient, tema, i18n), factories de datos y fixtures (los mismos JSON que los mocks de endpoints).
+- Todo lo común vive en `__tests__/helpers/`: `renderWithProviders` (QueryClient, tema, i18n), factories de datos (`authFactories`), fixtures (los mismos JSON que los mocks de endpoints), el mock del selector de fecha (`dateTimePickerMock`) y `settle()`, que deja terminar lo que se notifica en la siguiente vuelta (validación de Zod, `reset()` de una mutación) antes de comprobar.
+- **Reanimated en Jest:** `__tests__/setup/jest.setup.tsx` llama a `setUpTests()` (animaciones sin hilo nativo y el matcher `toHaveAnimatedStyle`), y `jest.config.js` usa `__tests__/setup/resolver.js`, que encadena el resolver de `react-native-worklets` (sus ficheros sin las extensiones `.native`) con el de React Native que trae jest-expo. Las animaciones se avanzan con `jest.useFakeTimers()` y `jest.advanceTimersByTime()`.
+- **Jest 29.7** es la versión de jest-expo 57 (sus dependencias son `^29`). Se sube cuando Expo publique un jest-expo sobre Jest 30.
 - Cada bug corregido lleva el test que lo reproduce.
 - Los tests nunca llaman al servidor real.
 
@@ -683,23 +568,49 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 
 ## 13. Tema y diseño
 
-- **Colores de marca en un solo sitio:** `shared/config/brand.js` (JavaScript plano porque también lo lee `app.config.js`; tipos en `brand.d.ts`). Los tonos translúcidos salen de ahí con `withAlpha(color, opacidad)` (`shared/utils/color.ts`), nunca escritos a mano.
-- **Tokens en `shared/config/theme.ts`:** colores con nombre de uso (`background`, `surface`, `text`, `primary`, `danger`…), espaciado, radios, tipografía y `touchTarget` (44). En los componentes no se escriben colores ni tamaños a mano.
-- **Solo tema oscuro por ahora:** el claro no está definido. La app está fijada en `userInterfaceStyle: "dark"` y `useTheme()` devuelve siempre `darkTheme`. Cuando se defina el claro, se añade `lightTheme` con las mismas claves y `useTheme()` elige con `useColorScheme()`, sin tocar los componentes.
-- **Estilos:** cada `<Comp>.styles.ts` exporta `useStyles = makeStyles((theme) => ({…}))` y el componente hace `const styles = useStyles()`. Se escriben una vez y valen para cualquier tema.
-- **El aspecto es el de la app de alumnos.** Antes de maquetar una pantalla que ya existe allí, se mira cómo está hecha (fondo, cabecera, campos, botones, textos) y se reproduce con los componentes de aquí.
-- **Componentes base** en `shared/components/<Comp>/`:
-  - `BrandBackground`: el fondo de marca (degradado, dos brillos rosas y líneas en diagonal). Lo usan el splash y las pantallas de acceso.
-  - `Button`: `primary` es la píldora con el degradado `#5742E3` → `#8033C4` (gris `#9D9D9D` si no se puede pulsar), `secondary` la píldora con borde y `link` el texto subrayado. Ignora las pulsaciones mientras está ocupado, así no hay doble envío.
-  - `Input`: píldora de cristal (blanco al 10 %, borde rosa al 30 %), texto de 18 y etiqueta blanca; acepta un `rightAccessory` (p. ej. el ojo de la contraseña).
-  - `BackButton`: círculo con flecha arriba a la izquierda.
-  - `Text` (variante, color y alineación del tema), `Screen`, `LoadingState`, `ErrorState` (texto con `getErrorMessage` y Reintentar) y `EmptyState`; los tres estados comparten `StateLayout`.
+### De dónde sale el aspecto
+
+- **Estilos: el prototipo de Lovable** (`playtopia-coach-pro`, en `D:\playtopia\lovable-coach-pro\`, fuera de los repos). De él se toman colores, degradados, brillos, radios, fuentes, animaciones y la disposición de las pantallas. **El código no se copia:** es web (Tailwind, Radix, TanStack Router) y se reescribe con los componentes de aquí.
+- **Pantallas de acceso** (email, contraseña, registro, términos, recuperar): la disposición es la de la app de alumnos, con los colores del prototipo.
+
+### Colores
+
+- **Una sola paleta:** `shared/config/brand.js`, la del prototipo pasada de OKLCH a hex (React Native no entiende OKLCH). Es JavaScript plano porque también la lee `app.config.js`: el splash nativo y el fondo del icono adaptativo de Android salen de `BRAND.night`.
+- **Nadie más importa `brand.js`:** el tema asigna cada color a un uso y los componentes usan `useTheme()` / `makeStyles()`. Un test falla si algún fichero importa la paleta fuera del tema, y otro si el tema escribe un color a mano (cada uno es de la paleta o una transparencia suya con `withAlpha`).
+- **Tokens de color** (`theme.colors`): `background` `#0C0B1A`, `surface`, `surfaceStrong`, `card`, `elevated`, `text`, `textSecondary`, `border`, `primary` (magenta `#EF1EC1`), `accent` (violeta `#A63DF8`), `success`, `warning`, `danger`, `glass` / `glassBorder` (campos), `glassPanel` (barra de pestañas), `field`, `option`, `overlay` (velo de modal), `hairline` / `hairlineStrong` (líneas finas), `glowPrimary`.
+- **Acentos** (`theme.accents`): `gold`, `coral`, `sky` y `violet`, cada uno con su color y su degradado, para contadores y accesos rápidos.
+- **Degradados** (`theme.gradients`): `brand` (`#FF2FB5` → `#C122E0` → `#8434F4`, en diagonal: botón principal y pestaña activa), `ink` (tarjetas oscuras), `modal` y `disabled`.
+- **Fondo de marca** (`BrandBackground`): el color de fondo con los tres resplandores radiales del prototipo (`theme.backdrop`), dibujados con `react-native-svg`.
+- **Brillos:** `glow(color)` da la sombra de brillo de cualquier color; `theme.shadows.glow` es la de marca.
+
+### Fuentes y tipografía
+
+- **Sora** para títulos y marca, **Inter** para el resto. Solo se cargan los pesos que se usan (Inter 400, 500, 600 y 700; Sora 700 y 800), cada uno desde su subcarpeta (`@expo-google-fonts/inter/400Regular`): el índice del paquete haría `require` de los 18 pesos de Inter y Metro los metería todos en la app.
+- **Con fuentes propias el peso va en el nombre de la fuente, nunca en `fontWeight`** (en Android se ignora y sale la letra normal). `shared/config/fonts.ts` da los nombres por uso (`FONTS.regular`, `FONTS.semibold`, `FONTS.display`…) y cada variante de `theme.typography` lleva su `fontFamily`. Un test falla si alguna variante usa `fontWeight` o una fuente sin cargar.
+- **Nada de estilos de letra sueltos:** si hace falta un estilo nuevo, se añade una variante con nombre de uso (`strong`, `mark`, `tab`, `tagline`, `link`…).
+- Las fuentes se cargan en `useAppReady`, con el idioma, la sesión y el logo: no hay salto de letra al aparecer. Si fallan, la app arranca con las del sistema.
+
+### Iconos
+
+- **De `@playtopia/icons/react-native`**, la librería propia (repo `D:\playtopia\IconsPlaytopia`, publicada en npm con Trusted Publishing). Los del prototipo son los `IconLo…` (trazo fino de Lucide, prefijo `lo` para distinguirlos de los demás).
+- Aceptan `size`, `color` y, los de un solo grosor, `strokeWidth` (la pestaña activa usa 2,4).
+- **Un icono nuevo se añade a la librería**, no a la app: SVG en `src/svg/`, compilar, publicar una versión (release en GitHub) y actualizar aquí la dependencia y su excepción de `minimumReleaseAge`.
+
+### Radios, espaciado y movimiento
+
+- **Radios del prototipo** (`theme.radius`): `sm` 14, `md` 17, `lg` 20, `xl` 26, `xxl` 32, `xxxl` 40 y `pill`. `theme.controlHeight` (48) es el alto de campos y botones, y `touchTarget` (44) el área táctil mínima.
+- **Animaciones con Reanimated,** solo con `transform` y `opacity` para que vayan en el hilo de la interfaz. Se respeta «reducir movimiento» del sistema (`useReduceMotion`). Los valores de cada animación, en un fichero aparte junto al componente (p. ej. `TabBar.animation.ts`).
+- **Vibración** con `selectionFeedback()` (`shared/utils/haptics.ts`), que no falla si el móvil no vibra.
+
+### Reglas de siempre
+
+- **Solo tema oscuro por ahora:** la app está fijada en `userInterfaceStyle: "dark"` y `useTheme()` devuelve siempre `darkTheme`. Cuando se defina el claro, se añade `lightTheme` con las mismas claves y `useTheme()` elige con `useColorScheme()`, sin tocar los componentes.
+- **Estilos:** cada `<Comp>.styles.ts` exporta `useStyles = makeStyles((theme) => ({…}))` y el componente hace `const styles = useStyles()`.
+- **Componentes base** en `shared/components/<Comp>/`: `Text`, `Button` (`primary` con el degradado de marca, `solid`, `secondary`, `link`; ignora pulsaciones mientras está ocupado), `Input` (`glass` o `solid`), `Checkbox`, `FieldError`, `PhoneInput`, `DateInput`, `GenderSelector`, `BackButton`, `BrandBackground`, `BrandLogo`, `Screen`, `LoadingState`, `ErrorState`, `EmptyState` y los del menú (`AppTabs`, `TabBar`, `TabButton`, `ComingSoonScreen`).
 - **Nada de `zIndex` en elementos que se desmontan** (botón de volver, splash, overlays): se colocan como último hijo y se pintan encima por orden. En Android, un hijo con `zIndex` que se desmonta durante una transición cierra la app (`IndexOutOfBoundsException` en `getChildDrawingOrder`).
-- Los componentes base (`Button`, `Card`, `Input`, `Text`, estados de carga, vacío y error) viven en `shared/components/`; las pantallas los componen.
-- Estilos en `<Comp>.styles.ts` junto al componente, generados a partir del tema.
-- Accesibilidad mínima: `accessibilityLabel` en los controles, áreas táctiles de al menos 44 px y contraste suficiente en los dos temas.
-- **Responsive:** la app está bloqueada en vertical (`orientation: "portrait"`), pero en tablets y plegables Android 16 (targetSdk 36) ignora el bloqueo. Las pantallas no dependen de un ancho fijo: `flex`, `useWindowDimensions` y anchos máximos para que en pantalla grande o en horizontal no se rompan.
-- **Edge-to-edge:** en Android 16 es obligatorio; el contenido respeta las zonas seguras con `react-native-safe-area-context`. No se usan las APIs antiguas de color o translucidez de la barra de estado.
+- **Accesibilidad mínima:** `accessibilityLabel` en los controles, roles (`tab`, `tablist`, `checkbox`…), áreas táctiles de al menos 44 y contraste suficiente.
+- **Responsive:** la app está bloqueada en vertical (`orientation: "portrait"`), pero en tablets y plegables Android 16 ignora el bloqueo. Las pantallas no dependen de un ancho fijo: `flex`, `useWindowDimensions`, `onLayout` y anchos máximos.
+- **Edge-to-edge:** obligatorio en Android 16; el contenido respeta las zonas seguras con `react-native-safe-area-context`.
 
 ---
 
