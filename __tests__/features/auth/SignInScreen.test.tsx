@@ -56,6 +56,8 @@ describe("SignInScreen", () => {
     escribirYContinuar("nuevo@club.com");
 
     await screen.findByText("Correo no encontrado. Verifica tu correo o regístrate");
+    // El registro lo recibe ya escrito.
+    expect(useAuthFlowStore.getState().email).toBe("nuevo@club.com");
     // Como en la app de alumnos, el mismo botón pasa a "Registrarse".
     fireEvent.press(screen.getByRole("button", { name: "Registrarse" }));
     expect(mockPush).toHaveBeenCalledWith("/sign-up");

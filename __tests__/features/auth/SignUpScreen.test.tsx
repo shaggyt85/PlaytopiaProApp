@@ -3,6 +3,7 @@ import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
 import { TERMS_VERSION } from "@/features/auth/schemas/signUp.schema";
 import { signUpService } from "@/features/auth/services/signUpService";
 import { SignUpScreen } from "@/features/auth/SignUpScreen";
+import { useAuthFlowStore } from "@/features/auth/store/authFlowStore";
 import { HttpError } from "@/shared/services/HttpError";
 
 import { renderWithProviders } from "../../helpers/renderWithProviders";
@@ -56,6 +57,15 @@ const validacion = () => act(() => new Promise((resolve) => setTimeout(resolve, 
 const botonContinuar = () => screen.getByRole("button", { name: "Continuar" });
 
 describe("SignUpScreen", () => {
+  beforeEach(() => useAuthFlowStore.getState().reset());
+
+  it("trae ya escrito el email del primer paso", () => {
+    useAuthFlowStore.getState().setCheckedEmail("nuevo@club.com", false);
+    renderWithProviders(<SignUpScreen />);
+
+    expect(screen.getByLabelText("Correo electrónico")).toHaveProp("value", "nuevo@club.com");
+  });
+
   it("pinta el formulario del registro sin logo", () => {
     renderWithProviders(<SignUpScreen />);
 

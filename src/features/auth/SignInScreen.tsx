@@ -36,8 +36,9 @@ export function SignInScreen() {
     // El error queda en checkEmail.error y se pinta abajo.
     const result = await checkEmail.mutateAsync(email).catch(() => undefined);
     if (!result) return;
+    // Se guarda en los dos casos: la contraseña o el registro lo muestran ya escrito.
+    setCheckedEmail(email, result.is_student);
     if (result.is_teacher) {
-      setCheckedEmail(email, result.is_student);
       router.push("/password");
     } else {
       setNotFound(true);

@@ -19,12 +19,14 @@ import {
   type SignUpForm,
   type SignUpFormInput,
 } from "./schemas/signUp.schema";
+import { useAuthFlowStore } from "./store/authFlowStore";
 
 /**
  * Registro del profesor, igual que el de la app de alumnos (sin documento ni
- * adulto/niño). Los errores de cada campo salen al dejarlo y se corrigen al
- * escribir; el botón no se activa hasta que todo es válido. Tras el alta,
- * vuelve al login para entrar con el email y la contraseña recién creados.
+ * adulto/niño), con el email del primer paso ya escrito. Los errores de cada
+ * campo salen al dejarlo y se corrigen al escribir; el botón no se activa
+ * hasta que todo es válido. Tras el alta, vuelve al login para entrar con el
+ * email y la contraseña recién creados.
  */
 export function SignUpScreen() {
   const { t } = useTranslation();
@@ -35,7 +37,7 @@ export function SignUpScreen() {
   const { control, handleSubmit, formState } = useForm<SignUpFormInput, unknown, SignUpForm>({
     resolver: zodResolver(SignUpFormSchema),
     mode: "onTouched",
-    defaultValues: SIGN_UP_DEFAULTS,
+    defaultValues: { ...SIGN_UP_DEFAULTS, email: useAuthFlowStore.getState().email },
   });
   const { errors } = formState;
   // Hasta hoy mismo: nadie nace en el futuro.
