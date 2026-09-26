@@ -4,7 +4,7 @@ import { Text } from "@/shared/components/Text";
 export function FormError({ message }: { message?: string | null }) {
   if (!message) return null;
   return (
-    <Text color="danger" align="center" accessibilityRole="alert">
+    <Text variant="caption" accessibilityRole="alert">
       {message}
     </Text>
   );

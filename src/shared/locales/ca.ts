@@ -32,21 +32,18 @@ const ca: Translations = {
   },
   auth: {
     signIn: {
-      title: "Hola, profe",
-      subtitle: "Escriu el teu email per continuar",
-      emailLabel: "Email",
-      emailPlaceholder: "tu@email.com",
+      emailLabel: "Correu electrònic",
+      emailPlaceholder: "el.teu@correu.com",
       continue: "Continuar",
-      notFound: "No trobem cap compte amb aquest email.",
-      createAccount: "Crear compte de professor",
+      register: "Registrar-se",
+      notFound: "Correu no trobat. Verifica el teu correu o registra't",
     },
     password: {
-      title: "La teva contrasenya",
-      subtitle: "Entrant com a {{email}}",
+      title: "Hola de nou!",
       label: "Contrasenya",
-      submit: "Entrar",
-      forgot: "Has oblidat la contrasenya?",
-      changeEmail: "Canviar email",
+      placeholder: "••••••••",
+      submit: "Continuar",
+      forgot: "Has oblidat la teva contrasenya?",
       invalidCredentials: "Email o contrasenya incorrectes.",
       studentHint: "Si també ets alumne, fes servir la contrasenya del teu compte de professor.",
       noTeacherAccount: "Encara no tens compte de professor?",
@@ -54,11 +51,30 @@ const ca: Translations = {
       show: "Mostrar contrasenya",
       hide: "Amagar contrasenya",
     },
+    legal: {
+      text: "En registrar-te acceptes les nostres",
+      terms: "condicions d'ús",
+      and: "i",
+      privacy: "polítiques de privacitat",
+    },
     comingSoon: "Disponible molt aviat.",
+  },
+  // Textos legales (los mismos que la app de alumnos hasta tener los del profesor).
+  legalDocs: {
+    terms: {
+      title: "Termes i Condicions",
+      summary: "En utilitzar la nostra aplicació, acceptes els nostres termes de servei i política de privacitat. Això inclou recopilació de dades per a experiències personalitzades, directrius de conducta de l'usuari, protecció de propietat intel·lectual i limitació de responsabilitat. Els nostres serveis es proporcionen 'tal com estan' amb el millor esforç de suport. Ens reservem el dret de modificar aquests termes amb previ avís. El teu ús continuat indica acceptació de qualsevol canvi. Per a detalls complets i obligacions legals, revisa el document complet.",
+    },
+    privacy: {
+      title: "Política de Privacitat",
+      summary: "Playtopia SL tracta les teves dades personals d'acord amb el RGPD per a gestió d'activitats esportives, comunicacions i pagaments. Recopilem dades d'identificació, contacte, acadèmiques i de pagament (tokenitzades via Stripe). Utilitzem càmera opcional per a foto de perfil. Base legal: consentiment, execució contractual i interès legítim. Compartim amb proveïdors autoritzats (Stripe, CRM). Tens dret a accés, rectificació, supressió i portabilitat. Les dades de menors requereixen consentiment parental. Implementem mesures de seguretat adequades.",
+    },
+    viewFullDocument: "Veure Document Complet",
+    openFailed: "Error en obrir el document. Torna-ho a provar.",
   },
   validation: {
     emailRequired: "Escriu el teu email.",
-    emailInvalid: "Aquest email no és vàlid.",
+    emailInvalid: "El correu electrònic no és vàlid",
     passwordRequired: "Escriu la teva contrasenya.",
   },
   splash: {

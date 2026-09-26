@@ -1,4 +1,3 @@
-import { LinearGradient } from "expo-linear-gradient";
 import { memo, useEffect, useRef } from "react";
 import {
   Animated,
@@ -8,10 +7,11 @@ import {
   View,
 } from "react-native";
 
+import { BrandBackground } from "@/shared/components/BrandBackground";
 import { BRAND_ASSETS } from "@/shared/config/assets";
 import { t } from "@/shared/config/i18n";
 
-import { SPLASH_COLORS, styles } from "./AnimatedSplash.styles";
+import { styles } from "./AnimatedSplash.styles";
 
 interface AnimatedSplashProps {
   onFinish: () => void;
@@ -168,22 +168,7 @@ export const AnimatedSplash = memo(function AnimatedSplash({
       accessibilityLabel={`PLAYTOPIA. ${t("splash.tagline")}`}
       testID="animated-splash"
     >
-      <LinearGradient
-        colors={SPLASH_COLORS.gradient}
-        locations={[0, 0.5, 1]}
-        style={styles.gradient}
-      >
-        <LinearGradient
-          colors={SPLASH_COLORS.glowStrong}
-          locations={[0, 0.3, 0.7, 1]}
-          style={styles.backgroundCircle1}
-        />
-        <LinearGradient
-          colors={SPLASH_COLORS.glowSoft}
-          locations={[0, 0.3, 0.7, 1]}
-          style={styles.backgroundCircle2}
-        />
-
+      <BrandBackground>
         <View style={styles.content}>
           <Animated.View
             style={[
@@ -223,9 +208,7 @@ export const AnimatedSplash = memo(function AnimatedSplash({
           </Animated.View>
         </View>
 
-        <View style={[styles.shimmer1, { top: height * 0.2 }]} />
-        <View style={[styles.shimmer2, { bottom: height * 0.3 }]} />
-      </LinearGradient>
+      </BrandBackground>
     </Animated.View>
   );
 });

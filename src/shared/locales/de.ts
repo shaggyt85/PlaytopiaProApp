@@ -32,21 +32,18 @@ const de: Translations = {
   },
   auth: {
     signIn: {
-      title: "Hallo, Trainer",
-      subtitle: "Geben Sie Ihre E-Mail ein, um fortzufahren",
-      emailLabel: "E-Mail",
-      emailPlaceholder: "sie@email.com",
+      emailLabel: "E-Mail-Adresse",
+      emailPlaceholder: "ihre@email.com",
       continue: "Weiter",
-      notFound: "Wir haben kein Konto mit dieser E-Mail gefunden.",
-      createAccount: "Trainerkonto erstellen",
+      register: "Registrieren",
+      notFound: "E-Mail nicht gefunden. Überprüfen Sie Ihre E-Mail oder registrieren Sie sich",
     },
     password: {
-      title: "Ihr Passwort",
-      subtitle: "Anmeldung als {{email}}",
+      title: "Willkommen zurück!",
       label: "Passwort",
-      submit: "Anmelden",
+      placeholder: "••••••••",
+      submit: "Weiter",
       forgot: "Passwort vergessen?",
-      changeEmail: "E-Mail ändern",
       invalidCredentials: "E-Mail oder Passwort falsch.",
       studentHint: "Wenn Sie auch Schüler sind, verwenden Sie das Passwort Ihres Trainerkontos.",
       noTeacherAccount: "Noch kein Trainerkonto?",
@@ -54,11 +51,30 @@ const de: Translations = {
       show: "Passwort anzeigen",
       hide: "Passwort verbergen",
     },
+    legal: {
+      text: "Mit der Registrierung akzeptieren Sie unsere",
+      terms: "Nutzungsbedingungen",
+      and: "und",
+      privacy: "Datenschutzrichtlinien",
+    },
     comingSoon: "Bald verfügbar.",
+  },
+  // Textos legales (los mismos que la app de alumnos hasta tener los del profesor).
+  legalDocs: {
+    terms: {
+      title: "Allgemeine Geschäftsbedingungen",
+      summary: "Durch die Nutzung unserer Anwendung akzeptieren Sie unsere Nutzungsbedingungen und Datenschutzrichtlinien. Dies umfasst die Datenerfassung für personalisierte Erlebnisse, Richtlinien für Benutzerverhalten, Schutz des geistigen Eigentums und Haftungsbeschränkung. Unsere Dienste werden 'wie besehen' mit bestmöglicher Unterstützung bereitgestellt. Wir behalten uns das Recht vor, diese Bedingungen mit vorheriger Ankündigung zu ändern. Ihre fortgesetzte Nutzung zeigt die Akzeptanz aller Änderungen an. Für vollständige Details und rechtliche Verpflichtungen lesen Sie bitte das vollständige Dokument.",
+    },
+    privacy: {
+      title: "Datenschutzrichtlinie",
+      summary: "Playtopia SL verarbeitet Ihre personenbezogenen Daten gemäß DSGVO für die Verwaltung von Sportaktivitäten, Kommunikation und Zahlungen. Wir erfassen Identifikations-, Kontakt-, akademische und Zahlungsdaten (tokenisiert über Stripe). Wir verwenden optional die Kamera für Profilfotos. Rechtsgrundlage: Einwilligung, Vertragserfüllung und berechtigtes Interesse. Wir teilen mit autorisierten Anbietern (Stripe, CRM). Sie haben das Recht auf Zugang, Berichtigung, Löschung und Datenübertragbarkeit. Daten von Minderjährigen erfordern elterliche Einwilligung. Wir implementieren angemessene Sicherheitsmaßnahmen.",
+    },
+    viewFullDocument: "Vollständiges Dokument anzeigen",
+    openFailed: "Fehler beim Öffnen des Dokuments. Versuchen Sie es erneut.",
   },
   validation: {
     emailRequired: "Geben Sie Ihre E-Mail ein.",
-    emailInvalid: "Diese E-Mail ist ungültig.",
+    emailInvalid: "Die E-Mail-Adresse ist ungültig",
     passwordRequired: "Geben Sie Ihr Passwort ein.",
   },
   splash: {

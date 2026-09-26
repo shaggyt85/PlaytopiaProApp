@@ -1,23 +1,27 @@
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
+// Campo de Playtopia (el de la app de alumnos): píldora "cristal" sobre el
+// fondo de marca.
+const FIELD_HEIGHT = 48;
+
 export const useStyles = makeStyles((theme) => ({
-  container: { gap: theme.spacing.xs },
+  container: { gap: theme.spacing.sm },
   field: {
     flexDirection: "row",
     alignItems: "center",
-    minHeight: theme.touchTarget,
-    borderRadius: theme.radius.md,
+    height: FIELD_HEIGHT,
+    borderRadius: theme.radius.pill,
     borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.glassBorder,
+    backgroundColor: theme.colors.glass,
   },
   fieldError: { borderColor: theme.colors.danger },
   input: {
-    ...theme.typography.body,
+    ...theme.typography.input,
     flex: 1,
-    minHeight: theme.touchTarget,
+    height: "100%",
     paddingHorizontal: theme.spacing.md,
     color: theme.colors.text,
   },
-  accessory: { paddingRight: theme.spacing.sm },
+  accessory: { paddingRight: theme.spacing.xs },
 }));

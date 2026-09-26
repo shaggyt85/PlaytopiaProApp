@@ -16,7 +16,7 @@ jest.mock("@/features/auth/services/checkEmailService", () => ({
 }));
 
 const escribirYContinuar = (email: string) => {
-  fireEvent.changeText(screen.getByLabelText("Email"), email);
+  fireEvent.changeText(screen.getByLabelText("Correo electrónico"), email);
   fireEvent.press(screen.getByRole("button", { name: "Continuar" }));
 };
 
@@ -43,7 +43,7 @@ describe("SignInScreen", () => {
     });
   });
 
-  it("si no existe, ofrece crear la cuenta de profesor", async () => {
+  it("si no existe, el botón pasa a Registrarse y lleva al registro", async () => {
     jest.mocked(checkEmailService.checkEmail).mockResolvedValue({
       email: "nuevo@club.com",
       exists: false,
@@ -53,8 +53,9 @@ describe("SignInScreen", () => {
 
     escribirYContinuar("nuevo@club.com");
 
-    await screen.findByText("No encontramos una cuenta con este email.");
-    fireEvent.press(screen.getByRole("button", { name: "Crear cuenta de profesor" }));
+    await screen.findByText("Correo no encontrado. Verifica tu correo o regístrate");
+    // Como en la app de alumnos, el mismo botón pasa a "Registrarse".
+    fireEvent.press(screen.getByRole("button", { name: "Registrarse" }));
     expect(mockPush).toHaveBeenCalledWith("/sign-up");
   });
 
@@ -63,7 +64,7 @@ describe("SignInScreen", () => {
 
     escribirYContinuar("ana@");
 
-    await screen.findByText("Ese email no es válido.");
+    await screen.findByText("El correo electrónico no es válido");
     expect(checkEmailService.checkEmail).not.toHaveBeenCalled();
   });
 

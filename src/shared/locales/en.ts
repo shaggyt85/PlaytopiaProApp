@@ -32,21 +32,18 @@ const en: Translations = {
   },
   auth: {
     signIn: {
-      title: "Hi, coach",
-      subtitle: "Enter your email to continue",
       emailLabel: "Email",
-      emailPlaceholder: "you@email.com",
+      emailPlaceholder: "your@email.com",
       continue: "Continue",
-      notFound: "We couldn't find an account with this email.",
-      createAccount: "Create a coach account",
+      register: "Sign Up",
+      notFound: "Email not found. Please check your email or sign up",
     },
     password: {
-      title: "Your password",
-      subtitle: "Signing in as {{email}}",
+      title: "Welcome back!",
       label: "Password",
-      submit: "Sign in",
+      placeholder: "••••••••",
+      submit: "Continue",
       forgot: "Forgot your password?",
-      changeEmail: "Change email",
       invalidCredentials: "Incorrect email or password.",
       studentHint: "If you're also a student, use your coach account password.",
       noTeacherAccount: "Don't have a coach account yet?",
@@ -54,11 +51,30 @@ const en: Translations = {
       show: "Show password",
       hide: "Hide password",
     },
+    legal: {
+      text: "By signing up you accept our",
+      terms: "terms of use",
+      and: "and",
+      privacy: "privacy policy",
+    },
     comingSoon: "Coming very soon.",
+  },
+  // Textos legales (los mismos que la app de alumnos hasta tener los del profesor).
+  legalDocs: {
+    terms: {
+      title: "Terms and Conditions",
+      summary: "By using our application, you agree to our terms of service and privacy policy. This includes data collection for personalized experiences, user conduct guidelines, intellectual property protection, and limitation of liability. Our services are provided 'as is' with best effort support. We reserve the right to modify these terms with notice. Your continued use indicates acceptance of any changes. For complete details and legal obligations, please review the full document.",
+    },
+    privacy: {
+      title: "Privacy Policy",
+      summary: "Playtopia SL processes your personal data in accordance with GDPR for sports activity management, communications, and payments. We collect identification, contact, academic, and payment data (tokenized via Stripe). Optional camera access for profile photos. Legal basis: consent, contract execution, and legitimate interest. We share with authorized providers (Stripe, CRM). You have rights to access, rectification, deletion, and portability. Minor data requires parental consent. We implement adequate security measures.",
+    },
+    viewFullDocument: "View Full Document",
+    openFailed: "Failed to open the document. Please try again.",
   },
   validation: {
     emailRequired: "Enter your email.",
-    emailInvalid: "That email isn't valid.",
+    emailInvalid: "Enter a valid email address",
     passwordRequired: "Enter your password.",
   },
   splash: {

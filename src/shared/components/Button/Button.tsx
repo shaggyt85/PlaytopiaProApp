@@ -1,12 +1,14 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { useRef, useState } from "react";
-import { ActivityIndicator, Pressable, type PressableProps } from "react-native";
+import { ActivityIndicator, Pressable, View, type PressableProps } from "react-native";
 
 import { Text } from "@/shared/components/Text";
+import type { ThemeColor } from "@/shared/config/theme";
 import { useTheme } from "@/shared/hooks/useTheme";
 
 import { useStyles } from "./Button.styles";
 
-export type ButtonVariant = "primary" | "secondary" | "ghost";
+export type ButtonVariant = "primary" | "secondary" | "link";
 
 export interface ButtonProps extends Omit<PressableProps, "onPress" | "children"> {
   title: string;
@@ -17,9 +19,13 @@ export interface ButtonProps extends Omit<PressableProps, "onPress" | "children"
 }
 
 /**
- * Botón del tema. Ignora las pulsaciones mientras está ocupado (`loading` o
- * la promesa de `onPress` sin terminar): así un doble toque no envía dos
- * veces el mismo formulario.
+ * Botón de Playtopia (el mismo que la app de alumnos):
+ * - `primary`: píldora con el degradado de marca; gris si no se puede pulsar.
+ * - `secondary`: píldora con borde.
+ * - `link`: texto subrayado ("¿Has olvidado tu contraseña?").
+ *
+ * Ignora las pulsaciones mientras está ocupado (`loading` o la promesa de
+ * `onPress` sin terminar): un doble toque no envía dos veces.
  */
 export function Button({
   title,
@@ -53,7 +59,23 @@ export function Button({
     }
   };
 
-  const textColor = variant === "primary" ? "onPrimary" : "primary";
+  const textColor: ThemeColor =
+    variant === "primary" ? "onPrimary" : variant === "link" ? "link" : "primary";
+
+  const label = (
+    <>
+      {busy && (
+        <ActivityIndicator color={theme.colors[textColor]} testID="button-loading" />
+      )}
+      <Text
+        variant="button"
+        color={textColor}
+        style={variant === "link" ? styles.linkText : undefined}
+      >
+        {title}
+      </Text>
+    </>
+  );
 
   return (
     <Pressable
@@ -61,23 +83,23 @@ export function Button({
       accessibilityState={{ disabled: inactive, busy }}
       onPress={handlePress}
       disabled={inactive}
-      style={({ pressed }) => [
-        styles.base,
-        styles[variant],
-        pressed && styles.pressed,
-        inactive && styles.disabled,
-      ]}
+      style={({ pressed }) => [styles.pressable, pressed && styles.pressed]}
       {...rest}
     >
-      {busy && (
-        <ActivityIndicator
-          color={theme.colors[textColor]}
-          testID="button-loading"
-        />
+      {variant === "primary" ? (
+        <LinearGradient
+          colors={inactive ? theme.gradients.disabled : theme.gradients.button}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.body}
+        >
+          {label}
+        </LinearGradient>
+      ) : (
+        <View style={variant === "secondary" ? [styles.body, styles.secondary] : styles.link}>
+          {label}
+        </View>
       )}
-      <Text variant="button" color={textColor}>
-        {title}
-      </Text>
     </Pressable>
   );
 }

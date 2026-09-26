@@ -21,9 +21,7 @@ export function Input({ label, error, rightAccessory, style, ...rest }: InputPro
 
   return (
     <View style={styles.container}>
-      <Text variant="caption" color="textSecondary">
-        {label}
-      </Text>
+      <Text>{label}</Text>
       <View style={[styles.field, error ? styles.fieldError : null]} testID="input-field">
         <TextInput
           accessibilityLabel={label}
@@ -34,7 +32,7 @@ export function Input({ label, error, rightAccessory, style, ...rest }: InputPro
         {rightAccessory ? <View style={styles.accessory}>{rightAccessory}</View> : null}
       </View>
       {error ? (
-        <Text variant="caption" color="danger" accessibilityLiveRegion="polite">
+        <Text variant="caption" accessibilityLiveRegion="polite">
           {error}
         </Text>
       ) : null}

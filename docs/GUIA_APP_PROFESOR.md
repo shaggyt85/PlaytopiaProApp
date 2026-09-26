@@ -663,7 +663,14 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 - **Tokens en `shared/config/theme.ts`:** colores con nombre de uso (`background`, `surface`, `text`, `primary`, `danger`…), espaciado, radios, tipografía y `touchTarget` (44). En los componentes no se escriben colores ni tamaños a mano.
 - **Solo tema oscuro por ahora:** el claro no está definido. La app está fijada en `userInterfaceStyle: "dark"` y `useTheme()` devuelve siempre `darkTheme`. Cuando se defina el claro, se añade `lightTheme` con las mismas claves y `useTheme()` elige con `useColorScheme()`, sin tocar los componentes.
 - **Estilos:** cada `<Comp>.styles.ts` exporta `useStyles = makeStyles((theme) => ({…}))` y el componente hace `const styles = useStyles()`. Se escriben una vez y valen para cualquier tema.
-- **Componentes base** en `shared/components/<Comp>/`: `Text` (variante, color y alineación del tema), `Button` (primario, secundario, fantasma; ignora pulsaciones mientras está ocupado, así no hay doble envío), `Input` (etiqueta y error), `LoadingState`, `ErrorState` (texto con `getErrorMessage` y Reintentar) y `EmptyState`. Los tres estados comparten `StateLayout`.
+- **El aspecto es el de la app de alumnos.** Antes de maquetar una pantalla que ya existe allí, se mira cómo está hecha (fondo, cabecera, campos, botones, textos) y se reproduce con los componentes de aquí.
+- **Componentes base** en `shared/components/<Comp>/`:
+  - `BrandBackground`: el fondo de marca (degradado, dos brillos rosas y líneas en diagonal). Lo usan el splash y las pantallas de acceso.
+  - `Button`: `primary` es la píldora con el degradado `#5742E3` → `#8033C4` (gris `#9D9D9D` si no se puede pulsar), `secondary` la píldora con borde y `link` el texto subrayado. Ignora las pulsaciones mientras está ocupado, así no hay doble envío.
+  - `Input`: píldora de cristal (blanco al 10 %, borde rosa al 30 %), texto de 18 y etiqueta blanca; acepta un `rightAccessory` (p. ej. el ojo de la contraseña).
+  - `BackButton`: círculo con flecha arriba a la izquierda.
+  - `Text` (variante, color y alineación del tema), `Screen`, `LoadingState`, `ErrorState` (texto con `getErrorMessage` y Reintentar) y `EmptyState`; los tres estados comparten `StateLayout`.
+- **Nada de `zIndex` en elementos que se desmontan** (botón de volver, splash, overlays): se colocan como último hijo y se pintan encima por orden. En Android, un hijo con `zIndex` que se desmonta durante una transición cierra la app (`IndexOutOfBoundsException` en `getChildDrawingOrder`).
 - Los componentes base (`Button`, `Card`, `Input`, `Text`, estados de carga, vacío y error) viven en `shared/components/`; las pantallas los componen.
 - Estilos en `<Comp>.styles.ts` junto al componente, generados a partir del tema.
 - Accesibilidad mínima: `accessibilityLabel` en los controles, áreas táctiles de al menos 44 px y contraste suficiente en los dos temas.

@@ -34,21 +34,18 @@ const es = {
   },
   auth: {
     signIn: {
-      title: "Hola, profe",
-      subtitle: "Escribe tu email para continuar",
-      emailLabel: "Email",
-      emailPlaceholder: "tu@email.com",
+      emailLabel: "Correo electrónico",
+      emailPlaceholder: "tu@correo.com",
       continue: "Continuar",
-      notFound: "No encontramos una cuenta con este email.",
-      createAccount: "Crear cuenta de profesor",
+      register: "Registrarse",
+      notFound: "Correo no encontrado. Verifica tu correo o regístrate",
     },
     password: {
-      title: "Tu contraseña",
-      subtitle: "Entrando como {{email}}",
+      title: "¡Hola de nuevo!",
       label: "Contraseña",
-      submit: "Entrar",
-      forgot: "¿Olvidaste tu contraseña?",
-      changeEmail: "Cambiar email",
+      placeholder: "••••••••",
+      submit: "Continuar",
+      forgot: "¿Has olvidado tu contraseña?",
       invalidCredentials: "Email o contraseña incorrectos.",
       studentHint: "Si también eres alumno, usa la contraseña de tu cuenta de profesor.",
       noTeacherAccount: "¿Aún no tienes cuenta de profesor?",
@@ -56,11 +53,30 @@ const es = {
       show: "Mostrar contraseña",
       hide: "Ocultar contraseña",
     },
+    legal: {
+      text: "Al registrarte aceptas nuestras",
+      terms: "condiciones de uso",
+      and: "y",
+      privacy: "políticas de privacidad",
+    },
     comingSoon: "Disponible muy pronto.",
+  },
+  // Textos legales (los mismos que la app de alumnos hasta tener los del profesor).
+  legalDocs: {
+    terms: {
+      title: "Términos y Condiciones",
+      summary: "Al usar nuestra aplicación, aceptas nuestros términos de servicio y política de privacidad. Esto incluye recopilación de datos para experiencias personalizadas, directrices de conducta del usuario, protección de propiedad intelectual y limitación de responsabilidad. Nuestros servicios se proporcionan 'tal como están' con el mejor esfuerzo de soporte. Nos reservamos el derecho de modificar estos términos con previo aviso. Tu uso continuado indica aceptación de cualquier cambio. Para detalles completos y obligaciones legales, revisa el documento completo.",
+    },
+    privacy: {
+      title: "Política de Privacidad",
+      summary: "Playtopia SL trata tus datos personales conforme al RGPD para gestión de actividades deportivas, comunicaciones y pagos. Recopilamos datos de identificación, contacto, académicos y de pago (tokenizados vía Stripe). Usamos cámara opcional para foto de perfil. Base legal: consentimiento, ejecución contractual e interés legítimo. Compartimos con proveedores autorizados (Stripe, CRM). Tienes derecho a acceso, rectificación, supresión y portabilidad. Datos de menores requieren consentimiento parental. Implementamos medidas de seguridad adecuadas.",
+    },
+    viewFullDocument: "Ver Documento Completo",
+    openFailed: "Error al abrir el documento. Inténtalo de nuevo.",
   },
   validation: {
     emailRequired: "Escribe tu email.",
-    emailInvalid: "Ese email no es válido.",
+    emailInvalid: "El correo electrónico no es válido",
     passwordRequired: "Escribe tu contraseña.",
   },
   splash: {

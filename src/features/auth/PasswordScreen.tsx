@@ -1,11 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Redirect, useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
+import { View } from "react-native";
 
 import { Button } from "@/shared/components/Button";
 import { Text } from "@/shared/components/Text";
-import { isHttpError } from "@/shared/services/HttpError";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import { isHttpError } from "@/shared/services/HttpError";
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
 import { AuthLayout, FormError, PasswordInput } from "./components";
@@ -14,9 +15,10 @@ import { PasswordFormSchema, type PasswordForm } from "./schemas/auth.schema";
 import { useAuthFlowStore } from "./store/authFlowStore";
 
 /**
- * Paso 2 del acceso: la contraseña. Si entra, los guards llevan solos al
- * inicio. Siempre ofrece registrarse: un alumno que aún no es profesor llega
- * aquí (Core le dice que el email existe) y tiene que poder crear su cuenta.
+ * Paso 2 del acceso: la contraseña, igual que la app de alumnos. Si entra,
+ * los guards llevan solos al inicio. Además siempre ofrece registrarse: un
+ * alumno que aún no es profesor llega aquí (su email existe) y tiene que
+ * poder crear su cuenta de profesor.
  */
 export function PasswordScreen() {
   const { t } = useTranslation();
@@ -39,17 +41,23 @@ export function PasswordScreen() {
   });
 
   return (
-    <AuthLayout
-      title={t("auth.password.title")}
-      subtitle={t("auth.password.subtitle", { email })}
-      testID="password-screen"
-    >
+    <AuthLayout showBackButton testID="password-screen">
+      <View>
+        <Text variant="heading" align="center">
+          {t("auth.password.title")}
+        </Text>
+        <Text variant="emphasis" color="primary" align="center">
+          {email}
+        </Text>
+      </View>
+
       <Controller
         control={control}
         name="password"
         render={({ field: { onChange, onBlur, value } }) => (
           <PasswordInput
             label={t("auth.password.label")}
+            placeholder={t("auth.password.placeholder")}
             returnKeyType="go"
             value={value}
             onBlur={onBlur}
@@ -68,22 +76,17 @@ export function PasswordScreen() {
       <Button title={t("auth.password.submit")} onPress={submit} />
       <Button
         title={t("auth.password.forgot")}
-        variant="ghost"
+        variant="link"
         onPress={() => router.push("/password-recovery")}
       />
 
-      <Text color="textSecondary" align="center">
+      <Text variant="caption" color="textSecondary" align="center">
         {t("auth.password.noTeacherAccount")}
       </Text>
       <Button
         title={t("auth.password.register")}
-        variant="secondary"
+        variant="link"
         onPress={() => router.push("/sign-up")}
-      />
-      <Button
-        title={t("auth.password.changeEmail")}
-        variant="ghost"
-        onPress={() => router.back()}
       />
     </AuthLayout>
   );

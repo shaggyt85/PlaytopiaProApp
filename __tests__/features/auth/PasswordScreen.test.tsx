@@ -34,7 +34,7 @@ const tokens = {
 
 const entrar = (password: string) => {
   fireEvent.changeText(screen.getByLabelText("Contraseña"), password);
-  fireEvent.press(screen.getByRole("button", { name: "Entrar" }));
+  fireEvent.press(screen.getByRole("button", { name: "Continuar" }));
 };
 
 describe("PasswordScreen", () => {
@@ -46,7 +46,8 @@ describe("PasswordScreen", () => {
     jest.mocked(signInService.signIn).mockResolvedValue(tokens);
     renderWithProviders(<PasswordScreen />);
 
-    expect(screen.getByText("Entrando como ana@club.com")).toBeTruthy();
+    expect(screen.getByText("¡Hola de nuevo!")).toBeTruthy();
+    expect(screen.getByText("ana@club.com")).toBeTruthy();
     entrar("secreta");
 
     await waitFor(() => expect(session.start).toHaveBeenCalledWith("acceso", "refresco"));
@@ -82,7 +83,7 @@ describe("PasswordScreen", () => {
     renderWithProviders(<PasswordScreen />);
 
     fireEvent.press(screen.getByRole("button", { name: "Regístrate" }));
-    fireEvent.press(screen.getByRole("button", { name: "¿Olvidaste tu contraseña?" }));
+    fireEvent.press(screen.getByRole("button", { name: "¿Has olvidado tu contraseña?" }));
 
     expect(mockPush).toHaveBeenCalledWith("/sign-up");
     expect(mockPush).toHaveBeenCalledWith("/password-recovery");

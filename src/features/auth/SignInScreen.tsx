@@ -5,19 +5,18 @@ import { Controller, useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/Button";
 import { Input } from "@/shared/components/Input";
-import { Text } from "@/shared/components/Text";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
-import { AuthLayout, FormError } from "./components";
+import { AuthLayout, FormError, LegalFooter } from "./components";
 import { useCheckEmail, useFieldErrorText } from "./hooks";
 import { EmailFormSchema, type EmailForm } from "./schemas/auth.schema";
 import { useAuthFlowStore } from "./store/authFlowStore";
 
 /**
- * Paso 1 del acceso: el email. Igual que la app de alumnos, pero decidiendo
- * por `exists` (Core no dice si es profesor): si existe, a la contraseña; si
- * no, se ofrece crear la cuenta.
+ * Paso 1 del acceso: el email, igual que la app de alumnos. Decide por
+ * `exists` (Core no dice si es profesor): si existe, a la contraseña; si no,
+ * el mismo botón pasa a "Registrarse".
  */
 export function SignInScreen() {
   const { t } = useTranslation();
@@ -45,12 +44,14 @@ export function SignInScreen() {
     }
   });
 
+  const errorText = notFound
+    ? t("auth.signIn.notFound")
+    : checkEmail.error
+      ? getErrorMessage(checkEmail.error)
+      : null;
+
   return (
-    <AuthLayout
-      title={t("auth.signIn.title")}
-      subtitle={t("auth.signIn.subtitle")}
-      testID="sign-in-screen"
-    >
+    <AuthLayout testID="sign-in-screen">
       <Controller
         control={control}
         name="email"
@@ -63,7 +64,8 @@ export function SignInScreen() {
             autoCorrect={false}
             autoComplete="email"
             textContentType="emailAddress"
-            returnKeyType="next"
+            maxLength={254}
+            returnKeyType="done"
             value={value}
             onBlur={onBlur}
             onChangeText={(text) => {
@@ -77,22 +79,14 @@ export function SignInScreen() {
         )}
       />
 
-      <FormError message={checkEmail.error ? getErrorMessage(checkEmail.error) : null} />
+      <FormError message={errorText} />
 
-      <Button title={t("auth.signIn.continue")} onPress={submit} />
+      <Button
+        title={notFound ? t("auth.signIn.register") : t("auth.signIn.continue")}
+        onPress={notFound ? () => router.push("/sign-up") : submit}
+      />
 
-      {notFound ? (
-        <>
-          <Text color="textSecondary" align="center">
-            {t("auth.signIn.notFound")}
-          </Text>
-          <Button
-            title={t("auth.signIn.createAccount")}
-            variant="secondary"
-            onPress={() => router.push("/sign-up")}
-          />
-        </>
-      ) : null}
+      <LegalFooter />
     </AuthLayout>
   );
 }

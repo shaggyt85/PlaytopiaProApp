@@ -32,21 +32,18 @@ const pt: Translations = {
   },
   auth: {
     signIn: {
-      title: "Olá, professor",
-      subtitle: "Digite seu email para continuar",
-      emailLabel: "Email",
-      emailPlaceholder: "voce@email.com",
+      emailLabel: "E-mail",
+      emailPlaceholder: "seu@email.com",
       continue: "Continuar",
-      notFound: "Não encontramos uma conta com este email.",
-      createAccount: "Criar conta de professor",
+      register: "Cadastrar-se",
+      notFound: "E-mail não encontrado. Verifique seu e-mail ou cadastre-se",
     },
     password: {
-      title: "Sua senha",
-      subtitle: "Entrando como {{email}}",
+      title: "Olá de novo!",
       label: "Senha",
-      submit: "Entrar",
+      placeholder: "••••••••",
+      submit: "Continuar",
       forgot: "Esqueceu sua senha?",
-      changeEmail: "Trocar email",
       invalidCredentials: "Email ou senha incorretos.",
       studentHint: "Se você também é aluno, use a senha da sua conta de professor.",
       noTeacherAccount: "Ainda não tem conta de professor?",
@@ -54,11 +51,30 @@ const pt: Translations = {
       show: "Mostrar senha",
       hide: "Ocultar senha",
     },
+    legal: {
+      text: "Ao se cadastrar você aceita nossos",
+      terms: "termos de uso",
+      and: "e",
+      privacy: "política de privacidade",
+    },
     comingSoon: "Disponível em breve.",
+  },
+  // Textos legales (los mismos que la app de alumnos hasta tener los del profesor).
+  legalDocs: {
+    terms: {
+      title: "Termos e Condições",
+      summary: "Ao usar nossa aplicação, você concorda com nossos termos de serviço e política de privacidade. Isso inclui coleta de dados para experiências personalizadas, diretrizes de conduta do usuário, proteção de propriedade intelectual e limitação de responsabilidade. Nossos serviços são fornecidos 'como estão' com melhor esforço de suporte. Reservamos o direito de modificar estes termos com aviso prévio. Seu uso continuado indica aceitação de quaisquer alterações. Para detalhes completos e obrigações legais, revise o documento completo.",
+    },
+    privacy: {
+      title: "Política de Privacidade",
+      summary: "Playtopia SL processa seus dados pessoais de acordo com o GDPR para gestão de atividades esportivas, comunicações e pagamentos. Coletamos dados de identificação, contato, acadêmicos e de pagamento (tokenizados via Stripe). Acesso opcional à câmera para fotos de perfil. Base legal: consentimento, execução de contrato e interesse legítimo. Compartilhamos com provedores autorizados (Stripe, CRM). Você tem direitos de acesso, retificação, exclusão e portabilidade. Dados de menores requerem consentimento parental. Implementamos medidas de segurança adequadas.",
+    },
+    viewFullDocument: "Ver Documento Completo",
+    openFailed: "Falha ao abrir o documento. Tente novamente.",
   },
   validation: {
     emailRequired: "Digite seu email.",
-    emailInvalid: "Esse email não é válido.",
+    emailInvalid: "Digite um endereço de e-mail válido",
     passwordRequired: "Digite sua senha.",
   },
   splash: {
