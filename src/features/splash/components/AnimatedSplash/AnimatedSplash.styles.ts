@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 
-import { BRAND } from "@/shared/config/brand";
 import { darkTheme } from "@/shared/config/theme";
 import { withAlpha } from "@/shared/utils/color";
 
@@ -14,7 +13,7 @@ const SPLASH_LAYOUT = {
   taglineFontSize: 14,
 };
 
-const { spacing, radius, typography, shadows } = darkTheme;
+const { colors, spacing, radius, typography, shadows } = darkTheme;
 
 export const styles = StyleSheet.create({
   // Sin zIndex a propósito: el splash es el último hijo del layout y se pinta
@@ -37,20 +36,20 @@ export const styles = StyleSheet.create({
   title: {
     ...typography.display,
     ...shadows.textGlow,
-    color: BRAND.white,
+    color: colors.text,
   },
   subtitle: {
     marginTop: SPLASH_LAYOUT.taglineGap,
     paddingHorizontal: SPLASH_LAYOUT.taglinePaddingX,
     paddingVertical: spacing.sm,
-    backgroundColor: withAlpha(BRAND.white, 0.1),
+    backgroundColor: colors.hairline,
     borderRadius: radius.lg,
     borderWidth: 1,
-    borderColor: withAlpha(BRAND.white, 0.2),
+    borderColor: colors.hairlineStrong,
   },
   subtitleText: {
     fontSize: SPLASH_LAYOUT.taglineFontSize,
-    color: withAlpha(BRAND.white, 0.8),
+    color: withAlpha(colors.text, 0.8),
     fontWeight: "300",
     letterSpacing: 1,
   },

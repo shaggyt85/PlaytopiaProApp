@@ -12,7 +12,7 @@ import { useSessionStore } from "@/shared/store/sessionStore";
 // falla aquí con un mensaje claro y no más tarde en una pantalla cualquiera.
 import "@/shared/config/env";
 
-// El splash nativo (fondo #1a1333) se mantiene hasta que la app está lista y
+// El splash nativo (fondo `BRAND.night`) se mantiene hasta que la app está lista y
 // el animado ya está pintado encima: si se quitara antes, durante un instante
 // se vería la pantalla de debajo (el login).
 SplashScreen.preventAutoHideAsync();

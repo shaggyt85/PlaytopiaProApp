@@ -1,6 +1,4 @@
-import { BRAND } from "@/shared/config/brand";
 import { makeStyles } from "@/shared/hooks/makeStyles";
-import { withAlpha } from "@/shared/utils/color";
 
 const CARD_MAX_WIDTH = 400;
 const ICON_CIRCLE = 80;
@@ -18,7 +16,7 @@ export const useStyles = makeStyles((theme) => ({
     right: 0,
     bottom: 0,
     left: 0,
-    backgroundColor: withAlpha(BRAND.black, 0.5),
+    backgroundColor: theme.colors.overlay,
   },
   card: {
     width: "100%",
@@ -27,7 +25,7 @@ export const useStyles = makeStyles((theme) => ({
     borderRadius: theme.radius.lg,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: withAlpha(BRAND.white, 0.3),
+    borderColor: theme.colors.hairlineStrong,
   },
   header: {
     flexDirection: "row",
@@ -35,7 +33,7 @@ export const useStyles = makeStyles((theme) => ({
     paddingHorizontal: theme.spacing.lg,
     paddingVertical: theme.spacing.md + theme.spacing.xs,
     borderBottomWidth: 1,
-    borderBottomColor: withAlpha(BRAND.white, 0.1),
+    borderBottomColor: theme.colors.hairline,
     gap: theme.spacing.sm,
   },
   title: { flex: 1 },
@@ -45,9 +43,9 @@ export const useStyles = makeStyles((theme) => ({
     borderRadius: theme.touchTarget / 2,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: withAlpha(BRAND.white, 0.1),
+    backgroundColor: theme.colors.hairline,
     borderWidth: 1,
-    borderColor: withAlpha(BRAND.white, 0.2),
+    borderColor: theme.colors.hairlineStrong,
   },
   content: {
     padding: theme.spacing.md,
@@ -60,9 +58,9 @@ export const useStyles = makeStyles((theme) => ({
     borderRadius: ICON_CIRCLE / 2,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: withAlpha(BRAND.white, 0.1),
+    backgroundColor: theme.colors.hairline,
     borderWidth: 1,
-    borderColor: withAlpha(BRAND.white, 0.2),
+    borderColor: theme.colors.hairlineStrong,
   },
   summary: { lineHeight: 24, textAlign: "justify" },
   action: { alignSelf: "stretch", gap: theme.spacing.sm },

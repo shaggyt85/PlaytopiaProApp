@@ -47,7 +47,8 @@ export default {
         : "com.playtopiateam.playtopiapro",
       adaptiveIcon: {
         foregroundImage: icon("adaptive-icon"),
-        backgroundColor: "#000000",
+        // El fondo de la app, de la misma paleta.
+        backgroundColor: BRAND.night,
       },
       predictiveBackGestureEnabled: false,
     },

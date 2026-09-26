@@ -1,7 +1,7 @@
 import { makeStyles } from "@/shared/hooks/makeStyles";
 import { withAlpha } from "@/shared/utils/color";
 
-// Campo de fecha de la app de alumnos: cristal, esquinas de 12 y 14 de alto
+// Campo de fecha: cristal, esquinas `md` y 14 de alto
 // alrededor del texto.
 const FIELD_PADDING = 14;
 

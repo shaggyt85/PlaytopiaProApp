@@ -36,7 +36,7 @@ export interface ButtonProps extends Omit<PressableProps, "onPress" | "children"
 /**
  * Botón de Playtopia (el mismo que la app de alumnos):
  * - `primary`: píldora con el degradado de marca; gris si no se puede pulsar.
- * - `solid`: píldora violeta lisa, la del registro; apagada si no se puede pulsar.
+ * - `solid`: píldora lisa del color primario, la del registro; apagada si no se puede pulsar.
  * - `secondary`: píldora con borde.
  * - `link`: texto subrayado ("¿Has olvidado tu contraseña?").
  *
@@ -109,9 +109,9 @@ export function Button({
     >
       {variant === "primary" ? (
         <LinearGradient
-          colors={inactive ? theme.gradients.disabled : theme.gradients.button}
+          colors={inactive ? theme.gradients.disabled : theme.gradients.brand}
           start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
+          end={{ x: 1, y: 1 }}
           style={styles.body}
         >
           {label}

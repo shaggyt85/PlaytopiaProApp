@@ -58,7 +58,7 @@ export const AnimatedSplash = memo(function AnimatedSplash({
   const logoOpacity = useRef(new Animated.Value(1)).current;
   const textOpacity = useRef(new Animated.Value(0)).current;
   const textTranslateY = useRef(new Animated.Value(50)).current;
-  // Opaco desde el primer frame: sustituye al splash nativo (mismo #1a1333)
+  // Opaco desde el primer frame: sustituye al splash nativo (mismo `BRAND.night`)
   // sin dejar ver lo que hay debajo. Solo se desvanece al terminar.
   const backgroundOpacity = useRef(new Animated.Value(1)).current;
 

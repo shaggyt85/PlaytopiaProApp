@@ -5,10 +5,8 @@ import { Alert, Animated, Linking, Modal, Pressable, ScrollView, View } from "re
 
 import { Button } from "@/shared/components/Button";
 import { Text } from "@/shared/components/Text";
-import { BRAND } from "@/shared/config/brand";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
-import { withAlpha } from "@/shared/utils/color";
 
 import { useStyles } from "./LegalModal.styles";
 
@@ -24,9 +22,6 @@ const ICON: Record<LegalDocument, keyof typeof Ionicons.glyphMap> = {
   terms: "document-text-outline",
   privacy: "shield-checkmark-outline",
 };
-
-// Fondo de la tarjeta: el "cristal" oscuro de la app de alumnos.
-const CARD_GRADIENT = [withAlpha(BRAND.night, 0.75), withAlpha(BRAND.slate, 0.8)] as const;
 
 interface LegalModalProps {
   document: LegalDocument | null;
@@ -71,7 +66,7 @@ export function LegalModal({ document, onClose, onAccept, error }: LegalModalPro
         <Pressable style={styles.overlay} onPress={onClose} accessibilityLabel={t("common.close")} />
         {document ? (
           <Animated.View style={[styles.card, { transform: [{ scale }] }]}>
-            <LinearGradient colors={CARD_GRADIENT} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+            <LinearGradient colors={theme.gradients.modal} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
               <View style={styles.header}>
                 <Text variant="subtitle" style={styles.title} accessibilityRole="header">
                   {t(`legalDocs.${document}.title`)}
