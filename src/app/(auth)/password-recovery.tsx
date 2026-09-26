@@ -1,4 +1,3 @@
-import { ComingSoonScreen } from "@/features/auth";
+import { PasswordRecoveryScreen } from "@/features/auth";
 
-// Provisional hasta el paso 18 (recuperar contraseña).
-export default ComingSoonScreen;
+export default PasswordRecoveryScreen;

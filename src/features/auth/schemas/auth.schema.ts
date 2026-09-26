@@ -32,6 +32,13 @@ export const CheckEmailResponseSchema = z.object({
 });
 export type CheckEmailResponse = z.infer<typeof CheckEmailResponseSchema>;
 
+/**
+ * POST /api/PassRecovery/request. Siempre `{ status: "ok" }`, exista o no el
+ * email (Core no revela qué cuentas hay).
+ */
+export const PasswordRecoveryResponseSchema = z.object({ status: z.string() });
+export type PasswordRecoveryResponse = z.infer<typeof PasswordRecoveryResponseSchema>;
+
 /** POST /api/auth/login/teacher. El campo se llama `username`, no `email`. */
 export interface SignInRequest {
   username: string;

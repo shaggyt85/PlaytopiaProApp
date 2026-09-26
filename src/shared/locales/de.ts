@@ -60,13 +60,20 @@ const de: Translations = {
       submit: "Weiter",
       submitting: "Registrierung läuft...",
     },
+    passwordRecovery: {
+      title: "Passwort vergessen?",
+      subtitle: "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Wiederherstellungslink",
+      submit: "Wiederherstellungs-E-Mail senden",
+      sentTitle: "Wiederherstellungs-E-Mail erfolgreich gesendet!",
+      sentMessage: "Bitte überprüfen Sie Ihre E-Mails für Anweisungen zum Zurücksetzen Ihres Passworts",
+      backToLogin: "Zurück zur Anmeldung",
+    },
     legal: {
       text: "Mit der Registrierung akzeptieren Sie unsere",
       terms: "Nutzungsbedingungen",
       and: "und",
       privacy: "Datenschutzrichtlinien",
     },
-    comingSoon: "Bald verfügbar.",
   },
   // Textos legales (los mismos que la app de alumnos hasta tener los del profesor).
   legalDocs: {

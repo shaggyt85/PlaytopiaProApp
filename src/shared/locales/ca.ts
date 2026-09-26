@@ -60,13 +60,20 @@ const ca: Translations = {
       submit: "Continuar",
       submitting: "Registrant...",
     },
+    passwordRecovery: {
+      title: "Has oblidat la teva contrasenya?",
+      subtitle: "Introdueix el teu correu electrònic i t'enviarem un enllaç de recuperació",
+      submit: "Enviar Correu de Recuperació",
+      sentTitle: "Correu de recuperació enviat amb èxit!",
+      sentMessage: "Si us plau revisa el teu correu per obtenir instruccions sobre com restablir la teva contrasenya",
+      backToLogin: "Tornar al Login",
+    },
     legal: {
       text: "En registrar-te acceptes les nostres",
       terms: "condicions d'ús",
       and: "i",
       privacy: "polítiques de privacitat",
     },
-    comingSoon: "Disponible molt aviat.",
   },
   // Textos legales (los mismos que la app de alumnos hasta tener los del profesor).
   legalDocs: {

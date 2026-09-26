@@ -60,13 +60,20 @@ const pt: Translations = {
       submit: "Continuar",
       submitting: "Registrando...",
     },
+    passwordRecovery: {
+      title: "Esqueceu sua senha?",
+      subtitle: "Digite seu endereço de email e enviaremos um link de recuperação",
+      submit: "Enviar Email de Recuperação",
+      sentTitle: "Email de recuperação enviado com sucesso!",
+      sentMessage: "Por favor, verifique seu email para obter instruções sobre como redefinir sua senha",
+      backToLogin: "Voltar ao Login",
+    },
     legal: {
       text: "Ao se cadastrar você aceita nossos",
       terms: "termos de uso",
       and: "e",
       privacy: "política de privacidade",
     },
-    comingSoon: "Disponível em breve.",
   },
   // Textos legales (los mismos que la app de alumnos hasta tener los del profesor).
   legalDocs: {

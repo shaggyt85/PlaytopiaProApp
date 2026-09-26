@@ -1,4 +1,4 @@
-import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
+import { fireEvent, screen, waitFor } from "@testing-library/react-native";
 
 import { TERMS_VERSION } from "@/features/auth/schemas/signUp.schema";
 import { signUpService } from "@/features/auth/services/signUpService";
@@ -7,6 +7,7 @@ import { useAuthFlowStore } from "@/features/auth/store/authFlowStore";
 import { HttpError } from "@/shared/services/HttpError";
 
 import { renderWithProviders } from "../../helpers/renderWithProviders";
+import { settle } from "../../helpers/settle";
 
 const mockDismissTo = jest.fn();
 jest.mock("expo-router", () => ({
@@ -42,12 +43,6 @@ function rellenar() {
     }),
   );
 }
-
-/**
- * Deja terminar la validación que dispara un cambio de texto: el resolver de
- * Zod es asíncrono y `waitFor` no le da paso para quitar un error ya pintado.
- */
-const validacion = () => act(() => new Promise((resolve) => setTimeout(resolve, 0)));
 
 const botonContinuar = () => screen.getByRole("button", { name: "Continuar" });
 
@@ -89,7 +84,7 @@ describe("SignUpScreen", () => {
     await screen.findByText("El nombre debe tener al menos 2 caracteres");
 
     fireEvent.changeText(nombre(), "Ana");
-    await validacion();
+    await settle();
     expect(screen.queryByText("El nombre debe tener al menos 2 caracteres")).toBeNull();
   });
 

@@ -364,7 +364,7 @@ Tabla viva: se actualiza cada vez que una pantalla empieza a usar un endpoint o 
 | POST | `/api/auth/check-email` | auth (email) | real |
 | POST | `/api/UserTeacher` | auth (registro) | real |
 | POST | `/api/PassRecovery/request` (con `scope: "teacher"`) | auth (recuperar) | real |
-| POST | `/api/PassRecovery/validate` | auth (recuperar) | real |
+| POST | `/api/PassRecovery/validate` | la web de recuperación, no la app | real |
 | GET | `/api/UserTeacher/{id}` | auth (términos tras el login), profile | real |
 | PATCH | `/api/UserTeacher/{id}` | auth (aceptar términos), profile | real |
 | DELETE | `/api/UserTeacher/{id}` | settings (borrar cuenta) | real |
@@ -576,9 +576,12 @@ useQuery({
 
 ### Recuperación de contraseña
 
-- `POST /api/PassRecovery/request` con **`scope: "teacher"`**. Sin `scope`, si el mismo email existe como admin o alumno, Core recupera esa otra cuenta (prioridad admin > alumno > profesor).
-- Siempre responde 200, exista o no el email (anti-enumeración): la pantalla muestra el mismo mensaje en ambos casos.
-- `POST /api/PassRecovery/validate` fija la contraseña nueva con el token del email; 400 si el token no existe, expiró o ya se usó.
+- `PasswordRecoveryScreen` (ruta `password-recovery`), desde «¿Has olvidado tu contraseña?» en la pantalla de contraseña. Igual que en la app de alumnos: título, subtítulo, email **vacío** (quien recupera sabe su correo) y el botón desactivado hasta que el email es válido (`EmailFormSchema`).
+- `passwordRecoveryService` llama a `POST /api/PassRecovery/request` con **`scope: "teacher"`**. Sin `scope`, si el mismo email existe como admin o alumno, Core recupera esa otra cuenta (prioridad admin > alumno > profesor).
+- Siempre responde 200 `{ status: "ok" }`, exista o no el email (anti-enumeración). La pantalla muestra la misma confirmación en ambos casos, y la saca de `isSuccess` de la mutación.
+- **La contraseña nueva se pone en la web**, no en la app: el correo lleva `https://playtopiax.com/passrecovery/?key=…`, y la web llama a `POST /api/PassRecovery/validate`. Core guarda en el token la tabla de la cuenta (`user_teachers`) y cambia la contraseña ahí; después revoca los refresh tokens de ese profesor.
+- Por eso «Volver al Login» lleva al **primer paso** (`dismissTo("/sign-in")`): hasta cambiarla en la web no hay contraseña nueva que escribir.
+- Errores por status con `getErrorMessage` (p. ej. el 429, «Demasiados intentos»). Core los manda como `about:blank` y el texto del status basta.
 
 ### Almacenamiento en el dispositivo
 

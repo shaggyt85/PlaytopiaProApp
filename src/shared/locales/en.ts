@@ -60,13 +60,20 @@ const en: Translations = {
       submit: "Continue",
       submitting: "Registering...",
     },
+    passwordRecovery: {
+      title: "Forgot your password?",
+      subtitle: "Enter your email address and we'll send you a recovery link",
+      submit: "Send Recovery Email",
+      sentTitle: "Recovery email sent successfully!",
+      sentMessage: "Please check your email for instructions to reset your password",
+      backToLogin: "Back to Login",
+    },
     legal: {
       text: "By signing up you accept our",
       terms: "terms of use",
       and: "and",
       privacy: "privacy policy",
     },
-    comingSoon: "Coming very soon.",
   },
   // Textos legales (los mismos que la app de alumnos hasta tener los del profesor).
   legalDocs: {

@@ -60,13 +60,20 @@ const fr: Translations = {
       submit: "Continuer",
       submitting: "Inscription en cours...",
     },
+    passwordRecovery: {
+      title: "Mot de passe oublié ?",
+      subtitle: "Entrez votre adresse e-mail et nous vous enverrons un lien de récupération",
+      submit: "Envoyer l'e-mail de récupération",
+      sentTitle: "E-mail de récupération envoyé avec succès !",
+      sentMessage: "Veuillez consulter votre e-mail pour obtenir des instructions sur la réinitialisation de votre mot de passe",
+      backToLogin: "Retour à la connexion",
+    },
     legal: {
       text: "En vous inscrivant, vous acceptez nos",
       terms: "conditions d'utilisation",
       and: "et",
       privacy: "politiques de confidentialité",
     },
-    comingSoon: "Disponible très bientôt.",
   },
   // Textos legales (los mismos que la app de alumnos hasta tener los del profesor).
   legalDocs: {

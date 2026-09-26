@@ -10,6 +10,7 @@ import { session } from "@/shared/services/session";
 
 import { signInTokens, teacherTerms } from "../../helpers/authFactories";
 import { renderWithProviders } from "../../helpers/renderWithProviders";
+import { settle } from "../../helpers/settle";
 
 const mockPush = jest.fn();
 const mockBack = jest.fn();
@@ -96,7 +97,8 @@ describe("PasswordScreen", () => {
 
     expect(session.end).toHaveBeenCalled();
     expect(session.start).not.toHaveBeenCalled();
-    await waitFor(() => expect(screen.queryByText("Términos y Condiciones")).toBeNull());
+    await settle();
+    expect(screen.queryByText("Términos y Condiciones")).toBeNull();
   });
 
   it("si Core no guarda la aceptación, lo dice en el modal y no entra", async () => {

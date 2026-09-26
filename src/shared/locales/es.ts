@@ -62,13 +62,20 @@ const es = {
       submit: "Continuar",
       submitting: "Registrando...",
     },
+    passwordRecovery: {
+      title: "¿Olvidaste tu contraseña?",
+      subtitle: "Ingresa tu correo electrónico y te enviaremos un enlace de recuperación",
+      submit: "Enviar Correo de Recuperación",
+      sentTitle: "¡Correo de recuperación enviado exitosamente!",
+      sentMessage: "Por favor revisa tu correo para obtener instrucciones sobre cómo restablecer tu contraseña",
+      backToLogin: "Volver al Login",
+    },
     legal: {
       text: "Al registrarte aceptas nuestras",
       terms: "condiciones de uso",
       and: "y",
       privacy: "políticas de privacidad",
     },
-    comingSoon: "Disponible muy pronto.",
   },
   // Textos legales (los mismos que la app de alumnos hasta tener los del profesor).
   legalDocs: {
