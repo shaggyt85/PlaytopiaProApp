@@ -5,7 +5,9 @@ const LOGO_SIZE = 100;
 export const useStyles = makeStyles((theme) => ({
   container: {
     alignItems: "center",
-    marginBottom: theme.spacing.xl,
+    // Con el hueco del formulario (spacing.md) suma 40, como en la app de
+    // alumnos: el primer campo queda justo debajo de la versión.
+    marginBottom: theme.spacing.lg,
     ...theme.shadows.glow,
   },
   logo: {
