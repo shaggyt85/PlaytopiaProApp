@@ -13,6 +13,8 @@ import { t } from "@/shared/config/i18n";
 import { SPLASH_LOGO_SIZE, styles } from "./AnimatedSplash.styles";
 
 interface AnimatedSplashProps {
+  /** Ya está pintado: es el momento de ocultar el splash nativo. */
+  onReady?: () => void;
   onFinish: () => void;
   duration?: number;
 }
@@ -23,6 +25,7 @@ interface AnimatedSplashProps {
  * y todo se desvanece al cumplirse `duration`.
  */
 export const AnimatedSplash = memo(function AnimatedSplash({
+  onReady,
   onFinish,
   duration = 3000,
 }: AnimatedSplashProps) {
@@ -36,16 +39,12 @@ export const AnimatedSplash = memo(function AnimatedSplash({
   const logoOpacity = useRef(new Animated.Value(1)).current;
   const textOpacity = useRef(new Animated.Value(0)).current;
   const textTranslateY = useRef(new Animated.Value(50)).current;
-  const backgroundOpacity = useRef(new Animated.Value(0)).current;
+  // Opaco desde el primer frame: sustituye al splash nativo (mismo #1a1333)
+  // sin dejar ver lo que hay debajo. Solo se desvanece al terminar.
+  const backgroundOpacity = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     let textTimeout: ReturnType<typeof setTimeout> | undefined;
-
-    Animated.timing(backgroundOpacity, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
 
     // Un rebote: sube `altura` y vuelve, con un "aplastado" de escala al tocar.
     const rebote = (
@@ -166,6 +165,7 @@ export const AnimatedSplash = memo(function AnimatedSplash({
       accessible
       accessibilityLabel={`PLAYTOPIA. ${t("splash.tagline")}`}
       testID="animated-splash"
+      onLayout={onReady}
     >
       <BrandBackground>
         <View style={styles.content}>

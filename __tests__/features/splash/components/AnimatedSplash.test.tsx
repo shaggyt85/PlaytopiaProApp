@@ -1,4 +1,4 @@
-import { act, cleanup, render, screen } from "@testing-library/react-native";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react-native";
 
 import { AnimatedSplash } from "@/features/splash";
 
@@ -32,5 +32,22 @@ describe("AnimatedSplash", () => {
     });
 
     expect(onFinish).toHaveBeenCalledTimes(1);
+  });
+
+  it("es opaco desde el primer frame (no deja ver la pantalla de debajo)", () => {
+    render(<AnimatedSplash onFinish={jest.fn()} />);
+
+    expect(screen.getByTestId("animated-splash")).toHaveStyle({ opacity: 1 });
+  });
+
+  it("avisa con onReady cuando ya está pintado, para ocultar el splash nativo", () => {
+    const onReady = jest.fn();
+    render(<AnimatedSplash onReady={onReady} onFinish={jest.fn()} />);
+
+    fireEvent(screen.getByTestId("animated-splash"), "layout", {
+      nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 844 } },
+    });
+
+    expect(onReady).toHaveBeenCalledTimes(1);
   });
 });

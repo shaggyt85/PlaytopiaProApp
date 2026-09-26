@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { AnimatedSplash } from "@/features/splash";
 import { AppProviders } from "@/shared/components/AppProviders";
@@ -13,7 +13,8 @@ import { useSessionStore } from "@/shared/store/sessionStore";
 import "@/shared/config/env";
 
 // El splash nativo (fondo #1a1333) se mantiene hasta que la app está lista y
-// el animado está montado encima; así no hay un parpadeo entre los dos.
+// el animado ya está pintado encima: si se quitara antes, durante un instante
+// se vería la pantalla de debajo (el login).
 SplashScreen.preventAutoHideAsync();
 
 // Layout raíz: providers y guards. Con sesión de profesor solo existe (app);
@@ -24,11 +25,14 @@ export default function RootLayout() {
   const isAuthenticated = useSessionStore((s) => s.status === "authenticated");
   const [showSplash, setShowSplash] = useState(true);
 
-  useEffect(() => {
-    if (ready) SplashScreen.hideAsync();
-  }, [ready]);
+  const hideNativeSplash = useCallback(() => {
+    SplashScreen.hideAsync();
+  }, []);
 
-  const handleSplashFinish = useCallback(() => setShowSplash(false), []);
+  const handleSplashFinish = useCallback(() => {
+    hideNativeSplash(); // por si el animado no llegó a avisar
+    setShowSplash(false);
+  }, [hideNativeSplash]);
 
   if (!ready) return null;
 
@@ -49,7 +53,9 @@ export default function RootLayout() {
           <Stack.Screen name="(auth)" />
         </Stack.Protected>
       </Stack>
-      {showSplash && <AnimatedSplash onFinish={handleSplashFinish} />}
+      {showSplash && (
+        <AnimatedSplash onReady={hideNativeSplash} onFinish={handleSplashFinish} />
+      )}
     </AppProviders>
   );
 }
