@@ -25,11 +25,12 @@ describe("SignInScreen", () => {
     useAuthFlowStore.getState().reset();
   });
 
-  it("si el email existe, lo guarda para el paso 2 y va a la contraseña", async () => {
+  it("si es profesor, guarda el email para el paso 2 y va a la contraseña", async () => {
     jest.mocked(checkEmailService.checkEmail).mockResolvedValue({
       email: "ana@club.com",
       exists: true,
       is_student: true,
+      is_teacher: true,
     });
     renderWithProviders(<SignInScreen />);
 
@@ -43,11 +44,12 @@ describe("SignInScreen", () => {
     });
   });
 
-  it("si no existe, el botón pasa a Registrarse y lleva al registro", async () => {
+  it("si no es profesor, el botón pasa a Registrarse y lleva al registro", async () => {
     jest.mocked(checkEmailService.checkEmail).mockResolvedValue({
       email: "nuevo@club.com",
       exists: false,
       is_student: false,
+      is_teacher: false,
     });
     renderWithProviders(<SignInScreen />);
 
@@ -57,6 +59,21 @@ describe("SignInScreen", () => {
     // Como en la app de alumnos, el mismo botón pasa a "Registrarse".
     fireEvent.press(screen.getByRole("button", { name: "Registrarse" }));
     expect(mockPush).toHaveBeenCalledWith("/sign-up");
+  });
+
+  it("un email que solo es de alumno no va a la contraseña", async () => {
+    jest.mocked(checkEmailService.checkEmail).mockResolvedValue({
+      email: "alumno@club.com",
+      exists: true,
+      is_student: true,
+      is_teacher: false,
+    });
+    renderWithProviders(<SignInScreen />);
+
+    escribirYContinuar("alumno@club.com");
+
+    await screen.findByRole("button", { name: "Registrarse" });
+    expect(mockPush).not.toHaveBeenCalled();
   });
 
   it("valida el email antes de llamar a Core", async () => {

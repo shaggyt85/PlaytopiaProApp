@@ -15,8 +15,8 @@ import { useAuthFlowStore } from "./store/authFlowStore";
 
 /**
  * Paso 1 del acceso: el email, igual que la app de alumnos. Decide por
- * `exists` (Core no dice si es profesor): si existe, a la contraseña; si no,
- * el mismo botón pasa a "Registrarse".
+ * `is_teacher`: si es profesor, a la contraseña; si no, el mismo botón pasa a
+ * "Registrarse".
  */
 export function SignInScreen() {
   const { t } = useTranslation();
@@ -36,7 +36,7 @@ export function SignInScreen() {
     // El error queda en checkEmail.error y se pinta abajo.
     const result = await checkEmail.mutateAsync(email).catch(() => undefined);
     if (!result) return;
-    if (result.exists) {
+    if (result.is_teacher) {
       setCheckedEmail(email, result.is_student);
       router.push("/password");
     } else {

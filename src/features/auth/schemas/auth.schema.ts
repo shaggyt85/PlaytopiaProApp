@@ -23,11 +23,12 @@ export type PasswordForm = z.infer<typeof PasswordFormSchema>;
 
 // ── Contratos de Core (Scalar) ────────────────────────────────────────────
 
-/** POST /api/auth/check-email. No hay is_teacher: Core no lo expone. */
+/** POST /api/auth/check-email. */
 export const CheckEmailResponseSchema = z.object({
   email: z.string(),
   exists: z.boolean(),
   is_student: z.boolean(),
+  is_teacher: z.boolean(),
 });
 export type CheckEmailResponse = z.infer<typeof CheckEmailResponseSchema>;
 

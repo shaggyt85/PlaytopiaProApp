@@ -29,10 +29,15 @@ describe("PasswordFormSchema", () => {
 });
 
 describe("contratos de Core", () => {
-  it("check-email trae exists e is_student", () => {
-    expect(
+  it("check-email trae exists, is_student e is_teacher", () => {
+    const body = { email: "a@b.com", exists: true, is_student: false, is_teacher: true };
+    expect(CheckEmailResponseSchema.parse(body)).toEqual(body);
+  });
+
+  it("check-email sin is_teacher no cumple el contrato", () => {
+    expect(() =>
       CheckEmailResponseSchema.parse({ email: "a@b.com", exists: true, is_student: true }),
-    ).toEqual({ email: "a@b.com", exists: true, is_student: true });
+    ).toThrow();
   });
 
   it("login rechaza una respuesta sin tokens", () => {
