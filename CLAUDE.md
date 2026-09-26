@@ -56,7 +56,7 @@ docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 ## Reglas duras
 
 - **Secretos:** ninguno al repo. Solo se sube `.env.example`. Todo por env, validado en `shared/config/env.ts`; nunca leas `process.env` fuera de ahí. `EXPO_PUBLIC_*` va dentro del bundle: solo valores públicos (la firma HMAC del registro es la excepción documentada). Secretos reales (Sentry auth token, tiendas, EAS) solo en variables de EAS. `google-services.json` como variable de fichero de EAS.
-- **Errores RFC 9457:** todo fallo pasa por `HttpError` con su `ProblemDetail` (`shared/schemas/problemDetail.schema.ts`). Se traduce por `type` (`errors.<type>` en locales), **nunca se muestra el `detail`**. Para ramificar, usa `type` y los extension members, nunca el texto.
+- **Errores RFC 9457:** todo fallo pasa por `HttpError` con su `ProblemDetail` (`shared/schemas/problemDetail.schema.ts`). Se traduce con `getErrorMessage(error)` (`errors.byType.<clave>` → `errors.byStatus.<status>` → genérico), **nunca se muestra el `detail`**. Para ramificar, usa `type` y los extension members, nunca el texto.
 - **Caché:** cada query usa una `CachePolicy` de `shared/config/cachePolicies.ts` (`STATIC`, `STANDARD`, `LIVE`, `POLLING(ms, cuándo)`, `ALWAYS_FRESH`). Nada de `staleTime` a mano sin un comentario que explique el porqué. Tras mutar, se invalida.
 - **Estado:** servidor solo en TanStack Query; Zustand solo para UI (`features/<x>/store/` o `shared/store/`).
 - **Almacenamiento:** SecureStore para lo que permite actuar como el usuario (tokens, credenciales de biometría). AsyncStorage solo para lo no sensible. Credenciales temporales de biometría en Zustand en memoria, 60 s. Caché de imágenes con FileSystem. La contraseña no se guarda nunca.
@@ -64,7 +64,7 @@ docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 - **Multi-club:** la identidad de una sede es `db_id` + `club_id`. Toda query key de datos de club lleva los dos.
 - **Formularios:** react-hook-form + `zodResolver` sobre el schema del contrato; mensajes como claves de i18n.
 - **Fechas:** en la zona horaria del club; "ahora" sale de `serverClock`.
-- **i18n:** todo texto visible en `shared/locales/`, en los 6 idiomas (es, en, pt, ca, de, fr).
+- **i18n:** todo texto visible en `shared/locales/`, en los 6 idiomas (es, en, pt, ca, de, fr). En componentes, `useTranslation()`; las claves están tipadas.
 - **Tema:** colores y tamaños solo desde los tokens de `shared/config/theme`; claro y oscuro.
 - **Versionado:** versión SemVer manual en `app.config.js` y `package.json`, igual en Android e iOS. El build (`versionCode` / `buildNumber`) lo sube EAS: no lo toques. Un OTA no cambia la versión.
 - **Plataforma:** R8 activo en release de Android (`expo-build-properties`); si una librería nativa se rompe en release, reglas en `extraProguardRules`. Mínimos de Android/iOS: los del SDK, no se fijan a mano. Vertical en móvil, pero pantallas responsive (Android 16 deja girar en tablets). Edge-to-edge obligatorio: usa safe areas, no las APIs antiguas de barra de estado.

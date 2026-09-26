@@ -361,7 +361,7 @@ Core responde **todos** sus errores con RFC 9457 (*Problem Details*, `applicatio
   - Ningún service ni hook hace `try/catch` para inventar su propio formato.
 - **Se traduce por `type`, nunca por `detail`:**
   - el `detail` es prosa en español para logs y Scalar; no se muestra al usuario;
-  - el texto visible sale de `shared/locales/` con la clave del `type` (`errors.<type>`);
+  - el texto visible lo da `getErrorMessage(error)` (`shared/utils/`): primero `errors.byType.<clave>` (la clave es el `type` sin `urn:playtopia:problem:`), después `errors.byStatus.<status>` (el de `500` para cualquier 5xx), y por último red, timeout o `errors.unknown`;
   - si no hay traducción para ese `type`, se usa un texto genérico por `status`.
 - **Cuando la pantalla tiene que reaccionar distinto**, decide por `type` y por los *extension members* (`pending_consents`, `conflicts`…), nunca parseando texto.
 - **Errores nuevos:** cada petición de `docs/endpoints-pendientes/` indica qué `type` debe crear Core para cada error.
@@ -499,7 +499,9 @@ Siempre en la ruta espejo de `__tests__/`, con Jest y Testing Library.
 ## 12. i18n
 
 - Todo texto visible sale de `shared/locales/`. **Los 6 idiomas son obligatorios** (es, en, pt, ca, de, fr): una clave que no está en los 6 no se mergea.
-- Claves agrupadas por pantalla: `signIn.title`, `home.emptyState`. Textos comunes en `common.*`; errores de Core en `errors.<type>` (ver [sección 6](#6-manejo-de-errores-rfc-9457)).
+- Claves agrupadas por pantalla: `signIn.title`, `home.emptyState`. Textos comunes en `common.*`; errores en `errors.byType.*` y `errors.byStatus.*` (ver [sección 6](#6-manejo-de-errores-rfc-9457)). Un `type` nuevo de Core se traduce añadiéndolo a `errors.byType` en los 6 idiomas.
+- En componentes se usa el hook `useTranslation()`, que vuelve a pintar al cambiar de idioma; el `t` suelto solo fuera de React. Las claves están tipadas: una clave que no existe no compila.
+- Solo se carga en memoria el diccionario del idioma activo (los 6 van en el bundle). El idioma elegido a mano se guarda en AsyncStorage (solo el código, p. ej. `"es"`) y se aplica antes de pintar la app; si no hay ninguno, se usa el del móvil y, si no está soportado, inglés.
 - Nada de concatenar frases: se interpola con parámetros (`t("home.classesToday", { count })`), con plurales cuando haga falta.
 
 ---

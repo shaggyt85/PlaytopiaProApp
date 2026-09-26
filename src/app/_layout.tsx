@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { AnimatedSplash } from "@/features/splash";
 import { AppProviders } from "@/shared/components/AppProviders";
+import { useLanguageReady } from "@/shared/hooks/useLanguageReady";
 // Valida las variables de entorno al arrancar: si falta alguna, la app
 // falla aquí con un mensaje claro y no más tarde en una pantalla cualquiera.
 import "@/shared/config/env";
@@ -17,12 +18,16 @@ SplashScreen.preventAutoHideAsync();
 // con sus guards.
 export default function RootLayout() {
   const [showSplash, setShowSplash] = useState(true);
+  const languageReady = useLanguageReady();
 
+  // Hasta tener el idioma guardado sigue el splash nativo (solo fondo).
   useEffect(() => {
-    SplashScreen.hideAsync();
-  }, []);
+    if (languageReady) SplashScreen.hideAsync();
+  }, [languageReady]);
 
   const handleSplashFinish = useCallback(() => setShowSplash(false), []);
+
+  if (!languageReady) return null;
 
   return (
     <AppProviders>
