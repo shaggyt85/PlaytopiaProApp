@@ -4,17 +4,12 @@ import { Alert } from "react-native";
 import { BiometricOfferModal } from "@/features/auth/components/BiometricOfferModal";
 import { biometricService } from "@/features/auth/services/biometricService";
 import { useBiometricOfferStore } from "@/features/auth/store/biometricOfferStore";
+import { useSessionStore } from "@/shared/store/sessionStore";
 
 import { renderWithProviders } from "../../../helpers/renderWithProviders";
 
 jest.mock("@/features/auth/services/biometricService", () => ({
-  biometricService: {
-    isAvailable: jest.fn(),
-    savedEmail: jest.fn(),
-    enable: jest.fn(),
-    unlock: jest.fn(),
-    disable: jest.fn(),
-  },
+  biometricService: require("../../../helpers/biometricServiceMock").createBiometricServiceMock(),
 }));
 jest.mock("@/shared/services/tokenStorage", () => ({
   tokenStorage: { getRefreshToken: jest.fn().mockResolvedValue("refresco-vigente") },
@@ -30,6 +25,7 @@ describe("BiometricOfferModal", () => {
     jest.spyOn(Alert, "alert").mockImplementation(() => undefined);
     jest.mocked(biometricService.isAvailable).mockResolvedValue(true);
     jest.mocked(biometricService.savedEmail).mockResolvedValue(null);
+    useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 });
     useBiometricOfferStore.getState().setOffer("ana@club.com", 42);
   });
 

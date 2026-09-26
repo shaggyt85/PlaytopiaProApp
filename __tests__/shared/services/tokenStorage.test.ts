@@ -1,6 +1,9 @@
 import * as SecureStore from "expo-secure-store";
 
-import type { IBiometricCredentialStore } from "@/shared/services/biometricCredentialStore";
+import {
+  SecureBiometricCredentialStore,
+  type IBiometricCredentialStore,
+} from "@/shared/services/biometricCredentialStore";
 import { SecureTokenStorage } from "@/shared/services/tokenStorage";
 
 import { createFakeSecureStore } from "../../helpers/fakeSecureStore";
@@ -81,5 +84,19 @@ describe("SecureTokenStorage y la biometría", () => {
 
     await expect(storage.setTokens(createTestJwt(teacherClaims()), "refresco")).resolves.toBeUndefined();
     await expect(storage.getRefreshToken()).resolves.toBe("refresco");
+  });
+
+  it("cerrar sesión borra los tokens pero conserva la biometría", async () => {
+    const { secure } = createFakeSecureStore();
+    const biometric = new SecureBiometricCredentialStore(secure);
+    const storage = new SecureTokenStorage(secure, biometric);
+    const credentials = { email: "ana@club.com", userId: 42, refreshToken: "refresco" };
+    await biometric.save(credentials);
+    await storage.setTokens(createTestJwt(teacherClaims()), "refresco");
+
+    await storage.clearTokens();
+
+    await expect(storage.getRefreshToken()).resolves.toBeNull();
+    await expect(biometric.get()).resolves.toEqual(credentials);
   });
 });

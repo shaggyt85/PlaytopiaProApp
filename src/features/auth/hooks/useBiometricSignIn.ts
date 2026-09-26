@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import {
@@ -12,6 +12,8 @@ import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 import { completeSignIn, type SignInOutcome } from "../services/completeSignIn";
 import { biometricService, type IBiometricService } from "../services/biometricService";
 import { sameEmail } from "../utils/email";
+
+import { useBiometricStatus } from "./useBiometricStatus";
 
 /** Tras tantos fallos seguidos se deja de ofrecer: se entra con contraseña. */
 export const MAX_BIOMETRIC_FAILURES = 3;
@@ -40,25 +42,8 @@ const defaultDeps: Deps = { service: biometricService, refresh: requestTokenRefr
  */
 export function useBiometricSignIn({ service, refresh }: Deps = defaultDeps) {
   const { t } = useTranslation();
-  const [available, setAvailable] = useState(false);
-  const [savedEmail, setSavedEmail] = useState<string | null>(null);
-  const [loaded, setLoaded] = useState(false);
+  const { loaded, available, savedEmail, forgetSavedEmail } = useBiometricStatus(service);
   const [failures, setFailures] = useState(0);
-
-  useEffect(() => {
-    let mounted = true;
-    Promise.all([service.isAvailable(), service.savedEmail()])
-      .then(([isAvailable, email]) => {
-        if (!mounted) return;
-        setAvailable(isAvailable);
-        setSavedEmail(email);
-      })
-      .catch(() => undefined)
-      .finally(() => mounted && setLoaded(true));
-    return () => {
-      mounted = false;
-    };
-  }, [service]);
 
   const attempt = useMutation({
     mutationFn: async (): Promise<Attempt> => {
@@ -81,7 +66,7 @@ export function useBiometricSignIn({ service, refresh }: Deps = defaultDeps) {
     },
     onSuccess: (result) => {
       if (result.status === "failed") setFailures((count) => count + 1);
-      if (result.status === "expired") setSavedEmail(null);
+      if (result.status === "expired") forgetSavedEmail();
       if (result.status === "signed-in") setFailures(0);
     },
   });

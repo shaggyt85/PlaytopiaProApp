@@ -1,5 +1,5 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { renderRouter, screen } from "expo-router/testing-library";
+import { act, renderRouter, screen } from "expo-router/testing-library";
 import type { ReactNode } from "react";
 import { Text } from "react-native";
 
@@ -7,15 +7,10 @@ import AppLayout from "@/app/(app)/_layout";
 import { biometricService } from "@/features/auth/services/biometricService";
 import { useBiometricOfferStore } from "@/features/auth/store/biometricOfferStore";
 import { createQueryClient } from "@/shared/config/queryClient";
+import { useSessionStore } from "@/shared/store/sessionStore";
 
 jest.mock("@/features/auth/services/biometricService", () => ({
-  biometricService: {
-    isAvailable: jest.fn(),
-    savedEmail: jest.fn(),
-    enable: jest.fn(),
-    unlock: jest.fn(),
-    disable: jest.fn(),
-  },
+  biometricService: require("../../helpers/biometricServiceMock").createBiometricServiceMock(),
 }));
 
 // En la app lo pone AppProviders, en el layout raíz.
@@ -30,13 +25,16 @@ const routes = {
 
 describe("layout con sesión", () => {
   beforeEach(() => {
+    useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 });
     useBiometricOfferStore.getState().clear();
     jest.mocked(biometricService.isAvailable).mockResolvedValue(true);
     jest.mocked(biometricService.savedEmail).mockResolvedValue(null);
   });
 
-  it("pinta la pantalla sin panel si no hay oferta de biometría", () => {
+  it("pinta la pantalla sin panel si no hay oferta de biometría", async () => {
     renderRouter(routes, { initialUrl: "/", wrapper });
+    // Deja resolver la lectura de la biometría (renderRouter usa timers falsos).
+    await act(async () => {});
 
     expect(screen.getByText("Pantalla de inicio")).toBeTruthy();
     expect(screen.queryByText("Activa el acceso con biometría")).toBeNull();

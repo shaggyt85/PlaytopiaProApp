@@ -3,11 +3,12 @@ import { act, renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 
 import { MAX_BIOMETRIC_FAILURES, useBiometricSignIn } from "@/features/auth/hooks/useBiometricSignIn";
-import type { IBiometricService, UnlockResult } from "@/features/auth/services/biometricService";
+import type { UnlockResult } from "@/features/auth/services/biometricService";
 import { completeSignIn } from "@/features/auth/services/completeSignIn";
 import { createQueryClient } from "@/shared/config/queryClient";
 
 import { signInTokens } from "../../../helpers/authFactories";
+import { createBiometricServiceMock } from "../../../helpers/biometricServiceMock";
 
 jest.mock("@/features/auth/services/completeSignIn", () => ({ completeSignIn: jest.fn() }));
 
@@ -19,13 +20,10 @@ const saved = { email: "ana@club.com", userId: 42, refreshToken: "refresco-guard
 const newTokens = { access_token: signInTokens.access_token, refresh_token: "refresco-nuevo" };
 
 function build(unlock: UnlockResult = { status: "ok", credentials: saved }) {
-  const service: jest.Mocked<IBiometricService> = {
-    isAvailable: jest.fn().mockResolvedValue(true),
-    savedEmail: jest.fn().mockResolvedValue(saved.email),
-    enable: jest.fn(),
-    unlock: jest.fn().mockResolvedValue(unlock),
-    disable: jest.fn().mockResolvedValue(undefined),
-  };
+  const service = createBiometricServiceMock();
+  service.isAvailable.mockResolvedValue(true);
+  service.savedEmail.mockResolvedValue(saved.email);
+  service.unlock.mockResolvedValue(unlock);
   const refresh = jest.fn().mockResolvedValue(newTokens);
   const hook = renderHook(() => useBiometricSignIn({ service, refresh }), { wrapper });
   return { service, refresh, ...hook };

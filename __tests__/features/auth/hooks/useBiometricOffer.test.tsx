@@ -3,13 +3,15 @@ import { act, renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 
 import { useBiometricOffer } from "@/features/auth/hooks/useBiometricOffer";
-import type { EnableResult, IBiometricService } from "@/features/auth/services/biometricService";
+import type { EnableResult } from "@/features/auth/services/biometricService";
 import {
   BIOMETRIC_OFFER_TTL_MS,
   useBiometricOfferStore,
 } from "@/features/auth/store/biometricOfferStore";
 import { createQueryClient } from "@/shared/config/queryClient";
+import { useSessionStore } from "@/shared/store/sessionStore";
 
+import { createBiometricServiceMock } from "../../../helpers/biometricServiceMock";
 import { settle } from "../../../helpers/settle";
 
 const wrapper = ({ children }: { children: ReactNode }) => (
@@ -24,13 +26,10 @@ interface Options {
 }
 
 function build({ available = true, savedEmail = null, enable = "enabled", refreshToken = "refresco-vigente" }: Options = {}) {
-  const service: jest.Mocked<IBiometricService> = {
-    isAvailable: jest.fn().mockResolvedValue(available),
-    savedEmail: jest.fn().mockResolvedValue(savedEmail),
-    enable: jest.fn().mockResolvedValue(enable),
-    unlock: jest.fn(),
-    disable: jest.fn(),
-  };
+  const service = createBiometricServiceMock();
+  service.isAvailable.mockResolvedValue(available);
+  service.savedEmail.mockResolvedValue(savedEmail);
+  service.enable.mockResolvedValue(enable);
   const tokens = { getRefreshToken: jest.fn().mockResolvedValue(refreshToken) };
   const hook = renderHook(() => useBiometricOffer({ service, tokens }), { wrapper });
   return { service, tokens, ...hook };
@@ -50,17 +49,17 @@ async function enableNow(hook: ReturnType<typeof useBiometricOffer>) {
 
 describe("useBiometricOffer", () => {
   beforeEach(() => {
+    useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 });
     useBiometricOfferStore.getState().clear();
     useBiometricOfferStore.getState().setOffer("ana@club.com", 42);
   });
 
   it("sin oferta no se muestra", async () => {
     useBiometricOfferStore.getState().clear();
-    const { result, service } = build();
+    const { result } = build();
     await settle();
 
     expect(result.current.visible).toBe(false);
-    expect(service.isAvailable).not.toHaveBeenCalled();
   });
 
   it("con oferta vigente, biometría disponible y sin activar en esa cuenta, se muestra", async () => {
@@ -85,13 +84,31 @@ describe("useBiometricOffer", () => {
     expect(result.current.visible).toBe(false);
   });
 
-  it("una oferta caducada no se muestra y se borra", async () => {
-    jest.spyOn(Date, "now").mockReturnValue(Date.now() + BIOMETRIC_OFFER_TTL_MS);
-    const { result, service } = build();
+  it("la oferta de otro profesor (cerró sesión sin responderla) no se muestra y se borra", async () => {
+    useSessionStore.getState().setAuthenticated({ userId: 77, dbId: 7 });
+    const { result } = build();
 
     await waitFor(() => expect(offer()).toBeNull());
     expect(result.current.visible).toBe(false);
-    expect(service.isAvailable).not.toHaveBeenCalled();
+  });
+
+  it("si cambia el profesor con el panel abierto, no la activa: cuenta como caducada", async () => {
+    const { result, service } = build();
+    await waitFor(() => expect(result.current.visible).toBe(true));
+    act(() => useSessionStore.getState().setAuthenticated({ userId: 77, dbId: 7 }));
+
+    const outcome = await enableNow(result.current);
+
+    expect(outcome).toBe("expired");
+    expect(service.enable).not.toHaveBeenCalled();
+  });
+
+  it("una oferta caducada no se muestra y se borra", async () => {
+    jest.spyOn(Date, "now").mockReturnValue(Date.now() + BIOMETRIC_OFFER_TTL_MS);
+    const { result } = build();
+
+    await waitFor(() => expect(offer()).toBeNull());
+    expect(result.current.visible).toBe(false);
     jest.restoreAllMocks();
   });
 

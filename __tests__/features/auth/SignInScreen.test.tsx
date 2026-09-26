@@ -25,13 +25,7 @@ jest.mock("@/features/auth/services/checkEmailService", () => ({
 }));
 // Sin biometría por defecto; los casos de biometría la activan.
 jest.mock("@/features/auth/services/biometricService", () => ({
-  biometricService: {
-    isAvailable: jest.fn(),
-    savedEmail: jest.fn(),
-    enable: jest.fn(),
-    unlock: jest.fn(),
-    disable: jest.fn(),
-  },
+  biometricService: require("../../helpers/biometricServiceMock").createBiometricServiceMock(),
 }));
 jest.mock("@/features/auth/services/completeSignIn", () => ({ completeSignIn: jest.fn() }));
 jest.mock("@/shared/services/tokenRefresh", () => ({
