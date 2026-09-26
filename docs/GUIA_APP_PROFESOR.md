@@ -41,6 +41,9 @@ Esta guía es la referencia de **cómo se trabaja** en este repo. El resumen acc
 | i18n | i18n-js (es, en, pt, ca, de, fr) |
 | Fechas | dayjs (utc, timezone) |
 | Animación | react-native-reanimated 4 (con react-native-worklets) |
+| Desenfoque | expo-blur (velo de los paneles inferiores) |
+| Biometría | expo-local-authentication + expo-secure-store |
+| Barra de navegación (Android) | expo-navigation-bar (solo su plugin) |
 | Gráficos e iconos | react-native-svg; iconos de `@playtopia/icons` (librería propia, repo IconsPlaytopia) |
 | Fuentes | Sora (títulos) e Inter (texto), de `@expo-google-fonts`, cargadas con expo-font |
 | Vibración | expo-haptics |
@@ -434,7 +437,7 @@ useQuery({
 - **Campos:** nombre, apellidos, email (llega ya escrito desde el paso 1), teléfono con selector de país, fecha de nacimiento (selector nativo), género, contraseña, repetirla y la casilla de términos (sus enlaces abren `LegalModal`).
 - **Validación:** un solo schema Zod (`SignUpFormSchema`) con `mode: "onTouched"`. El error de un campo sale al dejarlo y se corrige al escribir. El botón queda gris hasta que todo es válido.
 - **Envío** (`toSignUpRequest` y `signUpService`): `POST /api/UserTeacher` con `name`, `last_name`, `email`, `password`, `phone_number` con prefijo (`+34612345678`), `birthday` (`YYYY-MM-DDT00:00:00`), `gender`, `terms_version` (`TERMS_VERSION`) y el `registration_token` recién firmado.
-- **Tras el 201** vuelve al login, igual que la app de alumnos: la respuesta trae tokens, pero no se usan.
+- **Tras el 201** vuelve al login, igual que la app de alumnos: la respuesta trae tokens, pero no se usan. La biometría se ofrece tras ese primer login.
 - **Errores:** hoy todos llegan como `about:blank` y se muestra el texto genérico de su status. Los `type` están pedidos a Core (ver «Types pedidos a Core»).
 
 ### Aceptación de términos
@@ -460,20 +463,42 @@ useQuery({
 
 | Mecanismo | Qué guarda | Dónde vive el código |
 |---|---|---|
-| **SecureStore** (Keychain / Keystore, cifrado por el sistema) | `access_token`, `refresh_token`; credenciales de biometría (email + refresh token) y el flag `biometric_enabled` | `shared/services/tokenStorage`, `features/auth/services/biometricService` |
+| **SecureStore** (Keychain / Keystore, cifrado por el sistema) | `access_token`, `refresh_token`; credenciales de biometría (email, id del profesor y refresh token) | `shared/services/tokenStorage`, `shared/services/biometricCredentialStore` |
 | **AsyncStorage** (texto plano) | solo datos **no sensibles**: perfil público mínimo (`user_public`), idioma elegido, preferencias de notificaciones (Zustand `persist`), ID de instalación para push, onboarding visto, sucursal activa | el service o store de cada caso |
-| **Zustand en memoria** (sin persistir) | credenciales temporales tras el login (email + refresh token, caducan a los **60 s**) para activar la biometría sin volver a pedir la contraseña | `shared/store/` |
+| **Zustand en memoria** (sin persistir) | la oferta de activar la biometría tras el login con contraseña (email e id del profesor, **60 s**); sin tokens | `features/auth/store/biometricOfferStore` |
 | **FileSystem** (`expo-file-system`) | caché de imágenes (avatares) en un directorio propio, con limpieza | `shared/utils/imageCache` |
 
 **Regla:** si quien lo tenga puede actuar como el usuario, va en SecureStore. Todo lo demás, en AsyncStorage. **La contraseña no se guarda en ningún sitio.**
 
-### Biometría (Face ID / Touch ID / huella)
+### Biometría
 
-- `expo-local-authentication`, opcional. Se ofrece justo después del primer login correcto, usando las credenciales temporales de 60 s (tras el registro no hay sesión: se vuelve al login).
-- Al activarla, el email y el refresh token se guardan en SecureStore.
-- En el siguiente arranque, la biometría desbloquea esas credenciales y se hace refresh para obtener un `access_token` nuevo, sin pedir contraseña.
-- Core rota el refresh token en cada `/auth/refresh`: tras cada refresh correcto **se actualiza también el refresh token guardado para biometría** (`updateRefreshToken`). Si no, la biometría deja de funcionar en la sesión siguiente.
-- Permisos: `NSFaceIDUsageDescription` en iOS, `USE_BIOMETRIC` en Android.
+- **En los textos visibles siempre «biometría»**, nunca «huella»: el móvil puede usar huella, cara o su código.
+- `expo-local-authentication`, opcional. Si la biometría falla, el código del móvil también vale (`disableDeviceFallback: false`). Face ID no funciona en Expo Go: en iPhone se prueba con un development build.
+- **Piezas, en `features/auth/`:**
+  - `biometricService`: solo sensor y almacén. Si el móvil puede usarla, activarla (verifica y guarda), desbloquear (verifica y devuelve lo guardado), el email guardado y desactivarla.
+  - `useBiometricStatus`: si el móvil puede usarla y para qué email está activada. La comparten los dos hooks siguientes.
+  - `useBiometricSignIn`: entrar con biometría en la pantalla del email.
+  - `useBiometricOffer` + `BiometricOfferModal`: la oferta de activarla.
+- **Guardado** (`shared/services/biometricCredentialStore`): email, id del profesor y refresh token, en SecureStore. La contraseña nunca.
+- **Token al día:** Core rota el refresh token en cada `/auth/refresh`. `tokenStorage.setTokens()` es el único sitio que actualiza la copia de la biometría (`updateRefreshToken`), en cada login y renovación, y solo si los tokens son del mismo profesor. Un fallo ahí nunca impide abrir o renovar la sesión.
+
+**Ofrecerla**
+- Solo el login con contraseña deja la oferta (`biometricOfferStore`, en memoria): email e id del profesor, durante **60 s**. Sin tokens: el refresh token se lee de SecureStore al activarla, así es el vigente.
+- El registro no la ofrece porque no abre sesión: tras el alta el profesor entra con su contraseña y ese login la ofrece.
+- El panel (`BiometricOfferModal`, un `BottomSheet`) se monta en `(app)/_layout.tsx`: aparece encima de Hoy, ya con la sesión abierta. Se muestra una vez si la oferta sigue vigente, **es del profesor con la sesión abierta**, el móvil puede usarla y esa cuenta no la tiene ya. Si la tiene otra cuenta, activarla la sustituye.
+- La oferta de un profesor que cerró sesión sin responderla no vale para el siguiente: se descarta al mostrarla y otra vez al activarla. Si no, se guardaría el email de uno con la sesión del otro.
+- **Resultados con `Alert` nativo:** activada → se cierra el panel y avisa; falla o el móvil ya no puede usarla → avisa y el panel sigue abierto para reintentar; la oferta caducó → avisa y se cierra; cancelar el diálogo del sistema → nada.
+- «Ahora no», la X, tocar fuera y el botón atrás de Android equivalen: se cierra y no se vuelve a ofrecer.
+
+**Entrar**
+- En la pantalla del email: el email guardado aparece ya escrito, la biometría se lanza sola al abrir y el botón pasa a «Acceder con biometría» mientras el email escrito sea el guardado.
+- Si sale bien, se renueva la sesión con el refresh token guardado y se termina como el login con contraseña (`completeSignIn`: términos y abrir la sesión).
+- Si Core rechaza el token guardado, se desactiva y se pide la contraseña; sin red, avisa y se conserva; tras 3 fallos seguidos, se pide la contraseña.
+
+**Cerrar sesión**
+- Cerrar sesión **conserva la biometría** (como la app de alumnos). Justo después de un cierre manual (`endReason: "manual"`) no se lanza sola, para no volver a entrar en la cuenta que se acaba de cerrar; el botón sigue ahí. Al volver a abrir la app sí se lanza sola.
+
+- Permisos: `NSFaceIDUsageDescription` en los 6 idiomas (`shared/locales/native.js`) en iOS; `USE_BIOMETRIC` en Android.
 
 ### Estado de la sesión (`shared/services/session.ts`)
 
@@ -483,12 +508,14 @@ useQuery({
 - **`session.restore()`** al arrancar: manda que haya **refresh token** (el access token lo normal es que esté caducado, dura 60 min) y que el rol sea 4. Si no, se cierra la sesión. Si el Keychain falla, se muestra el login **sin borrar** los tokens.
 - **`session.start(access, refresh)`** tras el login: guarda los tokens y abre la sesión si el token es de profesor.
 - **`session.saveTokens(access, refresh)`** guarda los tokens sin abrir la sesión: las peticiones ya van autenticadas, pero los guards no llevan al inicio. Se usa mientras el profesor acepta los términos.
-- **`session.end()`** es el **único sitio** que cierra la sesión: borra los tokens, vacía la caché y deja el estado en `anonymous`. Lo usan el aviso de sesión expirada del cliente HTTP (que solo avisa) y el botón de cerrar sesión. Con biometría y push se ampliará aquí.
+- **`session.end(reason)`** es el **único sitio** que cierra la sesión: borra los tokens, vacía la caché y deja el estado en `anonymous`, con el motivo en `endReason`: `manual` (por defecto: cerrar sesión, no aceptar los términos) o `expired` (Core la dio por muerta, o el token no era de profesor). Vive en memoria. No toca la biometría. Lo usan el aviso de sesión expirada del cliente HTTP (que solo avisa) y el botón de cerrar sesión. Con push se ampliará aquí.
 - **`useAppReady()`** es la única puerta de arranque: espera al idioma guardado y a la sesión; hasta entonces sigue el splash nativo.
 
 ### Guards de navegación
 
 - En el layout raíz, con **`Stack.Protected`** de expo-router: con sesión solo existe el grupo `(app)`; sin ella, solo `(auth)`. Una ruta protegida ni se monta sin sesión, y al cerrar la sesión la app vuelve sola al login.
+- **`(auth)`:** cada pantalla entra deslizándose desde la derecha (`animation: "slide_from_right"`, como la app de alumnos) sobre el fondo del tema (`contentStyle`). En Android la animación por defecto es un fundido corto que se ve de golpe.
+- **`(app)`:** las pantallas van dentro de un `BlurTarget` y los paneles inferiores fuera, encima (ver «Paneles inferiores» en la sección 13).
 
 ### Menú inferior (pestañas)
 
@@ -563,6 +590,7 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 - En componentes se usa el hook `useTranslation()`, que vuelve a pintar al cambiar de idioma; el `t` suelto solo fuera de React. Las claves están tipadas: una clave que no existe no compila.
 - Solo se carga en memoria el diccionario del idioma activo (los 6 van en el bundle). El idioma elegido a mano se guarda en AsyncStorage (solo el código, p. ej. `"es"`) y se aplica antes de pintar la app; si no hay ninguno, se usa el del móvil y, si no está soportado, inglés.
 - Nada de concatenar frases: se interpola con parámetros (`t("home.classesToday", { count })`), con plurales cuando haga falta.
+- **«Biometría», nunca «huella»**, en los 6 idiomas: el móvil puede usar huella, cara o su código.
 
 ---
 
@@ -577,7 +605,7 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 
 - **Una sola paleta:** `shared/config/brand.js`, la del prototipo pasada de OKLCH a hex (React Native no entiende OKLCH). Es JavaScript plano porque también la lee `app.config.js`: el splash nativo y el fondo del icono adaptativo de Android salen de `BRAND.night`.
 - **Nadie más importa `brand.js`:** el tema asigna cada color a un uso y los componentes usan `useTheme()` / `makeStyles()`. Un test falla si algún fichero importa la paleta fuera del tema, y otro si el tema escribe un color a mano (cada uno es de la paleta o una transparencia suya con `withAlpha`).
-- **Tokens de color** (`theme.colors`): `background` `#0C0B1A`, `surface`, `surfaceStrong`, `card`, `elevated`, `text`, `textSecondary`, `border`, `primary` (magenta `#EF1EC1`), `accent` (violeta `#A63DF8`), `success`, `warning`, `danger`, `glass` / `glassBorder` (campos), `glassPanel` (barra de pestañas), `field`, `option`, `overlay` (velo de modal), `hairline` / `hairlineStrong` (líneas finas), `glowPrimary`.
+- **Tokens de color** (`theme.colors`): `background` `#0C0B1A`, `surface`, `surfaceStrong`, `card`, `elevated`, `text`, `textSecondary`, `border`, `primary` (magenta `#EF1EC1`), `accent` (violeta `#A63DF8`), `success`, `warning`, `danger`, `glass` / `glassBorder` (campos), `glassPanel` (barra de pestañas), `field`, `option`, `overlay` (velo de modal), `sheetOverlay` (velo de panel inferior, al 60 %), `hairline` / `hairlineStrong` (líneas finas), `glowPrimary`.
 - **Acentos** (`theme.accents`): `gold`, `coral`, `sky` y `violet`, cada uno con su color y su degradado, para contadores y accesos rápidos.
 - **Degradados** (`theme.gradients`): `brand` (`#FF2FB5` → `#C122E0` → `#8434F4`, en diagonal: botón principal y pestaña activa), `ink` (tarjetas oscuras), `modal` y `disabled`.
 - **Fondo de marca** (`BrandBackground`): el color de fondo con los tres resplandores radiales del prototipo (`theme.backdrop`), dibujados con `react-native-svg`.
@@ -602,15 +630,24 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 - **Animaciones con Reanimated,** solo con `transform` y `opacity` para que vayan en el hilo de la interfaz. Se respeta «reducir movimiento» del sistema (`useReduceMotion`). Los valores de cada animación, en un fichero aparte junto al componente (p. ej. `TabBar.animation.ts`).
 - **Vibración** con `selectionFeedback()` (`shared/utils/haptics.ts`), que no falla si el móvil no vibra.
 
+### Paneles inferiores (`BottomSheet`)
+
+- **El panel de Lovable:** sube desde abajo (300 ms; baja en 250) sobre un velo negro al 60 % desenfocado (`expo-blur`, el `backdrop-blur-sm` del prototipo). Tarjeta `card` con las esquinas de arriba de radio `xxxl`, borde fino, barrita de agarre y la X. Ancho máximo 448 en tablets.
+- **Sin `Modal`:** es una capa encima de la pantalla. Así los `Alert` y lo que venga después se ven encima, y en Android se puede desenfocar lo de debajo.
+- **Desenfoque en Android:** `expo-blur` solo desenfoca lo que está dentro de un `BlurTarget`, y el panel tiene que quedar fuera. Por eso el layout monta `BlurTargetProvider` > `BlurTarget` (las pantallas) + los paneles como hermanos, encima. Con `blurMethod: "dimezisBlurViewSdk31Plus"`: en Android 12 o posterior desenfoca; en los anteriores queda solo el velo, sin coste.
+- **Se cierra** con la X, tocando fuera o con el botón atrás de Android (`onClose`). Con «reducir movimiento» aparece sin deslizarse (lo respetan solas las animaciones de entrada y salida de Reanimated).
+- **Hoy se montan en un layout** (`(app)/_layout.tsx`). Cuando una pantalla necesite su propio panel, habrá que sacarlo al nivel del layout con un portal.
+
 ### Reglas de siempre
 
 - **Solo tema oscuro por ahora:** la app está fijada en `userInterfaceStyle: "dark"` y `useTheme()` devuelve siempre `darkTheme`. Cuando se defina el claro, se añade `lightTheme` con las mismas claves y `useTheme()` elige con `useColorScheme()`, sin tocar los componentes.
 - **Estilos:** cada `<Comp>.styles.ts` exporta `useStyles = makeStyles((theme) => ({…}))` y el componente hace `const styles = useStyles()`.
-- **Componentes base** en `shared/components/<Comp>/`: `Text`, `Button` (`primary` con el degradado de marca, `solid`, `secondary`, `link`; ignora pulsaciones mientras está ocupado), `Input` (`glass` o `solid`), `Checkbox`, `FieldError`, `PhoneInput`, `DateInput`, `GenderSelector`, `BackButton`, `BrandBackground`, `BrandLogo`, `Screen`, `LoadingState`, `ErrorState`, `EmptyState` y los del menú (`AppTabs`, `TabBar`, `TabButton`, `ComingSoonScreen`).
+- **Componentes base** en `shared/components/<Comp>/`: `Text`, `Button` (`primary` con el degradado de marca, `solid`, `secondary`, `link`; ignora pulsaciones mientras está ocupado), `Input` (`glass` o `solid`), `Checkbox`, `FieldError`, `PhoneInput`, `DateInput`, `GenderSelector`, `BackButton`, `BrandBackground`, `BrandLogo`, `Screen`, `LoadingState`, `ErrorState`, `EmptyState`, `BottomSheet` y `BlurTarget` (paneles inferiores) y los del menú (`AppTabs`, `TabBar`, `TabButton`, `ComingSoonScreen`).
 - **Nada de `zIndex` en elementos que se desmontan** (botón de volver, splash, overlays): se colocan como último hijo y se pintan encima por orden. En Android, un hijo con `zIndex` que se desmonta durante una transición cierra la app (`IndexOutOfBoundsException` en `getChildDrawingOrder`).
 - **Accesibilidad mínima:** `accessibilityLabel` en los controles, roles (`tab`, `tablist`, `checkbox`…), áreas táctiles de al menos 44 y contraste suficiente.
 - **Responsive:** la app está bloqueada en vertical (`orientation: "portrait"`), pero en tablets y plegables Android 16 ignora el bloqueo. Las pantallas no dependen de un ancho fijo: `flex`, `useWindowDimensions`, `onLayout` y anchos máximos.
 - **Edge-to-edge:** obligatorio en Android 16; el contenido respeta las zonas seguras con `react-native-safe-area-context`.
+- **Barra de navegación de Android:** con navegación por botones, Android pinta detrás una capa translúcida (blanca con el sistema en claro). El plugin de `expo-navigation-bar` la quita (`enforceContrast: false`, `style: "dark"`: botones claros). Expo Go no aplica plugins: allí la barra sigue saliendo; se ve bien en un development build o en la de tienda.
 
 ---
 

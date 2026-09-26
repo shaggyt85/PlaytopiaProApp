@@ -45,7 +45,6 @@ export const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: theme.spacing.md,
     right: theme.spacing.md,
-    zIndex: 1,
     width: CLOSE_SIZE,
     height: CLOSE_SIZE,
     borderRadius: CLOSE_SIZE / 2,

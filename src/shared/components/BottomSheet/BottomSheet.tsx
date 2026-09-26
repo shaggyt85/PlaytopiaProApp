@@ -80,6 +80,8 @@ export function BottomSheet({ visible, onClose, children }: BottomSheetProps) {
             accessibilityViewIsModal
           >
             <View style={styles.handle} />
+            {children}
+            {/* Último hijo: se pinta encima por orden, sin zIndex (se desmonta con el panel). */}
             <Pressable
               onPress={onClose}
               style={styles.close}
@@ -89,7 +91,6 @@ export function BottomSheet({ visible, onClose, children }: BottomSheetProps) {
             >
               <IconLoX size={CLOSE_ICON} color={theme.colors.text} />
             </Pressable>
-            {children}
           </Animated.View>
         </>
       ) : null}
