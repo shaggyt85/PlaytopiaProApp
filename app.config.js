@@ -68,6 +68,17 @@ export default {
         { faceIDPermission: NATIVE_STRINGS.es.NSFaceIDUsageDescription },
       ],
       [
+        "expo-navigation-bar",
+        {
+          // Con navegación por botones, Android pinta detrás una capa translúcida
+          // (blanca con el sistema en claro). Sin ella se ve la app, como en iOS;
+          // `dark`: botones claros para el tema oscuro. Expo Go no aplica plugins:
+          // solo se ve en un development build o en la de tienda.
+          enforceContrast: false,
+          style: "dark",
+        },
+      ],
+      [
         "expo-splash-screen",
         {
           // Solo el fondo de marca: el logo lo pone el splash animado
