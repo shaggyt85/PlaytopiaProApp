@@ -52,15 +52,17 @@ const typography = {
 
 /**
  * Brillo de color bajo un elemento (el `glow-*` de Lovable): la pestaña activa,
- * el botón "Empezar", el logo.
+ * el botón "Empezar", el logo. Lovable usa `0 10px 30px -8px` al 70 %; React
+ * Native no tiene el `-8px` (spread) que encoge la sombra, así que se aproxima
+ * con menos desplazamiento, radio y opacidad.
  */
 export const glow = (color: string) =>
   ({
     shadowColor: color,
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.7,
-    shadowRadius: 15,
-    elevation: 10,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.45,
+    shadowRadius: 10,
+    elevation: 6,
   }) as const;
 
 const textGlow = {

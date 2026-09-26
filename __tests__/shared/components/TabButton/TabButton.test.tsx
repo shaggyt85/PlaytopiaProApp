@@ -21,6 +21,15 @@ describe("TabButton", () => {
     expect(screen.getByRole("tab", { name: "Hoy", selected: true })).toBeTruthy();
   });
 
+  it("el icono va encima del nombre aunque TabTrigger le pase su estilo en fila", () => {
+    render(<TabButton tab={today} style={{ flexDirection: "row", justifyContent: "space-between" }} />);
+
+    expect(screen.getByRole("tab", { name: "Hoy" })).toHaveStyle({
+      flexDirection: "column",
+      justifyContent: "center",
+    });
+  });
+
   it("al cambiar a otra pestaña vibra y navega", () => {
     const onPress = jest.fn();
     render(<TabButton tab={today} onPress={onPress} />);

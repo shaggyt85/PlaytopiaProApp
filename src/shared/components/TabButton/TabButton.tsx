@@ -21,7 +21,9 @@ interface TabButtonProps extends TabTriggerSlotProps {
  * Una pestaña: icono y nombre. La gota del fondo la pinta la barra. Vibra al
  * cambiar a otra pestaña, no al tocar la que ya está activa.
  */
-export function TabButton({ tab, isFocused = false, onPress, ...rest }: TabButtonProps) {
+// `style` se descarta a propósito: TabTrigger (asChild) pasa el suyo, en fila,
+// y sustituiría el del botón (icono encima del nombre).
+export function TabButton({ tab, isFocused = false, onPress, style: _ignored, ...rest }: TabButtonProps) {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
@@ -33,8 +35,8 @@ export function TabButton({ tab, isFocused = false, onPress, ...rest }: TabButto
       accessibilityRole="tab"
       accessibilityState={{ selected: isFocused }}
       accessibilityLabel={t(tab.label)}
-      style={styles.button}
       {...rest}
+      style={styles.button}
       onPress={(event) => {
         if (!isFocused) selectionFeedback();
         onPress?.(event);
