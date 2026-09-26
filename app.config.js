@@ -1,4 +1,5 @@
 const { BRAND } = require("./src/shared/config/brand");
+const { NATIVE_STRINGS } = require("./src/shared/locales/native");
 // Identidad de la app. APP_VARIANT=development genera la variante DEV, que se
 // instala junto a la de tienda sin pisarla (bundle id, package e icono propios).
 //
@@ -40,7 +41,14 @@ export default {
         dark: icon("ios-dark"),
         tinted: icon("ios-tinted"),
       },
+      // Permite que los textos del sistema (permisos) salgan en el idioma del
+      // móvil, desde `locales` más abajo.
+      infoPlist: { CFBundleAllowMixedLocalizations: true },
     },
+    // Textos del sistema por idioma (src/shared/locales/native.js).
+    locales: Object.fromEntries(
+      Object.entries(NATIVE_STRINGS).map(([locale, strings]) => [locale, { ios: strings }]),
+    ),
     android: {
       package: IS_DEV
         ? "com.playtopiateam.playtopiapro.dev"
@@ -54,6 +62,11 @@ export default {
     },
     plugins: [
       "expo-router",
+      [
+        "expo-local-authentication",
+        // Texto por defecto del permiso de Face ID; las traducciones, en `locales`.
+        { faceIDPermission: NATIVE_STRINGS.es.NSFaceIDUsageDescription },
+      ],
       [
         "expo-splash-screen",
         {
