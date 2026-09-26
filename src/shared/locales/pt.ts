@@ -70,6 +70,21 @@ const pt: Translations = {
     viewFullDocument: "Ver Documento Completo",
     openFailed: "Falha ao abrir o documento. Tente novamente.",
   },
+  phone: {
+    label: "Número de telefone",
+    placeholder: "Seu número de telefone",
+  },
+  countryPicker: {
+    title: "Seleciona o teu país",
+    searchPlaceholder: "Pesquisar país ou indicativo",
+    empty: "Nenhum país corresponde à pesquisa",
+  },
+  gender: {
+    label: "Gênero",
+    male: "Masculino",
+    female: "Feminino",
+    preferNotToSay: "Prefiro não dizê-lo",
+  },
   validation: {
     emailRequired: "Digite seu email.",
     emailInvalid: "Digite um endereço de e-mail válido",

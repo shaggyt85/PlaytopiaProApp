@@ -25,6 +25,8 @@ const typography = {
   /** Cuerpo destacado (p. ej. el email en la pantalla de contraseña). */
   emphasis: { fontSize: 16, fontWeight: "500" },
   caption: { fontSize: 13, fontWeight: "400" },
+  /** Texto junto a una casilla (términos, "prefiero no decirlo"). */
+  label: { fontSize: 14, fontWeight: "400", lineHeight: 20 },
   /** Texto legal, pies. */
   small: { fontSize: 12, fontWeight: "400" },
   /** Versión de la app. */
@@ -66,6 +68,10 @@ export const darkTheme = {
     /** Fondo "cristal" de los campos sobre el fondo de marca. */
     glass: withAlpha(BRAND.white, 0.1),
     glassBorder: withAlpha(BRAND.pink, 0.3),
+    /** Fondo sólido de los campos del formulario de registro. */
+    field: "#2a2153",
+    /** Opciones de selección de los formularios (género). */
+    option: BRAND.lilac,
     disabled: BRAND.grey,
     link: BRAND.violet,
   },

@@ -9,6 +9,7 @@ const BRAND = Object.freeze({
   pink: "#C21D93", // brillos decorativos
   indigo: "#5742E3", // inicio del degradado de los botones
   purple: "#8033C4", // final del degradado de los botones
+  lilac: "#8B5FBF", // opciones de los formularios (género)
   grey: "#9D9D9D", // deshabilitado, bordes neutros
   white: "#FFFFFF",
   black: "#000000", // sombras y fondos translúcidos de modales

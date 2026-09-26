@@ -70,6 +70,21 @@ const ca: Translations = {
     viewFullDocument: "Veure Document Complet",
     openFailed: "Error en obrir el document. Torna-ho a provar.",
   },
+  phone: {
+    label: "Número de telèfon",
+    placeholder: "El teu número de telèfon",
+  },
+  countryPicker: {
+    title: "Selecciona el teu país",
+    searchPlaceholder: "Cerca país o prefix",
+    empty: "Cap país coincideix amb la cerca",
+  },
+  gender: {
+    label: "Gènere",
+    male: "Masculí",
+    female: "Femení",
+    preferNotToSay: "Prefereixo no dir-ho",
+  },
   validation: {
     emailRequired: "Escriu el teu email.",
     emailInvalid: "El correu electrònic no és vàlid",

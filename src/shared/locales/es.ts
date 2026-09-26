@@ -72,6 +72,21 @@ const es = {
     viewFullDocument: "Ver Documento Completo",
     openFailed: "Error al abrir el documento. Inténtalo de nuevo.",
   },
+  phone: {
+    label: "Número de teléfono",
+    placeholder: "Tu número de teléfono",
+  },
+  countryPicker: {
+    title: "Selecciona tu país",
+    searchPlaceholder: "Buscar país o prefijo",
+    empty: "Ningún país coincide con la búsqueda",
+  },
+  gender: {
+    label: "Género",
+    male: "Masculino",
+    female: "Femenino",
+    preferNotToSay: "Prefiero no decirlo",
+  },
   validation: {
     emailRequired: "Escribe tu email.",
     emailInvalid: "El correo electrónico no es válido",

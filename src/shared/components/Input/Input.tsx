@@ -12,21 +12,33 @@ export interface InputProps extends TextInputProps {
   error?: string;
   /** Algo a la derecha dentro del campo (p. ej. mostrar u ocultar contraseña). */
   rightAccessory?: ReactNode;
+  /** `glass` es el campo del acceso; `solid`, el del formulario de registro. */
+  variant?: "glass" | "solid";
 }
 
 /** Campo de texto del tema con etiqueta, mensaje de error y accesorio opcional. */
-export function Input({ label, error, rightAccessory, style, ...rest }: InputProps) {
+export function Input({
+  label,
+  error,
+  rightAccessory,
+  variant = "glass",
+  style,
+  ...rest
+}: InputProps) {
   const styles = useStyles();
   const theme = useTheme();
 
   return (
     <View style={styles.container}>
       <Text>{label}</Text>
-      <View style={[styles.field, error ? styles.fieldError : null]} testID="input-field">
+      <View
+        style={[styles.field, variant === "solid" && styles.solid, error ? styles.fieldError : null]}
+        testID="input-field"
+      >
         <TextInput
           accessibilityLabel={label}
           placeholderTextColor={theme.colors.textSecondary}
-          style={[styles.input, style]}
+          style={[styles.input, variant === "solid" && styles.solidInput, style]}
           {...rest}
         />
         {rightAccessory ? <View style={styles.accessory}>{rightAccessory}</View> : null}

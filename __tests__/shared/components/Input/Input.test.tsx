@@ -23,6 +23,15 @@ describe("Input", () => {
     });
   });
 
+  it("la variante sólida es la píldora del registro, con borde violeta", () => {
+    render(<Input label="Nombre" variant="solid" />);
+
+    expect(screen.getByTestId("input-field")).toHaveStyle({
+      backgroundColor: darkTheme.colors.field,
+      borderColor: darkTheme.colors.primary,
+    });
+  });
+
   it("sin error no muestra mensaje", () => {
     render(<Input label="Email" />);
 
