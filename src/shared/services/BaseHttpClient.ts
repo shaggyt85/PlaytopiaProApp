@@ -31,6 +31,8 @@ export interface HttpClientDeps {
   axiosConfig: CreateAxiosDefaults;
   tokens: ITokenStorage;
   refreshSession: () => Promise<RefreshResult>;
+  /** Ve las cabeceras de toda respuesta, buena o de error (p. ej. la hora del servidor). */
+  observeResponseHeaders?: (headers: Record<string, unknown>) => void;
 }
 
 /**
@@ -46,15 +48,20 @@ export class BaseHttpClient implements IHttpClient {
   protected readonly instance: AxiosInstance;
   private readonly tokens: ITokenStorage;
   private readonly refreshSession: () => Promise<RefreshResult>;
+  private readonly observeHeaders: (headers: Record<string, unknown>) => void;
   private sessionExpiredHandler: () => void = () => {};
 
   constructor(deps: HttpClientDeps) {
     this.instance = createAxios(deps.axiosConfig);
     this.tokens = deps.tokens;
     this.refreshSession = deps.refreshSession;
+    this.observeHeaders = deps.observeResponseHeaders ?? (() => {});
     this.instance.interceptors.request.use((config) => this.withToken(config));
     this.instance.interceptors.response.use(
-      (response) => response,
+      (response) => {
+        this.observeHeaders(response.headers ?? {});
+        return response;
+      },
       (error) => this.handleError(error),
     );
   }
@@ -82,6 +89,7 @@ export class BaseHttpClient implements IHttpClient {
     }
 
     const { status, data, headers } = error.response;
+    this.observeHeaders(headers ?? {});
     const original = error.config;
 
     // Solo se renueva si la petición iba con sesión. El 401 del login con

@@ -489,10 +489,17 @@ Siempre en la ruta espejo de `__tests__/`, con Jest y Testing Library.
 
 ## 11. Fechas y zona horaria
 
-- `dayjs` se configura una sola vez en `shared/config/` (plugins utc, timezone y locale).
-- Las fechas de Core llegan en ISO/UTC y se muestran en la **zona horaria del club**, no en la del móvil: un profesor de viaje ve la clase a su hora real.
-- La hora "ahora" (por ejemplo, para saber si una clase ya empezó) sale de `serverClock`, no del reloj del móvil.
-- El formato de fecha sigue el idioma activo; nunca un locale fijo.
+Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`, espejo de `club_clock.rs` de Core, con los mismos nombres y casos de test):
+
+| Lo que llega de Core | Qué es | Cómo se trata |
+|---|---|---|
+| `class_date` + `class_time` (`"2026-09-26"`, `"18:00:00"`) | **Hora de pared del club**, sin zona: las 18:00 en la pista | Se muestra tal cual (`formatClubDate`, `formatClubTime`). **Nunca** se convierte con la zona del móvil |
+| Timestamps e ISO con `Z` (`created_at`, `payment_date`…) | Instante real | Se muestra en la zona del club (`formatInstant`, `toClubTime`) |
+
+- **Zona del club:** es por tenant (`db_id`), un identificador IANA. Core no la expone todavía a la app: se usa `DEFAULT_CLUB_TIMEZONE` (`Europe/Madrid`, el mismo valor por defecto que Core) y está pedida en `docs/endpoints-pendientes/clubs-timezone.md`. Todas las funciones reciben la zona como parámetro: cuando llegue, se pasa la del club activo.
+- **"Ahora"** sale de `serverNow()` (`shared/utils/serverClock.ts`): el desfase con la hora del servidor se aprende de la cabecera `Date` de cada respuesta, así un móvil con la hora mal puesta no cambia nada.
+- **¿Ya empezó una clase?** `hasClassStarted(date, time, tz)`: compara `serverNow()` con `clubInstant(date, time, tz)`, que resuelve el cambio de hora igual que Core (hora saltada → la primera que existe; hora repetida → la primera).
+- **`dayjs`** (`shared/config/dayjs.ts`) solo se usa para cálculos con zonas; lo que ve el usuario se formatea con `shared/utils/formatDate.ts` (`Intl` y el idioma activo, nunca un locale fijo). Para pasar de hora de pared a instante no se usa `dayjs.tz()`: se equivoca justo después del cambio de hora, y lo detectó un test.
 
 ---
 

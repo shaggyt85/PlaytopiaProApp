@@ -2,6 +2,7 @@ import axios from "axios";
 import { z } from "zod";
 
 import { env } from "@/shared/config/env";
+import { recordServerDate } from "@/shared/utils/serverClock";
 
 import { BaseHttpClient, type IHttpClient } from "./BaseHttpClient";
 import { createSessionRefresher } from "./sessionRefresher";
@@ -43,6 +44,8 @@ const client = new BaseHttpClient({
   },
   tokens: tokenStorage,
   refreshSession,
+  // Cada respuesta trae la hora del servidor en la cabecera Date.
+  observeResponseHeaders: (headers) => recordServerDate(headers.date),
 });
 
 export const httpClient: IHttpClient = client;

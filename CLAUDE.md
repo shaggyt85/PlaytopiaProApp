@@ -63,7 +63,7 @@ docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 - **Refresh:** único y compartido en `BaseHttpClient` (Core rota el refresh token). Tras cada refresh correcto, actualiza también el refresh token de la biometría.
 - **Multi-club:** la identidad de una sede es `db_id` + `club_id`. Toda query key de datos de club lleva los dos.
 - **Formularios:** react-hook-form + `zodResolver` sobre el schema del contrato; mensajes como claves de i18n.
-- **Fechas:** en la zona horaria del club; "ahora" sale de `serverClock`.
+- **Fechas:** `class_date`/`class_time` son hora de pared del club: se muestran tal cual, nunca con la zona del móvil. Los instantes UTC, en la zona del club. "Ahora" = `serverNow()`. Usa `shared/utils/clubClock.ts` y `formatDate.ts`; nunca `toLocaleDateString` ni `dayjs.tz()` para pasar de pared a instante.
 - **i18n:** todo texto visible en `shared/locales/`, en los 6 idiomas (es, en, pt, ca, de, fr). En componentes, `useTranslation()`; las claves están tipadas.
 - **Tema:** colores y tamaños solo desde los tokens (`useTheme()`, `makeStyles()`); colores de marca solo en `shared/config/brand.js`, translúcidos con `withAlpha`. Por ahora solo tema oscuro (fijo). Usa los componentes base de `shared/components/` antes de crear otros.
 - **Versionado:** versión SemVer manual en `app.config.js` y `package.json`, igual en Android e iOS. El build (`versionCode` / `buildNumber`) lo sube EAS: no lo toques. Un OTA no cambia la versión.

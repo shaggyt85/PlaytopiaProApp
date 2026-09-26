@@ -25,14 +25,16 @@ function buildClient(options: {
     if (result.ok) tokens.access = result.accessToken;
     return result;
   });
+  const observeResponseHeaders = jest.fn();
   const client = new BaseHttpClient({
     axiosConfig: { baseURL: "https://api.test.local/api", adapter },
     tokens,
     refreshSession,
+    observeResponseHeaders,
   });
   const sessionExpired = jest.fn();
   client.onSessionExpired(sessionExpired);
-  return { client, calls, tokens, refreshSession, sessionExpired };
+  return { client, calls, tokens, refreshSession, sessionExpired, observeResponseHeaders };
 }
 
 const authHeader = (config: InternalAxiosRequestConfig) =>
@@ -153,5 +155,17 @@ describe("BaseHttpClient", () => {
     await expect(client.get("/clases")).rejects.toMatchObject({ status: 401 });
     expect(refreshSession).toHaveBeenCalledTimes(1);
     expect(calls).toHaveLength(2);
+  });
+
+  it("enseña las cabeceras de cada respuesta, buena o de error (hora del servidor)", async () => {
+    const date = "Sat, 26 Sep 2026 10:05:00 GMT";
+    const ok = buildClient({ handler: () => ({ status: 200, data: {}, headers: { date } }) });
+    const ko = buildClient({ handler: () => ({ status: 409, data: {}, headers: { date } }) });
+
+    await ok.client.get("/x");
+    await ko.client.get("/x").catch(() => undefined);
+
+    expect(ok.observeResponseHeaders.mock.calls[0][0].date).toBe(date);
+    expect(ko.observeResponseHeaders.mock.calls[0][0].date).toBe(date);
   });
 });
