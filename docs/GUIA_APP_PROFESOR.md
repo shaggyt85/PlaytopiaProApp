@@ -633,6 +633,8 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 
 - **De `@playtopia/icons/react-native`**, la librería propia (repo `D:\playtopia\IconsPlaytopia`, publicada en npm con Trusted Publishing). Los del prototipo son los `IconLo…` (trazo fino de Lucide, prefijo `lo` para distinguirlos de los demás).
 - Aceptan `size`, `color` y, los de un solo grosor, `strokeWidth` (la pestaña activa usa 2,4).
+- **Tipo común:** `IconComponent` (`shared/config/icons.ts`) cuando un icono se pasa como prop (pestañas, `IconButton`, listas). La librería no exporta uno: es el único sitio.
+- **`IconButton`** (botón redondo): sin `onPress` queda desactivado, para que el lector de pantalla no anuncie un botón que no hace nada.
 - **Un icono nuevo se añade a la librería**, no a la app: SVG en `src/svg/`, compilar, publicar una versión (release en GitHub) y actualizar aquí la dependencia y su excepción de `minimumReleaseAge`.
 
 ### Radios, espaciado y movimiento

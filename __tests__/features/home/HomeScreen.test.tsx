@@ -60,10 +60,10 @@ describe("HomeScreen", () => {
     expect(screen.getByTestId("screen-header-title-placeholder")).toBeTruthy();
   });
 
-  it("muestra la campana de notificaciones", async () => {
+  it("muestra la campana de notificaciones, desactivada hasta que existan", async () => {
     renderWithProviders(<HomeScreen />);
 
-    expect(await screen.findByRole("button", { name: "Notificaciones" })).toBeTruthy();
+    expect(await screen.findByRole("button", { name: "Notificaciones" })).toBeDisabled();
   });
 
   it("Cerrar sesión (provisional) cierra la sesión", async () => {

@@ -1,11 +1,9 @@
-import type { ComponentType } from "react";
 import { Pressable, type PressableProps } from "react-native";
 
+import type { IconComponent } from "@/shared/config/icons";
 import { useTheme } from "@/shared/hooks/useTheme";
 
 import { useStyles } from "./IconButton.styles";
-
-type IconComponent = ComponentType<{ size?: number; color?: string }>;
 
 export interface IconButtonProps extends Omit<PressableProps, "children" | "style"> {
   Icon: IconComponent;
@@ -18,16 +16,21 @@ export interface IconButtonProps extends Omit<PressableProps, "children" | "styl
 /**
  * Botón redondo con un icono (los de Lovable: la campana, la X de un panel):
  * círculo de superficie con borde fino. Si es más pequeño que el área táctil
- * mínima, la completa con `hitSlop`.
+ * mínima, la completa con `hitSlop`. Sin `onPress` queda desactivado: el lector
+ * de pantalla lo anuncia así y no se anima al tocarlo.
  */
-export function IconButton({ Icon, size, hitSlop, ...rest }: IconButtonProps) {
+export function IconButton({ Icon, size, hitSlop, onPress, disabled, ...rest }: IconButtonProps) {
   const theme = useTheme();
   const diameter = size ?? theme.touchTarget;
   const styles = useStyles();
+  const inactive = Boolean(disabled) || !onPress;
 
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityState={{ disabled: inactive }}
+      onPress={onPress}
+      disabled={inactive}
       hitSlop={hitSlop ?? Math.max(0, (theme.touchTarget - diameter) / 2)}
       style={({ pressed }) => [
         styles.circle,

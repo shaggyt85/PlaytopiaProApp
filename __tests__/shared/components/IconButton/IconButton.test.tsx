@@ -14,6 +14,18 @@ describe("IconButton", () => {
     expect(onPress).toHaveBeenCalled();
   });
 
+  it("sin acción queda desactivado: el lector lo anuncia así", () => {
+    render(<IconButton Icon={IconLoBell} accessibilityLabel="Notificaciones" />);
+
+    expect(screen.getByRole("button", { name: "Notificaciones" })).toBeDisabled();
+  });
+
+  it("con acción está activo", () => {
+    render(<IconButton Icon={IconLoBell} accessibilityLabel="Notificaciones" onPress={jest.fn()} />);
+
+    expect(screen.getByRole("button", { name: "Notificaciones" })).toBeEnabled();
+  });
+
   it("por defecto mide el área táctil mínima", () => {
     render(<IconButton Icon={IconLoBell} accessibilityLabel="Notificaciones" />);
 

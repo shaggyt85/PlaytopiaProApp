@@ -6,7 +6,8 @@ import {
   IconLoUsers,
 } from "@playtopia/icons/react-native";
 import type { Href } from "expo-router";
-import type { ComponentType } from "react";
+
+import type { IconComponent } from "@/shared/config/icons";
 
 import type { TranslationKey } from "@/shared/locales";
 
@@ -16,7 +17,7 @@ export interface TabItem {
   href: Href;
   /** Texto de la pestaña (y título de su pantalla mientras no tenga contenido). */
   label: TranslationKey;
-  Icon: ComponentType<{ size?: number; color?: string; strokeWidth?: number }>;
+  Icon: IconComponent;
 }
 
 /**

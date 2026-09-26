@@ -1,10 +1,10 @@
 import { IconLoLock, IconLoShield, IconLoZap } from "@playtopia/icons/react-native";
-import type { ComponentType } from "react";
 import { Alert, View } from "react-native";
 
 import { BottomSheet } from "@/shared/components/BottomSheet";
 import { Button } from "@/shared/components/Button";
 import { Text } from "@/shared/components/Text";
+import type { IconComponent } from "@/shared/config/icons";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TranslationKey } from "@/shared/locales";
@@ -16,7 +16,7 @@ import { useStyles } from "./BiometricOfferModal.styles";
 const ICON = 32;
 const BENEFIT_ICON = 20;
 
-const BENEFITS: readonly { Icon: ComponentType<{ size?: number; color?: string }>; label: TranslationKey }[] = [
+const BENEFITS: readonly { Icon: IconComponent; label: TranslationKey }[] = [
   { Icon: IconLoZap, label: "auth.biometric.offer.instant" },
   { Icon: IconLoShield, label: "auth.biometric.offer.security" },
   { Icon: IconLoLock, label: "auth.biometric.offer.encrypted" },
