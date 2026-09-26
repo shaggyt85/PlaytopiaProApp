@@ -54,11 +54,14 @@ export default {
       [
         "expo-splash-screen",
         {
+          // Solo el fondo de marca: el logo lo pone el splash animado
+          // (features/splash), que arranca encima sin salto. La imagen es
+          // transparente porque, sin imagen, Android 12+ pinta el icono de la app.
           backgroundColor: SPLASH_BACKGROUND,
-          image: "./assets/app_icons/splash-icon-light.png",
+          image: "./assets/app_icons/splash-transparent.png",
           dark: {
             backgroundColor: SPLASH_BACKGROUND,
-            image: "./assets/app_icons/splash-icon-dark.png",
+            image: "./assets/app_icons/splash-transparent.png",
           },
           imageWidth: 200,
         },
