@@ -1,6 +1,17 @@
 import { Stack } from "expo-router";
 
-// Rutas con sesión de profesor.
+import { BiometricOfferModal } from "@/features/auth";
+import { BlurTarget, BlurTargetProvider } from "@/shared/components/BlurTarget";
+
+// Rutas con sesión de profesor. Las pantallas van dentro del BlurTarget para
+// quedar desenfocadas bajo los paneles, que van fuera y encima.
 export default function AppLayout() {
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <BlurTargetProvider>
+      <BlurTarget>
+        <Stack screenOptions={{ headerShown: false }} />
+      </BlurTarget>
+      <BiometricOfferModal />
+    </BlurTargetProvider>
+  );
 }

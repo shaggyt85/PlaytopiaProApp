@@ -1,0 +1,1 @@
+export { BiometricOfferModal } from "./BiometricOfferModal";

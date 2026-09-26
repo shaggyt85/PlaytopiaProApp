@@ -103,6 +103,8 @@ export const darkTheme = {
     link: BRAND.magenta,
     /** Velo bajo un modal. */
     overlay: withAlpha(BRAND.black, 0.5),
+    /** Velo bajo un panel inferior (va además desenfocado). */
+    sheetOverlay: withAlpha(BRAND.black, 0.6),
     /** Líneas y bordes finos sobre cristal. */
     hairline: withAlpha(BRAND.white, 0.1),
     hairlineStrong: withAlpha(BRAND.white, 0.25),

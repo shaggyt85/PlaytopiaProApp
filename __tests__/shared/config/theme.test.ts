@@ -37,7 +37,7 @@ describe("darkTheme", () => {
 
   it("no escribe colores a mano: cada uno es de la paleta o una transparencia de ella", () => {
     const translucent = paletteColors.flatMap((color) =>
-      [0.1, 0.25, 0.3, 0.5, 0.72, 0.85, 0.9].map((alpha) => withAlpha(color, alpha)),
+      [0.1, 0.25, 0.3, 0.5, 0.6, 0.72, 0.85, 0.9].map((alpha) => withAlpha(color, alpha)),
     );
     for (const value of Object.values(darkTheme.colors)) {
       expect([...paletteColors, ...translucent]).toContain(value);

@@ -1,4 +1,5 @@
 export { AuthLayout } from "./AuthLayout";
+export { BiometricOfferModal } from "./BiometricOfferModal";
 export { FormError } from "./FormError";
 export { LegalFooter } from "./LegalFooter";
 export { PasswordInput } from "./PasswordInput";
