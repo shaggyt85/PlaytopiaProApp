@@ -533,7 +533,7 @@ useQuery({
 ### Hoy
 
 - **Cabecera:** «Buenos días / Buenas tardes / Buenas noches, entrenador» (6-12, 12-20 y el resto; `home/utils/greeting.ts`), el nombre del profesor (`useTeacherProfile`, caché `STANDARD`) y la fecha («Viernes · 22 de noviembre», `formatWeekdayDate`).
-- **La hora es la del móvil** con `serverNow()`: es el día del profesor, no de un club (puede dar clases en clubes de zonas distintas). Las horas de las clases, cuando lleguen, van en la hora de su club. Saludo y fecha se renuevan al volver la app al primer plano (`useForegroundNow`), sin temporizadores.
+- **La hora es la del móvil** con `serverNow()`: es el día del profesor, no de un club (puede dar clases en clubes de zonas distintas). Las horas de las clases, cuando lleguen, van en la hora de su club. Saludo y fecha se renuevan al volver la app al primer plano (`useForegroundNow`), sin temporizadores. `useTodayHeader` los junta y los da listos: la pantalla solo los pinta.
 - **Si el perfil no llega,** la cabecera sale igual sin el nombre.
 - **Provisional:** la campana se ve pero no hace nada hasta las notificaciones (sin punto rojo), y el botón de cerrar sesión sigue hasta que exista Perfil.
 - **Pestaña sin contenido:** su ruta reexporta `ComingSoonScreen`, que muestra el nombre de la pestaña (de `TABS`, según la ruta) y «Próximamente».
@@ -591,6 +591,7 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 - **"Ahora"** sale de `serverNow()` (`shared/utils/serverClock.ts`): el desfase con la hora del servidor se aprende de la cabecera `Date` de cada respuesta, así un móvil con la hora mal puesta no cambia nada.
 - **¿Ya empezó una clase?** `hasClassStarted(date, time, tz)`: compara `serverNow()` con `clubInstant(date, time, tz)`, que resuelve el cambio de hora igual que Core (hora saltada → la primera que existe; hora repetida → la primera).
 - **`dayjs`** (`shared/config/dayjs.ts`) solo se usa para cálculos con zonas; lo que ve el usuario se formatea con `shared/utils/formatDate.ts` (`Intl` y el idioma activo, nunca un locale fijo). Para pasar de hora de pared a instante no se usa `dayjs.tz()`: se equivoca justo después del cambio de hora, y lo detectó un test.
+- **Formateadores reutilizados:** `formatDate.ts` guarda un `Intl.DateTimeFormat` por idioma y opciones (crearlo es lo caro con Hermes). Una fecha nueva se formatea siempre por ahí, nunca con `new Intl.DateTimeFormat` suelto.
 
 ---
 

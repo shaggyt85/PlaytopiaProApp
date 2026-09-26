@@ -8,12 +8,10 @@ import { TabScreen } from "@/shared/components/TabScreen";
 import { TabScrollView } from "@/shared/components/TabScrollView";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { session } from "@/shared/services/session";
-import { formatWeekdayDate } from "@/shared/utils/formatDate";
 
 import { useStyles } from "./HomeScreen.styles";
-import { useForegroundNow } from "./hooks/useForegroundNow";
 import { useTeacherProfile } from "./hooks/useTeacherProfile";
-import { greetingFor } from "./utils/greeting";
+import { useTodayHeader } from "./hooks/useTodayHeader";
 
 /**
  * Hoy: saludo según la hora, el nombre del profesor y la fecha, con la hora
@@ -25,17 +23,17 @@ import { greetingFor } from "./utils/greeting";
 export function HomeScreen() {
   const styles = useStyles();
   const { t } = useTranslation();
-  const now = useForegroundNow();
+  const header = useTodayHeader();
   const profile = useTeacherProfile();
 
   return (
     <TabScreen testID="home-screen">
       <TabScrollView>
         <ScreenHeader
-          greeting={t(`home.greeting.${greetingFor(new Date(now).getHours())}`)}
+          greeting={t(header.greeting)}
           title={profile.data?.name}
           loading={profile.isPending}
-          subtitle={formatWeekdayDate(now)}
+          subtitle={header.date}
           right={<IconButton Icon={IconLoBell} accessibilityLabel={t("home.notifications")} />}
         />
         <View style={styles.signOut}>

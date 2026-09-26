@@ -38,12 +38,29 @@ describe("formatDate", () => {
     ).toBe("12:00");
   });
 
-  it("el día de la cabecera: semana con mayúscula y fecha en la forma de cada idioma", async () => {
+  it.each([
+    ["es", "Viernes · 20 de noviembre"],
+    ["en", "Friday · November 20"],
+    ["pt", "Sexta-feira · 20 de novembro"],
+    ["ca", "Divendres · 20 de novembre"],
+    ["de", "Freitag · 20. November"],
+    ["fr", "Vendredi · 20 novembre"],
+  ] as const)("el día de la cabecera en %s: %s", async (locale, expected) => {
+    await changeLanguage(locale);
     // Mediodía: el mismo día en cualquier zona horaria en la que se ejecute el test.
-    const friday = new Date(2026, 10, 20, 12, 0);
-    expect(formatWeekdayDate(friday)).toBe("Viernes · 20 de noviembre");
+    expect(formatWeekdayDate(new Date(2026, 10, 20, 12, 0))).toBe(expected);
+  });
 
-    await changeLanguage("en");
-    expect(formatWeekdayDate(friday)).toBe("Friday · November 20");
+  it("reutiliza el formateador: no crea uno nuevo en cada fecha", () => {
+    const create = jest.spyOn(Intl, "DateTimeFormat");
+    const day = new Date(2026, 10, 20, 12, 0);
+    formatWeekdayDate(day);
+    const afterFirst = create.mock.calls.length;
+
+    formatWeekdayDate(day);
+    formatWeekdayDate(day);
+
+    expect(create.mock.calls.length).toBe(afterFirst);
+    create.mockRestore();
   });
 });
