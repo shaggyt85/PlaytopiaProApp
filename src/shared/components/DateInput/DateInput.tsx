@@ -119,6 +119,7 @@ export function DateInput({
                   minimumDate={minimumDate}
                   maximumDate={maximumDate}
                   onChange={(_, date) => date && setDraft(date)}
+                  style={styles.picker}
                   testID="date-input-picker"
                 />
               ) : null}

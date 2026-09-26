@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react-native";
+import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
 
 import { checkEmailService } from "@/features/auth/services/checkEmailService";
 import { SignInScreen } from "@/features/auth/SignInScreen";
@@ -8,8 +8,13 @@ import { HttpError } from "@/shared/services/HttpError";
 import { renderWithProviders } from "../../helpers/renderWithProviders";
 
 const mockPush = jest.fn();
+// Guarda lo que la pantalla hace al recibir el foco, para simular que se vuelve a ella.
+let mockOnFocus: (() => void) | undefined;
 jest.mock("expo-router", () => ({
   useRouter: () => ({ push: mockPush, back: jest.fn() }),
+  useFocusEffect: (effect: () => void) => {
+    mockOnFocus = effect;
+  },
 }));
 jest.mock("@/features/auth/services/checkEmailService", () => ({
   checkEmailService: { checkEmail: jest.fn() },
@@ -76,6 +81,24 @@ describe("SignInScreen", () => {
 
     await screen.findByRole("button", { name: "Registrarse" });
     expect(mockPush).not.toHaveBeenCalled();
+  });
+
+  it("al volver del registro, el botón vuelve a Continuar para poder entrar", async () => {
+    jest.mocked(checkEmailService.checkEmail).mockResolvedValue({
+      email: "nuevo@club.com",
+      exists: false,
+      is_student: false,
+      is_teacher: false,
+    });
+    renderWithProviders(<SignInScreen />);
+    escribirYContinuar("nuevo@club.com");
+    await screen.findByRole("button", { name: "Registrarse" });
+
+    act(() => mockOnFocus?.());
+
+    expect(screen.getByRole("button", { name: "Continuar" })).toBeTruthy();
+    expect(screen.queryByText("Correo no encontrado. Verifica tu correo o regístrate")).toBeNull();
+    expect(screen.getByLabelText("Correo electrónico")).toHaveProp("value", "nuevo@club.com");
   });
 
   it("valida el email antes de llamar a Core", async () => {

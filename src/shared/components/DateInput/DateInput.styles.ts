@@ -32,6 +32,8 @@ export const useStyles = makeStyles((theme) => ({
     borderTopRightRadius: theme.radius.lg,
     backgroundColor: theme.colors.surfaceStrong,
   },
+  // La rueda de iOS tiene su propio ancho: sin esto queda pegada a la izquierda.
+  picker: { alignSelf: "center" },
   actions: { flexDirection: "row", gap: theme.spacing.sm, marginTop: theme.spacing.sm },
   action: { flex: 1 },
 }));

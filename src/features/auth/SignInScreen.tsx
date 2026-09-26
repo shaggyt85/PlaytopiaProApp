@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/Button";
@@ -25,6 +25,16 @@ export function SignInScreen() {
   const checkEmail = useCheckEmail();
   const setCheckedEmail = useAuthFlowStore((s) => s.setCheckedEmail);
   const [notFound, setNotFound] = useState(false);
+  const resetCheck = checkEmail.reset;
+
+  // Al volver a esta pantalla (p. ej. tras registrarse) el botón vuelve a
+  // "Continuar": el correo ya puede existir y hay que comprobarlo de nuevo.
+  useFocusEffect(
+    useCallback(() => {
+      setNotFound(false);
+      resetCheck();
+    }, [resetCheck]),
+  );
 
   const { control, handleSubmit, formState } = useForm<EmailForm>({
     resolver: zodResolver(EmailFormSchema),
