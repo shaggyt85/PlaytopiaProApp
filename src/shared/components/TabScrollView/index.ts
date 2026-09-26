@@ -1,0 +1,1 @@
+export { TabScrollView } from "./TabScrollView";

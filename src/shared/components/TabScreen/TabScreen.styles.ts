@@ -1,7 +1,5 @@
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
-export const useStyles = makeStyles((theme) => ({
-  flex: { flex: 1 },
-  // flexGrow: el contenido corto (p. ej. «Próximamente») puede centrarse.
-  content: { flexGrow: 1, paddingTop: theme.spacing.md + theme.spacing.xs },
+export const useStyles = makeStyles(() => ({
+  container: { flex: 1 },
 }));

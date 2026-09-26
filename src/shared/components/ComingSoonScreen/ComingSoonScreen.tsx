@@ -2,6 +2,7 @@ import { usePathname } from "expo-router";
 
 import { EmptyState } from "@/shared/components/EmptyState";
 import { TabScreen } from "@/shared/components/TabScreen";
+import { TabScrollView } from "@/shared/components/TabScrollView";
 import { TABS } from "@/shared/config/tabs";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
@@ -16,7 +17,9 @@ export function ComingSoonScreen() {
 
   return (
     <TabScreen testID="coming-soon-screen">
-      <EmptyState title={tab ? t(tab.label) : t("common.comingSoon")} message={t("common.comingSoon")} />
+      <TabScrollView>
+        <EmptyState title={tab ? t(tab.label) : t("common.comingSoon")} message={t("common.comingSoon")} />
+      </TabScrollView>
     </TabScreen>
   );
 }

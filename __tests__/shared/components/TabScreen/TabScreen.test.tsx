@@ -4,7 +4,7 @@ import { Text } from "react-native";
 import { TabScreen } from "@/shared/components/TabScreen";
 
 describe("TabScreen", () => {
-  it("lleva el logo de Playtopia arriba y el contenido debajo", () => {
+  it("enmarca el contenido de la pestaña", () => {
     render(
       <TabScreen testID="pestana">
         <Text>Contenido</Text>
@@ -12,7 +12,6 @@ describe("TabScreen", () => {
     );
 
     expect(screen.getByTestId("pestana")).toBeTruthy();
-    expect(screen.getByRole("header", { name: "Playtopia" })).toBeTruthy();
     expect(screen.getByText("Contenido")).toBeTruthy();
   });
 });

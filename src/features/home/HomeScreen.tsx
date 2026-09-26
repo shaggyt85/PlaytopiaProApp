@@ -5,6 +5,7 @@ import { Button } from "@/shared/components/Button";
 import { IconButton } from "@/shared/components/IconButton";
 import { ScreenHeader } from "@/shared/components/ScreenHeader";
 import { TabScreen } from "@/shared/components/TabScreen";
+import { TabScrollView } from "@/shared/components/TabScrollView";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { session } from "@/shared/services/session";
 import { formatWeekdayDate } from "@/shared/utils/formatDate";
@@ -29,15 +30,17 @@ export function HomeScreen() {
 
   return (
     <TabScreen testID="home-screen">
-      <ScreenHeader
-        greeting={t(`home.greeting.${greetingFor(new Date(now).getHours())}`)}
-        title={profile.data?.name}
-        subtitle={formatWeekdayDate(now)}
-        right={<IconButton Icon={IconLoBell} accessibilityLabel={t("home.notifications")} />}
-      />
-      <View style={styles.signOut}>
-        <Button title={t("common.signOut")} variant="secondary" onPress={() => session.end()} />
-      </View>
+      <TabScrollView>
+        <ScreenHeader
+          greeting={t(`home.greeting.${greetingFor(new Date(now).getHours())}`)}
+          title={profile.data?.name}
+          subtitle={formatWeekdayDate(now)}
+          right={<IconButton Icon={IconLoBell} accessibilityLabel={t("home.notifications")} />}
+        />
+        <View style={styles.signOut}>
+          <Button title={t("common.signOut")} variant="secondary" onPress={() => session.end()} />
+        </View>
+      </TabScrollView>
     </TabScreen>
   );
 }

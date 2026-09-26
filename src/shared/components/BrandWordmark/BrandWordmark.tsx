@@ -5,8 +5,8 @@ import { Text } from "@/shared/components/Text";
 
 import { LOGO_SIZE, useStyles } from "./BrandWordmark.styles";
 
-// Nombre de marca: no se traduce.
-const WORDMARK = "PLAYTOPIA";
+// Nombre de marca: no se traduce. Se pinta en mayúsculas y se lee tal cual.
+const BRAND_NAME = "Playtopia";
 
 /**
  * Logo y marca arriba de cada pestaña (el `PlaytopiaWordmark` de Lovable). De
@@ -16,9 +16,9 @@ const WORDMARK = "PLAYTOPIA";
 export function BrandWordmark() {
   const styles = useStyles();
   return (
-    <View style={styles.container} accessible accessibilityRole="header" accessibilityLabel="Playtopia">
+    <View style={styles.container} accessible accessibilityRole="image" accessibilityLabel={BRAND_NAME}>
       <BrandLogo size={LOGO_SIZE} />
-      <Text variant="wordmark">{WORDMARK}</Text>
+      <Text variant="wordmark">{BRAND_NAME.toUpperCase()}</Text>
     </View>
   );
 }
