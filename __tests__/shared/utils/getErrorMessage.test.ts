@@ -6,10 +6,6 @@ const problem = (type: string, status: number) =>
   HttpError.fromResponse(status, { type, status, detail: "prosa interna de Core" });
 
 describe("getErrorMessage", () => {
-  beforeEach(async () => {
-    await changeLanguage("es");
-  });
-
   it("usa la traducción del type de Core si existe", () => {
     expect(getErrorMessage(problem("urn:playtopia:problem:server-overloaded", 503))).toBe(
       "El servidor está saturado. Inténtalo en unos minutos.",

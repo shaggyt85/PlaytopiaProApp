@@ -1,4 +1,4 @@
-import { parseProblemDetail } from "@/shared/schemas/problemDetail.schema";
+import { parseProblemDetail, problemKey } from "@/shared/schemas/problemDetail.schema";
 
 describe("parseProblemDetail", () => {
   it("lee un ProblemDetail de Core y conserva sus miembros extendidos", () => {
@@ -22,5 +22,16 @@ describe("parseProblemDetail", () => {
   it("devuelve undefined si el cuerpo no es un ProblemDetail", () => {
     expect(parseProblemDetail("<html>502</html>")).toBeUndefined();
     expect(parseProblemDetail(undefined)).toBeUndefined();
+  });
+});
+
+describe("problemKey", () => {
+  it("saca la clave de un type de Core", () => {
+    expect(problemKey("urn:playtopia:problem:email-taken")).toBe("email-taken");
+  });
+
+  it("devuelve undefined si el type no es de Core o no hay type", () => {
+    expect(problemKey("about:blank")).toBeUndefined();
+    expect(problemKey(undefined)).toBeUndefined();
   });
 });

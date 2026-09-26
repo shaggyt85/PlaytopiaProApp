@@ -9,3 +9,10 @@ process.env.EXPO_PUBLIC_API_BASE_URL = "https://api.test.local/api";
 jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
 );
+
+// Todos los tests empiezan en español, sea cual sea el idioma del equipo que
+// los ejecuta (y aunque un test anterior lo haya cambiado).
+beforeEach(async () => {
+  const { changeLanguage } = require("@/shared/config/i18n");
+  await changeLanguage("es");
+});

@@ -16,13 +16,30 @@ export const SPLASH_COLORS = {
   text: BRAND.white,
 };
 
+// Medidas propias de la composición del splash (no hay token equivalente).
+const SPLASH_LAYOUT = {
+  logoSize: 120,
+  logoGap: 60,
+  circleSmall: 300,
+  circleLarge: 400,
+  taglineGap: 12,
+  taglinePaddingX: 20,
+  taglineFontSize: 14,
+};
+
+const { spacing, radius, typography } = darkTheme;
+
+/** Círculo decorativo: ancho, alto y radio salen de un solo tamaño. */
+const circle = (size: number) => ({
+  position: "absolute" as const,
+  width: size,
+  height: size,
+  borderRadius: size / 2,
+});
+
 export const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
+    ...StyleSheet.absoluteFill,
     zIndex: 1000,
   },
   gradient: {
@@ -31,20 +48,14 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   backgroundCircle1: {
-    position: "absolute",
-    top: -100,
-    right: -100,
-    width: 300,
-    height: 300,
-    borderRadius: 150,
+    ...circle(SPLASH_LAYOUT.circleSmall),
+    top: -SPLASH_LAYOUT.circleSmall / 3,
+    right: -SPLASH_LAYOUT.circleSmall / 3,
   },
   backgroundCircle2: {
-    position: "absolute",
-    bottom: -150,
-    left: -150,
-    width: 400,
-    height: 400,
-    borderRadius: 200,
+    ...circle(SPLASH_LAYOUT.circleLarge),
+    bottom: -SPLASH_LAYOUT.circleLarge * 0.375,
+    left: -SPLASH_LAYOUT.circleLarge * 0.375,
   },
   content: {
     alignItems: "center",
@@ -52,40 +63,38 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   logoContainer: {
-    marginBottom: 60,
+    marginBottom: SPLASH_LAYOUT.logoGap,
     shadowColor: SPLASH_COLORS.accent,
-    shadowOffset: { width: 0, height: 8 },
+    shadowOffset: { width: 0, height: spacing.sm },
     shadowOpacity: 0.3,
-    shadowRadius: 16,
+    shadowRadius: spacing.md,
     elevation: 10,
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: SPLASH_LAYOUT.logoSize,
+    height: SPLASH_LAYOUT.logoSize,
   },
   textContainer: {
     alignItems: "center",
   },
   title: {
-    fontSize: 32,
-    fontWeight: "bold",
+    ...typography.display,
     color: SPLASH_COLORS.text,
-    letterSpacing: 4,
     textShadowColor: withAlpha(BRAND.violet, 0.5),
     textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
+    textShadowRadius: spacing.sm,
   },
   subtitle: {
-    marginTop: 12,
-    paddingHorizontal: 20,
-    paddingVertical: 8,
+    marginTop: SPLASH_LAYOUT.taglineGap,
+    paddingHorizontal: SPLASH_LAYOUT.taglinePaddingX,
+    paddingVertical: spacing.sm,
     backgroundColor: withAlpha(BRAND.white, 0.1),
-    borderRadius: 20,
+    borderRadius: radius.lg,
     borderWidth: 1,
     borderColor: withAlpha(BRAND.white, 0.2),
   },
   subtitleText: {
-    fontSize: 14,
+    fontSize: SPLASH_LAYOUT.taglineFontSize,
     color: withAlpha(BRAND.white, 0.8),
     fontWeight: "300",
     letterSpacing: 1,

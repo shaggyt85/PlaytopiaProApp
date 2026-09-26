@@ -14,10 +14,6 @@ function Boton() {
 }
 
 describe("useTranslation", () => {
-  beforeEach(async () => {
-    await changeLanguage("es");
-  });
-
   it("vuelve a pintar el componente al cambiar de idioma", async () => {
     render(<Boton />);
     expect(screen.getByText("es: Reintentar")).toBeTruthy();

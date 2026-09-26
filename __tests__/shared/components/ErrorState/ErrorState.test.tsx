@@ -1,14 +1,9 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import { ErrorState } from "@/shared/components/ErrorState";
-import { changeLanguage } from "@/shared/config/i18n";
 import { HttpError } from "@/shared/services/HttpError";
 
 describe("ErrorState", () => {
-  beforeEach(async () => {
-    await changeLanguage("es");
-  });
-
   it("muestra el texto traducido del error", () => {
     render(<ErrorState error={HttpError.network()} />);
 

@@ -26,3 +26,16 @@ export function parseProblemDetail(body: unknown): ProblemDetail | undefined {
   const result = ProblemDetailSchema.safeParse(body);
   return result.success ? result.data : undefined;
 }
+
+/** Prefijo de los `type` propios de Core (urn:playtopia:problem:<clave>). */
+export const PROBLEM_TYPE_PREFIX = "urn:playtopia:problem:";
+
+/**
+ * La clave de un `type` de Core: "urn:playtopia:problem:email-taken" →
+ * "email-taken". undefined si el type no es de Core (p. ej. about:blank).
+ */
+export function problemKey(type: string | undefined): string | undefined {
+  return type?.startsWith(PROBLEM_TYPE_PREFIX)
+    ? type.slice(PROBLEM_TYPE_PREFIX.length)
+    : undefined;
+}

@@ -1,9 +1,5 @@
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
-export const useStyles = makeStyles((theme) => ({
-  title: theme.typography.title,
-  subtitle: theme.typography.subtitle,
-  body: theme.typography.body,
-  caption: theme.typography.caption,
-  button: theme.typography.button,
-}));
+// Una variante por cada entrada de la tipografía del tema: una variante nueva
+// en el tema llega sola a <Text variant="…">.
+export const useStyles = makeStyles((theme) => ({ ...theme.typography }));

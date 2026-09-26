@@ -10,8 +10,8 @@ import {
 
 describe("i18n", () => {
   beforeEach(async () => {
+    // El setup ya deja el idioma en español; aquí se vacía lo guardado.
     await AsyncStorage.clear();
-    await changeLanguage("es");
   });
 
   it("traduce en el idioma activo", async () => {
