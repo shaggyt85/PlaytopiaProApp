@@ -23,7 +23,7 @@ export function AppProviders({ children, client = appQueryClient }: AppProviders
   // caché y estado. Los guards del layout llevan entonces al login.
   useEffect(() => {
     onSessionExpired(() => {
-      session.end();
+      session.end("expired");
     });
   }, []);
 

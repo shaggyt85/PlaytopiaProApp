@@ -108,4 +108,28 @@ describe("session.end", () => {
     expect(queryClient.clear).toHaveBeenCalled();
     expect(store.setAnonymous).toHaveBeenCalled();
   });
+
+  it("por defecto el cierre es manual (lo decidió el profesor)", async () => {
+    const { session, store } = build({ access: teacherToken, refresh: "refresco" });
+
+    await session.end();
+
+    expect(store.setAnonymous).toHaveBeenCalledWith("manual");
+  });
+
+  it("cuando Core da la sesión por muerta, el cierre es expired", async () => {
+    const { session, store } = build({ access: teacherToken, refresh: "refresco" });
+
+    await session.end("expired");
+
+    expect(store.setAnonymous).toHaveBeenCalledWith("expired");
+  });
+
+  it("al arrancar sin sesión no hay motivo de cierre", async () => {
+    const { session, store } = build();
+
+    await session.restore();
+
+    expect(store.setAnonymous).toHaveBeenCalledWith(null);
+  });
 });

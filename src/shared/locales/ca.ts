@@ -76,6 +76,13 @@ const ca: Translations = {
       sentMessage: "Si us plau revisa el teu correu per obtenir instruccions sobre com restablir la teva contrasenya",
       backToLogin: "Tornar al Login",
     },
+    biometric: {
+      signIn: "Accedeix amb biometria",
+      prompt: "Verifica la teva identitat per entrar a Playtopia Pro",
+      failed: "No s'ha pogut verificar la teva identitat. Torna-ho a provar.",
+      expired: "El teu accés amb biometria ha caducat. Entra amb la contrasenya per tornar-lo a activar.",
+      tooManyAttempts: "Massa intents. Entra amb la contrasenya.",
+    },
     legal: {
       text: "En registrar-te acceptes les nostres",
       terms: "condicions d'ús",

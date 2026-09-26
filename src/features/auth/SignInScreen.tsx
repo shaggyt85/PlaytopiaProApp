@@ -1,22 +1,25 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { Button } from "@/shared/components/Button";
 import { Input } from "@/shared/components/Input";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import { useSessionStore } from "@/shared/store/sessionStore";
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
-import { AuthLayout, FormError, LegalFooter } from "./components";
-import { useCheckEmail, useFieldErrorText } from "./hooks";
+import { AuthLayout, FormError, LegalFooter, PendingTermsModal } from "./components";
+import { useBiometricSignIn, useCheckEmail, useFieldErrorText } from "./hooks";
 import { EmailFormSchema, type EmailForm } from "./schemas/auth.schema";
 import { useAuthFlowStore } from "./store/authFlowStore";
 
 /**
  * Paso 1 del acceso: el email, igual que la app de alumnos. Decide por
  * `is_teacher`: si es profesor, a la contraseña; si no, el mismo botón pasa a
- * "Registrarse".
+ * "Registrarse". Con la biometría activada, trae su email ya escrito, la lanza
+ * sola al abrir (salvo justo después de cerrar sesión) y el botón pasa a
+ * "Acceder con biometría".
  */
 export function SignInScreen() {
   const { t } = useTranslation();
@@ -26,6 +29,9 @@ export function SignInScreen() {
   const setCheckedEmail = useAuthFlowStore((s) => s.setCheckedEmail);
   const [notFound, setNotFound] = useState(false);
   const resetCheck = checkEmail.reset;
+  const biometric = useBiometricSignIn();
+  const endedManually = useSessionStore((s) => s.endReason === "manual");
+  const autoTried = useRef(false);
 
   // Al volver a esta pantalla (p. ej. tras registrarse) el botón vuelve a
   // "Continuar": el correo ya puede existir y hay que comprobarlo de nuevo.
@@ -36,10 +42,21 @@ export function SignInScreen() {
     }, [resetCheck]),
   );
 
-  const { control, handleSubmit, formState } = useForm<EmailForm>({
+  const { control, handleSubmit, formState, getValues, setValue } = useForm<EmailForm>({
     resolver: zodResolver(EmailFormSchema),
     defaultValues: { email: useAuthFlowStore.getState().email },
   });
+  const useBiometric = biometric.canUseFor(useWatch({ control, name: "email" }));
+  const { loaded, available, savedEmail, signIn: signInWithBiometric } = biometric;
+
+  // Una sola vez al abrir: el email de la biometría ya escrito y, si no se
+  // acaba de cerrar sesión a mano, la biometría se lanza sola.
+  useEffect(() => {
+    if (!loaded || autoTried.current || !savedEmail) return;
+    autoTried.current = true;
+    if (!getValues("email")) setValue("email", savedEmail);
+    if (available && !endedManually) signInWithBiometric();
+  }, [loaded, available, savedEmail, endedManually, getValues, setValue, signInWithBiometric]);
 
   const submit = handleSubmit(async ({ email }) => {
     setNotFound(false);
@@ -55,7 +72,9 @@ export function SignInScreen() {
     }
   });
 
-  const errorText = notFound
+  const errorText = biometric.message
+    ? biometric.message
+    : notFound
     ? t("auth.signIn.notFound")
     : checkEmail.error
       ? getErrorMessage(checkEmail.error)
@@ -77,12 +96,14 @@ export function SignInScreen() {
             textContentType="emailAddress"
             maxLength={254}
             returnKeyType="done"
+            editable={!biometric.isPending}
             value={value}
             onBlur={onBlur}
             onChangeText={(text) => {
               onChange(text);
               setNotFound(false);
               checkEmail.reset();
+              biometric.reset();
             }}
             onSubmitEditing={submit}
             error={fieldError(formState.errors.email?.message)}
@@ -93,11 +114,19 @@ export function SignInScreen() {
       <FormError message={errorText} />
 
       <Button
-        title={notFound ? t("auth.signIn.register") : t("auth.signIn.continue")}
-        onPress={notFound ? () => router.push("/sign-up") : submit}
+        title={
+          useBiometric
+            ? t("auth.biometric.signIn")
+            : notFound
+              ? t("auth.signIn.register")
+              : t("auth.signIn.continue")
+        }
+        onPress={useBiometric ? signInWithBiometric : notFound ? () => router.push("/sign-up") : submit}
+        loading={biometric.isPending}
       />
 
       <LegalFooter />
+      <PendingTermsModal tokens={biometric.pendingTokens} onDismiss={biometric.reset} />
     </AuthLayout>
   );
 }

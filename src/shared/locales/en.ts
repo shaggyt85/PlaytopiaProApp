@@ -76,6 +76,13 @@ const en: Translations = {
       sentMessage: "Please check your email for instructions to reset your password",
       backToLogin: "Back to Login",
     },
+    biometric: {
+      signIn: "Sign in with biometrics",
+      prompt: "Verify your identity to sign in to Playtopia Pro",
+      failed: "We couldn't verify your identity. Please try again.",
+      expired: "Your biometric sign-in has expired. Sign in with your password to turn it on again.",
+      tooManyAttempts: "Too many attempts. Sign in with your password.",
+    },
     legal: {
       text: "By signing up you accept our",
       terms: "terms of use",

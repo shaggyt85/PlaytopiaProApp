@@ -6,6 +6,16 @@ import { create } from "zustand";
  */
 export type SessionStatus = "checking" | "authenticated" | "anonymous";
 
+/**
+ * Por qué se cerró la sesión la última vez en esta ejecución de la app:
+ * - `manual`: lo decidió el profesor (cerrar sesión, no aceptar los términos).
+ * - `expired`: Core la dio por muerta o el token no era de profesor.
+ * `null` si no se ha cerrado desde que se abrió la app. Vive en memoria: al
+ * volver a abrir la app se olvida (tras un cierre manual, la biometría no se
+ * lanza sola hasta entonces).
+ */
+export type SessionEndReason = "manual" | "expired" | null;
+
 export interface SessionUser {
   userId: number;
   /** La escuela (tenant). La sucursal activa es otra cosa y va aparte. */
@@ -15,13 +25,15 @@ export interface SessionUser {
 interface SessionState {
   status: SessionStatus;
   user: SessionUser | null;
+  endReason: SessionEndReason;
   setAuthenticated: (user: SessionUser) => void;
-  setAnonymous: () => void;
+  setAnonymous: (endReason?: SessionEndReason) => void;
 }
 
 export const useSessionStore = create<SessionState>((set) => ({
   status: "checking",
   user: null,
+  endReason: null,
   setAuthenticated: (user) => set({ status: "authenticated", user }),
-  setAnonymous: () => set({ status: "anonymous", user: null }),
+  setAnonymous: (endReason = null) => set({ status: "anonymous", user: null, endReason }),
 }));

@@ -78,6 +78,13 @@ const es = {
       sentMessage: "Por favor revisa tu correo para obtener instrucciones sobre cómo restablecer tu contraseña",
       backToLogin: "Volver al Login",
     },
+    biometric: {
+      signIn: "Acceder con biometría",
+      prompt: "Verifica tu identidad para entrar en Playtopia Pro",
+      failed: "No se ha podido verificar tu identidad. Inténtalo de nuevo.",
+      expired: "Tu acceso con biometría ha caducado. Entra con tu contraseña para volver a activarlo.",
+      tooManyAttempts: "Demasiados intentos. Entra con tu contraseña.",
+    },
     legal: {
       text: "Al registrarte aceptas nuestras",
       terms: "condiciones de uso",

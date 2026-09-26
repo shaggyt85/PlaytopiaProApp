@@ -76,6 +76,13 @@ const fr: Translations = {
       sentMessage: "Veuillez consulter votre e-mail pour obtenir des instructions sur la réinitialisation de votre mot de passe",
       backToLogin: "Retour à la connexion",
     },
+    biometric: {
+      signIn: "Se connecter avec la biométrie",
+      prompt: "Vérifiez votre identité pour vous connecter à Playtopia Pro",
+      failed: "Impossible de vérifier votre identité. Veuillez réessayer.",
+      expired: "Votre accès biométrique a expiré. Connectez-vous avec votre mot de passe pour le réactiver.",
+      tooManyAttempts: "Trop de tentatives. Connectez-vous avec votre mot de passe.",
+    },
     legal: {
       text: "En vous inscrivant, vous acceptez nos",
       terms: "conditions d'utilisation",

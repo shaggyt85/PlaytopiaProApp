@@ -1,9 +1,13 @@
 import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
 
+import { biometricService } from "@/features/auth/services/biometricService";
 import { checkEmailService } from "@/features/auth/services/checkEmailService";
+import { completeSignIn } from "@/features/auth/services/completeSignIn";
 import { SignInScreen } from "@/features/auth/SignInScreen";
 import { useAuthFlowStore } from "@/features/auth/store/authFlowStore";
 import { HttpError } from "@/shared/services/HttpError";
+import { requestTokenRefresh } from "@/shared/services/tokenRefresh";
+import { useSessionStore } from "@/shared/store/sessionStore";
 
 import { renderWithProviders } from "../../helpers/renderWithProviders";
 
@@ -19,6 +23,21 @@ jest.mock("expo-router", () => ({
 jest.mock("@/features/auth/services/checkEmailService", () => ({
   checkEmailService: { checkEmail: jest.fn() },
 }));
+// Sin biometría por defecto; los casos de biometría la activan.
+jest.mock("@/features/auth/services/biometricService", () => ({
+  biometricService: {
+    isAvailable: jest.fn(),
+    savedEmail: jest.fn(),
+    enable: jest.fn(),
+    unlock: jest.fn(),
+    disable: jest.fn(),
+  },
+}));
+jest.mock("@/features/auth/services/completeSignIn", () => ({ completeSignIn: jest.fn() }));
+jest.mock("@/shared/services/tokenRefresh", () => ({
+  ...jest.requireActual("@/shared/services/tokenRefresh"),
+  requestTokenRefresh: jest.fn(),
+}));
 
 const escribirYContinuar = (email: string) => {
   fireEvent.changeText(screen.getByLabelText("Correo electrónico"), email);
@@ -28,6 +47,9 @@ const escribirYContinuar = (email: string) => {
 describe("SignInScreen", () => {
   beforeEach(() => {
     useAuthFlowStore.getState().reset();
+    useSessionStore.getState().setAnonymous(null);
+    jest.mocked(biometricService.isAvailable).mockResolvedValue(false);
+    jest.mocked(biometricService.savedEmail).mockResolvedValue(null);
   });
 
   it("si es profesor, guarda el email para el paso 2 y va a la contraseña", async () => {
@@ -118,5 +140,64 @@ describe("SignInScreen", () => {
 
     await screen.findByText("Sin conexión. Revisa tu red e inténtalo de nuevo.");
     expect(mockPush).not.toHaveBeenCalled();
+  });
+
+  describe("con la biometría activada", () => {
+    const saved = { email: "ana@club.com", userId: 42, refreshToken: "refresco-guardado" };
+    const tokens = { access_token: "acceso", refresh_token: "refresco-nuevo" };
+
+    beforeEach(() => {
+      jest.mocked(biometricService.isAvailable).mockResolvedValue(true);
+      jest.mocked(biometricService.savedEmail).mockResolvedValue(saved.email);
+      jest.mocked(biometricService.unlock).mockResolvedValue({ status: "ok", credentials: saved });
+      jest.mocked(requestTokenRefresh).mockResolvedValue(tokens);
+      jest.mocked(completeSignIn).mockResolvedValue({ tokens, termsPending: false });
+    });
+
+    it("al abrir trae su email escrito y la lanza sola", async () => {
+      renderWithProviders(<SignInScreen />);
+
+      await waitFor(() => expect(completeSignIn).toHaveBeenCalledWith(tokens));
+      expect(screen.getByLabelText("Correo electrónico")).toHaveProp("value", "ana@club.com");
+      expect(requestTokenRefresh).toHaveBeenCalledWith("refresco-guardado");
+    });
+
+    it("justo después de cerrar sesión a mano no se lanza sola", async () => {
+      useSessionStore.getState().setAnonymous("manual");
+      renderWithProviders(<SignInScreen />);
+
+      await screen.findByRole("button", { name: "Acceder con biometría" });
+      expect(biometricService.unlock).not.toHaveBeenCalled();
+    });
+
+    it("el botón pasa a «Acceder con biometría» con su email y la usa al pulsarlo", async () => {
+      useSessionStore.getState().setAnonymous("manual");
+      renderWithProviders(<SignInScreen />);
+
+      const button = await screen.findByRole("button", { name: "Acceder con biometría" });
+      await act(async () => {
+        fireEvent.press(button);
+      });
+
+      expect(biometricService.unlock).toHaveBeenCalled();
+      expect(checkEmailService.checkEmail).not.toHaveBeenCalled();
+    });
+
+    it("con otro email el botón vuelve a Continuar", async () => {
+      useSessionStore.getState().setAnonymous("manual");
+      renderWithProviders(<SignInScreen />);
+      await screen.findByRole("button", { name: "Acceder con biometría" });
+
+      fireEvent.changeText(screen.getByLabelText("Correo electrónico"), "otro@club.com");
+
+      expect(screen.getByRole("button", { name: "Continuar" })).toBeTruthy();
+    });
+
+    it("si le faltan los términos abre su modal", async () => {
+      jest.mocked(completeSignIn).mockResolvedValue({ tokens, termsPending: true });
+      renderWithProviders(<SignInScreen />);
+
+      expect(await screen.findByText("Términos y Condiciones")).toBeTruthy();
+    });
   });
 });

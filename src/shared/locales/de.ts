@@ -76,6 +76,13 @@ const de: Translations = {
       sentMessage: "Bitte überprüfen Sie Ihre E-Mails für Anweisungen zum Zurücksetzen Ihres Passworts",
       backToLogin: "Zurück zur Anmeldung",
     },
+    biometric: {
+      signIn: "Mit Biometrie anmelden",
+      prompt: "Bestätigen Sie Ihre Identität, um sich bei Playtopia Pro anzumelden",
+      failed: "Ihre Identität konnte nicht bestätigt werden. Bitte versuchen Sie es erneut.",
+      expired: "Ihre biometrische Anmeldung ist abgelaufen. Melden Sie sich mit Ihrem Passwort an, um sie wieder zu aktivieren.",
+      tooManyAttempts: "Zu viele Versuche. Melden Sie sich mit Ihrem Passwort an.",
+    },
     legal: {
       text: "Mit der Registrierung akzeptieren Sie unsere",
       terms: "Nutzungsbedingungen",

@@ -2,7 +2,11 @@ import type { QueryClient } from "@tanstack/react-query";
 
 import { queryClient } from "@/shared/config/queryClient";
 import { ROLES } from "@/shared/config/roles";
-import { useSessionStore, type SessionUser } from "@/shared/store/sessionStore";
+import {
+  useSessionStore,
+  type SessionEndReason,
+  type SessionUser,
+} from "@/shared/store/sessionStore";
 import { decodeSessionClaims } from "@/shared/utils/jwt";
 
 import { tokenStorage, type ITokenStorage } from "./tokenStorage";
@@ -18,20 +22,20 @@ export function createSessionService(deps: {
   queryClient: Pick<QueryClient, "clear">;
   store: {
     setAuthenticated: (user: SessionUser) => void;
-    setAnonymous: () => void;
+    setAnonymous: (endReason?: SessionEndReason) => void;
   };
 }) {
-  const end = async (): Promise<void> => {
+  const end = async (reason: SessionEndReason = "manual"): Promise<void> => {
     await deps.tokens.clearTokens();
     deps.queryClient.clear();
-    deps.store.setAnonymous();
+    deps.store.setAnonymous(reason);
   };
 
   /** Deja la sesión abierta si el token es de un profesor; si no, la cierra. */
   const openFromToken = async (accessToken: string | null): Promise<boolean> => {
     const claims = accessToken ? decodeSessionClaims(accessToken) : undefined;
     if (claims?.roleId !== ROLES.TEACHER) {
-      await end();
+      await end("expired");
       return false;
     }
     deps.store.setAuthenticated({ userId: claims.userId, dbId: claims.dbId });
@@ -48,7 +52,7 @@ export function createSessionService(deps: {
       try {
         const refreshToken = await deps.tokens.getRefreshToken();
         if (!refreshToken) {
-          await end();
+          await end(null);
           return;
         }
         await openFromToken(await deps.tokens.getAccessToken());
@@ -74,7 +78,10 @@ export function createSessionService(deps: {
       return openFromToken(accessToken);
     },
 
-    /** Cierre de sesión: manual o porque Core la dio por muerta. */
+    /**
+     * Cierre de sesión. Por defecto `manual` (lo decidió el profesor);
+     * `expired` cuando Core la da por muerta.
+     */
     end,
   };
 }

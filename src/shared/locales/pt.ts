@@ -76,6 +76,13 @@ const pt: Translations = {
       sentMessage: "Por favor, verifique seu email para obter instruções sobre como redefinir sua senha",
       backToLogin: "Voltar ao Login",
     },
+    biometric: {
+      signIn: "Entrar com biometria",
+      prompt: "Verifique sua identidade para entrar no Playtopia Pro",
+      failed: "Não foi possível verificar sua identidade. Tente novamente.",
+      expired: "Seu acesso com biometria expirou. Entre com sua senha para ativá-lo de novo.",
+      tooManyAttempts: "Muitas tentativas. Entre com sua senha.",
+    },
     legal: {
       text: "Ao se cadastrar você aceita nossos",
       terms: "termos de uso",
