@@ -8,15 +8,19 @@ import { useStyles } from "./ScreenHeader.styles";
 export interface ScreenHeaderProps {
   /** Línea pequeña en mayúsculas sobre el título. Textos ya traducidos. */
   greeting?: string;
-  /** Sin título (p. ej. mientras carga) se reserva su hueco: nada salta al llegar. */
   title?: string;
+  /** El título aún no ha llegado: se reserva su hueco para que nada salte. */
+  loading?: boolean;
   subtitle?: string;
   /** Hueco a la derecha (p. ej. la campana). */
   right?: ReactNode;
 }
 
+// Como en Lovable, un nombre largo baja a una segunda línea antes de cortarse.
+const TITLE_MAX_LINES = 2;
+
 /** Cabecera de pantalla de Lovable (`ScreenHeader`). Solo pinta lo que recibe. */
-export function ScreenHeader({ greeting, title, subtitle, right }: ScreenHeaderProps) {
+export function ScreenHeader({ greeting, title, loading = false, subtitle, right }: ScreenHeaderProps) {
   const styles = useStyles();
   return (
     <View style={styles.container}>
@@ -27,12 +31,12 @@ export function ScreenHeader({ greeting, title, subtitle, right }: ScreenHeaderP
           </Text>
         ) : null}
         {title ? (
-          <Text variant="hero" accessibilityRole="header" numberOfLines={1} style={styles.title}>
+          <Text variant="hero" accessibilityRole="header" numberOfLines={TITLE_MAX_LINES} style={styles.title}>
             {title}
           </Text>
-        ) : (
+        ) : loading ? (
           <View style={styles.titlePlaceholder} testID="screen-header-title-placeholder" />
-        )}
+        ) : null}
         {subtitle ? (
           <Text variant="label" color="textSecondary" style={styles.subtitle}>
             {subtitle}

@@ -6,7 +6,7 @@ export const useStyles = makeStyles((theme) => ({
     alignItems: "flex-start",
     justifyContent: "space-between",
     gap: theme.spacing.sm + theme.spacing.xs,
-    paddingHorizontal: theme.spacing.md + theme.spacing.xs,
+    paddingHorizontal: theme.gutter,
     paddingTop: theme.spacing.xl,
     paddingBottom: theme.spacing.md,
   },

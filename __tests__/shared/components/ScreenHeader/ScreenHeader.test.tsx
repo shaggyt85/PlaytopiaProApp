@@ -15,10 +15,23 @@ describe("ScreenHeader", () => {
     expect(screen.getByText("campana")).toBeTruthy();
   });
 
-  it("sin título reserva su hueco para que nada salte al llegar", () => {
-    render(<ScreenHeader greeting="Buenos días" />);
+  it("mientras carga el título reserva su hueco para que nada salte al llegar", () => {
+    render(<ScreenHeader greeting="Buenos días" loading />);
 
     expect(screen.queryByRole("header")).toBeNull();
     expect(screen.getByTestId("screen-header-title-placeholder")).toBeTruthy();
+  });
+
+  it("sin título y sin cargar no deja hueco", () => {
+    render(<ScreenHeader greeting="Buenos días" subtitle="Viernes" />);
+
+    expect(screen.queryByTestId("screen-header-title-placeholder")).toBeNull();
+    expect(screen.getByText("Viernes")).toBeTruthy();
+  });
+
+  it("un título largo puede ocupar dos líneas antes de cortarse", () => {
+    render(<ScreenHeader title="María de los Ángeles" />);
+
+    expect(screen.getByRole("header").props.numberOfLines).toBe(2);
   });
 });

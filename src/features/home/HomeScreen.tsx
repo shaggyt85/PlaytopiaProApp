@@ -34,6 +34,7 @@ export function HomeScreen() {
         <ScreenHeader
           greeting={t(`home.greeting.${greetingFor(new Date(now).getHours())}`)}
           title={profile.data?.name}
+          loading={profile.isPending}
           subtitle={formatWeekdayDate(now)}
           right={<IconButton Icon={IconLoBell} accessibilityLabel={t("home.notifications")} />}
         />

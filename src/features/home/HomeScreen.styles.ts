@@ -1,5 +1,5 @@
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
 export const useStyles = makeStyles((theme) => ({
-  signOut: { paddingHorizontal: theme.spacing.md + theme.spacing.xs, paddingTop: theme.spacing.lg },
+  signOut: { paddingHorizontal: theme.gutter, paddingTop: theme.spacing.lg },
 }));

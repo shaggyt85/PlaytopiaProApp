@@ -37,7 +37,7 @@ const typography = {
   caption: { fontFamily: FONTS.regular, fontSize: 13 },
   /** Línea pequeña en mayúsculas sobre un título (el saludo de Hoy). */
   eyebrow: { fontFamily: FONTS.medium, fontSize: 12, letterSpacing: 2.2, textTransform: "uppercase" },
-  /** Texto junto a una casilla (términos, "prefiero no decirlo"). */
+  /** Texto secundario de 14: junto a una casilla (términos, "prefiero no decirlo") o subtítulo de una cabecera. */
   label: { fontFamily: FONTS.regular, fontSize: 14, lineHeight: 20 },
   /** Texto legal, pies. */
   small: { fontFamily: FONTS.regular, fontSize: 12 },
@@ -146,6 +146,8 @@ export const darkTheme = {
   spacing,
   radius,
   typography,
+  /** Margen lateral de pantallas y paneles (el `px-5` de Lovable). */
+  gutter: 20,
   /** Área táctil mínima (accesibilidad). */
   touchTarget: 44,
   /** Alto de campos y botones (píldoras). */

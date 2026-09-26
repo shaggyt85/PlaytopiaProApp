@@ -1,4 +1,4 @@
-import { act, fireEvent, screen } from "@testing-library/react-native";
+import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
 
 import { HomeScreen } from "@/features/home/HomeScreen";
 import { session } from "@/shared/services/session";
@@ -49,6 +49,15 @@ describe("HomeScreen", () => {
 
     expect(await screen.findByText("Buenos días, entrenador")).toBeTruthy();
     expect(screen.queryByRole("header", { name: "David" })).toBeNull();
+    // Sin el nombre no queda hueco: la fecha sube.
+    await waitFor(() => expect(screen.queryByTestId("screen-header-title-placeholder")).toBeNull());
+  });
+
+  it("mientras llega el nombre reserva su hueco", () => {
+    jest.mocked(teacherProfileService.get).mockReturnValue(new Promise(() => undefined));
+    renderWithProviders(<HomeScreen />);
+
+    expect(screen.getByTestId("screen-header-title-placeholder")).toBeTruthy();
   });
 
   it("muestra la campana de notificaciones", async () => {

@@ -28,7 +28,7 @@ export const useStyles = makeStyles((theme) => ({
     borderWidth: 1,
     borderBottomWidth: 0,
     borderColor: theme.colors.hairline,
-    paddingHorizontal: theme.spacing.md + theme.spacing.xs,
+    paddingHorizontal: theme.gutter,
     paddingTop: theme.spacing.md + theme.spacing.xs,
     paddingBottom: theme.spacing.lg + theme.spacing.xs,
   },

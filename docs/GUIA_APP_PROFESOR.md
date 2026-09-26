@@ -528,7 +528,7 @@ useQuery({
 - **Fondo de las pestañas:** `AppTabs` dibuja el fondo de marca **una sola vez**, detrás de todas (como el `body` de Lovable); las pestañas son transparentes y el fondo no se redibuja al cambiar.
 - **Marco de cada pestaña: `TabScreen`**, solo la zona segura de arriba. El desplazamiento lo elige cada pantalla: `TabScrollView` (logo `BrandWordmark` arriba, que se desplaza con el contenido, y el hueco de la barra abajo) para contenido libre; para listas largas, una `FlatList` con el logo como cabecera y `useTabBarInset()` abajo. Nunca una `FlatList` dentro de un `ScrollView`.
 - **El logo se anuncia como imagen** («Playtopia»): el título de la pantalla es el de su cabecera. De momento el logo blanco; el isotipo con degradado está pendiente de la librería.
-- **Cabecera: `ScreenHeader`** (la de Lovable): saludo en mayúsculas (`eyebrow`), título grande (`hero`), subtítulo y un hueco a la derecha. Solo pinta lo que recibe; sin título reserva su altura.
+- **Cabecera: `ScreenHeader`** (la de Lovable): saludo en mayúsculas (`eyebrow`), título grande (`hero`), subtítulo y un hueco a la derecha. Solo pinta lo que recibe. Con `loading` reserva la altura del título mientras llega; sin título y sin `loading` no deja hueco. Un título largo baja a una segunda línea antes de cortarse.
 
 ### Hoy
 
@@ -637,7 +637,7 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 
 ### Radios, espaciado y movimiento
 
-- **Radios del prototipo** (`theme.radius`): `sm` 14, `md` 17, `lg` 20, `xl` 26, `xxl` 32, `xxxl` 40 y `pill`. `theme.controlHeight` (48) es el alto de campos y botones, y `touchTarget` (44) el área táctil mínima.
+- **Radios del prototipo** (`theme.radius`): `sm` 14, `md` 17, `lg` 20, `xl` 26, `xxl` 32, `xxxl` 40 y `pill`. `theme.controlHeight` (48) es el alto de campos y botones, `touchTarget` (44) el área táctil mínima y `gutter` (20, el `px-5` de Lovable) el margen lateral de pantallas y paneles: nunca se escribe como suma de espaciados.
 - **Animaciones con Reanimated,** solo con `transform` y `opacity` para que vayan en el hilo de la interfaz. Se respeta «reducir movimiento» del sistema (`useReduceMotion`). Los valores de cada animación, en un fichero aparte junto al componente (p. ej. `TabBar.animation.ts`).
 - **Vibración** con `selectionFeedback()` (`shared/utils/haptics.ts`), que no falla si el móvil no vibra.
 
