@@ -4,6 +4,9 @@ import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useState } from "react";
 
 import { AnimatedSplash } from "@/features/splash";
+// Valida las variables de entorno al arrancar: si falta alguna, la app
+// falla aquí con un mensaje claro y no más tarde en una pantalla cualquiera.
+import "@/shared/config/env";
 
 // El splash nativo (logo sobre #1a1333) se mantiene hasta que el animado está
 // montado encima; así no hay un parpadeo en blanco entre los dos.

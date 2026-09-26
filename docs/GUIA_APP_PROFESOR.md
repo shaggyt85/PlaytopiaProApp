@@ -301,22 +301,12 @@ No se toca nada más de la pantalla.
 - **Nada hardcodeado**: ni URLs de servidor, ni claves, ni DSN de Sentry, ni IDs de proyecto.
 - **Validación al arrancar:** `shared/config/env.ts` valida todas las variables con un schema Zod. Si falta o está mal alguna, la app falla en el arranque con un mensaje claro. El resto del código importa `env` desde ahí y **nunca lee `process.env` directamente**.
 
-```ts
-// shared/config/env.ts
-const envSchema = z.object({
-  EXPO_PUBLIC_API_BASE_URL: z.string().url(),
-  EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET: z.string().min(1),
-  EXPO_PUBLIC_TOKEN_SKEW_SECONDS: z.coerce.number().int().positive().default(300),
-  EXPO_PUBLIC_SENTRY_DSN: z.string().optional(),
-});
-
-export const env = envSchema.parse({
-  EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL,
-  EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET: process.env.EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET,
-  EXPO_PUBLIC_TOKEN_SKEW_SECONDS: process.env.EXPO_PUBLIC_TOKEN_SKEW_SECONDS,
-  EXPO_PUBLIC_SENTRY_DSN: process.env.EXPO_PUBLIC_SENTRY_DSN,
-});
-```
+Cómo está hecho (`src/shared/config/env.ts`):
+- Un schema Zod con todas las variables; `parseEnv()` lo aplica y, si algo falla, lanza un error que nombra cada variable mal o ausente.
+- Una variable vacía en `.env` (`CLAVE=`) cuenta como no definida.
+- El layout raíz lo importa, así la validación ocurre al arrancar y no en una pantalla cualquiera.
+- Una variable que solo necesita una pantalla futura se declara opcional y pasa a obligatoria cuando esa pantalla existe (el secreto HMAC, con `sign-up`).
+- Para una variable nueva: añadirla al schema, a la llamada de `parseEnv`, a `.env.example` y a las variables de EAS.
 
 > Expo solo sustituye `process.env.EXPO_PUBLIC_X` cuando se escribe literal, por eso cada variable se nombra una a una.
 

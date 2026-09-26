@@ -1,3 +1,6 @@
 // Setup común de Jest. Aquí van los mocks globales que necesiten todos los
 // tests (módulos nativos, etc.) a medida que la app los vaya usando.
-export {};
+
+// Variables mínimas para que shared/config/env.ts cargue en los tests. Nunca
+// valores reales: los tests no llaman al servidor.
+process.env.EXPO_PUBLIC_API_BASE_URL = "https://api.test.local/api";
