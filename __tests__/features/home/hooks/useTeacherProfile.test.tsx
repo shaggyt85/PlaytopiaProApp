@@ -16,7 +16,12 @@ function setup() {
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>{children}</QueryClientProvider>
   );
-  return { client, service, render: () => renderHook(() => useTeacherProfile(service), { wrapper }) };
+  return {
+    client,
+    service,
+    render: () => renderHook(() => useTeacherProfile({ service }), { wrapper }),
+    renderName: () => renderHook(() => useTeacherProfile({ service, select: (p) => p.name }), { wrapper }),
+  };
 }
 
 describe("useTeacherProfile", () => {
@@ -38,6 +43,13 @@ describe("useTeacherProfile", () => {
 
     expect(result.current.data?.name).toBe("David");
     expect(service.get).not.toHaveBeenCalled();
+  });
+
+  it("con select devuelve solo lo que la pantalla usa", async () => {
+    const { renderName } = setup();
+    const { result } = renderName();
+
+    await waitFor(() => expect(result.current.data).toBe("David"));
   });
 
   it("sin sesión no pide nada", async () => {

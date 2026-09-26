@@ -1,4 +1,11 @@
-import { TeacherProfileService, teacherKeys } from "@/shared/services/teacherProfileService";
+import { skipToken } from "@tanstack/react-query";
+
+import { CachePolicy } from "@/shared/config/cachePolicies";
+import {
+  TeacherProfileService,
+  teacherKeys,
+  teacherProfileQuery,
+} from "@/shared/services/teacherProfileService";
 
 import { createFakeHttpClient as fakeHttp } from "../../helpers/fakeHttpClient";
 
@@ -39,5 +46,18 @@ describe("TeacherProfileService", () => {
 
   it("la clave de caché del perfil lleva el id del profesor", () => {
     expect(teacherKeys.profile(42)).toEqual(["teacher", "profile", 42]);
+  });
+
+  it("la receta de la query: su clave, cómo se pide y la caché STANDARD", async () => {
+    const service = { get: jest.fn().mockResolvedValue("perfil") };
+    const query = teacherProfileQuery(42, service);
+
+    expect(query.queryKey).toEqual(["teacher", "profile", 42]);
+    expect(query.staleTime).toBe(CachePolicy.STANDARD.staleTime);
+    expect(query.queryFn).not.toBe(skipToken);
+  });
+
+  it("sin profesor la receta no pide nada", () => {
+    expect(teacherProfileQuery(undefined).queryFn).toBe(skipToken);
   });
 });

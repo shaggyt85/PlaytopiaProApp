@@ -7,11 +7,15 @@ import { ScreenHeader } from "@/shared/components/ScreenHeader";
 import { TabScreen } from "@/shared/components/TabScreen";
 import { TabScrollView } from "@/shared/components/TabScrollView";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 import { session } from "@/shared/services/session";
 
 import { useStyles } from "./HomeScreen.styles";
 import { useTeacherProfile } from "./hooks/useTeacherProfile";
 import { useTodayHeader } from "./hooks/useTodayHeader";
+
+// Hoy solo usa el nombre: no se vuelve a pintar si cambia otro campo del perfil.
+const selectName = (profile: TeacherProfile) => profile.name;
 
 /**
  * Hoy: saludo según la hora, el nombre del profesor y la fecha, con la hora
@@ -24,15 +28,15 @@ export function HomeScreen() {
   const styles = useStyles();
   const { t } = useTranslation();
   const header = useTodayHeader();
-  const profile = useTeacherProfile();
+  const name = useTeacherProfile({ select: selectName });
 
   return (
     <TabScreen testID="home-screen">
       <TabScrollView>
         <ScreenHeader
           greeting={t(header.greeting)}
-          title={profile.data?.name}
-          loading={profile.isPending}
+          title={name.data}
+          loading={name.isPending}
           subtitle={header.date}
           right={<IconButton Icon={IconLoBell} accessibilityLabel={t("home.notifications")} />}
         />

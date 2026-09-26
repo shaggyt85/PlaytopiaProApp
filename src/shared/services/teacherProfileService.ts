@@ -1,3 +1,6 @@
+import { queryOptions, skipToken } from "@tanstack/react-query";
+
+import { CachePolicy } from "@/shared/config/cachePolicies";
 import {
   TeacherProfileSchema,
   type TeacherProfile,
@@ -15,7 +18,7 @@ export const TEACHER_ENDPOINTS = {
 /** Claves de caché del profesor: siempre con su id. */
 export const teacherKeys = {
   all: ["teacher"] as const,
-  profile: (teacherId: number) => [...teacherKeys.all, "profile", teacherId] as const,
+  profile: (teacherId: number | undefined) => [...teacherKeys.all, "profile", teacherId] as const,
 };
 
 /**
@@ -42,3 +45,19 @@ export class TeacherProfileService implements ITeacherProfileService {
 }
 
 export const teacherProfileService: ITeacherProfileService = new TeacherProfileService(httpClient);
+
+/**
+ * La receta de la query del perfil, en un solo sitio: clave, cómo se pide y su
+ * caché. Quien lee la usa entera; quien escribe (el acceso) usa su `queryKey`,
+ * que sabe qué guarda: `setQueryData` solo acepta un `TeacherProfile`. Sin
+ * profesor no se pide nada (`skipToken`).
+ */
+export const teacherProfileQuery = (
+  teacherId: number | undefined,
+  service: Pick<ITeacherProfileService, "get"> = teacherProfileService,
+) =>
+  queryOptions({
+    queryKey: teacherKeys.profile(teacherId),
+    queryFn: teacherId === undefined ? skipToken : () => service.get(teacherId),
+    ...CachePolicy.STANDARD,
+  });

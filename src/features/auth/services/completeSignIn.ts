@@ -3,7 +3,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { queryClient } from "@/shared/config/queryClient";
 import { session } from "@/shared/services/session";
 import {
-  teacherKeys,
+  teacherProfileQuery,
   teacherProfileService,
   type ITeacherProfileService,
 } from "@/shared/services/teacherProfileService";
@@ -43,7 +43,7 @@ export async function completeSignIn(
   try {
     if (teacherId === undefined) throw new Error("El access token no dice qué profesor es.");
     const profile = await deps.profile.get(teacherId);
-    deps.cache.setQueryData(teacherKeys.profile(teacherId), profile);
+    deps.cache.setQueryData(teacherProfileQuery(teacherId).queryKey, profile);
     if (profile.terms_version !== TERMS_VERSION) return { tokens, termsPending: true };
   } catch (error) {
     // Sin saber si los aceptó no se entra: se borran los tokens guardados.

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { session } from "@/shared/services/session";
 import {
-  teacherKeys,
+  teacherProfileQuery,
   teacherProfileService,
   type ITeacherProfileService,
 } from "@/shared/services/teacherProfileService";
@@ -23,7 +23,7 @@ export function useAcceptTerms(profile: Pick<ITeacherProfileService, "update"> =
       const teacherId = decodeSessionClaims(tokens.access_token)?.userId;
       if (teacherId === undefined) throw new Error("El access token no dice qué profesor es.");
       const updated = await profile.update(teacherId, { terms_version: TERMS_VERSION });
-      queryClient.setQueryData(teacherKeys.profile(teacherId), updated);
+      queryClient.setQueryData(teacherProfileQuery(teacherId).queryKey, updated);
       await session.start(tokens.access_token, tokens.refresh_token);
     },
   });

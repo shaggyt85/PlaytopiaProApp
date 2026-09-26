@@ -532,7 +532,7 @@ useQuery({
 
 ### Hoy
 
-- **Cabecera:** «Buenos días / Buenas tardes / Buenas noches, entrenador» (6-12, 12-20 y el resto; `home/utils/greeting.ts`), el nombre del profesor (`useTeacherProfile`, caché `STANDARD`) y la fecha («Viernes · 22 de noviembre», `formatWeekdayDate`).
+- **Cabecera:** «Buenos días / Buenas tardes / Buenas noches, entrenador» (6-12, 12-20 y el resto; `home/utils/greeting.ts`), el nombre del profesor (`useTeacherProfile` con `select` del nombre: solo se vuelve a pintar si cambia; la receta `teacherProfileQuery` con `queryOptions` lleva clave, función y caché `STANDARD`, y el acceso escribe con su `queryKey` tipada) y la fecha («Viernes · 22 de noviembre», `formatWeekdayDate`).
 - **La hora es la del móvil** con `serverNow()`: es el día del profesor, no de un club (puede dar clases en clubes de zonas distintas). Las horas de las clases, cuando lleguen, van en la hora de su club. Saludo y fecha se renuevan al volver la app al primer plano (`useForegroundNow`), sin temporizadores. `useTodayHeader` los junta y los da listos: la pantalla solo los pinta.
 - **Si el perfil no llega,** la cabecera sale igual sin el nombre.
 - **Provisional:** la campana se ve pero no hace nada hasta las notificaciones (sin punto rojo), y el botón de cerrar sesión sigue hasta que exista Perfil.
