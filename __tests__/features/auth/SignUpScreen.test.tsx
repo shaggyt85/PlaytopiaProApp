@@ -18,8 +18,11 @@ jest.mock("@/features/auth/services/signUpService", () => ({
 // Rueda de iOS simulada: al tocarla elige el 3 de mayo de 1990.
 jest.mock("@react-native-community/datetimepicker", () => {
   const { Pressable } = jest.requireActual("react-native");
-  const Picker = ({ onChange }: { onChange: (e: unknown, d: Date) => void }) => (
-    <Pressable accessibilityLabel="rueda" onPress={() => onChange({ type: "set" }, new Date(1990, 4, 3))} />
+  const Picker = ({ onValueChange }: { onValueChange: (e: unknown, d: Date) => void }) => (
+    <Pressable
+      accessibilityLabel="rueda"
+      onPress={() => onValueChange({ nativeEvent: {} }, new Date(1990, 4, 3))}
+    />
   );
   return { __esModule: true, default: Picker, DateTimePickerAndroid: { open: jest.fn() } };
 });

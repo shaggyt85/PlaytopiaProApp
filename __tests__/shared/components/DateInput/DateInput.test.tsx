@@ -9,11 +9,11 @@ import { darkTheme } from "@/shared/config/theme";
 // 3 de mayo de 1990; en Android se comprueba lo que se le pide al diálogo.
 jest.mock("@react-native-community/datetimepicker", () => {
   const { Pressable } = jest.requireActual("react-native");
-  const Picker = ({ onChange }: { onChange: (e: unknown, d: Date) => void }) => (
+  const Picker = ({ onValueChange }: { onValueChange: (e: unknown, d: Date) => void }) => (
     <Pressable
       accessibilityRole="adjustable"
       accessibilityLabel="rueda"
-      onPress={() => onChange({ type: "set" }, new Date(1990, 4, 3))}
+      onPress={() => onValueChange({ nativeEvent: {} }, new Date(1990, 4, 3))}
     />
   );
   return { __esModule: true, default: Picker, DateTimePickerAndroid: { open: jest.fn() } };
@@ -104,15 +104,12 @@ describe("DateInput", () => {
       renderDate({ onChange, onBlur });
 
       fireEvent.press(screen.getByRole("button", { name: "Fecha de nacimiento" }));
-      const { onChange: dialogChange } = jest.mocked(DateTimePickerAndroid.open).mock.calls[0][0];
+      const dialog = jest.mocked(DateTimePickerAndroid.open).mock.calls[0][0];
 
-      dialogChange?.({ type: "dismissed", nativeEvent: { timestamp: 0, utcOffset: 0 } }, undefined);
+      dialog.onDismiss?.();
       expect(onChange).not.toHaveBeenCalled();
 
-      dialogChange?.(
-        { type: "set", nativeEvent: { timestamp: 0, utcOffset: 0 } },
-        new Date(1985, 11, 31),
-      );
+      dialog.onValueChange?.({ nativeEvent: { timestamp: 0, utcOffset: 0 } }, new Date(1985, 11, 31));
       expect(onChange).toHaveBeenCalledWith("1985-12-31");
       expect(onBlur).toHaveBeenCalledTimes(2);
     });

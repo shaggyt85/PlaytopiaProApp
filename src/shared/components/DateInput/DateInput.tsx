@@ -64,10 +64,11 @@ export function DateInput({
         mode: "date",
         minimumDate,
         maximumDate,
-        onChange: (event, date) => {
-          if (event.type === "set" && date) onChange(toValue(date));
+        onValueChange: (_, date) => {
+          onChange(toValue(date));
           onBlur?.();
         },
+        onDismiss: () => onBlur?.(),
       });
       return;
     }
@@ -118,7 +119,7 @@ export function DateInput({
                   locale={locale}
                   minimumDate={minimumDate}
                   maximumDate={maximumDate}
-                  onChange={(_, date) => date && setDraft(date)}
+                  onValueChange={(_, date) => setDraft(date)}
                   style={styles.picker}
                   testID="date-input-picker"
                 />
