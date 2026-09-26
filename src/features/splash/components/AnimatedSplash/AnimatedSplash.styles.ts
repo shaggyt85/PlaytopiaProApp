@@ -10,7 +10,6 @@ const SPLASH_LAYOUT = {
   logoGap: 60,
   taglineGap: 12,
   taglinePaddingX: 20,
-  taglineFontSize: 14,
 };
 
 const { colors, spacing, radius, typography, shadows } = darkTheme;
@@ -48,9 +47,7 @@ export const styles = StyleSheet.create({
     borderColor: colors.hairlineStrong,
   },
   subtitleText: {
-    fontSize: SPLASH_LAYOUT.taglineFontSize,
+    ...typography.tagline,
     color: withAlpha(colors.text, 0.8),
-    fontWeight: "300",
-    letterSpacing: 1,
   },
 });

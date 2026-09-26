@@ -89,7 +89,7 @@ export function Button({
         <ActivityIndicator color={theme.colors[textColor]} testID="button-loading" />
       )}
       <Text
-        variant="button"
+        variant={variant === "link" ? "link" : "button"}
         color={textColor}
         style={variant === "link" && styles.linkText}
       >

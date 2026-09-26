@@ -1,6 +1,7 @@
 import { withAlpha } from "@/shared/utils/color";
 
 import { BRAND } from "./brand";
+import { FONTS } from "./fonts";
 
 /**
  * Tokens de diseño (guía §13). En los componentes no se escriben colores ni
@@ -15,26 +16,36 @@ const spacing = { xs: 4, sm: 8, md: 16, lg: 24, xl: 32 } as const;
 // Escala de radios del prototipo de Lovable (base 20).
 const radius = { sm: 14, md: 17, lg: 20, xl: 26, xxl: 32, xxxl: 40, pill: 999 } as const;
 
+// Cada variante lleva su fuente (el peso va en el nombre, ver fonts.ts) y
+// nunca `fontWeight`. Títulos y marca en Sora; el resto en Inter.
 const typography = {
   /** Nombre de marca grande (splash). */
-  display: { fontSize: 32, fontWeight: "700", letterSpacing: 4 },
+  display: { fontFamily: FONTS.display, fontSize: 32, letterSpacing: 4 },
   /** Nombre de marca en la cabecera de acceso. */
-  brand: { fontSize: 32, fontWeight: "700", letterSpacing: 2 },
-  title: { fontSize: 24, fontWeight: "700" },
-  subtitle: { fontSize: 18, fontWeight: "600" },
-  body: { fontSize: 16, fontWeight: "400" },
+  brand: { fontFamily: FONTS.displayHeavy, fontSize: 32, letterSpacing: 2 },
+  title: { fontFamily: FONTS.display, fontSize: 24 },
+  subtitle: { fontFamily: FONTS.display, fontSize: 18 },
+  body: { fontFamily: FONTS.regular, fontSize: 16 },
   /** Cuerpo destacado (p. ej. el email en la pantalla de contraseña). */
-  emphasis: { fontSize: 16, fontWeight: "500" },
-  caption: { fontSize: 13, fontWeight: "400" },
+  emphasis: { fontFamily: FONTS.medium, fontSize: 16 },
+  /** Dato corto remarcado (p. ej. el prefijo de un teléfono). */
+  strong: { fontFamily: FONTS.semibold, fontSize: 16 },
+  caption: { fontFamily: FONTS.regular, fontSize: 13 },
   /** Texto junto a una casilla (términos, "prefiero no decirlo"). */
-  label: { fontSize: 14, fontWeight: "400", lineHeight: 20 },
+  label: { fontFamily: FONTS.regular, fontSize: 14, lineHeight: 20 },
   /** Texto legal, pies. */
-  small: { fontSize: 12, fontWeight: "400" },
+  small: { fontFamily: FONTS.regular, fontSize: 12 },
+  /** Marca pequeña dentro de un control (el ✓ de una casilla). */
+  mark: { fontFamily: FONTS.bold, fontSize: 12 },
   /** Versión de la app. */
-  micro: { fontSize: 11, fontWeight: "400", letterSpacing: 1 },
-  button: { fontSize: 16, fontWeight: "700" },
+  micro: { fontFamily: FONTS.regular, fontSize: 11, letterSpacing: 1 },
+  /** Lema bajo la marca (splash). */
+  tagline: { fontFamily: FONTS.regular, fontSize: 14, letterSpacing: 1 },
+  button: { fontFamily: FONTS.bold, fontSize: 16 },
+  /** Botón con aspecto de enlace ("¿Has olvidado tu contraseña?"). */
+  link: { fontFamily: FONTS.regular, fontSize: 15 },
   /** Lo que se escribe dentro de un campo. */
-  input: { fontSize: 18, fontWeight: "400" },
+  input: { fontFamily: FONTS.regular, fontSize: 18 },
 } as const;
 
 /**

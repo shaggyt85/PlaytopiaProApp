@@ -14,6 +14,6 @@ export const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
-  check: { ...theme.typography.small, fontWeight: "700", color: theme.colors.onPrimary },
+  check: { ...theme.typography.mark, color: theme.colors.onPrimary },
   text: { flex: 1 },
 }));

@@ -29,10 +29,6 @@ export const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     gap: theme.spacing.sm,
   },
-  linkText: {
-    fontSize: 15,
-    fontWeight: "400",
-    textDecorationLine: "underline",
-  },
+  linkText: { textDecorationLine: "underline" },
   pressed: { opacity: 0.8 },
 }));

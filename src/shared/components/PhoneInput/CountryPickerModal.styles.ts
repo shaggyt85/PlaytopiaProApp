@@ -37,6 +37,6 @@ export const useStyles = makeStyles((theme) => ({
   rowSelected: { backgroundColor: theme.colors.field },
   flag: { fontSize: FLAG_SIZE, marginRight: theme.spacing.md - theme.spacing.xs },
   name: { flex: 1 },
-  code: { fontWeight: "600", marginLeft: theme.spacing.md - theme.spacing.xs },
+  code: { ...theme.typography.strong, marginLeft: theme.spacing.md - theme.spacing.xs },
   empty: { marginTop: theme.spacing.xl },
 }));

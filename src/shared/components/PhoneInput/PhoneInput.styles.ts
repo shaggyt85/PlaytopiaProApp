@@ -20,7 +20,7 @@ export const useStyles = makeStyles((theme) => {
       paddingHorizontal: theme.spacing.md - theme.spacing.xs,
     },
     flag: { fontSize: FLAG_SIZE },
-    code: { fontWeight: "600", marginLeft: theme.spacing.sm },
+    code: { ...theme.typography.strong, marginLeft: theme.spacing.sm },
     input: {
       ...pill,
       ...theme.typography.body,

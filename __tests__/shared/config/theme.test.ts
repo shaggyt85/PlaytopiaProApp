@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 
 import { BRAND } from "@/shared/config/brand";
+import { FONTS } from "@/shared/config/fonts";
 import { darkTheme } from "@/shared/config/theme";
 import { withAlpha } from "@/shared/utils/color";
 
@@ -41,6 +42,20 @@ describe("darkTheme", () => {
     for (const value of Object.values(darkTheme.colors)) {
       expect([...paletteColors, ...translucent]).toContain(value);
     }
+  });
+
+  it("cada variante de letra usa una fuente cargada y nunca fontWeight", () => {
+    const loaded: string[] = Object.values(FONTS);
+    for (const style of Object.values(darkTheme.typography)) {
+      expect(loaded).toContain(style.fontFamily);
+      expect(style).not.toHaveProperty("fontWeight");
+    }
+  });
+
+  it("los títulos y la marca van en Sora; el texto, en Inter", () => {
+    const { display, brand, title, subtitle, body, button } = darkTheme.typography;
+    for (const style of [display, brand, title, subtitle]) expect(style.fontFamily).toMatch(/^Sora_/);
+    for (const style of [body, button]) expect(style.fontFamily).toMatch(/^Inter_/);
   });
 
   it("el brillo acepta cualquier color", () => {
