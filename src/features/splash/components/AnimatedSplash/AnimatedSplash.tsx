@@ -8,11 +8,10 @@ import {
   View,
 } from "react-native";
 
+import { BRAND_ASSETS } from "@/shared/config/assets";
 import { t } from "@/shared/config/i18n";
 
 import { SPLASH_COLORS, styles } from "./AnimatedSplash.styles";
-
-const logoWhite = require("../../../../../assets/images/logoWhite.png");
 
 interface AnimatedSplashProps {
   onFinish: () => void;
@@ -204,7 +203,7 @@ export const AnimatedSplash = memo(function AnimatedSplash({
               },
             ]}
           >
-            <Image source={logoWhite} style={styles.logo} resizeMode="contain" />
+            <Image source={BRAND_ASSETS.logoWhite} style={styles.logo} resizeMode="contain" />
           </Animated.View>
 
           <Animated.View

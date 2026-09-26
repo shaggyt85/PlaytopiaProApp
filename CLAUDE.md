@@ -31,13 +31,13 @@ pnpm verificar:ota      # obligatorio antes de cualquier eas update
 ```
 src/
   app/                 solo rutas: importan <X>Screen del index.ts de la feature
-  features/<pantalla>/ components/ hooks/ services/ schemas/ [store/] <X>Screen.tsx index.ts
+  features/<pantalla o flujo>/ components/ hooks/ services/ schemas/ [store/] <X>Screen.tsx… index.ts
   shared/              components/ hooks/ services/ schemas/ store/ locales/ config/ utils/
 __tests__/             espejo de src/ (+ helpers/, setup/)
 docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 ```
 
-1. Una feature = una pantalla, con todo lo suyo dentro.
+1. Una feature = una pantalla o un flujo completo (p. ej. `auth`), con todo lo suyo dentro.
 2. Nada de carpetas por tipo en la raíz de `src/`.
 3. `shared/` solo para lo que usan 2+ features, siempre en la carpeta de su tipo; nunca archivos sueltos. Mientras lo use una sola feature, se queda en ella.
 4. `shared/` no importa de `features/`; una feature no importa de otra.

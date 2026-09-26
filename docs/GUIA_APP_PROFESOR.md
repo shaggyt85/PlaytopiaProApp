@@ -58,21 +58,22 @@ Los ajustes de pnpm 11 van en `pnpm-workspace.yaml` (ya no se leen de `.npmrc`):
 
 ## 2. Estructura de carpetas
 
-**Una feature = una pantalla de la app.** Dentro lleva todo lo que esa pantalla necesita. Lo que usan dos o más features va en `shared/`, y nunca como archivo suelto: va en la carpeta de su tipo, igual que dentro de una feature.
+**Una feature = una pantalla o un flujo completo de la app** (p. ej. `auth`: email → contraseña → registro / recuperar contraseña → sesión abierta). Dentro lleva todo lo que esa pantalla o flujo necesita. Lo que usan dos o más features va en `shared/`, y nunca como archivo suelto: va en la carpeta de su tipo, igual que dentro de una feature.
 
 ```
 src/
   app/                   rutas expo-router, solo montan la pantalla
     _layout.tsx
-    (auth)/              sign-in, sign-up, password-recovery
+    (auth)/              sign-in, password, sign-up, password-recovery
     (app)/               pantallas con sesión (guard en su _layout)
   features/
-    sign-in/             = pantalla Login
-      components/
-      hooks/
-      services/
+    auth/                = flujo de acceso (varias pantallas)
+      components/        AuthLayout, PasswordInput, FormError
+      hooks/             useCheckEmail, useSignIn…
+      services/          una interfaz por caso de uso
       schemas/
-      SignInScreen.tsx
+      store/             estado del flujo (email entre pasos)
+      SignInScreen.tsx  PasswordScreen.tsx  …
       index.ts
     home/                = pantalla Home
       components/
@@ -82,7 +83,7 @@ src/
       store/             solo si la pantalla tiene estado de UI propio (Zustand)
       HomeScreen.tsx
       index.ts
-    ...                  una carpeta por pantalla
+    ...                  una carpeta por pantalla o flujo
   shared/                lo usado por 2 o más features, por tipo
     components/          Button, ErrorState, LoadingState, Navbar…
     hooks/               useNetworkStatus, useAppUpdates…
@@ -94,9 +95,9 @@ src/
     utils/               logger, fechas, formato, serverClock, imageCache
 __tests__/               espejo de src/
   features/
-    sign-in/
-      hooks/useLogin.test.ts
-      services/authService.test.ts
+    auth/
+      hooks/useSignIn.test.tsx
+      services/signInService.test.ts
       SignInScreen.test.tsx
   shared/
     services/httpClient.test.ts
@@ -113,7 +114,7 @@ scripts/
 
 ### Reglas
 
-1. **Una feature por pantalla.** Dentro van sus `components/`, `hooks/`, `services/` (con sus endpoints y query keys), `schemas/`, `store/` si hace falta, `<X>Screen.tsx` e `index.ts`.
+1. **Una feature por pantalla o por flujo.** Dentro van sus `components/`, `hooks/`, `services/` (con sus endpoints y query keys), `schemas/`, `store/` si hace falta, sus `<X>Screen.tsx` e `index.ts`. Un flujo agrupa las pantallas que comparten datos y piezas (como `auth`) para no repartir su lógica entre features.
 2. **No hay carpetas por tipo en la raíz de `src/`** (`src/services/`, `src/hooks/`…). O algo es de una feature, o está en `shared/<tipo>/`.
 3. **`shared/` solo recibe lo que usan dos o más features**, y siempre en la carpeta de su tipo: un componente compartido va a `shared/components/`, un hook a `shared/hooks/`, un service a `shared/services/`, un schema a `shared/schemas/`. No hay archivos sueltos en `shared/`. Mientras algo lo use una sola feature, se queda en ella.
 4. **`shared/` nunca importa de `features/`**, y una feature no importa de otra feature.
@@ -128,9 +129,142 @@ scripts/
 
 ### Tests: espejo de `src/`
 
-A `src/features/sign-in/hooks/useLogin.ts` le corresponde `__tests__/features/sign-in/hooks/useLogin.test.ts`. Si se mueve o renombra un archivo, su test se mueve igual. Solo `helpers/` y `setup/` quedan fuera del espejo.
+A `src/features/auth/hooks/useSignIn.ts` le corresponde `__tests__/features/auth/hooks/useSignIn.test.tsx`. Si se mueve o renombra un archivo, su test se mueve igual. Solo `helpers/` y `setup/` quedan fuera del espejo.
 
-Configuración de Jest: `testMatch` apunta a `__tests__/**/*.test.(ts|tsx)` y `moduleNameMapper` traduce `^@/(.*)$` a `<rootDir>/src/$1`.
+Configuración de Jest: `testMatch` apunta a `__tests__/**/*.test.(ts|tsx)`, `moduleNameMapper` traduce `^@/(.*)# Guía de trabajo — Playtopia Pro (app Profesor)
+
+App móvil para los profesores de Playtopia (repo `PlaytopiaAppPro`), hermana de la app de alumnos (`PlaytopiaAppStudent`). Comparte stack, backend (Core_Playtopia) e infraestructura; tiene su propia estructura por features y sus propias pantallas.
+
+Esta guía es la referencia de **cómo se trabaja** en este repo. El resumen accionable para Claude Code está en [`CLAUDE.md`](../CLAUDE.md), en la raíz del repo.
+
+## Índice
+
+1. [Stack](#1-stack)
+2. [Estructura de carpetas](#2-estructura-de-carpetas)
+3. [Principios: SOLID y DRY](#3-principios-solid-y-dry)
+4. [Endpoints del backend: Scalar de Core](#4-endpoints-del-backend-scalar-de-core)
+5. [Secretos y variables de entorno](#5-secretos-y-variables-de-entorno)
+6. [Manejo de errores: RFC 9457](#6-manejo-de-errores-rfc-9457)
+7. [Caché con TanStack Query](#7-caché-con-tanstack-query)
+8. [Sesión, almacenamiento y sucursales](#8-sesión-almacenamiento-y-sucursales)
+9. [Formularios](#9-formularios)
+10. [Estrategia de tests](#10-estrategia-de-tests)
+11. [Fechas y zona horaria](#11-fechas-y-zona-horaria)
+12. [i18n](#12-i18n)
+13. [Tema y diseño](#13-tema-y-diseño)
+14. [Versionado (Android e iOS)](#14-versionado-android-e-ios)
+15. [Flujo de Git](#15-flujo-de-git)
+16. [Definition of Done](#16-definition-of-done)
+17. [Arranque del repo: de cero, trayendo solo lo necesario](#17-arranque-del-repo-de-cero-trayendo-solo-lo-necesario)
+18. [Receta: crear una pantalla nueva](#18-receta-crear-una-pantalla-nueva)
+19. [Publicación](#19-publicación)
+
+---
+
+## 1. Stack
+
+| Pieza | Versión / herramienta |
+|---|---|
+| Framework | Expo SDK 57, React Native 0.86, React 19.2, New Architecture. Se prueba con Expo Go (que solo abre el último SDK) o con development build |
+| Navegación | expo-router 6 |
+| Datos de servidor | TanStack Query 5 + axios |
+| Contratos y validación | Zod 4 |
+| Estado de UI | Zustand 5 |
+| Formularios | react-hook-form + `@hookform/resolvers` (zodResolver) |
+| i18n | i18n-js (es, en, pt, ca, de, fr) |
+| Fechas | dayjs (utc, timezone) |
+| Observabilidad | Sentry |
+| Actualizaciones | expo-updates (OTA), `runtimeVersion` con policy `fingerprint` |
+| Tests | Jest (jest-expo) + Testing Library |
+| Lenguaje | TypeScript 6 `strict` (sin `baseUrl`: `paths` relativos) |
+| Gestor de paquetes | **pnpm 11**, versión fijada en `packageManager` de `package.json` |
+| Mínimos de plataforma | Los del SDK, sin fijar a mano: hoy Android minSdk 24, target/compile 36; iOS 16.4. Se actualizan solos al subir de SDK; solo se fijan en `expo-build-properties` si una librería lo exige |
+
+Sobre pnpm: `scripts/only-pnpm.js` corta cualquier instalación que no sea con pnpm. La versión exacta se fija en `packageManager` porque EAS Build y corepack instalan la que declara ese campo; tiene que coincidir con la que usa el equipo en local.
+
+Los ajustes de pnpm 11 van en `pnpm-workspace.yaml` (ya no se leen de `.npmrc`):
+- `nodeLinker: hoisted`: `node_modules` en plano, como espera el autolinking nativo de React Native.
+- `allowBuilds`: aquí se aprueba (`true`) o se deniega (`false`) cada dependencia con script de instalación. Una dependencia nueva con script para la instalación hasta que se decide.
+- `minimumReleaseAge` (política de cadena de suministro de pnpm 11, activa por defecto): pnpm no instala versiones publicadas hace muy poco, que es cuando una versión maliciosa todavía no se ha detectado. **No se añaden excepciones** (`minimumReleaseAgeExclude`): si una versión es demasiado reciente, se usa la anterior. Si pnpm añade una excepción por su cuenta, se quita y se reinstala. Los ajustes de pnpm 11 van en `pnpm-workspace.yaml` (ya no se leen de `.npmrc`): `nodeLinker: hoisted`, para que `node_modules` quede en plano como espera el autolinking nativo, y `allowBuilds`, donde se aprueba (`true`) o se deniega (`false`) cada dependencia con script de instalación. Una dependencia nueva con script para la instalación hasta que se decide.
+
+---
+
+## 2. Estructura de carpetas
+
+**Una feature = una pantalla o un flujo completo de la app** (p. ej. `auth`: email → contraseña → registro / recuperar contraseña → sesión abierta). Dentro lleva todo lo que esa pantalla o flujo necesita. Lo que usan dos o más features va en `shared/`, y nunca como archivo suelto: va en la carpeta de su tipo, igual que dentro de una feature.
+
+```
+src/
+  app/                   rutas expo-router, solo montan la pantalla
+    _layout.tsx
+    (auth)/              sign-in, password, sign-up, password-recovery
+    (app)/               pantallas con sesión (guard en su _layout)
+  features/
+    auth/                = flujo de acceso (varias pantallas)
+      components/        AuthLayout, PasswordInput, FormError
+      hooks/             useCheckEmail, useSignIn…
+      services/          una interfaz por caso de uso
+      schemas/
+      store/             estado del flujo (email entre pasos)
+      SignInScreen.tsx  PasswordScreen.tsx  …
+      index.ts
+    home/                = pantalla Home
+      components/
+      hooks/
+      services/
+      schemas/
+      store/             solo si la pantalla tiene estado de UI propio (Zustand)
+      HomeScreen.tsx
+      index.ts
+    ...                  una carpeta por pantalla o flujo
+  shared/                lo usado por 2 o más features, por tipo
+    components/          Button, ErrorState, LoadingState, Navbar…
+    hooks/               useNetworkStatus, useAppUpdates…
+    services/            httpClient, tokenStorage
+    schemas/             schemas comunes (ProblemDetail…)
+    store/               sesión y sucursal activa (Zustand)
+    locales/             diccionario compartido: es, en, pt, ca, de, fr
+    config/              env, queryClient, cachePolicies, i18n, theme, sentry
+    utils/               logger, fechas, formato, serverClock, imageCache
+__tests__/               espejo de src/
+  features/
+    auth/
+      hooks/useSignIn.test.tsx
+      services/signInService.test.ts
+      SignInScreen.test.tsx
+  shared/
+    services/httpClient.test.ts
+    hooks/useNetworkStatus.test.ts
+  helpers/               renderWithProviders, factories, fixtures
+  setup/                 setup común de Jest
+__mocks__/               mocks de módulos nativos
+docs/
+  GUIA_APP_PROFESOR.md   esta guía
+  endpoints-pendientes/  una petición a Core por endpoint que falta
+assets/
+scripts/
+```
+
+### Reglas
+
+1. **Una feature por pantalla o por flujo.** Dentro van sus `components/`, `hooks/`, `services/` (con sus endpoints y query keys), `schemas/`, `store/` si hace falta, sus `<X>Screen.tsx` e `index.ts`. Un flujo agrupa las pantallas que comparten datos y piezas (como `auth`) para no repartir su lógica entre features.
+2. **No hay carpetas por tipo en la raíz de `src/`** (`src/services/`, `src/hooks/`…). O algo es de una feature, o está en `shared/<tipo>/`.
+3. **`shared/` solo recibe lo que usan dos o más features**, y siempre en la carpeta de su tipo: un componente compartido va a `shared/components/`, un hook a `shared/hooks/`, un service a `shared/services/`, un schema a `shared/schemas/`. No hay archivos sueltos en `shared/`. Mientras algo lo use una sola feature, se queda en ella.
+4. **`shared/` nunca importa de `features/`**, y una feature no importa de otra feature.
+5. **`app/` solo contiene rutas**: importa `<X>Screen` desde el `index.ts` de la feature. Sin lógica.
+6. **Nombres**: carpetas de feature en kebab-case, componentes y pantallas en PascalCase, hooks `useX`, siempre `index.ts`.
+7. **Un solo alias**: `@/` apunta a `src/`.
+8. **Estado**:
+   - Lo que viene del servidor vive **solo** en TanStack Query. Nunca se copia a Zustand.
+   - Zustand es para estado de UI (filtros, modo edición, pestaña activa). Va en `features/<x>/store/` si lo usa una pantalla y en `shared/store/` si lo usan varias. La sesión y la sucursal activa van en `shared/store/`.
+   - Un store por responsabilidad, con selectores (`useStore((s) => s.campo)`) para no re-renderizar de más.
+   - Solo se persiste con AsyncStorage (`persist` + `createJSONStorage`) lo no sensible que tiene que sobrevivir a reiniciar la app. Los tokens van en SecureStore (ver [sección 8](#8-sesión-almacenamiento-y-sucursales)).
+
+### Tests: espejo de `src/`
+
+A `src/features/auth/hooks/useSignIn.ts` le corresponde `__tests__/features/auth/hooks/useSignIn.test.tsx`. Si se mueve o renombra un archivo, su test se mueve igual. Solo `helpers/` y `setup/` quedan fuera del espejo.
+
+ a `<rootDir>/src/$1` y `clearMocks` deja los mocks sin llamadas previas en cada test. Helpers comunes: `renderWithProviders`, `createFakeHttpClient`, `createFakeTokenStorage`, `createFakeAdapter`, `createTestJwt`.
 
 ### Pantallas iniciales
 
@@ -138,9 +272,7 @@ Base común que se trae de la appStudent, adaptada a profesor:
 
 | Feature | Qué hace |
 |---|---|
-| `sign-in` | login contra `/api/auth/login/teacher`, biometría |
-| `sign-up` | alta contra `POST /api/UserTeacher`, con firma HMAC |
-| `password-recovery` | recuperación con `scope: "teacher"` |
+| `auth` | flujo de acceso completo hasta el inicio: email → contraseña (login contra `/api/auth/login/teacher`), registro con firma HMAC, recuperar contraseña con `scope: "teacher"`, biometría y elegir sucursal |
 | `profile` | ver y editar perfil, avatar, cambiar contraseña |
 | `settings` | idioma, notificaciones, borrar cuenta |
 | `notifications` | notificaciones push |
@@ -227,12 +359,12 @@ Tabla viva: se actualiza cada vez que una pantalla empieza a usar un endpoint o 
 
 | Método | Ruta | Feature | Estado |
 |---|---|---|---|
-| POST | `/api/auth/login/teacher` | sign-in | real |
+| POST | `/api/auth/login/teacher` | auth (contraseña) | real |
 | POST | `/api/auth/refresh` | shared (httpClient) | real |
-| POST | `/api/auth/check-email` | sign-up | real |
-| POST | `/api/UserTeacher` | sign-up | real |
-| POST | `/api/PassRecovery/request` (con `scope: "teacher"`) | password-recovery | real |
-| POST | `/api/PassRecovery/validate` | password-recovery | real |
+| POST | `/api/auth/check-email` | auth (email) | real |
+| POST | `/api/UserTeacher` | auth (registro) | real |
+| POST | `/api/PassRecovery/request` (con `scope: "teacher"`) | auth (recuperar) | real |
+| POST | `/api/PassRecovery/validate` | auth (recuperar) | real |
 | GET | `/api/UserTeacher/{id}` | profile | real |
 | PATCH | `/api/UserTeacher/{id}` | profile | real |
 | DELETE | `/api/UserTeacher/{id}` | settings (borrar cuenta) | real |
@@ -400,7 +532,12 @@ useQuery({
 
 ## 8. Sesión, almacenamiento y sucursales
 
-### Login
+### Login: email y contraseña
+
+- **Paso 1, email** (`SignInScreen`): `POST /api/auth/check-email`. Si `exists`, pasa a la contraseña; si no, ofrece crear la cuenta. Se decide por `exists` y no por `is_student` porque Core no expone si el email es de profesor.
+- **Paso 2, contraseña** (`PasswordScreen`): login con `{ username: email, password }`. Un 401 es "credenciales incorrectas"; si el email también es de alumno, se aclara que la contraseña es la de la cuenta de profesor.
+- **Un alumno puede ser profesor:** son cuentas separadas en Core (tablas distintas, cada una con su contraseña) y el JWT lleva un solo rol. El alumno que aún no es profesor llega al paso 2 (su email existe), así que esa pantalla **siempre** ofrece registrarse.
+- Si el login va bien, `session.start()` abre la sesión y los guards llevan solos al inicio: las pantallas no navegan al inicio.
 
 - `POST /api/auth/login/teacher` con cuerpo **`{ username, password }`** (el campo se llama `username`, no `email`). Devuelve `access_token`, `refresh_token`, `id`, `role_id` y `db_id`.
 - **Rol del profesor: `4`** (`ROLES.TEACHER` en `shared/config/roles.ts`, copia de `crates/shared/src/roles.rs`). La fuente de verdad es el claim `RoleId` del JWT; Core responde 403 si no coincide.
@@ -427,7 +564,7 @@ useQuery({
 
 | Mecanismo | Qué guarda | Dónde vive el código |
 |---|---|---|
-| **SecureStore** (Keychain / Keystore, cifrado por el sistema) | `access_token`, `refresh_token`; credenciales de biometría (email + refresh token) y el flag `biometric_enabled` | `shared/services/tokenStorage`, `features/sign-in/services/biometricService` |
+| **SecureStore** (Keychain / Keystore, cifrado por el sistema) | `access_token`, `refresh_token`; credenciales de biometría (email + refresh token) y el flag `biometric_enabled` | `shared/services/tokenStorage`, `features/auth/services/biometricService` |
 | **AsyncStorage** (texto plano) | solo datos **no sensibles**: perfil público mínimo (`user_public`), idioma elegido, preferencias de notificaciones (Zustand `persist`), ID de instalación para push, onboarding visto, sucursal activa | el service o store de cada caso |
 | **Zustand en memoria** (sin persistir) | credenciales temporales tras el login (email + refresh token, caducan a los **60 s**) para activar la biometría sin volver a pedir la contraseña | `shared/store/` |
 | **FileSystem** (`expo-file-system`) | caché de imágenes (avatares) en un directorio propio, con limpieza | `shared/utils/imageCache` |
@@ -573,7 +710,7 @@ Hay **dos números**, y cada uno se gestiona de una forma. Aplican igual en Andr
 - **No se hace push directo** a `master` ni a `dev`.
 - **Commits:** Conventional Commits en español, con el scope de la pantalla y explicando el porqué.
   - `feat(asistencia): marcar ausente desde la lista`
-  - `fix(sign-in): el refresh fallido por red ya no cierra la sesión`
+  - `fix(auth): el refresh fallido por red ya no cierra la sesión`
   - Tipos: `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `build`, `chore`.
 - **Release:** PR `dev → master` + versión + etiqueta, según la [sección 14](#14-versionado-android-e-ios).
 
@@ -629,9 +766,9 @@ Cada fila se trae **solo cuando una pantalla la necesita**, revisada y adaptada,
 | `components/shared/*` (ErrorState, LoadingState, FeatureScreen…), navbar, back button | `shared/components/` |
 | `useNetworkStatus`, `useAppUpdates`, `useVersionCheck`, `useSystemUI`… | `shared/hooks/` |
 | `store/credential/tempCredentialsStore.ts` | `shared/store/` |
-| `services/auth`, `schemas/auth`, `hooks/queries/useAuthQueries.ts`, `features/sign-in`, `features/biometric-auth`, endpoints y query keys de auth | `features/sign-in/` |
-| `features/register`, `utils/registrationToken.ts`, `config/security` (adaptados a profesor) | `features/sign-up/` (la firma en `services/`, la variable en `shared/config/env.ts`) |
-| `features/password-recovery`, `services/PasswordRecovery`, `schemas/password-recovery` | `features/password-recovery/` (con `scope: "teacher"`) |
+| `services/auth`, `schemas/auth`, `hooks/queries/useAuthQueries.ts`, `features/sign-in`, `features/biometric-auth`, endpoints y query keys de auth | `features/auth/` |
+| `features/register`, `utils/registrationToken.ts`, `config/security` (adaptados a profesor) | `features/auth/` (la firma en `services/`, la variable en `shared/config/env.ts`) |
+| `features/password-recovery`, `services/PasswordRecovery`, `schemas/password-recovery` | `features/auth/` (con `scope: "teacher"`) |
 | `services/notification/installationId.ts`, `notificationService.ts` | `features/notifications/services/` (o `shared/services/` si lo usa también el login) |
 | Pantallas de alumno (pagos, inscripciones, clubes, recuperaciones…) | **no se traen** |
 

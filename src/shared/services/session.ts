@@ -2,7 +2,7 @@ import type { QueryClient } from "@tanstack/react-query";
 
 import { queryClient } from "@/shared/config/queryClient";
 import { ROLES } from "@/shared/config/roles";
-import { useSessionStore } from "@/shared/store/sessionStore";
+import { useSessionStore, type SessionUser } from "@/shared/store/sessionStore";
 import { decodeSessionClaims } from "@/shared/utils/jwt";
 
 import { tokenStorage, type ITokenStorage } from "./tokenStorage";
@@ -17,7 +17,7 @@ export function createSessionService(deps: {
   tokens: ITokenStorage;
   queryClient: Pick<QueryClient, "clear">;
   store: {
-    setAuthenticated: (user: { userId: number; dbId: number }) => void;
+    setAuthenticated: (user: SessionUser) => void;
     setAnonymous: () => void;
   };
 }) {

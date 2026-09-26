@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import { Input } from "@/shared/components/Input";
+import { Text } from "@/shared/components/Text";
 import { darkTheme } from "@/shared/config/theme";
 
 describe("Input", () => {
@@ -17,7 +18,7 @@ describe("Input", () => {
     render(<Input label="Email" error="Email no válido" />);
 
     expect(screen.getByText("Email no válido")).toBeTruthy();
-    expect(screen.getByLabelText("Email")).toHaveStyle({
+    expect(screen.getByTestId("input-field")).toHaveStyle({
       borderColor: darkTheme.colors.danger,
     });
   });
@@ -26,5 +27,11 @@ describe("Input", () => {
     render(<Input label="Email" />);
 
     expect(screen.queryByText("Email no válido")).toBeNull();
+  });
+
+  it("muestra el accesorio dentro del campo", () => {
+    render(<Input label="Contraseña" rightAccessory={<Text>ojo</Text>} />);
+
+    expect(screen.getByText("ojo")).toBeTruthy();
   });
 });

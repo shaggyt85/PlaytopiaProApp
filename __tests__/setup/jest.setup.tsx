@@ -21,3 +21,10 @@ beforeEach(async () => {
 jest.mock("react-native-safe-area-context", () =>
   require("react-native-safe-area-context/jest/mock").default,
 );
+
+// Iconos sin carga asíncrona de fuentes (en tests solo importa que estén).
+jest.mock("@expo/vector-icons", () => {
+  const { Text } = jest.requireActual("react-native");
+  const Icon = ({ name }: { name: string }) => <Text>{name}</Text>;
+  return { Ionicons: Icon };
+});

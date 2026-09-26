@@ -16,8 +16,6 @@ jest.mock("expo-secure-store", () => {
 });
 
 describe("SecureTokenStorage", () => {
-  beforeEach(() => jest.clearAllMocks());
-
   it("guarda los dos tokens en SecureStore y los devuelve", async () => {
     const storage = new SecureTokenStorage();
     await storage.setTokens("acceso", "refresco");
