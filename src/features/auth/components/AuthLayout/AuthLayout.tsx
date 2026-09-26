@@ -18,7 +18,7 @@ interface AuthLayoutProps {
 
 /**
  * Marco de todas las pantallas de acceso, igual que en la app de alumnos:
- * fondo de marca, cabecera con logo, "Playtopia" y versión, y el formulario
+ * fondo de marca, cabecera con logo, "Playtopia Pro" y versión, y el formulario
  * centrado que sube con el teclado.
  */
 export function AuthLayout({ children, showBackButton = false, testID }: AuthLayoutProps) {

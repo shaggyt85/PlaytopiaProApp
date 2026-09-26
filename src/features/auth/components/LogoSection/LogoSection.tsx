@@ -7,7 +7,7 @@ import { BRAND_ASSETS } from "@/shared/config/assets";
 import { useStyles } from "./LogoSection.styles";
 
 // Nombre de marca: no se traduce.
-const BRAND_NAME = "Playtopia";
+const BRAND_NAME = "Playtopia Pro";
 
 /** Cabecera de las pantallas de acceso: logo, marca y versión de la app. */
 export function LogoSection() {

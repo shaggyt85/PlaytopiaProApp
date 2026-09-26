@@ -8,7 +8,7 @@ describe("LogoSection", () => {
   it("muestra la marca y la versión de la app", () => {
     render(<LogoSection />);
 
-    expect(screen.getByText("Playtopia")).toBeTruthy();
+    expect(screen.getByText("Playtopia Pro")).toBeTruthy();
     expect(screen.getByText("v1.0.0")).toBeTruthy();
   });
 });
