@@ -497,6 +497,11 @@ Core responde **todos** sus errores con RFC 9457 (*Problem Details*, `applicatio
   - si no hay traducción para ese `type`, se usa un texto genérico por `status`.
 - **Cuando la pantalla tiene que reaccionar distinto**, decide por `type` y por los *extension members* (`pending_consents`, `conflicts`…), nunca parseando texto.
 - **Errores nuevos:** cada petición de `docs/endpoints-pendientes/` indica qué `type` debe crear Core para cada error.
+- **Types pedidos a Core:**
+
+  | Petición | Types | Estado |
+  |---|---|---|
+  | `auth-registro-types.md` | `email-already-registered`, `registration-token-expired`, `registration-token-invalid` | pendiente |
 - **Sentry** recibe `type`, `status` e `instance`, para poder cruzarlo con los logs de Core.
 
 ---
