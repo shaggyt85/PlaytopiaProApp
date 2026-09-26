@@ -1,6 +1,6 @@
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
-const LOGO_SIZE = 100;
+export const LOGO_SIZE = 100;
 
 export const useStyles = makeStyles((theme) => ({
   container: {
@@ -10,11 +10,7 @@ export const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing.lg,
     ...theme.shadows.glow,
   },
-  logo: {
-    width: LOGO_SIZE,
-    height: LOGO_SIZE,
-    marginBottom: theme.spacing.sm + theme.spacing.xs,
-  },
+  logo: { marginBottom: theme.spacing.sm + theme.spacing.xs },
   title: {
     ...theme.shadows.textGlow,
     marginBottom: theme.spacing.xs,

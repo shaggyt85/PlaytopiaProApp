@@ -1,17 +1,16 @@
 import { memo, useEffect, useRef } from "react";
 import {
   Animated,
-  Image,
   Text,
   useWindowDimensions,
   View,
 } from "react-native";
 
 import { BrandBackground } from "@/shared/components/BrandBackground";
-import { BRAND_ASSETS } from "@/shared/config/assets";
+import { BrandLogo } from "@/shared/components/BrandLogo";
 import { t } from "@/shared/config/i18n";
 
-import { styles } from "./AnimatedSplash.styles";
+import { SPLASH_LOGO_SIZE, styles } from "./AnimatedSplash.styles";
 
 interface AnimatedSplashProps {
   onFinish: () => void;
@@ -188,7 +187,7 @@ export const AnimatedSplash = memo(function AnimatedSplash({
               },
             ]}
           >
-            <Image source={BRAND_ASSETS.logoWhite} style={styles.logo} resizeMode="contain" />
+            <BrandLogo size={SPLASH_LOGO_SIZE} />
           </Animated.View>
 
           <Animated.View

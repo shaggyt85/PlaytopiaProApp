@@ -1,10 +1,10 @@
 import Constants from "expo-constants";
-import { Image, View } from "react-native";
+import { View } from "react-native";
 
+import { BrandLogo } from "@/shared/components/BrandLogo";
 import { Text } from "@/shared/components/Text";
-import { BRAND_ASSETS } from "@/shared/config/assets";
 
-import { useStyles } from "./LogoSection.styles";
+import { LOGO_SIZE, useStyles } from "./LogoSection.styles";
 
 // Nombre de marca: no se traduce.
 const BRAND_NAME = "Playtopia Pro";
@@ -16,12 +16,7 @@ export function LogoSection() {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={BRAND_ASSETS.logoWhite}
-        style={styles.logo}
-        resizeMode="contain"
-        accessibilityIgnoresInvertColors
-      />
+      <BrandLogo size={LOGO_SIZE} style={styles.logo} />
       <Text variant="brand" style={styles.title} accessibilityRole="header">
         {BRAND_NAME}
       </Text>

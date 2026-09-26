@@ -5,8 +5,9 @@ import { darkTheme } from "@/shared/config/theme";
 import { withAlpha } from "@/shared/utils/color";
 
 // Medidas propias de la composición del splash (no hay token equivalente).
+export const SPLASH_LOGO_SIZE = 120;
+
 const SPLASH_LAYOUT = {
-  logoSize: 120,
   logoGap: 60,
   taglineGap: 12,
   taglinePaddingX: 20,
@@ -29,10 +30,6 @@ export const styles = StyleSheet.create({
   logoContainer: {
     marginBottom: SPLASH_LAYOUT.logoGap,
     ...shadows.glow,
-  },
-  logo: {
-    width: SPLASH_LAYOUT.logoSize,
-    height: SPLASH_LAYOUT.logoSize,
   },
   textContainer: {
     alignItems: "center",

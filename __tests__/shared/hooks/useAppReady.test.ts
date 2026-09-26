@@ -4,6 +4,9 @@ import { restoreSavedLanguage } from "@/shared/config/i18n";
 import { useAppReady } from "@/shared/hooks/useAppReady";
 import { session } from "@/shared/services/session";
 
+jest.mock("@/shared/config/assets", () => ({
+  preloadBrandAssets: jest.fn().mockResolvedValue(undefined),
+}));
 jest.mock("@/shared/services/session", () => ({
   session: { restore: jest.fn() },
 }));
@@ -13,7 +16,7 @@ jest.mock("@/shared/config/i18n", () => ({
 }));
 
 describe("useAppReady", () => {
-  it("está listo cuando terminan idioma y sesión", async () => {
+  it("está listo cuando terminan idioma, sesión y precarga del logo", async () => {
     jest.mocked(restoreSavedLanguage).mockResolvedValue();
     jest.mocked(session.restore).mockResolvedValue();
 
