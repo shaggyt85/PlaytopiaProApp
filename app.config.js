@@ -1,3 +1,4 @@
+const { BRAND } = require("./src/shared/config/brand");
 // Identidad de la app. APP_VARIANT=development genera la variante DEV, que se
 // instala junto a la de tienda sin pisarla (bundle id, package e icono propios).
 //
@@ -11,8 +12,8 @@ const IS_DEV = process.env.APP_VARIANT === "development";
 const icon = (nombre) =>
   `./assets/app_icons/${nombre}${IS_DEV ? "-dev" : ""}.png`;
 
-// Color de marca del splash (mismo en claro y oscuro).
-const SPLASH_BACKGROUND = "#1a1333";
+// Color de marca del splash, desde la única fuente de colores de marca.
+const SPLASH_BACKGROUND = BRAND.night;
 
 export default {
   expo: {
@@ -24,7 +25,8 @@ export default {
     // el bloqueo: las pantallas se diseñan responsive (guía §13).
     orientation: "portrait",
     icon: icon("ios-light"),
-    userInterfaceStyle: "automatic",
+    // Por ahora solo hay tema oscuro: el claro no está definido (guía §13).
+    userInterfaceStyle: "dark",
     newArchEnabled: true,
     platforms: ["ios", "android"],
     ios: {

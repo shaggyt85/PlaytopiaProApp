@@ -65,7 +65,7 @@ docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 - **Formularios:** react-hook-form + `zodResolver` sobre el schema del contrato; mensajes como claves de i18n.
 - **Fechas:** en la zona horaria del club; "ahora" sale de `serverClock`.
 - **i18n:** todo texto visible en `shared/locales/`, en los 6 idiomas (es, en, pt, ca, de, fr). En componentes, `useTranslation()`; las claves están tipadas.
-- **Tema:** colores y tamaños solo desde los tokens de `shared/config/theme`; claro y oscuro.
+- **Tema:** colores y tamaños solo desde los tokens (`useTheme()`, `makeStyles()`); colores de marca solo en `shared/config/brand.js`, translúcidos con `withAlpha`. Por ahora solo tema oscuro (fijo). Usa los componentes base de `shared/components/` antes de crear otros.
 - **Versionado:** versión SemVer manual en `app.config.js` y `package.json`, igual en Android e iOS. El build (`versionCode` / `buildNumber`) lo sube EAS: no lo toques. Un OTA no cambia la versión.
 - **Plataforma:** R8 activo en release de Android (`expo-build-properties`); si una librería nativa se rompe en release, reglas en `extraProguardRules`. Mínimos de Android/iOS: los del SDK, no se fijan a mano. Vertical en móvil, pero pantallas responsive (Android 16 deja girar en tablets). Edge-to-edge obligatorio: usa safe areas, no las APIs antiguas de barra de estado.
 - **Dependencias:** respeta `minimumReleaseAge` de pnpm; nunca añadas `minimumReleaseAgeExclude`. Si una versión es demasiado reciente, instala la anterior.
@@ -95,6 +95,6 @@ docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 - [ ] Contrato comprobado en Scalar, o mock + petición en `docs/endpoints-pendientes/`; tabla de endpoints actualizada.
 - [ ] Errores RFC 9457 traducidos por `type`.
 - [ ] `CachePolicy` en cada query; invalidación tras cada mutación.
-- [ ] Probado en Android e iOS, claro y oscuro.
+- [ ] Probado en Android e iOS (tema oscuro).
 - [ ] Ningún secreto ni `.env` en el diff.
 - [ ] Commit con el formato del equipo.

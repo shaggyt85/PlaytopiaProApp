@@ -1,23 +1,19 @@
 import { StyleSheet } from "react-native";
 
-// Colores de marca del splash. Pasan a los tokens de shared/config/theme
-// cuando exista el tema (paso 13).
+import { BRAND } from "@/shared/config/brand";
+import { darkTheme } from "@/shared/config/theme";
+import { withAlpha } from "@/shared/utils/color";
+
+// El splash es marca, no tema: usa siempre los colores de marca.
+const glow = (alphas: readonly number[]) =>
+  alphas.map((alpha) => withAlpha(BRAND.pink, alpha)) as [string, string, ...string[]];
+
 export const SPLASH_COLORS = {
-  gradient: ["#1a1333", "#2d1b69", "#1a1333"] as const,
-  glowStrong: [
-    "rgba(194, 29, 147, 0.25)",
-    "rgba(194, 29, 147, 0.15)",
-    "rgba(194, 29, 147, 0.05)",
-    "rgba(194, 29, 147, 0)",
-  ] as const,
-  glowSoft: [
-    "rgba(194, 29, 147, 0.20)",
-    "rgba(194, 29, 147, 0.12)",
-    "rgba(194, 29, 147, 0.04)",
-    "rgba(194, 29, 147, 0)",
-  ] as const,
-  accent: "#7B3FFF",
-  text: "#FFFFFF",
+  gradient: darkTheme.gradients.brand,
+  glowStrong: glow([0.25, 0.15, 0.05, 0]),
+  glowSoft: glow([0.2, 0.12, 0.04, 0]),
+  accent: BRAND.violet,
+  text: BRAND.white,
 };
 
 export const styles = StyleSheet.create({
@@ -75,7 +71,7 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     color: SPLASH_COLORS.text,
     letterSpacing: 4,
-    textShadowColor: "rgba(123, 63, 255, 0.5)",
+    textShadowColor: withAlpha(BRAND.violet, 0.5),
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,
   },
@@ -83,14 +79,14 @@ export const styles = StyleSheet.create({
     marginTop: 12,
     paddingHorizontal: 20,
     paddingVertical: 8,
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backgroundColor: withAlpha(BRAND.white, 0.1),
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.2)",
+    borderColor: withAlpha(BRAND.white, 0.2),
   },
   subtitleText: {
     fontSize: 14,
-    color: "rgba(255, 255, 255, 0.8)",
+    color: withAlpha(BRAND.white, 0.8),
     fontWeight: "300",
     letterSpacing: 1,
   },
@@ -99,7 +95,7 @@ export const styles = StyleSheet.create({
     left: -50,
     width: 100,
     height: 2,
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    backgroundColor: withAlpha(BRAND.white, 0.3),
     transform: [{ rotate: "45deg" }],
   },
   shimmer2: {
@@ -107,7 +103,7 @@ export const styles = StyleSheet.create({
     right: -30,
     width: 60,
     height: 1,
-    backgroundColor: "rgba(123, 63, 255, 0.4)",
+    backgroundColor: withAlpha(BRAND.violet, 0.4),
     transform: [{ rotate: "-45deg" }],
   },
 });

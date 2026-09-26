@@ -31,7 +31,8 @@ export default function RootLayout() {
 
   return (
     <AppProviders>
-      <StatusBar style="auto" />
+      {/* Tema oscuro fijo: texto claro en la barra de estado */}
+      <StatusBar style="light" />
       <Stack screenOptions={{ headerShown: false }} />
       {showSplash && <AnimatedSplash onFinish={handleSplashFinish} />}
     </AppProviders>

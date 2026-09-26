@@ -508,8 +508,11 @@ Siempre en la ruta espejo de `__tests__/`, con Jest y Testing Library.
 
 ## 13. Tema y diseño
 
-- **Tokens en `shared/config/theme`:** colores, espaciado, radios, tipografía y sombras. En los componentes no se escriben colores ni tamaños a mano.
-- Modo **claro y oscuro** desde el primer día, siguiendo el tema del sistema.
+- **Colores de marca en un solo sitio:** `shared/config/brand.js` (JavaScript plano porque también lo lee `app.config.js`; tipos en `brand.d.ts`). Los tonos translúcidos salen de ahí con `withAlpha(color, opacidad)` (`shared/utils/color.ts`), nunca escritos a mano.
+- **Tokens en `shared/config/theme.ts`:** colores con nombre de uso (`background`, `surface`, `text`, `primary`, `danger`…), espaciado, radios, tipografía y `touchTarget` (44). En los componentes no se escriben colores ni tamaños a mano.
+- **Solo tema oscuro por ahora:** el claro no está definido. La app está fijada en `userInterfaceStyle: "dark"` y `useTheme()` devuelve siempre `darkTheme`. Cuando se defina el claro, se añade `lightTheme` con las mismas claves y `useTheme()` elige con `useColorScheme()`, sin tocar los componentes.
+- **Estilos:** cada `<Comp>.styles.ts` exporta `useStyles = makeStyles((theme) => ({…}))` y el componente hace `const styles = useStyles()`. Se escriben una vez y valen para cualquier tema.
+- **Componentes base** en `shared/components/<Comp>/`: `Text` (variante, color y alineación del tema), `Button` (primario, secundario, fantasma; ignora pulsaciones mientras está ocupado, así no hay doble envío), `Input` (etiqueta y error), `LoadingState`, `ErrorState` (texto con `getErrorMessage` y Reintentar) y `EmptyState`. Los tres estados comparten `StateLayout`.
 - Los componentes base (`Button`, `Card`, `Input`, `Text`, estados de carga, vacío y error) viven en `shared/components/`; las pantallas los componen.
 - Estilos en `<Comp>.styles.ts` junto al componente, generados a partir del tema.
 - Accesibilidad mínima: `accessibilityLabel` en los controles, áreas táctiles de al menos 44 px y contraste suficiente en los dos temas.
@@ -573,7 +576,7 @@ Un cambio no está terminado hasta que cumple todo esto:
 - [ ] Contrato comprobado en Scalar, o mock + petición en `docs/endpoints-pendientes/`; tabla de endpoints actualizada.
 - [ ] Errores tratados como RFC 9457 y traducidos por `type`.
 - [ ] Una `CachePolicy` en cada query e invalidaciones tras cada mutación.
-- [ ] Probado en Android e iOS, en tema claro y oscuro.
+- [ ] Probado en Android e iOS (en tema oscuro; en claro cuando exista).
 - [ ] Ningún secreto ni `.env` en el diff.
 - [ ] Commit con el formato de la [sección 15](#15-flujo-de-git).
 
