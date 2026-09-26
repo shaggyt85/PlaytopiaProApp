@@ -9,6 +9,7 @@ const ca: Translations = {
     close: "Tancar",
     back: "Tornar",
     loading: "Carregant…",
+    signOut: "Tancar sessió",
   },
   errors: {
     network: "Sense connexió. Revisa la xarxa i torna-ho a provar.",

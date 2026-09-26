@@ -9,6 +9,7 @@ const en: Translations = {
     close: "Close",
     back: "Back",
     loading: "Loading…",
+    signOut: "Sign Out",
   },
   errors: {
     network: "No connection. Check your network and try again.",

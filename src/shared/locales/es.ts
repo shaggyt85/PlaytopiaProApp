@@ -9,6 +9,7 @@ const es = {
     close: "Cerrar",
     back: "Volver",
     loading: "Cargando…",
+    signOut: "Cerrar sesión",
   },
   errors: {
     network: "Sin conexión. Revisa tu red e inténtalo de nuevo.",

@@ -9,6 +9,7 @@ const pt: Translations = {
     close: "Fechar",
     back: "Voltar",
     loading: "Carregando…",
+    signOut: "Sair",
   },
   errors: {
     network: "Sem conexão. Verifique sua rede e tente novamente.",

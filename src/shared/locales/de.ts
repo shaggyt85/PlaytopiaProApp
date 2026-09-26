@@ -9,6 +9,7 @@ const de: Translations = {
     close: "Schließen",
     back: "Zurück",
     loading: "Wird geladen…",
+    signOut: "Abmelden",
   },
   errors: {
     network: "Keine Verbindung. Prüfen Sie Ihr Netzwerk und versuchen Sie es erneut.",
