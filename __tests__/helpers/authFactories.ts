@@ -1,5 +1,5 @@
 import { TERMS_VERSION } from "@/features/auth/schemas/signUp.schema";
-import type { TeacherTerms } from "@/features/auth/schemas/terms.schema";
+import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 
 import { createTestJwt, teacherClaims } from "./jwt";
 
@@ -15,9 +15,10 @@ export const signInTokens = {
   db_id: 7,
 };
 
-/** Términos del profesor 42 con esa versión aceptada (`null`: nunca los aceptó). */
-export const teacherTerms = (version: string | null = TERMS_VERSION): TeacherTerms => ({
+/** Perfil del profesor 42 con esa versión de los términos aceptada (`null`: nunca los aceptó). */
+export const teacherProfile = (version: string | null = TERMS_VERSION): TeacherProfile => ({
   id: 42,
+  name: "David",
   terms_version: version,
   accepted_terms_at: version ? "2026-09-26T10:00:00" : null,
 });

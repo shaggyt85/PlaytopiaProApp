@@ -122,6 +122,14 @@ const pt: Translations = {
     viewFullDocument: "Ver Documento Completo",
     openFailed: "Falha ao abrir o documento. Tente novamente.",
   },
+  home: {
+    greeting: {
+      morning: "Bom dia, treinador",
+      afternoon: "Boa tarde, treinador",
+      evening: "Boa noite, treinador",
+    },
+    notifications: "Notificações",
+  },
   phone: {
     label: "Número de telefone",
     placeholder: "Seu número de telefone",

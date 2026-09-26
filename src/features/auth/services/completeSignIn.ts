@@ -1,10 +1,16 @@
+import type { QueryClient } from "@tanstack/react-query";
+
+import { queryClient } from "@/shared/config/queryClient";
 import { session } from "@/shared/services/session";
+import {
+  teacherKeys,
+  teacherProfileService,
+  type ITeacherProfileService,
+} from "@/shared/services/teacherProfileService";
 import type { SessionTokens } from "@/shared/services/tokenRefresh";
 import { decodeSessionClaims } from "@/shared/utils/jwt";
 
 import { TERMS_VERSION } from "../schemas/signUp.schema";
-
-import { termsService, type ITermsService } from "./termsService";
 
 export interface SignInOutcome {
   tokens: SessionTokens;
@@ -14,16 +20,19 @@ export interface SignInOutcome {
 
 export interface CompleteSignInDeps {
   session: Pick<typeof session, "saveTokens" | "start" | "end">;
-  terms: Pick<ITermsService, "getTerms">;
+  profile: Pick<ITeacherProfileService, "get">;
+  cache: Pick<QueryClient, "setQueryData">;
 }
 
-const defaultDeps: CompleteSignInDeps = { session, terms: termsService };
+const defaultDeps: CompleteSignInDeps = { session, profile: teacherProfileService, cache: queryClient };
 
 /**
  * Lo que pasa tras conseguir tokens, se entre con contraseña o con biometría:
  * se guardan, se comprueban los términos vigentes y se abre la sesión (los
  * guards llevan solos al inicio). Sin los términos vigentes la sesión queda
  * cerrada y la pantalla pide aceptarlos. El profesor sale del token.
+ *
+ * El perfil leído se deja en la caché: el inicio lo encuentra y no lo pide otra vez.
  */
 export async function completeSignIn(
   tokens: SessionTokens,
@@ -33,8 +42,9 @@ export async function completeSignIn(
   await deps.session.saveTokens(tokens.access_token, tokens.refresh_token);
   try {
     if (teacherId === undefined) throw new Error("El access token no dice qué profesor es.");
-    const { terms_version } = await deps.terms.getTerms(teacherId);
-    if (terms_version !== TERMS_VERSION) return { tokens, termsPending: true };
+    const profile = await deps.profile.get(teacherId);
+    deps.cache.setQueryData(teacherKeys.profile(teacherId), profile);
+    if (profile.terms_version !== TERMS_VERSION) return { tokens, termsPending: true };
   } catch (error) {
     // Sin saber si los aceptó no se entra: se borran los tokens guardados.
     await deps.session.end();

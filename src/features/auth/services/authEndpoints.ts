@@ -6,6 +6,4 @@ export const AUTH_ENDPOINTS = {
   PASSWORD_RECOVERY: "/PassRecovery/request",
   /** Alta de profesor (grupo Users → Teachers). Público: lo protege el registration_token. */
   SIGN_UP: "/UserTeacher",
-  /** Perfil del profesor: de él se lee y se acepta la versión de los términos. */
-  TEACHER: (teacherId: number) => `/UserTeacher/${teacherId}`,
 } as const;

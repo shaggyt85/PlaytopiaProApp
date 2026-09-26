@@ -23,6 +23,10 @@ const typography = {
   display: { fontFamily: FONTS.display, fontSize: 32, letterSpacing: 4 },
   /** Nombre de marca en la cabecera de acceso. */
   brand: { fontFamily: FONTS.displayHeavy, fontSize: 32, letterSpacing: 2 },
+  /** Marca pequeña junto al logo, arriba de cada pestaña ("PLAYTOPIA"). */
+  wordmark: { fontFamily: FONTS.displayHeavy, fontSize: 14, letterSpacing: 3 },
+  /** Nombre grande de una cabecera (el del profesor en Hoy). */
+  hero: { fontFamily: FONTS.display, fontSize: 30, lineHeight: 36 },
   title: { fontFamily: FONTS.display, fontSize: 24 },
   subtitle: { fontFamily: FONTS.display, fontSize: 18 },
   body: { fontFamily: FONTS.regular, fontSize: 16 },
@@ -31,6 +35,8 @@ const typography = {
   /** Dato corto remarcado (p. ej. el prefijo de un teléfono). */
   strong: { fontFamily: FONTS.semibold, fontSize: 16 },
   caption: { fontFamily: FONTS.regular, fontSize: 13 },
+  /** Línea pequeña en mayúsculas sobre un título (el saludo de Hoy). */
+  eyebrow: { fontFamily: FONTS.medium, fontSize: 12, letterSpacing: 2.2, textTransform: "uppercase" },
   /** Texto junto a una casilla (términos, "prefiero no decirlo"). */
   label: { fontFamily: FONTS.regular, fontSize: 14, lineHeight: 20 },
   /** Texto legal, pies. */

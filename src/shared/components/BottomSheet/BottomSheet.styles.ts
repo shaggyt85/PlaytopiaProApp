@@ -1,10 +1,9 @@
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
-// Medidas de la hoja de Lovable (`max-w-md`, barrita `h-1.5 w-10`, X `h-9 w-9`).
+// Medidas de la hoja de Lovable (`max-w-md`, barrita `h-1.5 w-10`).
 const PANEL_MAX_WIDTH = 448;
 const HANDLE_WIDTH = 40;
 const HANDLE_HEIGHT = 6;
-const CLOSE_SIZE = 36;
 
 export const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,13 +44,5 @@ export const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: theme.spacing.md,
     right: theme.spacing.md,
-    width: CLOSE_SIZE,
-    height: CLOSE_SIZE,
-    borderRadius: CLOSE_SIZE / 2,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: theme.colors.surface,
-    borderWidth: 1,
-    borderColor: theme.colors.hairline,
   },
 }));

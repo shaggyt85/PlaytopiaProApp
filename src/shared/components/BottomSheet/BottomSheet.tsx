@@ -6,7 +6,7 @@ import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown } from "react-nati
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useBlurTarget } from "@/shared/components/BlurTarget";
-import { useTheme } from "@/shared/hooks/useTheme";
+import { IconButton } from "@/shared/components/IconButton";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import { useStyles } from "./BottomSheet.styles";
@@ -16,7 +16,8 @@ const OPEN_MS = 300;
 const CLOSE_MS = 250;
 // El `backdrop-blur-sm` de Lovable.
 const BLUR_INTENSITY = 20;
-const CLOSE_ICON = 16;
+// La X de la hoja de Lovable (`h-9 w-9`).
+const CLOSE_SIZE = 36;
 
 export interface BottomSheetProps {
   visible: boolean;
@@ -33,7 +34,6 @@ export interface BottomSheetProps {
  */
 export function BottomSheet({ visible, onClose, children }: BottomSheetProps) {
   const styles = useStyles();
-  const theme = useTheme();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const blurTarget = useBlurTarget();
@@ -82,15 +82,9 @@ export function BottomSheet({ visible, onClose, children }: BottomSheetProps) {
             <View style={styles.handle} />
             {children}
             {/* Último hijo: se pinta encima por orden, sin zIndex (se desmonta con el panel). */}
-            <Pressable
-              onPress={onClose}
-              style={styles.close}
-              hitSlop={theme.spacing.xs}
-              accessibilityRole="button"
-              accessibilityLabel={t("common.close")}
-            >
-              <IconLoX size={CLOSE_ICON} color={theme.colors.text} />
-            </Pressable>
+            <View style={styles.close}>
+              <IconButton Icon={IconLoX} size={CLOSE_SIZE} onPress={onClose} accessibilityLabel={t("common.close")} />
+            </View>
           </Animated.View>
         </>
       ) : null}

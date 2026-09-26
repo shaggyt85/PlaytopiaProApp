@@ -241,7 +241,7 @@ Tabla viva: se actualiza cada vez que una pantalla empieza a usar un endpoint o 
 | POST | `/api/UserTeacher` | auth (registro) | real |
 | POST | `/api/PassRecovery/request` (con `scope: "teacher"`) | auth (recuperar) | real |
 | POST | `/api/PassRecovery/validate` | la web de recuperación, no la app | real |
-| GET | `/api/UserTeacher/{id}` | auth (términos tras el login), profile | real |
+| GET | `/api/UserTeacher/{id}` | auth (términos tras el login), home (nombre), profile | real |
 | PATCH | `/api/UserTeacher/{id}` | auth (aceptar términos), profile | real |
 | DELETE | `/api/UserTeacher/{id}` | settings (borrar cuenta) | real |
 | PATCH | `/api/UserTeacher/password` | profile | real |
@@ -421,7 +421,7 @@ useQuery({
 - **Paso 2, contraseña** (`PasswordScreen`): login con `{ username: email, password }`. Un 401 es "credenciales incorrectas"; si el email también es de alumno, se aclara que la contraseña es la de la cuenta de profesor.
 - **Un alumno puede ser profesor:** son cuentas separadas en Core (tablas distintas, cada una con su contraseña) y el JWT lleva un solo rol. El alumno que aún no es profesor ve «Registrarse» en el paso 1 y puede darse de alta con el mismo email: Core solo rechaza el alta si el email ya es de otro profesor.
 - **Al volver al paso 1** (p. ej. tras registrarse), el botón vuelve a «Continuar» y el email sigue escrito.
-- **Paso 3, términos:** tras el login se lee `GET /api/UserTeacher/{id}`. Si `terms_version` es la vigente, `session.start()` abre la sesión y los guards llevan solos al inicio: las pantallas no navegan al inicio. Si no (null por alta desde el CRM, o una versión anterior), ver «Aceptación de términos».
+- **Paso 3, términos:** tras el login se lee `GET /api/UserTeacher/{id}` (`shared/services/teacherProfileService`) y el perfil queda en la caché: Hoy no lo vuelve a pedir. Si `terms_version` es la vigente, `session.start()` abre la sesión y los guards llevan solos al inicio: las pantallas no navegan al inicio. Si no (null por alta desde el CRM, o una versión anterior), ver «Aceptación de términos».
 
 - `POST /api/auth/login/teacher` con cuerpo **`{ username, password }`** (el campo se llama `username`, no `email`). Devuelve `access_token`, `refresh_token`, `id`, `role_id` y `db_id`.
 - **Rol del profesor: `4`** (`ROLES.TEACHER` en `shared/config/roles.ts`, copia de `crates/shared/src/roles.rs`). La fuente de verdad es el claim `RoleId` del JWT; Core responde 403 si no coincide.
@@ -444,7 +444,7 @@ useQuery({
 
 - `TERMS_VERSION` (`features/auth/schemas/signUp.schema.ts`) es la fecha de la versión vigente. Los documentos están en la web; se sube a mano cuando cambian.
 - Si al hacer login el profesor no tiene la versión vigente, `useSignIn` guarda los tokens con `session.saveTokens()` **sin abrir la sesión**, y la pantalla de contraseña abre el `LegalModal` de los términos con el botón «Aceptar» (prop `onAccept`).
-  - **Aceptar:** `PATCH /api/UserTeacher/{id}` con `terms_version` (Core sella `accepted_terms_at`) y `session.start()`.
+  - **Aceptar:** `PATCH /api/UserTeacher/{id}` con `terms_version` (Core sella `accepted_terms_at`), el perfil que devuelve a la caché y `session.start()`.
   - **Cerrar el modal:** no entra; `session.end()` borra los tokens.
   - Si Core no guarda la aceptación, el error sale dentro del modal.
   - Si no se puede leer el perfil tras el login, no entra y se borran los tokens.
@@ -525,6 +525,15 @@ useQuery({
 - **La barra se monta una vez** y queda fija mientras cambia la pantalla de encima. `(app)` sigue siendo un `Stack` con `(tabs)` dentro: las pantallas de detalle se abrirán encima, a pantalla completa y sin barra.
 - **La gota** (degradado de marca bajo la pestaña activa) es un único indicador en `TabBar`: su posición sale de `onLayout` (ancho ÷ número de pestañas) y salta con anticipación, muelle, estela y brillo (valores en `TabBar.animation.ts`). Con «reducir movimiento» va directa.
 - **Hueco bajo la barra:** como flota sobre el contenido, cada pantalla del menú deja abajo `useTabBarInset()` para que no quede nada tapado.
+- **Marco de cada pestaña: `TabScreen`** (el `AppShell` de Lovable): fondo de marca, zona segura de arriba, el logo centrado (`BrandWordmark`; de momento el logo blanco, el isotipo con degradado está pendiente de la librería), scroll y el hueco de la barra. Toda pestaña lo usa; ninguna repite fondo ni hueco.
+- **Cabecera: `ScreenHeader`** (la de Lovable): saludo en mayúsculas (`eyebrow`), título grande (`hero`), subtítulo y un hueco a la derecha. Solo pinta lo que recibe; sin título reserva su altura.
+
+### Hoy
+
+- **Cabecera:** «Buenos días / Buenas tardes / Buenas noches, entrenador» (6-12, 12-20 y el resto; `home/utils/greeting.ts`), el nombre del profesor (`useTeacherProfile`, caché `STANDARD`) y la fecha («Viernes · 22 de noviembre», `formatWeekdayDate`).
+- **La hora es la del móvil** con `serverNow()`: es el día del profesor, no de un club (puede dar clases en clubes de zonas distintas). Las horas de las clases, cuando lleguen, van en la hora de su club. Saludo y fecha se renuevan al volver la app al primer plano (`useForegroundNow`), sin temporizadores.
+- **Si el perfil no llega,** la cabecera sale igual sin el nombre.
+- **Provisional:** la campana se ve pero no hace nada hasta las notificaciones (sin punto rojo), y el botón de cerrar sesión sigue hasta que exista Perfil.
 - **Pestaña sin contenido:** su ruta reexporta `ComingSoonScreen`, que muestra el nombre de la pestaña (de `TABS`, según la ruta) y «Próximamente».
 
 ### Escuela y sucursal
@@ -642,7 +651,7 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 
 - **Solo tema oscuro por ahora:** la app está fijada en `userInterfaceStyle: "dark"` y `useTheme()` devuelve siempre `darkTheme`. Cuando se defina el claro, se añade `lightTheme` con las mismas claves y `useTheme()` elige con `useColorScheme()`, sin tocar los componentes.
 - **Estilos:** cada `<Comp>.styles.ts` exporta `useStyles = makeStyles((theme) => ({…}))` y el componente hace `const styles = useStyles()`.
-- **Componentes base** en `shared/components/<Comp>/`: `Text`, `Button` (`primary` con el degradado de marca, `solid`, `secondary`, `link`; ignora pulsaciones mientras está ocupado), `Input` (`glass` o `solid`), `Checkbox`, `FieldError`, `PhoneInput`, `DateInput`, `GenderSelector`, `BackButton`, `BrandBackground`, `BrandLogo`, `Screen`, `LoadingState`, `ErrorState`, `EmptyState`, `BottomSheet` y `BlurTarget` (paneles inferiores) y los del menú (`AppTabs`, `TabBar`, `TabButton`, `ComingSoonScreen`).
+- **Componentes base** en `shared/components/<Comp>/`: `Text`, `Button` (`primary` con el degradado de marca, `solid`, `secondary`, `link`; ignora pulsaciones mientras está ocupado), `Input` (`glass` o `solid`), `Checkbox`, `FieldError`, `PhoneInput`, `DateInput`, `GenderSelector`, `BackButton`, `BrandBackground`, `BrandLogo`, `Screen`, `LoadingState`, `ErrorState`, `EmptyState`, `IconButton` (botón redondo con icono: la campana, la X de los paneles), `BottomSheet` y `BlurTarget` (paneles inferiores), los de cada pestaña (`TabScreen`, `ScreenHeader`, `BrandWordmark`) y los del menú (`AppTabs`, `TabBar`, `TabButton`, `ComingSoonScreen`).
 - **Nada de `zIndex` en elementos que se desmontan** (botón de volver, splash, overlays): se colocan como último hijo y se pintan encima por orden. En Android, un hijo con `zIndex` que se desmonta durante una transición cierra la app (`IndexOutOfBoundsException` en `getChildDrawingOrder`).
 - **Accesibilidad mínima:** `accessibilityLabel` en los controles, roles (`tab`, `tablist`, `checkbox`…), áreas táctiles de al menos 44 y contraste suficiente.
 - **Responsive:** la app está bloqueada en vertical (`orientation: "portrait"`), pero en tablets y plegables Android 16 ignora el bloqueo. Las pantallas no dependen de un ancho fijo: `flex`, `useWindowDimensions`, `onLayout` y anchos máximos.

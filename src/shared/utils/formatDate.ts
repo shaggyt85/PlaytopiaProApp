@@ -50,3 +50,14 @@ export function formatInstant(
     timeZone: parseTimezone(tz),
   }).format(new Date(instant));
 }
+
+/**
+ * Un instante como día de la semana y fecha, con la hora del móvil: "Viernes ·
+ * 22 de noviembre" (el día y el mes, en el orden y la forma de cada idioma).
+ */
+export function formatWeekdayDate(instant: number | Date): string {
+  const locale = getLocale();
+  const weekday = new Intl.DateTimeFormat(locale, { weekday: "long" }).format(instant);
+  const dayMonth = new Intl.DateTimeFormat(locale, { day: "numeric", month: "long" }).format(instant);
+  return `${weekday.charAt(0).toLocaleUpperCase(locale)}${weekday.slice(1)} · ${dayMonth}`;
+}

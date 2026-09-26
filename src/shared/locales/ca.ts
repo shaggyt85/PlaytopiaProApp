@@ -122,6 +122,14 @@ const ca: Translations = {
     viewFullDocument: "Veure Document Complet",
     openFailed: "Error en obrir el document. Torna-ho a provar.",
   },
+  home: {
+    greeting: {
+      morning: "Bon dia, entrenador",
+      afternoon: "Bona tarda, entrenador",
+      evening: "Bona nit, entrenador",
+    },
+    notifications: "Notificacions",
+  },
   phone: {
     label: "Número de telèfon",
     placeholder: "El teu número de telèfon",

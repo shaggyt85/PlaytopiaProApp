@@ -4,6 +4,7 @@ import {
   formatClubTime,
   formatInstant,
   formatNumericDate,
+  formatWeekdayDate,
 } from "@/shared/utils/formatDate";
 
 describe("formatDate", () => {
@@ -35,5 +36,14 @@ describe("formatDate", () => {
     expect(
       formatInstant("2026-08-25T16:00:00Z", "America/New_York", { time: "short" }),
     ).toBe("12:00");
+  });
+
+  it("el día de la cabecera: semana con mayúscula y fecha en la forma de cada idioma", async () => {
+    // Mediodía: el mismo día en cualquier zona horaria en la que se ejecute el test.
+    const friday = new Date(2026, 10, 20, 12, 0);
+    expect(formatWeekdayDate(friday)).toBe("Viernes · 20 de noviembre");
+
+    await changeLanguage("en");
+    expect(formatWeekdayDate(friday)).toBe("Friday · November 20");
   });
 });

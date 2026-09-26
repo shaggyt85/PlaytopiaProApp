@@ -1,24 +1,27 @@
+import { TERMS_VERSION } from "@/features/auth/schemas/signUp.schema";
 import { completeSignIn, type CompleteSignInDeps } from "@/features/auth/services/completeSignIn";
 import { HttpError } from "@/shared/services/HttpError";
+import { teacherKeys } from "@/shared/services/teacherProfileService";
 
-import { signInTokens, teacherTerms } from "../../../helpers/authFactories";
+import { signInTokens, teacherProfile } from "../../../helpers/authFactories";
 
 const tokens = { access_token: signInTokens.access_token, refresh_token: "refresco" };
 
-function deps(getTerms: CompleteSignInDeps["terms"]["getTerms"]) {
+function deps(get: CompleteSignInDeps["profile"]["get"]) {
   return {
     session: {
       saveTokens: jest.fn().mockResolvedValue(undefined),
       start: jest.fn().mockResolvedValue(true),
       end: jest.fn().mockResolvedValue(undefined),
     },
-    terms: { getTerms },
+    profile: { get },
+    cache: { setQueryData: jest.fn() },
   } satisfies CompleteSignInDeps;
 }
 
 describe("completeSignIn", () => {
   it("con los términos vigentes abre la sesión", async () => {
-    const d = deps(jest.fn().mockResolvedValue(teacherTerms()));
+    const d = deps(jest.fn().mockResolvedValue(teacherProfile()));
 
     await expect(completeSignIn(tokens, d)).resolves.toEqual({ tokens, termsPending: false });
 
@@ -27,15 +30,25 @@ describe("completeSignIn", () => {
   });
 
   it("pregunta los términos del profesor que dice el token", async () => {
-    const d = deps(jest.fn().mockResolvedValue(teacherTerms()));
+    const d = deps(jest.fn().mockResolvedValue(teacherProfile()));
 
     await completeSignIn(tokens, d);
 
-    expect(d.terms.getTerms).toHaveBeenCalledWith(42);
+    expect(d.profile.get).toHaveBeenCalledWith(42);
+  });
+
+  it("deja el perfil en la caché para el inicio, también si faltan los términos", async () => {
+    for (const version of [TERMS_VERSION, null]) {
+      const d = deps(jest.fn().mockResolvedValue(teacherProfile(version)));
+
+      await completeSignIn(tokens, d);
+
+      expect(d.cache.setQueryData).toHaveBeenCalledWith(teacherKeys.profile(42), teacherProfile(version));
+    }
   });
 
   it.each([null, "2020-01-01"])("con los términos en %s guarda los tokens pero no abre la sesión", async (version) => {
-    const d = deps(jest.fn().mockResolvedValue(teacherTerms(version)));
+    const d = deps(jest.fn().mockResolvedValue(teacherProfile(version)));
 
     await expect(completeSignIn(tokens, d)).resolves.toEqual({ tokens, termsPending: true });
 
@@ -57,7 +70,7 @@ describe("completeSignIn", () => {
 
     await expect(completeSignIn({ access_token: "ilegible", refresh_token: "r" }, d)).rejects.toThrow();
 
-    expect(d.terms.getTerms).not.toHaveBeenCalled();
+    expect(d.profile.get).not.toHaveBeenCalled();
     expect(d.session.end).toHaveBeenCalled();
   });
 });

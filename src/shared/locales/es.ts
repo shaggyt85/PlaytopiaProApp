@@ -124,6 +124,14 @@ const es = {
     viewFullDocument: "Ver Documento Completo",
     openFailed: "Error al abrir el documento. Inténtalo de nuevo.",
   },
+  home: {
+    greeting: {
+      morning: "Buenos días, entrenador",
+      afternoon: "Buenas tardes, entrenador",
+      evening: "Buenas noches, entrenador",
+    },
+    notifications: "Notificaciones",
+  },
   phone: {
     label: "Número de teléfono",
     placeholder: "Tu número de teléfono",

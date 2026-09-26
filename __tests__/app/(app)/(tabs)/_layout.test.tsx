@@ -1,4 +1,6 @@
+import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, renderRouter, screen } from "expo-router/testing-library";
+import type { ReactNode } from "react";
 
 import CalendarRoute from "@/app/(app)/(tabs)/calendar";
 import GroupsRoute from "@/app/(app)/(tabs)/groups";
@@ -6,6 +8,20 @@ import HomeRoute from "@/app/(app)/(tabs)/index";
 import NetworkRoute from "@/app/(app)/(tabs)/network";
 import ProfileRoute from "@/app/(app)/(tabs)/profile";
 import TabsLayout from "@/app/(app)/(tabs)/_layout";
+import { createQueryClient } from "@/shared/config/queryClient";
+import { teacherProfileService } from "@/shared/services/teacherProfileService";
+
+import { teacherProfile } from "../../../helpers/authFactories";
+
+jest.mock("@/shared/services/teacherProfileService", () => ({
+  ...jest.requireActual("@/shared/services/teacherProfileService"),
+  teacherProfileService: { get: jest.fn(), update: jest.fn() },
+}));
+
+// En la app lo pone AppProviders, en el layout raíz (Hoy pide el perfil).
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <QueryClientProvider client={createQueryClient()}>{children}</QueryClientProvider>
+);
 
 const routes = {
   "(tabs)/_layout": TabsLayout,
@@ -17,8 +33,12 @@ const routes = {
 };
 
 describe("menú inferior", () => {
+  beforeEach(() => {
+    jest.mocked(teacherProfileService.get).mockResolvedValue(teacherProfile());
+  });
+
   it("empieza en Hoy, con las 5 pestañas en orden y Hoy seleccionada", () => {
-    renderRouter(routes, { initialUrl: "/" });
+    renderRouter(routes, { initialUrl: "/", wrapper });
 
     expect(screen.getByTestId("home-screen")).toBeTruthy();
     expect(screen.getAllByRole("tab").map((tab) => tab.props.accessibilityLabel)).toEqual([
@@ -37,7 +57,7 @@ describe("menú inferior", () => {
     ["Red", "/network"],
     ["Perfil", "/profile"],
   ])("la pestaña %s lleva a %s y muestra su «Próximamente»", (label, path) => {
-    renderRouter(routes, { initialUrl: "/" });
+    renderRouter(routes, { initialUrl: "/", wrapper });
 
     fireEvent.press(screen.getByRole("tab", { name: label }));
 
@@ -47,7 +67,7 @@ describe("menú inferior", () => {
   });
 
   it("la barra sigue en pantalla al cambiar de pestaña", () => {
-    renderRouter(routes, { initialUrl: "/calendar" });
+    renderRouter(routes, { initialUrl: "/calendar", wrapper });
 
     fireEvent.press(screen.getByRole("tab", { name: "Hoy" }));
 

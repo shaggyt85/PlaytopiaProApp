@@ -3,12 +3,12 @@ import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
 import { PasswordScreen } from "@/features/auth/PasswordScreen";
 import { TERMS_VERSION } from "@/features/auth/schemas/signUp.schema";
 import { signInService } from "@/features/auth/services/signInService";
-import { termsService } from "@/features/auth/services/termsService";
 import { useAuthFlowStore } from "@/features/auth/store/authFlowStore";
 import { HttpError } from "@/shared/services/HttpError";
 import { session } from "@/shared/services/session";
+import { teacherKeys, teacherProfileService } from "@/shared/services/teacherProfileService";
 
-import { signInTokens, teacherTerms } from "../../helpers/authFactories";
+import { signInTokens, teacherProfile } from "../../helpers/authFactories";
 import { renderWithProviders } from "../../helpers/renderWithProviders";
 import { settle } from "../../helpers/settle";
 
@@ -24,8 +24,9 @@ jest.mock("expo-router", () => ({
 jest.mock("@/features/auth/services/signInService", () => ({
   signInService: { signIn: jest.fn() },
 }));
-jest.mock("@/features/auth/services/termsService", () => ({
-  termsService: { getTerms: jest.fn(), acceptTerms: jest.fn() },
+jest.mock("@/shared/services/teacherProfileService", () => ({
+  ...jest.requireActual("@/shared/services/teacherProfileService"),
+  teacherProfileService: { get: jest.fn(), update: jest.fn() },
 }));
 jest.mock("@/shared/services/session", () => ({
   session: {
@@ -37,7 +38,7 @@ jest.mock("@/shared/services/session", () => ({
 
 
 const tokens = signInTokens;
-const terms = teacherTerms;
+const terms = teacherProfile;
 
 const entrar = (password: string) => {
   fireEvent.changeText(screen.getByLabelText("Contraseña"), password);
@@ -47,7 +48,7 @@ const entrar = (password: string) => {
 describe("PasswordScreen", () => {
   beforeEach(() => {
     useAuthFlowStore.getState().setCheckedEmail("ana@club.com", false);
-    jest.mocked(termsService.getTerms).mockResolvedValue(terms(TERMS_VERSION));
+    jest.mocked(teacherProfileService.get).mockResolvedValue(terms(TERMS_VERSION));
   });
 
   it("entra con el email del paso 1 como username y abre la sesión", async () => {
@@ -67,9 +68,9 @@ describe("PasswordScreen", () => {
 
   it("sin los términos vigentes no entra: abre su modal y al aceptarlos entra", async () => {
     jest.mocked(signInService.signIn).mockResolvedValue(tokens);
-    jest.mocked(termsService.getTerms).mockResolvedValue(terms(null));
-    jest.mocked(termsService.acceptTerms).mockResolvedValue(terms(TERMS_VERSION));
-    renderWithProviders(<PasswordScreen />);
+    jest.mocked(teacherProfileService.get).mockResolvedValue(terms(null));
+    jest.mocked(teacherProfileService.update).mockResolvedValue(terms(TERMS_VERSION));
+    const { client } = renderWithProviders(<PasswordScreen />);
 
     entrar("secreta");
 
@@ -81,13 +82,15 @@ describe("PasswordScreen", () => {
       fireEvent.press(screen.getByRole("button", { name: "Aceptar" }));
     });
 
-    expect(termsService.acceptTerms).toHaveBeenCalledWith(42, TERMS_VERSION);
+    expect(teacherProfileService.update).toHaveBeenCalledWith(42, { terms_version: TERMS_VERSION });
     expect(session.start).toHaveBeenCalledWith(tokens.access_token, "refresco");
+    // El perfil que devuelve Core queda en la caché: el inicio no lo vuelve a pedir.
+    expect(client.getQueryData(teacherKeys.profile(42))).toEqual(terms(TERMS_VERSION));
   });
 
   it("si cierra el modal sin aceptar, no entra y se borran los tokens", async () => {
     jest.mocked(signInService.signIn).mockResolvedValue(tokens);
-    jest.mocked(termsService.getTerms).mockResolvedValue(terms("2020-01-01"));
+    jest.mocked(teacherProfileService.get).mockResolvedValue(terms("2020-01-01"));
     renderWithProviders(<PasswordScreen />);
 
     entrar("secreta");
@@ -103,8 +106,8 @@ describe("PasswordScreen", () => {
 
   it("si Core no guarda la aceptación, lo dice en el modal y no entra", async () => {
     jest.mocked(signInService.signIn).mockResolvedValue(tokens);
-    jest.mocked(termsService.getTerms).mockResolvedValue(terms(null));
-    jest.mocked(termsService.acceptTerms).mockRejectedValue(HttpError.network());
+    jest.mocked(teacherProfileService.get).mockResolvedValue(terms(null));
+    jest.mocked(teacherProfileService.update).mockRejectedValue(HttpError.network());
     renderWithProviders(<PasswordScreen />);
 
     entrar("secreta");
