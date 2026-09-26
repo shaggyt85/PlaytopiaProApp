@@ -272,7 +272,7 @@ Base común que se trae de la appStudent, adaptada a profesor:
 
 | Feature | Qué hace |
 |---|---|
-| `auth` | flujo de acceso completo hasta el inicio: email → contraseña (login contra `/api/auth/login/teacher`), registro con firma HMAC, recuperar contraseña con `scope: "teacher"`, biometría y elegir sucursal |
+| `auth` | flujo de acceso completo hasta el inicio: email → contraseña (login contra `/api/auth/login/teacher`) → aceptar los términos vigentes, registro con firma HMAC, recuperar contraseña con `scope: "teacher"`, biometría y elegir sucursal |
 | `profile` | ver y editar perfil, avatar, cambiar contraseña |
 | `settings` | idioma, notificaciones, borrar cuenta |
 | `notifications` | notificaciones push |
@@ -365,8 +365,8 @@ Tabla viva: se actualiza cada vez que una pantalla empieza a usar un endpoint o 
 | POST | `/api/UserTeacher` | auth (registro) | real |
 | POST | `/api/PassRecovery/request` (con `scope: "teacher"`) | auth (recuperar) | real |
 | POST | `/api/PassRecovery/validate` | auth (recuperar) | real |
-| GET | `/api/UserTeacher/{id}` | profile | real |
-| PATCH | `/api/UserTeacher/{id}` | profile | real |
+| GET | `/api/UserTeacher/{id}` | auth (términos tras el login), profile | real |
+| PATCH | `/api/UserTeacher/{id}` | auth (aceptar términos), profile | real |
 | DELETE | `/api/UserTeacher/{id}` | settings (borrar cuenta) | real |
 | PATCH | `/api/UserTeacher/password` | profile | real |
 | GET | `/api/MobileTeacher/avatar` | profile | real |
@@ -438,7 +438,7 @@ Cómo está hecho (`src/shared/config/env.ts`):
 - Un schema Zod con todas las variables; `parseEnv()` lo aplica y, si algo falla, lanza un error que nombra cada variable mal o ausente.
 - Una variable vacía en `.env` (`CLAVE=`) cuenta como no definida.
 - El layout raíz lo importa, así la validación ocurre al arrancar y no en una pantalla cualquiera.
-- Una variable que solo necesita una pantalla futura se declara opcional y pasa a obligatoria cuando esa pantalla existe (el secreto HMAC, con `sign-up`).
+- Una variable que solo necesita una pantalla futura se declara opcional y pasa a obligatoria cuando esa pantalla existe. Así pasó con el secreto HMAC: es obligatorio desde que existe `sign-up`.
 - Para una variable nueva: añadirla al schema, a la llamada de `parseEnv`, a `.env.example` y a las variables de EAS.
 
 > Expo solo sustituye `process.env.EXPO_PUBLIC_X` cuando se escribe literal, por eso cada variable se nombra una a una.
@@ -457,9 +457,11 @@ Esos viven en las **variables/secretos de EAS**, separadas por entorno (developm
 
 `POST /api/UserTeacher` exige un `registration_token` con formato `v1.{timestamp}.{hash}` (HMAC-SHA256 con `crypto-js`), firmado con el secreto compartido que Core valida con su `backend_shared_secret`.
 
-- El secreto entra **solo por env** (`EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET`, con el mismo valor que valida Core, más `EXPO_PUBLIC_TOKEN_SKEW_SECONDS`, por defecto 300). Su valor vive en las variables de EAS y en el `.env` local, **nunca en el repo**.
+- El secreto entra **solo por env** (`EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET`, más `EXPO_PUBLIC_TOKEN_SKEW_SECONDS`, por defecto 300). Su valor vive en las variables de EAS y en el `.env` local, **nunca en el repo**. Core valida el alta de alumno y la de profesor con el mismo `backend_shared_secret`, así que el valor es el mismo que `EXPO_PUBLIC_USER_STUDENT_SHARED_SECRET` de la app de alumnos.
 - Es una **firma de origen** para frenar altas automáticas, no un secreto fuerte: al ser `EXPO_PUBLIC_*`, va dentro del bundle. Si se filtra, se rota en Core y en EAS a la vez.
-- El timestamp sale de `serverClock` para no fallar por la desviación del reloj del móvil.
+- El timestamp sale de `serverClock` para no fallar por la desviación del reloj del móvil. Antes del registro el profesor pasa por `check-email`, cuya respuesta ya calibra la hora de Core.
+- Código: `features/auth/services/registrationToken.ts`. Su test reproduce la validación de Core con el HMAC de Node.
+- No hay reintento por token caducado: Core devuelve ese caso como `about:blank` y solo se distinguiría leyendo el `detail`. Está pedido en `docs/endpoints-pendientes/auth-registro-types.md`.
 
 ### Ficheros de credenciales
 
@@ -541,8 +543,9 @@ useQuery({
 
 - **Paso 1, email** (`SignInScreen`): `POST /api/auth/check-email`. Si `is_teacher`, pasa a la contraseña; si no, ofrece crear la cuenta. Un email que solo es de alumno tampoco pasa a la contraseña: la cuenta de profesor es otra.
 - **Paso 2, contraseña** (`PasswordScreen`): login con `{ username: email, password }`. Un 401 es "credenciales incorrectas"; si el email también es de alumno, se aclara que la contraseña es la de la cuenta de profesor.
-- **Un alumno puede ser profesor:** son cuentas separadas en Core (tablas distintas, cada una con su contraseña) y el JWT lleva un solo rol. El alumno que aún no es profesor llega al paso 2 (su email existe); la pantalla de contraseña es la misma que en la app de alumnos y no ofrece registrarse (decisión de producto).
-- Si el login va bien, `session.start()` abre la sesión y los guards llevan solos al inicio: las pantallas no navegan al inicio.
+- **Un alumno puede ser profesor:** son cuentas separadas en Core (tablas distintas, cada una con su contraseña) y el JWT lleva un solo rol. El alumno que aún no es profesor ve «Registrarse» en el paso 1 y puede darse de alta con el mismo email: Core solo rechaza el alta si el email ya es de otro profesor.
+- **Al volver al paso 1** (p. ej. tras registrarse), el botón vuelve a «Continuar» y el email sigue escrito.
+- **Paso 3, términos:** tras el login se lee `GET /api/UserTeacher/{id}`. Si `terms_version` es la vigente, `session.start()` abre la sesión y los guards llevan solos al inicio: las pantallas no navegan al inicio. Si no (null por alta desde el CRM, o una versión anterior), ver «Aceptación de términos».
 
 - `POST /api/auth/login/teacher` con cuerpo **`{ username, password }`** (el campo se llama `username`, no `email`). Devuelve `access_token`, `refresh_token`, `id`, `role_id` y `db_id`.
 - **Rol del profesor: `4`** (`ROLES.TEACHER` en `shared/config/roles.ts`, copia de `crates/shared/src/roles.rs`). La fuente de verdad es el claim `RoleId` del JWT; Core responde 403 si no coincide.
@@ -554,10 +557,22 @@ useQuery({
 
 ### Registro
 
-- `sign-up` llama a `POST /api/UserTeacher`. Campos obligatorios: `name`, `last_name`, `email`, `password`, `phone_number`, `birthday`, `document_id` y `registration_token`; opcionales `address` y `gender`.
-- Se puede usar antes `POST /api/auth/check-email` para avisar de un email ya registrado.
-- Si responde 201, llegan `access_token` y `refresh_token`: se guardan igual que en el login y el profesor entra directamente. Se ofrece activar la biometría.
-- Errores 400 y 409 (email ya registrado) se muestran en el formulario por `type`.
+- `SignUpScreen` (ruta `sign-up`), igual que el registro de la app de alumnos: sin logo, con botón de volver y el título «¡Regístrate!». No pide documento ni adulto/niño.
+- **Campos:** nombre, apellidos, email (llega ya escrito desde el paso 1), teléfono con selector de país, fecha de nacimiento (selector nativo), género, contraseña, repetirla y la casilla de términos (sus enlaces abren `LegalModal`).
+- **Validación:** un solo schema Zod (`SignUpFormSchema`) con `mode: "onTouched"`. El error de un campo sale al dejarlo y se corrige al escribir. El botón queda gris hasta que todo es válido.
+- **Envío** (`toSignUpRequest` y `signUpService`): `POST /api/UserTeacher` con `name`, `last_name`, `email`, `password`, `phone_number` con prefijo (`+34612345678`), `birthday` (`YYYY-MM-DDT00:00:00`), `gender`, `terms_version` (`TERMS_VERSION`) y el `registration_token` recién firmado.
+- **Tras el 201** vuelve al login, igual que la app de alumnos: la respuesta trae tokens, pero no se usan.
+- **Errores:** hoy todos llegan como `about:blank` y se muestra el texto genérico de su status. Los `type` están pedidos a Core (ver «Types pedidos a Core»).
+
+### Aceptación de términos
+
+- `TERMS_VERSION` (`features/auth/schemas/signUp.schema.ts`) es la fecha de la versión vigente. Los documentos están en la web; se sube a mano cuando cambian.
+- Si al hacer login el profesor no tiene la versión vigente, `useSignIn` guarda los tokens con `session.saveTokens()` **sin abrir la sesión**, y la pantalla de contraseña abre el `LegalModal` de los términos con el botón «Aceptar» (prop `onAccept`).
+  - **Aceptar:** `PATCH /api/UserTeacher/{id}` con `terms_version` (Core sella `accepted_terms_at`) y `session.start()`.
+  - **Cerrar el modal:** no entra; `session.end()` borra los tokens.
+  - Si Core no guarda la aceptación, el error sale dentro del modal.
+  - Si no se puede leer el perfil tras el login, no entra y se borran los tokens.
+- **Límite conocido:** quien ya tiene la sesión abierta cuando sube la versión no ve el modal hasta su siguiente login. Se cubrirá cuando se pida.
 
 ### Recuperación de contraseña
 
@@ -578,7 +593,7 @@ useQuery({
 
 ### Biometría (Face ID / Touch ID / huella)
 
-- `expo-local-authentication`, opcional. Se ofrece justo después del primer login o registro correcto, usando las credenciales temporales de 60 s.
+- `expo-local-authentication`, opcional. Se ofrece justo después del primer login correcto, usando las credenciales temporales de 60 s (tras el registro no hay sesión: se vuelve al login).
 - Al activarla, el email y el refresh token se guardan en SecureStore.
 - En el siguiente arranque, la biometría desbloquea esas credenciales y se hace refresh para obtener un `access_token` nuevo, sin pedir contraseña.
 - Core rota el refresh token en cada `/auth/refresh`: tras cada refresh correcto **se actualiza también el refresh token guardado para biometría** (`updateRefreshToken`). Si no, la biometría deja de funcionar en la sesión siguiente.
@@ -590,7 +605,8 @@ useQuery({
 - **`ClubId` del JWT no se usa:** Core lo rellena con el `db_id` (la escuela), no con la sucursal.
 - `sessionStore` (Zustand) guarda solo el estado (`checking`, `authenticated`, `anonymous`) y `{ userId, dbId }`. Nunca tokens.
 - **`session.restore()`** al arrancar: manda que haya **refresh token** (el access token lo normal es que esté caducado, dura 60 min) y que el rol sea 4. Si no, se cierra la sesión. Si el Keychain falla, se muestra el login **sin borrar** los tokens.
-- **`session.start(access, refresh)`** tras login o registro: guarda los tokens y abre la sesión si el token es de profesor.
+- **`session.start(access, refresh)`** tras el login: guarda los tokens y abre la sesión si el token es de profesor.
+- **`session.saveTokens(access, refresh)`** guarda los tokens sin abrir la sesión: las peticiones ya van autenticadas, pero los guards no llevan al inicio. Se usa mientras el profesor acepta los términos.
 - **`session.end()`** es el **único sitio** que cierra la sesión: borra los tokens, vacía la caché y deja el estado en `anonymous`. Lo usan el aviso de sesión expirada del cliente HTTP (que solo avisa) y el botón de cerrar sesión. Con biometría y push se ampliará aquí.
 - **`useAppReady()`** es la única puerta de arranque: espera al idioma guardado y a la sesión; hasta entonces sigue el splash nativo.
 

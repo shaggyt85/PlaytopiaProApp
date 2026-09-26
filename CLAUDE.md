@@ -23,7 +23,7 @@ pnpm verificar:ota      # obligatorio antes de cualquier eas update
 
 - API: `https://core-dev.playtopiax.com/api` (`EXPO_PUBLIC_API_BASE_URL`).
 - **Antes de escribir un schema, mira el endpoint en Scalar: `https://core-dev.playtopiax.com/docs`.** El contrato de Scalar manda: snake_case, tal cual lo devuelve Core.
-- Login: `POST /api/auth/login/teacher` (role_id = 4). Registro: `POST /api/UserTeacher` con `registration_token` HMAC. Recuperación: `POST /api/PassRecovery/request` **con `scope: "teacher"`**.
+- Login: `POST /api/auth/login/teacher` (role_id = 4). Registro: `POST /api/UserTeacher` con `registration_token` HMAC y `terms_version`; tras el alta se vuelve al login. Tras el login, si `terms_version` (de `GET /api/UserTeacher/{id}`) no es `TERMS_VERSION`, se aceptan en el `LegalModal` con `PATCH` antes de abrir la sesión. Recuperación: `POST /api/PassRecovery/request` **con `scope: "teacher"`**.
 - **Si falta el endpoint o no devuelve lo necesario, no pares la pantalla:** schema con el contrato esperado + `xService.mock.ts` que implementa la misma interfaz y pasa por el mismo `validate*` + interruptor `X_USE_MOCK` por endpoint + comentario `// MOCK: pendiente en Core, ver docs/endpoints-pendientes/<archivo>.md` + petición en `docs/endpoints-pendientes/<feature>-<accion>.md`. Actualiza la tabla "Endpoints en uso" de la guía.
 
 ## Estructura
