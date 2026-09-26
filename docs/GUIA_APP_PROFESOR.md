@@ -536,7 +536,7 @@ useQuery({
 
 - **Paso 1, email** (`SignInScreen`): `POST /api/auth/check-email`. Si `exists`, pasa a la contraseña; si no, ofrece crear la cuenta. Se decide por `exists` y no por `is_student` porque Core no expone si el email es de profesor.
 - **Paso 2, contraseña** (`PasswordScreen`): login con `{ username: email, password }`. Un 401 es "credenciales incorrectas"; si el email también es de alumno, se aclara que la contraseña es la de la cuenta de profesor.
-- **Un alumno puede ser profesor:** son cuentas separadas en Core (tablas distintas, cada una con su contraseña) y el JWT lleva un solo rol. El alumno que aún no es profesor llega al paso 2 (su email existe), así que esa pantalla **siempre** ofrece registrarse.
+- **Un alumno puede ser profesor:** son cuentas separadas en Core (tablas distintas, cada una con su contraseña) y el JWT lleva un solo rol. El alumno que aún no es profesor llega al paso 2 (su email existe); la pantalla de contraseña es la misma que en la app de alumnos y no ofrece registrarse (decisión de producto).
 - Si el login va bien, `session.start()` abre la sesión y los guards llevan solos al inicio: las pantallas no navegan al inicio.
 
 - `POST /api/auth/login/teacher` con cuerpo **`{ username, password }`** (el campo se llama `username`, no `email`). Devuelve `access_token`, `refresh_token`, `id`, `role_id` y `db_id`.

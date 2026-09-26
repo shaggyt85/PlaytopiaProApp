@@ -45,8 +45,6 @@ const de: Translations = {
       forgot: "Passwort vergessen?",
       invalidCredentials: "E-Mail oder Passwort falsch.",
       studentHint: "Wenn Sie auch Schüler sind, verwenden Sie das Passwort Ihres Trainerkontos.",
-      noTeacherAccount: "Noch kein Trainerkonto?",
-      register: "Registrieren",
       show: "Passwort anzeigen",
       hide: "Passwort verbergen",
     },

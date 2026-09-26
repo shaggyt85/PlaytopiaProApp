@@ -45,8 +45,6 @@ const pt: Translations = {
       forgot: "Esqueceu sua senha?",
       invalidCredentials: "Email ou senha incorretos.",
       studentHint: "Se você também é aluno, use a senha da sua conta de professor.",
-      noTeacherAccount: "Ainda não tem conta de professor?",
-      register: "Cadastre-se",
       show: "Mostrar senha",
       hide: "Ocultar senha",
     },

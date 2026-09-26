@@ -15,9 +15,7 @@ import { useAuthFlowStore } from "./store/authFlowStore";
 
 /**
  * Paso 2 del acceso: la contraseña, igual que la app de alumnos. Si entra,
- * los guards llevan solos al inicio. Además siempre ofrece registrarse: un
- * alumno que aún no es profesor llega aquí (su email existe) y tiene que
- * poder crear su cuenta de profesor.
+ * los guards llevan solos al inicio.
  */
 export function PasswordScreen() {
   const { t } = useTranslation();
@@ -72,15 +70,6 @@ export function PasswordScreen() {
         title={t("auth.password.forgot")}
         variant="link"
         onPress={() => router.push("/password-recovery")}
-      />
-
-      <Text variant="caption" color="textSecondary" align="center">
-        {t("auth.password.noTeacherAccount")}
-      </Text>
-      <Button
-        title={t("auth.password.register")}
-        variant="link"
-        onPress={() => router.push("/sign-up")}
       />
     </AuthLayout>
   );

@@ -45,8 +45,6 @@ const fr: Translations = {
       forgot: "Mot de passe oublié ?",
       invalidCredentials: "Email ou mot de passe incorrect.",
       studentHint: "Si vous êtes aussi élève, utilisez le mot de passe de votre compte coach.",
-      noTeacherAccount: "Pas encore de compte coach ?",
-      register: "S'inscrire",
       show: "Afficher le mot de passe",
       hide: "Masquer le mot de passe",
     },

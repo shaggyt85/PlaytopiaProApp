@@ -79,14 +79,13 @@ describe("PasswordScreen", () => {
     );
   });
 
-  it("siempre ofrece registrarse y recuperar la contraseña", () => {
+  it("ofrece recuperar la contraseña, y nada de registrarse (como la app de alumnos)", () => {
     renderWithProviders(<PasswordScreen />);
 
-    fireEvent.press(screen.getByRole("button", { name: "Regístrate" }));
     fireEvent.press(screen.getByRole("button", { name: "¿Has olvidado tu contraseña?" }));
 
-    expect(mockPush).toHaveBeenCalledWith("/sign-up");
     expect(mockPush).toHaveBeenCalledWith("/password-recovery");
+    expect(screen.queryByText("¿Aún no tienes cuenta de profesor?")).toBeNull();
   });
 
   it("pide la contraseña antes de llamar a Core", async () => {

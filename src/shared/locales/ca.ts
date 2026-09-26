@@ -45,8 +45,6 @@ const ca: Translations = {
       forgot: "Has oblidat la teva contrasenya?",
       invalidCredentials: "Email o contrasenya incorrectes.",
       studentHint: "Si també ets alumne, fes servir la contrasenya del teu compte de professor.",
-      noTeacherAccount: "Encara no tens compte de professor?",
-      register: "Registra't",
       show: "Mostrar contrasenya",
       hide: "Amagar contrasenya",
     },

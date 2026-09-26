@@ -47,8 +47,6 @@ const es = {
       forgot: "¿Has olvidado tu contraseña?",
       invalidCredentials: "Email o contraseña incorrectos.",
       studentHint: "Si también eres alumno, usa la contraseña de tu cuenta de profesor.",
-      noTeacherAccount: "¿Aún no tienes cuenta de profesor?",
-      register: "Regístrate",
       show: "Mostrar contraseña",
       hide: "Ocultar contraseña",
     },
