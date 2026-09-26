@@ -66,7 +66,7 @@ const es = {
       title: "¿Olvidaste tu contraseña?",
       subtitle: "Ingresa tu correo electrónico y te enviaremos un enlace de recuperación",
       submit: "Enviar Correo de Recuperación",
-      sentTitle: "¡Correo de recuperación enviado exitosamente!",
+      sentTitle: "¡Correo de recuperación enviado con éxito!",
       sentMessage: "Por favor revisa tu correo para obtener instrucciones sobre cómo restablecer tu contraseña",
       backToLogin: "Volver al Login",
     },

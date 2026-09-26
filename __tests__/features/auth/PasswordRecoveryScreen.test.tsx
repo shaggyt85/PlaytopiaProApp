@@ -42,7 +42,7 @@ describe("PasswordRecoveryScreen", () => {
     });
 
     expect(passwordRecoveryService.requestRecovery).toHaveBeenCalledWith("ana@club.com");
-    expect(await screen.findByText("¡Correo de recuperación enviado exitosamente!")).toBeTruthy();
+    expect(await screen.findByText("¡Correo de recuperación enviado con éxito!")).toBeTruthy();
 
     fireEvent.press(screen.getByRole("button", { name: "Volver al Login" }));
     expect(mockDismissTo).toHaveBeenCalledWith("/sign-in");
@@ -61,7 +61,7 @@ describe("PasswordRecoveryScreen", () => {
     });
 
     expect(await screen.findByText("Demasiados intentos. Espera un momento.")).toBeTruthy();
-    expect(screen.queryByText("¡Correo de recuperación enviado exitosamente!")).toBeNull();
+    expect(screen.queryByText("¡Correo de recuperación enviado con éxito!")).toBeNull();
   });
 
   it("al corregir el email desaparece el error anterior", async () => {
