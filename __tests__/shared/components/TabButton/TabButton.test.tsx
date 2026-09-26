@@ -2,29 +2,42 @@ import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import { TabButton } from "@/shared/components/TabButton";
 import { TABS } from "@/shared/config/tabs";
+import { selectionFeedback } from "@/shared/utils/haptics";
+
+jest.mock("@/shared/utils/haptics", () => ({ selectionFeedback: jest.fn() }));
 
 const [today] = TABS;
 
 describe("TabButton", () => {
-  it("se anuncia como pestaña con su nombre y avisa al pulsarla", () => {
-    const onPress = jest.fn();
-    render(<TabButton tab={today} onPress={onPress} />);
+  it("se anuncia como pestaña con su nombre", () => {
+    render(<TabButton tab={today} />);
 
-    fireEvent.press(screen.getByRole("tab", { name: "Hoy", selected: false }));
-
-    expect(onPress).toHaveBeenCalled();
+    expect(screen.getByRole("tab", { name: "Hoy", selected: false })).toBeTruthy();
   });
 
-  it("la activa se anuncia seleccionada y lleva el degradado de marca", () => {
+  it("la activa se anuncia seleccionada", () => {
     render(<TabButton tab={today} isFocused />);
 
     expect(screen.getByRole("tab", { name: "Hoy", selected: true })).toBeTruthy();
-    expect(screen.getByTestId("tab-active-background")).toBeTruthy();
   });
 
-  it("la inactiva no lleva degradado", () => {
-    render(<TabButton tab={today} />);
+  it("al cambiar a otra pestaña vibra y navega", () => {
+    const onPress = jest.fn();
+    render(<TabButton tab={today} onPress={onPress} />);
 
-    expect(screen.queryByTestId("tab-active-background")).toBeNull();
+    fireEvent.press(screen.getByRole("tab", { name: "Hoy" }));
+
+    expect(selectionFeedback).toHaveBeenCalledTimes(1);
+    expect(onPress).toHaveBeenCalled();
+  });
+
+  it("al tocar la pestaña que ya está activa no vibra", () => {
+    const onPress = jest.fn();
+    render(<TabButton tab={today} isFocused onPress={onPress} />);
+
+    fireEvent.press(screen.getByRole("tab", { name: "Hoy" }));
+
+    expect(selectionFeedback).not.toHaveBeenCalled();
+    expect(onPress).toHaveBeenCalled();
   });
 });

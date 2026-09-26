@@ -1,11 +1,11 @@
 import type { TabTriggerSlotProps } from "expo-router/ui";
-import { LinearGradient } from "expo-linear-gradient";
 import { Pressable } from "react-native";
 
 import { Text } from "@/shared/components/Text";
 import type { TabItem } from "@/shared/config/tabs";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import { selectionFeedback } from "@/shared/utils/haptics";
 
 import { useStyles } from "./TabButton.styles";
 
@@ -17,8 +17,11 @@ interface TabButtonProps extends TabTriggerSlotProps {
   tab: TabItem;
 }
 
-/** Una pestaña: icono y nombre; la activa, sobre el degradado de marca. */
-export function TabButton({ tab, isFocused = false, ...rest }: TabButtonProps) {
+/**
+ * Una pestaña: icono y nombre. La gota del fondo la pinta la barra. Vibra al
+ * cambiar a otra pestaña, no al tocar la que ya está activa.
+ */
+export function TabButton({ tab, isFocused = false, onPress, ...rest }: TabButtonProps) {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
@@ -32,16 +35,11 @@ export function TabButton({ tab, isFocused = false, ...rest }: TabButtonProps) {
       accessibilityLabel={t(tab.label)}
       style={styles.button}
       {...rest}
+      onPress={(event) => {
+        if (!isFocused) selectionFeedback();
+        onPress?.(event);
+      }}
     >
-      {isFocused ? (
-        <LinearGradient
-          colors={theme.gradients.brand}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.active}
-          testID="tab-active-background"
-        />
-      ) : null}
       <Icon size={ICON_SIZE} color={color} strokeWidth={isFocused ? ACTIVE_STROKE : undefined} />
       <Text variant="tab" style={[{ color }, !isFocused && styles.inactiveLabel]} numberOfLines={1}>
         {t(tab.label)}

@@ -10,14 +10,5 @@ export const useStyles = makeStyles((theme) => ({
     gap: 2,
     borderRadius: theme.radius.xxl,
   },
-  active: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    borderRadius: theme.radius.xxl,
-    ...theme.shadows.glow,
-  },
   inactiveLabel: { opacity: 0.8 },
 }));

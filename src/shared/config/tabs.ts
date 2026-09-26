@@ -30,3 +30,13 @@ export const TABS = [
   { name: "network", href: "/network", label: "tabs.network", Icon: IconLoNetwork },
   { name: "profile", href: "/profile", label: "tabs.profile", Icon: IconLoUser },
 ] as const satisfies readonly TabItem[];
+
+/**
+ * Índice de la pestaña de una ruta: la del inicio solo con "/" exacto; las
+ * demás también con sus subrutas. -1 si la ruta no es de ninguna.
+ */
+export function tabIndexForPath(pathname: string): number {
+  return TABS.findIndex(({ href }) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`),
+  );
+}
