@@ -10,6 +10,14 @@ const es = {
     back: "Volver",
     loading: "Cargando…",
     signOut: "Cerrar sesión",
+    comingSoon: "Próximamente",
+  },
+  tabs: {
+    today: "Hoy",
+    calendar: "Agenda",
+    groups: "Grupos",
+    network: "Red",
+    profile: "Perfil",
   },
   errors: {
     network: "Sin conexión. Revisa tu red e inténtalo de nuevo.",

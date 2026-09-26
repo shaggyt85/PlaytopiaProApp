@@ -1,7 +1,8 @@
 import { act, renderRouter, screen } from "expo-router/testing-library";
 
+import TabsLayout from "@/app/(app)/(tabs)/_layout";
+import HomeRoute from "@/app/(app)/(tabs)/index";
 import AppLayout from "@/app/(app)/_layout";
-import HomeRoute from "@/app/(app)/index";
 import AuthLayout from "@/app/(auth)/_layout";
 import SignInRoute from "@/app/(auth)/sign-in";
 import RootLayout from "@/app/_layout";
@@ -21,7 +22,8 @@ jest.mock("@/shared/config/queryManagers", () => ({
 const routes = {
   _layout: RootLayout,
   "(app)/_layout": AppLayout,
-  "(app)/index": HomeRoute,
+  "(app)/(tabs)/_layout": TabsLayout,
+  "(app)/(tabs)/index": HomeRoute,
   "(auth)/_layout": AuthLayout,
   "(auth)/sign-in": SignInRoute,
 };

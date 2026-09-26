@@ -10,6 +10,14 @@ const fr: Translations = {
     back: "Retour",
     loading: "Chargement…",
     signOut: "Se déconnecter",
+    comingSoon: "Bientôt",
+  },
+  tabs: {
+    today: "Aujourd'hui",
+    calendar: "Agenda",
+    groups: "Groupes",
+    network: "Réseau",
+    profile: "Profil",
   },
   errors: {
     network: "Pas de connexion. Vérifiez votre réseau et réessayez.",

@@ -39,6 +39,8 @@ const typography = {
   mark: { fontFamily: FONTS.bold, fontSize: 12 },
   /** Versión de la app. */
   micro: { fontFamily: FONTS.regular, fontSize: 11, letterSpacing: 1 },
+  /** Nombre de una pestaña del menú inferior. */
+  tab: { fontFamily: FONTS.semibold, fontSize: 10, letterSpacing: 0.4 },
   /** Lema bajo la marca (splash). */
   tagline: { fontFamily: FONTS.regular, fontSize: 14, letterSpacing: 1 },
   button: { fontFamily: FONTS.bold, fontSize: 16 },

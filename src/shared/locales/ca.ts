@@ -10,6 +10,14 @@ const ca: Translations = {
     back: "Tornar",
     loading: "Carregant…",
     signOut: "Tancar sessió",
+    comingSoon: "Properament",
+  },
+  tabs: {
+    today: "Avui",
+    calendar: "Agenda",
+    groups: "Grups",
+    network: "Xarxa",
+    profile: "Perfil",
   },
   errors: {
     network: "Sense connexió. Revisa la xarxa i torna-ho a provar.",

@@ -10,6 +10,14 @@ const en: Translations = {
     back: "Back",
     loading: "Loading…",
     signOut: "Sign Out",
+    comingSoon: "Coming soon",
+  },
+  tabs: {
+    today: "Today",
+    calendar: "Schedule",
+    groups: "Groups",
+    network: "Network",
+    profile: "Profile",
   },
   errors: {
     network: "No connection. Check your network and try again.",
