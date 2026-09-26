@@ -79,6 +79,9 @@ const fr: Translations = {
     searchPlaceholder: "Rechercher un pays ou un indicatif",
     empty: "Aucun pays ne correspond à la recherche",
   },
+  datePicker: {
+    placeholder: "JJ/MM/AAAA",
+  },
   gender: {
     label: "Genre",
     male: "Masculin",

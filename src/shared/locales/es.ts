@@ -81,6 +81,9 @@ const es = {
     searchPlaceholder: "Buscar país o prefijo",
     empty: "Ningún país coincide con la búsqueda",
   },
+  datePicker: {
+    placeholder: "DD/MM/AAAA",
+  },
   gender: {
     label: "Género",
     male: "Masculino",

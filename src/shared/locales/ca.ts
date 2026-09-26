@@ -79,6 +79,9 @@ const ca: Translations = {
     searchPlaceholder: "Cerca país o prefix",
     empty: "Cap país coincideix amb la cerca",
   },
+  datePicker: {
+    placeholder: "DD/MM/AAAA",
+  },
   gender: {
     label: "Gènere",
     male: "Masculí",

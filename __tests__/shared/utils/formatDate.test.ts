@@ -1,5 +1,10 @@
 import { changeLanguage } from "@/shared/config/i18n";
-import { formatClubDate, formatClubTime, formatInstant } from "@/shared/utils/formatDate";
+import {
+  formatClubDate,
+  formatClubTime,
+  formatInstant,
+  formatNumericDate,
+} from "@/shared/utils/formatDate";
 
 describe("formatDate", () => {
   it("la hora de pared del club se muestra tal cual, sin desplazarla", () => {
@@ -11,6 +16,16 @@ describe("formatDate", () => {
 
     await changeLanguage("en");
     expect(formatClubDate("2026-09-26", "long")).toBe("September 26, 2026");
+  });
+
+  it("la fecha en cifras sigue el orden del idioma y no se mueve de día", async () => {
+    expect(formatNumericDate("1990-05-03")).toBe("03/05/1990");
+
+    await changeLanguage("en");
+    expect(formatNumericDate("1990-05-03")).toBe("05/03/1990");
+
+    await changeLanguage("de");
+    expect(formatNumericDate("1990-05-03")).toBe("03.05.1990");
   });
 
   it("un instante UTC se muestra en la hora del club", () => {

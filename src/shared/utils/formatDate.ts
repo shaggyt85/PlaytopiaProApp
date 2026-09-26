@@ -20,6 +20,16 @@ export function formatClubDate(date: string, style: DateStyle = "medium"): strin
   }).format(wallAsUtcMs(date));
 }
 
+/** Fecha de calendario ("1990-05-03") en cifras: "03/05/1990" en español, "05/03/1990" en inglés. */
+export function formatNumericDate(date: string): string {
+  return new Intl.DateTimeFormat(getLocale(), {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(wallAsUtcMs(date));
+}
+
 /** `class_time` de Core ("18:00:00") → "18:00" (o "6:00 PM" según idioma). */
 export function formatClubTime(time: string): string {
   return new Intl.DateTimeFormat(getLocale(), {
