@@ -11,6 +11,8 @@ import { useStyles } from "./AuthLayout.styles";
 
 interface AuthLayoutProps {
   children: ReactNode;
+  /** Texto pegado bajo la versión (p. ej. el correo en la contraseña). */
+  subtitle?: string;
   /** Muestra el botón de volver (todas menos la primera pantalla). */
   showBackButton?: boolean;
   testID?: string;
@@ -21,7 +23,12 @@ interface AuthLayoutProps {
  * fondo de marca, cabecera con logo, "Playtopia Pro" y versión, y el formulario
  * centrado que sube con el teclado.
  */
-export function AuthLayout({ children, showBackButton = false, testID }: AuthLayoutProps) {
+export function AuthLayout({
+  children,
+  subtitle,
+  showBackButton = false,
+  testID,
+}: AuthLayoutProps) {
   const styles = useStyles();
 
   return (
@@ -33,7 +40,7 @@ export function AuthLayout({ children, showBackButton = false, testID }: AuthLay
         >
           <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
             <View style={styles.content}>
-              <LogoSection />
+              <LogoSection subtitle={subtitle} />
               {children}
             </View>
           </ScrollView>

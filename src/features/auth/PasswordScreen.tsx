@@ -3,7 +3,6 @@ import { Redirect, useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/Button";
-import { Text } from "@/shared/components/Text";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { isHttpError } from "@/shared/services/HttpError";
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
@@ -38,10 +37,7 @@ export function PasswordScreen() {
   });
 
   return (
-    <AuthLayout showBackButton testID="password-screen">
-      <Text variant="emphasis" color="primary" align="center">
-        {email}
-      </Text>
+    <AuthLayout subtitle={email} showBackButton testID="password-screen">
 
       <Controller
         control={control}

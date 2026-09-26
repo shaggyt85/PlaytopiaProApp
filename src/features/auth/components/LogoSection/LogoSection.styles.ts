@@ -16,4 +16,5 @@ export const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing.xs,
   },
   version: { opacity: 0.5 },
+  subtitle: { marginTop: theme.spacing.sm },
 }));
