@@ -4,7 +4,7 @@ import type { TranslationKey } from "@/shared/locales";
 
 // Los mensajes de validación son claves de i18n tipadas: una clave que no
 // existe no compila. La pantalla las traduce al mostrarlas.
-const message = (key: TranslationKey) => ({ error: key });
+export const message = (key: TranslationKey) => ({ error: key });
 
 /** Email de cualquier formulario del flujo (login, registro, recuperación). */
 export const EmailSchema = z

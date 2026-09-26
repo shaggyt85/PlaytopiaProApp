@@ -1,7 +1,6 @@
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
 // Botón de Playtopia: píldora; el principal con el degradado de marca.
-const BUTTON_HEIGHT = 48;
 
 export const useStyles = makeStyles((theme) => ({
   pressable: {
@@ -9,7 +8,7 @@ export const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
   },
   body: {
-    minHeight: BUTTON_HEIGHT,
+    minHeight: theme.controlHeight,
     paddingHorizontal: theme.spacing.xl,
     borderRadius: theme.radius.pill,
     alignItems: "center",

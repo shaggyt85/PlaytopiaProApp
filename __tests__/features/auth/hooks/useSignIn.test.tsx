@@ -3,12 +3,13 @@ import { act, renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 
 import { useSignIn } from "@/features/auth/hooks/useSignIn";
-import { TERMS_VERSION } from "@/features/auth/schemas/signUp.schema";
 import type { ISignInService } from "@/features/auth/services/signInService";
 import type { ITermsService } from "@/features/auth/services/termsService";
 import { createQueryClient } from "@/shared/config/queryClient";
 import { HttpError } from "@/shared/services/HttpError";
 import { session } from "@/shared/services/session";
+
+import { signInTokens, teacherTerms } from "../../../helpers/authFactories";
 
 jest.mock("@/shared/services/session", () => ({
   session: {
@@ -22,7 +23,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={createQueryClient()}>{children}</QueryClientProvider>
 );
 
-const tokens = { access_token: "acceso", refresh_token: "refresco", id: 42, role_id: 4, db_id: 7 };
+const tokens = signInTokens;
 const signInOk: ISignInService = { signIn: jest.fn().mockResolvedValue(tokens) };
 const termsWith = (getTerms: ITermsService["getTerms"]): ITermsService => ({
   getTerms,
@@ -33,7 +34,7 @@ const credentials = { username: "a@b.com", password: "x" };
 describe("useSignIn", () => {
   it("con los términos vigentes aceptados, abre la sesión con los tokens de Core", async () => {
     const terms = termsWith(
-      jest.fn().mockResolvedValue({ id: 42, terms_version: TERMS_VERSION, accepted_terms_at: "x" }),
+      jest.fn().mockResolvedValue(teacherTerms()),
     );
     const { result } = renderHook(() => useSignIn(signInOk, terms), { wrapper });
 
@@ -48,7 +49,7 @@ describe("useSignIn", () => {
     "con los términos en %s guarda los tokens pero no abre la sesión",
     async (version) => {
       const terms = termsWith(
-        jest.fn().mockResolvedValue({ id: 42, terms_version: version, accepted_terms_at: null }),
+        jest.fn().mockResolvedValue(teacherTerms(version)),
       );
       const { result } = renderHook(() => useSignIn(signInOk, terms), { wrapper });
 

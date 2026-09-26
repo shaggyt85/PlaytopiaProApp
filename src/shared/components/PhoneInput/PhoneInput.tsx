@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
 
+import { FieldError } from "@/shared/components/FieldError";
 import { Text } from "@/shared/components/Text";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
@@ -71,11 +72,7 @@ export function PhoneInput({
           testID="phone-input-field"
         />
       </View>
-      {error ? (
-        <Text variant="caption" accessibilityLiveRegion="polite">
-          {error}
-        </Text>
-      ) : null}
+      <FieldError message={error} />
 
       <CountryPickerModal
         visible={pickerOpen}

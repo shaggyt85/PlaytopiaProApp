@@ -1,6 +1,7 @@
 import { Pressable, View } from "react-native";
 
 import { Checkbox } from "@/shared/components/Checkbox";
+import { FieldError } from "@/shared/components/FieldError";
 import { Text } from "@/shared/components/Text";
 import { GENDER, GENDER_OPTIONS, type Gender } from "@/shared/config/gender";
 import { useTranslation } from "@/shared/hooks/useTranslation";
@@ -49,11 +50,7 @@ export function GenderSelector({ value, onChange, error }: GenderSelectorProps) 
       >
         {t("gender.preferNotToSay")}
       </Checkbox>
-      {error ? (
-        <Text variant="caption" accessibilityLiveRegion="polite">
-          {error}
-        </Text>
-      ) : null}
+      <FieldError message={error} />
     </View>
   );
 }

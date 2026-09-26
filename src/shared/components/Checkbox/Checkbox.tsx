@@ -10,7 +10,7 @@ import { useStyles } from "./Checkbox.styles";
 interface CheckboxProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
-  /** Texto de la casilla. Puede llevar enlaces dentro. */
+  /** Texto de la casilla, o un componente que pinte el suyo (p. ej. con enlaces). */
   children: ReactNode;
   /** Color del borde y del relleno marcado. */
   tone?: ThemeColor;
@@ -45,9 +45,9 @@ export function Checkbox({
       >
         {checked ? <Text style={styles.check}>✓</Text> : null}
       </Pressable>
-      <Text variant="label" style={styles.text}>
-        {children}
-      </Text>
+      <View style={styles.text}>
+        {typeof children === "string" ? <Text variant="label">{children}</Text> : children}
+      </View>
     </View>
   );
 }

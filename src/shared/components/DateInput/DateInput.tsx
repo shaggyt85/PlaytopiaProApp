@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Modal, Platform, Pressable, View } from "react-native";
 
 import { Button } from "@/shared/components/Button";
+import { FieldError } from "@/shared/components/FieldError";
 import { Text } from "@/shared/components/Text";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
@@ -100,11 +101,7 @@ export function DateInput({
         </Text>
         <Ionicons name="calendar-outline" size={20} color={theme.colors.option} />
       </Pressable>
-      {error ? (
-        <Text variant="caption" accessibilityLiveRegion="polite">
-          {error}
-        </Text>
-      ) : null}
+      <FieldError message={error} />
 
       {Platform.OS === "ios" ? (
         <Modal visible={draft !== null} transparent animationType="slide" onRequestClose={() => closeIos(false)}>

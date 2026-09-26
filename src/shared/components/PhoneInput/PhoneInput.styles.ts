@@ -1,18 +1,12 @@
+import { solidField } from "@/shared/config/theme";
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
 // La misma píldora sólida que los campos del registro.
-const FIELD_HEIGHT = 48;
 const COUNTRY_MIN_WIDTH = 100;
 const FLAG_SIZE = 20;
 
 export const useStyles = makeStyles((theme) => {
-  const pill = {
-    height: FIELD_HEIGHT,
-    borderRadius: theme.radius.pill,
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    backgroundColor: theme.colors.field,
-  } as const;
+  const pill = solidField(theme);
 
   return {
     container: { gap: theme.spacing.sm },

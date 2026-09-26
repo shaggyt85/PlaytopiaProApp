@@ -88,8 +88,23 @@ export const darkTheme = {
   typography,
   /** Área táctil mínima (accesibilidad). */
   touchTarget: 44,
+  /** Alto de campos y botones (píldoras). */
+  controlHeight: 48,
 };
 
 export type Theme = typeof darkTheme;
+
+/**
+ * Píldora sólida de los campos del registro (Input `solid`, teléfono): fondo
+ * `field` y borde violeta, como en la app de alumnos.
+ */
+export const solidField = (theme: Theme) =>
+  ({
+    height: theme.controlHeight,
+    borderRadius: theme.radius.pill,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.field,
+  }) as const;
 export type ThemeColor = keyof Theme["colors"];
 export type TextVariant = keyof Theme["typography"];

@@ -1,6 +1,13 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useRef, useState } from "react";
-import { ActivityIndicator, Pressable, View, type PressableProps } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  View,
+  type PressableProps,
+  type StyleProp,
+  type ViewStyle,
+} from "react-native";
 
 import { Text } from "@/shared/components/Text";
 import type { ThemeColor } from "@/shared/config/theme";
@@ -9,6 +16,14 @@ import { useTheme } from "@/shared/hooks/useTheme";
 import { useStyles } from "./Button.styles";
 
 export type ButtonVariant = "primary" | "solid" | "secondary" | "link";
+
+/** Color del texto de cada variante, activa y cuando no se puede pulsar. */
+const TEXT_COLOR: Record<ButtonVariant, { active: ThemeColor; inactive: ThemeColor }> = {
+  primary: { active: "onPrimary", inactive: "onPrimary" },
+  solid: { active: "onPrimary", inactive: "textSecondary" },
+  secondary: { active: "primary", inactive: "primary" },
+  link: { active: "link", inactive: "link" },
+};
 
 export interface ButtonProps extends Omit<PressableProps, "onPress" | "children"> {
   title: string;
@@ -60,16 +75,13 @@ export function Button({
     }
   };
 
-  const textColor: ThemeColor =
-    variant === "primary"
-      ? "onPrimary"
-      : variant === "solid"
-        ? inactive
-          ? "textSecondary"
-          : "onPrimary"
-        : variant === "link"
-          ? "link"
-          : "primary";
+  const textColor = TEXT_COLOR[variant][inactive ? "inactive" : "active"];
+  // Fondo de las variantes sin degradado; `primary` pinta el suyo abajo.
+  const bodyStyle: Record<Exclude<ButtonVariant, "primary">, StyleProp<ViewStyle>> = {
+    solid: [styles.body, styles.solid, inactive && styles.solidInactive],
+    secondary: [styles.body, styles.secondary],
+    link: styles.link,
+  };
 
   const label = (
     <>
@@ -79,7 +91,7 @@ export function Button({
       <Text
         variant="button"
         color={textColor}
-        style={variant === "link" ? styles.linkText : undefined}
+        style={variant === "link" && styles.linkText}
       >
         {title}
       </Text>
@@ -105,17 +117,7 @@ export function Button({
           {label}
         </LinearGradient>
       ) : (
-        <View
-          style={
-            variant === "solid"
-              ? [styles.body, styles.solid, inactive && styles.solidInactive]
-              : variant === "secondary"
-                ? [styles.body, styles.secondary]
-                : styles.link
-          }
-        >
-          {label}
-        </View>
+        <View style={bodyStyle[variant]}>{label}</View>
       )}
     </Pressable>
   );

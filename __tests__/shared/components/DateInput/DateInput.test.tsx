@@ -5,19 +5,9 @@ import { Platform } from "react-native";
 import { DateInput } from "@/shared/components/DateInput";
 import { darkTheme } from "@/shared/config/theme";
 
-// Selector nativo simulado: en iOS pinta un botón que "gira la rueda" hasta el
-// 3 de mayo de 1990; en Android se comprueba lo que se le pide al diálogo.
-jest.mock("@react-native-community/datetimepicker", () => {
-  const { Pressable } = jest.requireActual("react-native");
-  const Picker = ({ onValueChange }: { onValueChange: (e: unknown, d: Date) => void }) => (
-    <Pressable
-      accessibilityRole="adjustable"
-      accessibilityLabel="rueda"
-      onPress={() => onValueChange({ nativeEvent: {} }, new Date(1990, 4, 3))}
-    />
-  );
-  return { __esModule: true, default: Picker, DateTimePickerAndroid: { open: jest.fn() } };
-});
+jest.mock("@react-native-community/datetimepicker", () =>
+  jest.requireActual("../../../helpers/dateTimePickerMock"),
+);
 
 const renderDate = (props: Partial<Parameters<typeof DateInput>[0]> = {}) =>
   render(<DateInput label="Fecha de nacimiento" value="" onChange={jest.fn()} {...props} />);

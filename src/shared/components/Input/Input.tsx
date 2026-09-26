@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { TextInput, View, type TextInputProps } from "react-native";
 
+import { FieldError } from "@/shared/components/FieldError";
 import { Text } from "@/shared/components/Text";
 import { useTheme } from "@/shared/hooks/useTheme";
 
@@ -43,11 +44,7 @@ export function Input({
         />
         {rightAccessory ? <View style={styles.accessory}>{rightAccessory}</View> : null}
       </View>
-      {error ? (
-        <Text variant="caption" accessibilityLiveRegion="polite">
-          {error}
-        </Text>
-      ) : null}
+      <FieldError message={error} />
     </View>
   );
 }

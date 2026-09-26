@@ -15,17 +15,9 @@ jest.mock("expo-router", () => ({
 jest.mock("@/features/auth/services/signUpService", () => ({
   signUpService: { signUp: jest.fn() },
 }));
-// Rueda de iOS simulada: al tocarla elige el 3 de mayo de 1990.
-jest.mock("@react-native-community/datetimepicker", () => {
-  const { Pressable } = jest.requireActual("react-native");
-  const Picker = ({ onValueChange }: { onValueChange: (e: unknown, d: Date) => void }) => (
-    <Pressable
-      accessibilityLabel="rueda"
-      onPress={() => onValueChange({ nativeEvent: {} }, new Date(1990, 4, 3))}
-    />
-  );
-  return { __esModule: true, default: Picker, DateTimePickerAndroid: { open: jest.fn() } };
-});
+jest.mock("@react-native-community/datetimepicker", () =>
+  jest.requireActual("../../helpers/dateTimePickerMock"),
+);
 
 const escribir = (label: string, value: string) => {
   fireEvent.changeText(screen.getByLabelText(label), value);

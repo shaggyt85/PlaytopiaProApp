@@ -2,9 +2,8 @@ import { z } from "zod";
 
 import { callingCodeOf } from "@/shared/components/PhoneInput";
 import { GENDER } from "@/shared/config/gender";
-import type { TranslationKey } from "@/shared/locales";
 
-import { EmailSchema } from "./auth.schema";
+import { EmailSchema, message } from "./auth.schema";
 
 /**
  * Versión vigente de los términos y condiciones, la que se acepta al
@@ -13,8 +12,6 @@ import { EmailSchema } from "./auth.schema";
  * términos: a quien tenga otra, la app se los vuelve a pedir.
  */
 export const TERMS_VERSION = "2026-07-01";
-
-const message = (key: TranslationKey) => ({ error: key });
 
 // ── Formulario ────────────────────────────────────────────────────────────
 

@@ -8,6 +8,7 @@ import { useAuthFlowStore } from "@/features/auth/store/authFlowStore";
 import { HttpError } from "@/shared/services/HttpError";
 import { session } from "@/shared/services/session";
 
+import { signInTokens, teacherTerms } from "../../helpers/authFactories";
 import { renderWithProviders } from "../../helpers/renderWithProviders";
 
 const mockPush = jest.fn();
@@ -33,19 +34,9 @@ jest.mock("@/shared/services/session", () => ({
   },
 }));
 
-const terms = (version: string | null) => ({
-  id: 42,
-  terms_version: version,
-  accepted_terms_at: version ? "2026-09-26T10:00:00" : null,
-});
 
-const tokens = {
-  access_token: "acceso",
-  refresh_token: "refresco",
-  id: 42,
-  role_id: 4,
-  db_id: 7,
-};
+const tokens = signInTokens;
+const terms = teacherTerms;
 
 const entrar = (password: string) => {
   fireEvent.changeText(screen.getByLabelText("Contraseña"), password);
