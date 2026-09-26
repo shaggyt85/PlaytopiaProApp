@@ -20,6 +20,25 @@ interface AnimatedSplashProps {
 }
 
 /**
+ * Tiempos de la animación (ms). Todo tiene que caber en `duration` (3 s):
+ * caída 500 + rebotes 1060 + pausa 100 = el texto aparece a los 1,66 s y se
+ * ve completo desde los 2,26 s hasta que todo se desvanece a los 3 s.
+ */
+export const SPLASH_TIMING = {
+  duration: 3000,
+  fall: 500,
+  /** [altura, subida, escala, escalaIn, escalaOut] de cada rebote */
+  bounces: [
+    [80, 250, 1.3, 80, 200],
+    [40, 160, 1.15, 60, 120],
+    [15, 120, 1.08, 50, 90],
+  ] as const,
+  pauseBeforeText: 100,
+  textFadeIn: 600,
+  fadeOut: 400,
+};
+
+/**
  * Splash de marca que se monta encima de la app al abrirla:
  * el logo cae girando y rebota tres veces, aparece "PLAYTOPIA" con su lema
  * y todo se desvanece al cumplirse `duration`.
@@ -27,7 +46,7 @@ interface AnimatedSplashProps {
 export const AnimatedSplash = memo(function AnimatedSplash({
   onReady,
   onFinish,
-  duration = 3000,
+  duration = SPLASH_TIMING.duration,
 }: AnimatedSplashProps) {
   const { height } = useWindowDimensions();
 
@@ -44,8 +63,6 @@ export const AnimatedSplash = memo(function AnimatedSplash({
   const backgroundOpacity = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    let textTimeout: ReturnType<typeof setTimeout> | undefined;
-
     // Un rebote: sube `altura` y vuelve, con un "aplastado" de escala al tocar.
     const rebote = (
       altura: number,
@@ -86,46 +103,42 @@ export const AnimatedSplash = memo(function AnimatedSplash({
       Animated.parallel([
         Animated.timing(logoTranslateY, {
           toValue: 0,
-          duration: 800,
+          duration: SPLASH_TIMING.fall,
           useNativeDriver: true,
         }),
         Animated.timing(logoRotation, {
           toValue: 1,
-          duration: 800,
+          duration: SPLASH_TIMING.fall,
           useNativeDriver: true,
         }),
       ]),
-      rebote(80, 400, 1.3, 100, 300),
-      rebote(40, 250, 1.15, 80, 170),
-      rebote(15, 200, 1.08, 80, 120),
-      Animated.delay(300),
-    ]).start(({ finished }) => {
-      // Si se desmonta a mitad, stopAnimation() llega aquí con finished=false:
-      // no hay que programar nada más.
-      if (!finished) return;
-      textTimeout = setTimeout(() => {
-        Animated.parallel([
-          Animated.timing(textOpacity, {
-            toValue: 1,
-            duration: 800,
-            useNativeDriver: true,
-          }),
-          Animated.spring(textTranslateY, {
-            toValue: 0,
-            friction: 6,
-            tension: 80,
-            useNativeDriver: true,
-          }),
-        ]).start();
-      }, 500);
-    });
+      ...SPLASH_TIMING.bounces.map(([altura, subida, escala, escalaIn, escalaOut]) =>
+        rebote(altura, subida, escala, escalaIn, escalaOut),
+      ),
+      Animated.delay(SPLASH_TIMING.pauseBeforeText),
+      // El texto es el último paso de la misma secuencia (sin temporizadores
+      // aparte que limpiar al desmontar).
+      Animated.parallel([
+        Animated.timing(textOpacity, {
+          toValue: 1,
+          duration: SPLASH_TIMING.textFadeIn,
+          useNativeDriver: true,
+        }),
+        Animated.spring(textTranslateY, {
+          toValue: 0,
+          friction: 6,
+          tension: 80,
+          useNativeDriver: true,
+        }),
+      ]),
+    ]).start();
 
     const finishTimer = setTimeout(() => {
       Animated.parallel(
         [logoOpacity, textOpacity, backgroundOpacity].map((value) =>
           Animated.timing(value, {
             toValue: 0,
-            duration: 400,
+            duration: SPLASH_TIMING.fadeOut,
             useNativeDriver: true,
           }),
         ),
@@ -136,7 +149,6 @@ export const AnimatedSplash = memo(function AnimatedSplash({
 
     return () => {
       clearTimeout(finishTimer);
-      if (textTimeout) clearTimeout(textTimeout);
       [
         logoTranslateY,
         logoScale,

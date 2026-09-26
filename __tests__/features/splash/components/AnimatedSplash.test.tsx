@@ -1,6 +1,7 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react-native";
 
 import { AnimatedSplash } from "@/features/splash";
+import { SPLASH_TIMING } from "@/features/splash/components/AnimatedSplash/AnimatedSplash";
 
 describe("AnimatedSplash", () => {
   beforeEach(() => {
@@ -49,5 +50,14 @@ describe("AnimatedSplash", () => {
     });
 
     expect(onReady).toHaveBeenCalledTimes(1);
+  });
+
+  it("el título cabe en la duración: se ve completo al menos medio segundo", () => {
+    const { fall, bounces, pauseBeforeText, textFadeIn, duration } = SPLASH_TIMING;
+    const textStarts =
+      fall + bounces.reduce((total, [, subida]) => total + 2 * subida, 0) + pauseBeforeText;
+    const textFullyVisible = textStarts + textFadeIn;
+
+    expect(duration - textFullyVisible).toBeGreaterThanOrEqual(500);
   });
 });
