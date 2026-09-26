@@ -59,6 +59,15 @@ export function createSessionService(deps: {
       }
     },
 
+    /**
+     * Guarda los tokens sin abrir la sesión: las peticiones ya van
+     * autenticadas, pero los guards no llevan al inicio (p. ej. mientras el
+     * profesor acepta los términos tras el login).
+     */
+    async saveTokens(accessToken: string, refreshToken: string): Promise<void> {
+      await deps.tokens.setTokens(accessToken, refreshToken);
+    },
+
     /** Tras login o registro: guarda los tokens y abre la sesión. */
     async start(accessToken: string, refreshToken: string): Promise<boolean> {
       await deps.tokens.setTokens(accessToken, refreshToken);

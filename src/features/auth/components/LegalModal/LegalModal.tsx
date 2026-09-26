@@ -31,10 +31,14 @@ const CARD_GRADIENT = [withAlpha(BRAND.night, 0.75), withAlpha(BRAND.slate, 0.8)
 interface LegalModalProps {
   document: LegalDocument | null;
   onClose: () => void;
+  /** Si se pasa, el modal pide aceptar el documento con un botón "Aceptar". */
+  onAccept?: () => void | Promise<unknown>;
+  /** Error al aceptar, ya traducido. */
+  error?: string | null;
 }
 
 /** Resumen de las condiciones o la privacidad, con enlace al documento completo. */
-export function LegalModal({ document, onClose }: LegalModalProps) {
+export function LegalModal({ document, onClose, onAccept, error }: LegalModalProps) {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
@@ -88,6 +92,12 @@ export function LegalModal({ document, onClose }: LegalModalProps) {
                 <Text style={styles.summary}>{t(`legalDocs.${document}.summary`)}</Text>
                 <View style={styles.action}>
                   <Button title={t("legalDocs.viewFullDocument")} onPress={openFullDocument} />
+                  {onAccept ? <Button title={t("common.accept")} onPress={onAccept} /> : null}
+                  {error ? (
+                    <Text variant="caption" align="center" accessibilityRole="alert">
+                      {error}
+                    </Text>
+                  ) : null}
                 </View>
               </ScrollView>
             </LinearGradient>

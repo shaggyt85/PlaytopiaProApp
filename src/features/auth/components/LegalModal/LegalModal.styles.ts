@@ -65,5 +65,5 @@ export const useStyles = makeStyles((theme) => ({
     borderColor: withAlpha(BRAND.white, 0.2),
   },
   summary: { lineHeight: 24, textAlign: "justify" },
-  action: { alignSelf: "stretch" },
+  action: { alignSelf: "stretch", gap: theme.spacing.sm },
 }));

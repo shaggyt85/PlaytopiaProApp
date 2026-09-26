@@ -7,9 +7,10 @@ import type { TranslationKey } from "@/shared/locales";
 import { EmailSchema } from "./auth.schema";
 
 /**
- * Versión vigente de los términos y condiciones que acepta el registro. Se
- * envía a Core como evidencia de consentimiento (GDPR). Súbela cuando cambien
- * materialmente los términos: a quien tenga otra, la app se los vuelve a pedir.
+ * Versión vigente de los términos y condiciones, la que se acepta al
+ * registrarse o, tras el login, en el modal de términos. Se envía a Core como
+ * evidencia de consentimiento (GDPR). Súbela cuando cambien materialmente los
+ * términos: a quien tenga otra, la app se los vuelve a pedir.
  */
 export const TERMS_VERSION = "2026-07-01";
 

@@ -82,6 +82,18 @@ describe("session.start", () => {
   });
 });
 
+describe("session.saveTokens", () => {
+  it("guarda los tokens sin abrir la sesión", async () => {
+    const { session, store, tokens } = build();
+
+    await session.saveTokens(teacherToken, "refresco");
+
+    expect(tokens.access).toBe(teacherToken);
+    expect(tokens.refresh).toBe("refresco");
+    expect(store.setAuthenticated).not.toHaveBeenCalled();
+  });
+});
+
 describe("session.end", () => {
   it("borra los tokens, vacía la caché y deja la sesión anónima", async () => {
     const { session, store, tokens, queryClient } = build({

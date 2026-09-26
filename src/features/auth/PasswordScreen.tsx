@@ -5,22 +5,27 @@ import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/shared/components/Button";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { isHttpError } from "@/shared/services/HttpError";
+import { session } from "@/shared/services/session";
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
 import { AuthLayout, FormError, PasswordInput } from "./components";
-import { useFieldErrorText, useSignIn } from "./hooks";
+import { LegalModal } from "./components/LegalModal";
+import { useAcceptTerms, useFieldErrorText, useSignIn } from "./hooks";
 import { PasswordFormSchema, type PasswordForm } from "./schemas/auth.schema";
 import { useAuthFlowStore } from "./store/authFlowStore";
 
 /**
  * Paso 2 del acceso: la contraseña, igual que la app de alumnos. Si entra,
- * los guards llevan solos al inicio.
+ * los guards llevan solos al inicio. Si le faltan los términos vigentes, se
+ * abre su modal con "Aceptar": al aceptarlos entra; al cerrarlo, no.
  */
 export function PasswordScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const fieldError = useFieldErrorText();
   const signIn = useSignIn();
+  const acceptTerms = useAcceptTerms();
+  const pendingTokens = signIn.data?.termsPending ? signIn.data.tokens : null;
   const email = useAuthFlowStore((s) => s.email);
   const isStudent = useAuthFlowStore((s) => s.isStudent);
 
@@ -66,6 +71,20 @@ export function PasswordScreen() {
         title={t("auth.password.forgot")}
         variant="link"
         onPress={() => router.push("/password-recovery")}
+      />
+
+      <LegalModal
+        document={pendingTokens ? "terms" : null}
+        onAccept={async () => {
+          if (pendingTokens) await acceptTerms.mutateAsync(pendingTokens).catch(() => undefined);
+        }}
+        error={acceptTerms.error ? getErrorMessage(acceptTerms.error) : null}
+        onClose={() => {
+          // Sin aceptarlos no entra: se borran los tokens del login.
+          signIn.reset();
+          acceptTerms.reset();
+          session.end();
+        }}
       />
     </AuthLayout>
   );
