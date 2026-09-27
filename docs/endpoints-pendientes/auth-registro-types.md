@@ -1,6 +1,8 @@
 # Types RFC 9457 para el alta de profesor
 
-- **Estado:** pendiente
+- **Estado:**
+  - `email-already-registered`: **en desarrollo** (hecho en el Core local el 2026-09-27, fase C1.5; falta commit y desplegar a dev). Los tres registros (cliente, alumno y profesor) devuelven ahora `DomainError::EmailAlreadyRegistered`, que sale como 409 con este `type`; también el alta de profesor desde el CRM.
+  - `registration-token-expired` y `registration-token-invalid`: pendiente.
 - **Pantalla que lo necesita y para qué:** registro (`SignUpScreen`, `POST /api/UserTeacher`). La app traduce los errores por `type` y nunca muestra el `detail` (guía §5). Hoy los errores del alta llegan todos con `type: "about:blank"`, así que la app solo puede enseñar el texto genérico de su status.
 - **Situación actual (comprobada en Core, `dev`, 26-sep-2026):**
 

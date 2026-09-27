@@ -379,7 +379,8 @@ Core responde **todos** sus errores con RFC 9457 (*Problem Details*, `applicatio
 
   | Petición | Types | Estado |
   |---|---|---|
-  | `auth-registro-types.md` | `email-already-registered`, `registration-token-expired`, `registration-token-invalid` | pendiente |
+  | `auth-registro-types.md` | `email-already-registered` | en desarrollo (Core local, 27-sep-2026) |
+  | `auth-registro-types.md` | `registration-token-expired`, `registration-token-invalid` | pendiente |
 - **Sentry** recibe `type`, `status` e `instance`, para poder cruzarlo con los logs de Core.
 
 ---
