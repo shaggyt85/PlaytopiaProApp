@@ -37,3 +37,10 @@ export const useSessionStore = create<SessionState>((set) => ({
   setAuthenticated: (user) => set({ status: "authenticated", user }),
   setAnonymous: (endReason = null) => set({ status: "anonymous", user: null, endReason }),
 }));
+
+/**
+ * El id del profesor con la sesión abierta (el de sus claims), o `undefined`
+ * sin sesión. La única forma de leerlo desde un componente o un hook: si
+ * cambia cómo se obtiene, cambia aquí.
+ */
+export const useSessionUserId = (): number | undefined => useSessionStore((s) => s.user?.userId);

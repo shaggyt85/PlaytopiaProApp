@@ -6,7 +6,7 @@ import {
   teacherProfileService,
   type ITeacherProfileService,
 } from "@/shared/services/teacherProfileService";
-import { useSessionStore } from "@/shared/store/sessionStore";
+import { useSessionUserId } from "@/shared/store/sessionStore";
 
 interface Options<T> {
   /** Lo que la pantalla usa del perfil: solo se vuelve a pintar si eso cambia. */
@@ -19,6 +19,6 @@ interface Options<T> {
  * (lo deja el acceso): solo se pide al reabrir la app.
  */
 export function useTeacherProfile<T = TeacherProfile>({ select, service = teacherProfileService }: Options<T> = {}) {
-  const teacherId = useSessionStore((s) => s.user?.userId);
+  const teacherId = useSessionUserId();
   return useQuery({ ...teacherProfileQuery(teacherId, service), select });
 }

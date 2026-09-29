@@ -1,3 +1,6 @@
+import { infiniteQueryOptions, queryOptions, skipToken } from "@tanstack/react-query";
+
+import { CachePolicy } from "@/shared/config/cachePolicies";
 import type { IHttpClient } from "@/shared/services/BaseHttpClient";
 import { httpClient } from "@/shared/services/httpClient";
 
@@ -51,3 +54,46 @@ export class NetworkService implements INetworkService {
 }
 
 export const networkService: INetworkService = new NetworkService(httpClient);
+
+// ── Recetas de las queries ───────────────────────────────────────────────────
+//
+// Clave, cómo se pide y su caché, en un solo sitio (como `teacherProfileQuery`).
+// Sin profesor en sesión no se pide nada (`skipToken`).
+
+/** «Mis clubes». Cambia cuando un club le da de alta o de baja: `STANDARD`. */
+export const myClubsQuery = (
+  teacherId: number | undefined,
+  service: Pick<INetworkService, "getMyClubs"> = networkService,
+) =>
+  queryOptions({
+    queryKey: networkKeys.myClubs(teacherId),
+    queryFn: teacherId === undefined ? skipToken : () => service.getMyClubs(),
+    ...CachePolicy.STANDARD,
+  });
+
+/** La primera página de «Cerca de mí». */
+const FIRST_PAGE = 1;
+
+/**
+ * «Cerca de mí», página a página: la siguiente mientras queden.
+ *
+ * `STATIC` (1 hora) y no `STANDARD`, aunque no es un catálogo: la lista solo
+ * cambia cuando se abre una escuela o le dan de alta en una, que pasa muy de vez
+ * en cuando, y cada vuelta a pedirla serían tantas peticiones como páginas
+ * cargadas. Para ver algo nuevo ya, se desliza hacia abajo.
+ */
+export const joinableSchoolsQuery = (
+  teacherId: number | undefined,
+  service: Pick<INetworkService, "getJoinableSchools"> = networkService,
+) =>
+  infiniteQueryOptions({
+    queryKey: networkKeys.joinableSchools(teacherId),
+    queryFn:
+      teacherId === undefined
+        ? skipToken
+        : ({ pageParam }) => service.getJoinableSchools(pageParam),
+    initialPageParam: FIRST_PAGE,
+    getNextPageParam: ({ pagination }) =>
+      pagination.page < pagination.total_pages ? pagination.page + 1 : undefined,
+    ...CachePolicy.STATIC,
+  });

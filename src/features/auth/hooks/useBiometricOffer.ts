@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { tokenStorage, type ITokenStorage } from "@/shared/services/tokenStorage";
-import { useSessionStore } from "@/shared/store/sessionStore";
+import { useSessionStore, useSessionUserId } from "@/shared/store/sessionStore";
 
 import { biometricService, type EnableResult, type IBiometricService } from "../services/biometricService";
 import { isOfferValid, useBiometricOfferStore, type BiometricOffer } from "../store/biometricOfferStore";
@@ -39,7 +39,7 @@ export function useBiometricOffer({ service, tokens }: Deps = defaultDeps) {
   const { t } = useTranslation();
   const offer = useBiometricOfferStore((s) => s.offer);
   const clear = useBiometricOfferStore((s) => s.clear);
-  const sessionUserId = useSessionStore((s) => s.user?.userId);
+  const sessionUserId = useSessionUserId();
   const { loaded, available, savedEmail } = useBiometricStatus(service);
 
   // Sin mirar el reloj: la caducidad se comprueba en el efecto y al activarla.
