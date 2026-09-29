@@ -47,6 +47,14 @@ const typography = {
   micro: { fontFamily: FONTS.regular, fontSize: 11, letterSpacing: 1 },
   /** Nombre de una pestaña del menú inferior. */
   tab: { fontFamily: FONTS.semibold, fontSize: 10, letterSpacing: 0.4 },
+  // Escala del texto de las tarjetas del prototipo, la más usada en él:
+  // `font-display text-base` (23 veces), `text-[10px]` (183) y `text-[11px]` (115).
+  /** Título de una tarjeta (el nombre de una sede, de una clase). */
+  cardTitle: { fontFamily: FONTS.display, fontSize: 16, lineHeight: 20 },
+  /** Chip sobre un título (la sede, «Urgente»): mayúsculas algo espaciadas. */
+  chip: { fontFamily: FONTS.bold, fontSize: 10, letterSpacing: 0.5, textTransform: "uppercase" },
+  /** Línea de datos bajo un título (ciudad y dirección, día y hora). */
+  meta: { fontFamily: FONTS.regular, fontSize: 11 },
   /** Lema bajo la marca (splash). */
   tagline: { fontFamily: FONTS.regular, fontSize: 14, letterSpacing: 1 },
   button: { fontFamily: FONTS.bold, fontSize: 16 },
@@ -131,6 +139,12 @@ export const darkTheme = {
     ink: [BRAND.inkFrom, BRAND.inkTo] as const,
     /** Tarjeta de cristal de los modales. */
     modal: [withAlpha(BRAND.night, 0.85), withAlpha(BRAND.inkTo, 0.9)] as const,
+    /**
+     * Velo de una tarjeta con foto de fondo, de izquierda a derecha: opaco donde
+     * va el texto (para que se lea como en el `bg-surface` de Lovable) y dejando
+     * ver la foto a la derecha.
+     */
+    imageVeil: [BRAND.surface, withAlpha(BRAND.surface, 0.85), withAlpha(BRAND.surface, 0.3)] as const,
     disabled: [BRAND.grey, BRAND.grey] as const,
   },
   /**

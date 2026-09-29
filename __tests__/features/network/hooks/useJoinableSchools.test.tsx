@@ -63,7 +63,8 @@ describe("useJoinableSchools", () => {
     });
 
     expect(getJoinableSchools).toHaveBeenLastCalledWith(2);
-    expect(result.current.data).toEqual({ schools: [sede(1, 1), sede(2, 1)], totalCount: 2 });
+    // TanStack avisa al componente en el siguiente tick: se espera al render.
+    await waitFor(() => expect(result.current.data).toEqual({ schools: [sede(1, 1), sede(2, 1)], totalCount: 2 }));
     expect(result.current.hasNextPage).toBe(false);
   });
 
