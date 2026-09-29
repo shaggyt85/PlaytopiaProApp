@@ -74,7 +74,7 @@ src/
     _layout.tsx
     (auth)/              sign-in, password, sign-up, password-recovery
     (app)/               pantallas con sesión: un Stack con el menú y, encima, los detalles
-      (tabs)/            menú inferior: index (Hoy), calendar, groups, network, profile
+      (tabs)/            menú inferior: index (Agenda), groups, network, profile; calendar, oculta
   features/
     auth/                = flujo de acceso (varias pantallas)
       components/        AuthLayout, PasswordInput, FormError
@@ -533,7 +533,8 @@ useQuery({
 
 ### Menú inferior (pestañas)
 
-- **Cinco pestañas:** Hoy (`index`), Agenda (`calendar`), Grupos (`groups`), Red (`network`) y Perfil (`profile`). Las rutas van en inglés, como el resto del código; lo que ve el usuario sale de `tabs.*` en los 6 idiomas (nunca spanglish: «Red», no «Network»).
+- **Cuatro pestañas:** Agenda (`index`), Grupos (`groups`), Red (`network`) y Perfil (`profile`). Las rutas van en inglés, como el resto del código; lo que ve el usuario sale de `tabs.*` en los 6 idiomas (nunca spanglish: «Red», no «Network»).
+- **Hoy y Agenda, unificadas:** en el prototipo son una sola pantalla. La de inicio (`index`, la de Hoy) lleva el nombre y el icono de Agenda, y la pestaña `calendar` queda **oculta**: fuera de `TABS`, pero su ruta y el texto `tabs.today` se conservan.
 - **Una sola lista:** `shared/config/tabs.ts` (`TABS`: nombre, `href`, texto e icono `IconLo…`). La usan la navegación, la barra, el «Próximamente» y los tests. `tabIndexForPath()` da la pestaña de una ruta (el inicio solo con `/`; las demás, también con sus subrutas).
 - **Piezas, en `shared/components/`:** `AppTabs` monta la navegación con `expo-router/ui` (`Tabs`, `TabSlot`, `TabList` y un `TabTrigger` por pestaña: tienen que ir dentro de `TabList`, que es donde `Tabs` los busca); `TabBar`, la píldora de cristal flotante con la gota; `TabButton`, cada pestaña (icono y nombre; vibra al cambiar a otra, no al tocar la activa). La ruta `(tabs)/_layout.tsx` solo reexporta `AppTabs`.
 - **La barra se monta una vez** y queda fija mientras cambia la pantalla de encima. `(app)` sigue siendo un `Stack` con `(tabs)` dentro: las pantallas de detalle se abrirán encima, a pantalla completa y sin barra.
@@ -544,7 +545,9 @@ useQuery({
 - **El logo se anuncia como imagen** («Playtopia»): el título de la pantalla es el de su cabecera. De momento el logo blanco; el isotipo con degradado está pendiente de la librería.
 - **Cabecera: `ScreenHeader`** (la de Lovable): saludo en mayúsculas (`eyebrow`), título grande (`hero`), subtítulo y un hueco a la derecha. Solo pinta lo que recibe. Con `loading` reserva la altura del título mientras llega; sin título y sin `loading` no deja hueco. Un título largo baja a una segunda línea antes de cortarse.
 
-### Hoy
+### Hoy (pestaña Agenda)
+
+- **Es la pantalla de inicio,** bajo el nombre «Agenda»: el prototipo junta aquí la cabecera de Hoy, la próxima clase y el calendario de día, semana y mes. Hoy solo tiene la cabecera.
 
 - **Cabecera:** «Buenos días / Buenas tardes / Buenas noches, entrenador» (6-12, 12-20 y el resto; `home/utils/greeting.ts`), el nombre del profesor (`useTeacherProfile` con `select` del nombre: solo se vuelve a pintar si cambia; la receta `teacherProfileQuery` con `queryOptions` lleva clave, función y caché `STANDARD`, y el acceso escribe con su `queryKey` tipada) y la fecha («Viernes · 22 de noviembre», `formatWeekdayDate`).
 - **La hora es la del móvil** con `serverNow()`: es el día del profesor, no de un club (puede dar clases en clubes de zonas distintas). Las horas de las clases, cuando lleguen, van en la hora de su club. Saludo y fecha se renuevan al volver la app al primer plano (`useForegroundNow`), sin temporizadores. `useTodayHeader` los junta y los da listos: la pantalla solo los pinta.

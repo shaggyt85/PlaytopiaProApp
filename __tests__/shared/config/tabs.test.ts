@@ -2,8 +2,9 @@ import { TABS, tabIndexForPath } from "@/shared/config/tabs";
 import { hasTranslation } from "@/shared/config/i18n";
 
 describe("TABS", () => {
-  it("son las 5 del menú, en orden, con rutas en inglés", () => {
-    expect(TABS.map((tab) => tab.name)).toEqual(["index", "calendar", "groups", "network", "profile"]);
+  it("son las 4 del menú, en orden, con rutas en inglés: el inicio es Agenda", () => {
+    expect(TABS.map((tab) => tab.name)).toEqual(["index", "groups", "network", "profile"]);
+    expect(TABS[0].label).toBe("tabs.calendar");
   });
 
   it("no repiten nombre ni ruta", () => {
@@ -25,13 +26,14 @@ describe("tabIndexForPath", () => {
   });
 
   it("cada pestaña con su ruta y sus subrutas", () => {
-    expect(tabIndexForPath("/calendar")).toBe(1);
-    expect(tabIndexForPath("/groups/12")).toBe(2);
-    expect(tabIndexForPath("/profile")).toBe(4);
+    expect(tabIndexForPath("/groups/12")).toBe(1);
+    expect(tabIndexForPath("/profile")).toBe(3);
   });
 
   it("una ruta de ninguna pestaña da -1", () => {
     expect(tabIndexForPath("/sign-in")).toBe(-1);
     expect(tabIndexForPath("/calendario")).toBe(-1);
+    // Agenda está oculta: su ruta existe, pero no es de ninguna pestaña.
+    expect(tabIndexForPath("/calendar")).toBe(-1);
   });
 });

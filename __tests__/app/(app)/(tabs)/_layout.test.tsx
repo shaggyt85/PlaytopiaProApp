@@ -48,22 +48,20 @@ describe("menú inferior", () => {
     jest.mocked(networkService.getMyClubs).mockResolvedValue({ clubs: [schoolCard(4, 7)] });
   });
 
-  it("empieza en Hoy, con las 5 pestañas en orden y Hoy seleccionada", () => {
+  it("empieza en Agenda (la pantalla de inicio), con las 4 pestañas en orden y Agenda seleccionada", () => {
     renderRouter(routes, { initialUrl: "/", wrapper });
 
     expect(screen.getByTestId("home-screen")).toBeTruthy();
     expect(screen.getAllByRole("tab").map((tab) => tab.props.accessibilityLabel)).toEqual([
-      "Hoy",
       "Agenda",
       "Grupos",
       "Red",
       "Perfil",
     ]);
-    expect(screen.getByRole("tab", { name: "Hoy", selected: true })).toBeTruthy();
+    expect(screen.getByRole("tab", { name: "Agenda", selected: true })).toBeTruthy();
   });
 
   it.each([
-    ["Agenda", "/calendar"],
     ["Grupos", "/groups"],
     ["Perfil", "/profile"],
   ])("la pestaña %s lleva a %s y muestra su «Próximamente»", (label, path) => {
@@ -88,11 +86,11 @@ describe("menú inferior", () => {
   });
 
   it("la barra sigue en pantalla al cambiar de pestaña", () => {
-    renderRouter(routes, { initialUrl: "/calendar", wrapper });
+    renderRouter(routes, { initialUrl: "/groups", wrapper });
 
-    fireEvent.press(screen.getByRole("tab", { name: "Hoy" }));
+    fireEvent.press(screen.getByRole("tab", { name: "Agenda" }));
 
     expect(screen.getByTestId("home-screen")).toBeTruthy();
-    expect(screen.getAllByRole("tab")).toHaveLength(5);
+    expect(screen.getAllByRole("tab")).toHaveLength(4);
   });
 });

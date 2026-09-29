@@ -1,6 +1,5 @@
 import {
   IconLoCalendarDays,
-  IconLoHome,
   IconLoNetwork,
   IconLoUser,
   IconLoUsers,
@@ -23,10 +22,13 @@ export interface TabItem {
 /**
  * Las pestañas del menú inferior, en orden. Única lista: la usan la
  * navegación (`AppTabs`), la barra y el «Próximamente».
+ *
+ * Hoy y Agenda se unifican en el prototipo: la pantalla de inicio (`index`)
+ * lleva el nombre y el icono de Agenda, y la pestaña `calendar` queda oculta
+ * (su ruta y el texto `tabs.today` se conservan para cuando vuelva).
  */
 export const TABS = [
-  { name: "index", href: "/", label: "tabs.today", Icon: IconLoHome },
-  { name: "calendar", href: "/calendar", label: "tabs.calendar", Icon: IconLoCalendarDays },
+  { name: "index", href: "/", label: "tabs.calendar", Icon: IconLoCalendarDays },
   { name: "groups", href: "/groups", label: "tabs.groups", Icon: IconLoUsers },
   { name: "network", href: "/network", label: "tabs.network", Icon: IconLoNetwork },
   { name: "profile", href: "/profile", label: "tabs.profile", Icon: IconLoUser },

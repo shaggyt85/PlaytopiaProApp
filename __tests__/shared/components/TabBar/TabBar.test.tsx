@@ -9,8 +9,8 @@ let mockPathname = "/";
 jest.mock("expo-router", () => ({ usePathname: () => mockPathname }));
 jest.mock("@/shared/hooks/useReduceMotion", () => ({ useReduceMotion: jest.fn(() => false) }));
 
-/** Simula que la barra se ha pintado con ese ancho útil (5 pestañas de 70). */
-const layout = (width = 350) =>
+/** Simula que la barra se ha pintado con ese ancho útil (4 pestañas de 70). */
+const layout = (width = 280) =>
   fireEvent(screen.getByTestId("tab-bar-track"), "layout", {
     nativeEvent: { layout: { width, height: 52, x: 0, y: 0 } },
   });
@@ -38,12 +38,12 @@ describe("TabBar", () => {
   it("es una lista de pestañas y pinta los botones que recibe", () => {
     render(
       <TabBar>
-        <Text>Hoy</Text>
+        <Text>Agenda</Text>
       </TabBar>,
     );
 
     expect(screen.getByTestId("tab-bar")).toHaveProp("accessibilityRole", "tablist");
-    expect(screen.getByText("Hoy")).toBeTruthy();
+    expect(screen.getByText("Agenda")).toBeTruthy();
   });
 
   it("la gota aparece al conocer el ancho, bajo la pestaña de la ruta", () => {
@@ -55,7 +55,7 @@ describe("TabBar", () => {
     runAnimations();
 
     expect(screen.getByTestId("tab-indicator")).toHaveAnimatedStyle({
-      transform: [{ translateX: 140 }, { scale: 1 }],
+      transform: [{ translateX: 70 }, { scale: 1 }],
     });
   });
 
@@ -70,7 +70,7 @@ describe("TabBar", () => {
 
     // El muelle llega a su reposo de forma asintótica: la escala, casi 1.
     const { translateX, scale } = dropTransform();
-    expect(translateX).toBeCloseTo(210, 1);
+    expect(translateX).toBeCloseTo(140, 1);
     expect(scale).toBeCloseTo(1, 3);
   });
 
@@ -84,7 +84,7 @@ describe("TabBar", () => {
     runAnimations(16); // un solo fotograma: sin animación ya está en su sitio
 
     expect(screen.getByTestId("tab-indicator")).toHaveAnimatedStyle({
-      transform: [{ translateX: 280 }, { scale: 1 }],
+      transform: [{ translateX: 210 }, { scale: 1 }],
     });
   });
 
