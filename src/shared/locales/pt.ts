@@ -75,6 +75,9 @@ const pt: Translations = {
       sentTitle: "Email de recuperação enviado com sucesso!",
       sentMessage: "Por favor, verifique seu email para obter instruções sobre como redefinir sua senha",
       backToLogin: "Voltar ao Login",
+      setupTitle: "Crie sua senha",
+      setupSubtitle: "Seu clube fez o seu cadastro. Enviaremos um email para você criar sua senha.",
+      setupSentMessage: "Verifique seu email e siga o link para criar sua senha. Depois volte aqui para entrar.",
     },
     biometric: {
       signIn: "Entrar com biometria",

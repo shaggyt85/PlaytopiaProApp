@@ -9,6 +9,7 @@ describe("CheckEmailService", () => {
       exists: true,
       is_student: false,
       is_teacher: true,
+      teacher_needs_password_setup: false,
     });
 
     const result = await new CheckEmailService(http).checkEmail("ana@club.com");

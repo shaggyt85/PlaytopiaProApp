@@ -77,6 +77,9 @@ const es = {
       sentTitle: "¡Correo de recuperación enviado con éxito!",
       sentMessage: "Por favor revisa tu correo para obtener instrucciones sobre cómo restablecer tu contraseña",
       backToLogin: "Volver al Login",
+      setupTitle: "Crea tu contraseña",
+      setupSubtitle: "Tu club te ha dado de alta. Te enviaremos un correo para que crees tu contraseña.",
+      setupSentMessage: "Revisa tu correo y sigue el enlace para crear tu contraseña. Después vuelve aquí para entrar.",
     },
     biometric: {
       signIn: "Acceder con biometría",

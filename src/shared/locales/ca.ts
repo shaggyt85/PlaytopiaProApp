@@ -75,6 +75,9 @@ const ca: Translations = {
       sentTitle: "Correu de recuperació enviat amb èxit!",
       sentMessage: "Si us plau revisa el teu correu per obtenir instruccions sobre com restablir la teva contrasenya",
       backToLogin: "Tornar al Login",
+      setupTitle: "Crea la teva contrasenya",
+      setupSubtitle: "El teu club t'ha donat d'alta. T'enviarem un correu perquè creïs la teva contrasenya.",
+      setupSentMessage: "Revisa el teu correu i segueix l'enllaç per crear la teva contrasenya. Després torna aquí per entrar.",
     },
     biometric: {
       signIn: "Accedeix amb biometria",

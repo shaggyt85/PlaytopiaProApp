@@ -50,7 +50,9 @@ describe("SignUpScreen", () => {
   beforeEach(() => useAuthFlowStore.getState().reset());
 
   it("trae ya escrito el email del primer paso", () => {
-    useAuthFlowStore.getState().setCheckedEmail("nuevo@club.com", false);
+    useAuthFlowStore
+      .getState()
+      .setCheckedEmail("nuevo@club.com", { isStudent: false, needsPasswordSetup: false });
     renderWithProviders(<SignUpScreen />);
 
     expect(screen.getByLabelText("Correo electrónico")).toHaveProp("value", "nuevo@club.com");

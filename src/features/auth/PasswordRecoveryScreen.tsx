@@ -3,29 +3,59 @@ import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/Button";
-import { Input } from "@/shared/components/Input";
 import { Text } from "@/shared/components/Text";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { TranslationKey } from "@/shared/locales";
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
-import { AuthLayout, FormError } from "./components";
+import { AuthLayout, EmailInput, FormError } from "./components";
 import { useFieldErrorText, usePasswordRecovery } from "./hooks";
 import { EmailFormSchema, type EmailForm } from "./schemas/auth.schema";
+import { useAuthFlowStore } from "./store/authFlowStore";
+
+/**
+ * A qué viene el profesor: a recuperar una contraseña que olvidó, o a crear la
+ * primera porque su club le dio de alta desde el CRM. El envío es el mismo; solo
+ * cambia lo que se le cuenta.
+ */
+type RecoveryMode = "recovery" | "setup";
+
+const RECOVERY_COPY: Record<
+  RecoveryMode,
+  { title: TranslationKey; subtitle: TranslationKey; sentMessage: TranslationKey }
+> = {
+  recovery: {
+    title: "auth.passwordRecovery.title",
+    subtitle: "auth.passwordRecovery.subtitle",
+    sentMessage: "auth.passwordRecovery.sentMessage",
+  },
+  setup: {
+    title: "auth.passwordRecovery.setupTitle",
+    subtitle: "auth.passwordRecovery.setupSubtitle",
+    sentMessage: "auth.passwordRecovery.setupSentMessage",
+  },
+};
 
 /**
  * Recuperar la contraseña, igual que en la app de alumnos: se pide el correo y
  * la misma pantalla confirma el envío. La contraseña nueva se pone en la web,
  * desde el enlace del correo; por eso se vuelve al primer paso del acceso.
+ *
+ * Desde «¿Has olvidado tu contraseña?» el email empieza vacío. Si llega desde
+ * el primer paso porque la cuenta aún no tiene contraseña, viene ya escrito y
+ * los textos hablan de crearla.
  */
 export function PasswordRecoveryScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const fieldError = useFieldErrorText();
   const recovery = usePasswordRecovery();
+  const needsPasswordSetup = useAuthFlowStore((s) => s.needsPasswordSetup);
+  const copy = RECOVERY_COPY[needsPasswordSetup ? "setup" : "recovery"];
 
   const { control, handleSubmit, formState } = useForm<EmailForm>({
     resolver: zodResolver(EmailFormSchema),
-    defaultValues: { email: "" },
+    defaultValues: { email: needsPasswordSetup ? useAuthFlowStore.getState().email : "" },
   });
 
   const submit = handleSubmit(async ({ email }) => {
@@ -44,7 +74,7 @@ export function PasswordRecoveryScreen() {
           {t("auth.passwordRecovery.sentTitle")}
         </Text>
         <Text color="textSecondary" align="center">
-          {t("auth.passwordRecovery.sentMessage")}
+          {t(copy.sentMessage)}
         </Text>
         <Button title={t("auth.passwordRecovery.backToLogin")} onPress={() => router.dismissTo("/sign-in")} />
       </AuthLayout>
@@ -54,25 +84,17 @@ export function PasswordRecoveryScreen() {
   return (
     <AuthLayout showBackButton testID="password-recovery-screen">
       <Text variant="title" align="center" accessibilityRole="header">
-        {t("auth.passwordRecovery.title")}
+        {t(copy.title)}
       </Text>
       <Text color="textSecondary" align="center">
-        {t("auth.passwordRecovery.subtitle")}
+        {t(copy.subtitle)}
       </Text>
 
       <Controller
         control={control}
         name="email"
         render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            label={t("auth.signIn.emailLabel")}
-            placeholder={t("auth.signIn.emailPlaceholder")}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="email"
-            textContentType="emailAddress"
-            maxLength={254}
+          <EmailInput
             returnKeyType="send"
             value={value}
             onBlur={onBlur}

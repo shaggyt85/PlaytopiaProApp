@@ -11,7 +11,7 @@ import { Text } from "@/shared/components/Text";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
-import { AuthLayout, FormError, PasswordInput, TermsCheckbox } from "./components";
+import { AuthLayout, EmailInput, FormError, PasswordInput, TermsCheckbox } from "./components";
 import { useFieldErrorText, useSignUp } from "./hooks";
 import {
   SIGN_UP_DEFAULTS,
@@ -97,16 +97,8 @@ export function SignUpScreen() {
         control={control}
         name="email"
         render={({ field: { onChange, onBlur, value } }) => (
-          <Input
+          <EmailInput
             variant="solid"
-            label={t("auth.signIn.emailLabel")}
-            placeholder={t("auth.signIn.emailPlaceholder")}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="email"
-            textContentType="emailAddress"
-            maxLength={254}
             value={value}
             onChangeText={onChange}
             onBlur={onBlur}

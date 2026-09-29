@@ -4,22 +4,23 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { Button } from "@/shared/components/Button";
-import { Input } from "@/shared/components/Input";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { useSessionStore } from "@/shared/store/sessionStore";
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
-import { AuthLayout, FormError, LegalFooter, PendingTermsModal } from "./components";
+import { AuthLayout, EmailInput, FormError, LegalFooter, PendingTermsModal } from "./components";
 import { useBiometricSignIn, useCheckEmail, useFieldErrorText } from "./hooks";
 import { EmailFormSchema, type EmailForm } from "./schemas/auth.schema";
 import { useAuthFlowStore } from "./store/authFlowStore";
+import { signInNextStep, type SignInNextStep } from "./utils/signInNextStep";
 
 /**
- * Paso 1 del acceso: el email, igual que la app de alumnos. Decide por
- * `is_teacher`: si es profesor, a la contraseña; si no, el mismo botón pasa a
- * "Registrarse". Con la biometría activada, trae su email ya escrito, la lanza
- * sola al abrir (salvo justo después de cerrar sesión) y el botón pasa a
- * "Acceder con biometría".
+ * Paso 1 del acceso: el email, igual que la app de alumnos. Según lo que diga
+ * `check-email`: si es profesor, a la contraseña; si su club le dio de alta y aún
+ * no tiene contraseña, a la recuperación para crearla; si no es profesor, el
+ * mismo botón pasa a "Registrarse". Con la biometría activada, trae su email ya
+ * escrito, la lanza sola al abrir (salvo justo después de cerrar sesión) y el
+ * botón pasa a "Acceder con biometría".
  */
 export function SignInScreen() {
   const { t } = useTranslation();
@@ -58,18 +59,25 @@ export function SignInScreen() {
     if (available && !endedManually) signInWithBiometric();
   }, [loaded, available, savedEmail, endedManually, getValues, setValue, signInWithBiometric]);
 
+  // Qué hace la pantalla con cada paso: el paso lo decide `signInNextStep`.
+  const goTo: Record<SignInNextStep, () => void> = {
+    password: () => router.push("/password"),
+    passwordSetup: () => router.push("/password-recovery"),
+    register: () => setNotFound(true),
+  };
+
   const submit = handleSubmit(async ({ email }) => {
     setNotFound(false);
     // El error queda en checkEmail.error y se pinta abajo.
     const result = await checkEmail.mutateAsync(email).catch(() => undefined);
     if (!result) return;
-    // Se guarda en los dos casos: la contraseña o el registro lo muestran ya escrito.
-    setCheckedEmail(email, result.is_student);
-    if (result.is_teacher) {
-      router.push("/password");
-    } else {
-      setNotFound(true);
-    }
+    const step = signInNextStep(result);
+    // Se guarda siempre: la siguiente pantalla lo muestra ya escrito.
+    setCheckedEmail(email, {
+      isStudent: result.is_student,
+      needsPasswordSetup: step === "passwordSetup",
+    });
+    goTo[step]();
   });
 
   const errorText = biometric.message
@@ -86,15 +94,7 @@ export function SignInScreen() {
         control={control}
         name="email"
         render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            label={t("auth.signIn.emailLabel")}
-            placeholder={t("auth.signIn.emailPlaceholder")}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="email"
-            textContentType="emailAddress"
-            maxLength={254}
+          <EmailInput
             returnKeyType="done"
             editable={!biometric.isPending}
             value={value}

@@ -418,7 +418,10 @@ useQuery({
 
 ### Login: email y contraseña
 
-- **Paso 1, email** (`SignInScreen`): `POST /api/auth/check-email`. Si `is_teacher`, pasa a la contraseña; si no, ofrece crear la cuenta. Un email que solo es de alumno tampoco pasa a la contraseña: la cuenta de profesor es otra.
+- **Paso 1, email** (`SignInScreen`): `POST /api/auth/check-email`. El siguiente paso lo decide `signInNextStep` (`features/auth/utils`):
+  - `is_teacher` y con contraseña → a la contraseña;
+  - `is_teacher` y `teacher_needs_password_setup` → a la recuperación para **crearla**: su club le dio de alta desde el CRM, que no pone contraseña. La recuperación llega con el email escrito y sus propios textos (`authFlowStore.needsPasswordSetup`); la contraseña se pone en la web, desde el correo, y luego vuelve a entrar;
+  - si no es profesor → ofrece crear la cuenta. Un email que solo es de alumno tampoco pasa a la contraseña: la cuenta de profesor es otra.
 - **Paso 2, contraseña** (`PasswordScreen`): login con `{ username: email, password }`. Un 401 es "credenciales incorrectas"; si el email también es de alumno, se aclara que la contraseña es la de la cuenta de profesor.
 - **Un alumno puede ser profesor:** son cuentas separadas en Core (tablas distintas, cada una con su contraseña) y el JWT lleva un solo rol. El alumno que aún no es profesor ve «Registrarse» en el paso 1 y puede darse de alta con el mismo email: Core solo rechaza el alta si el email ya es de otro profesor.
 - **Al volver al paso 1** (p. ej. tras registrarse), el botón vuelve a «Continuar» y el email sigue escrito.

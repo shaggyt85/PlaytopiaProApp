@@ -2,6 +2,7 @@ import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
 
 import { PasswordRecoveryScreen } from "@/features/auth/PasswordRecoveryScreen";
 import { passwordRecoveryService } from "@/features/auth/services/passwordRecoveryService";
+import { useAuthFlowStore } from "@/features/auth/store/authFlowStore";
 import { HttpError } from "@/shared/services/HttpError";
 
 import { renderWithProviders } from "../../helpers/renderWithProviders";
@@ -20,6 +21,9 @@ const escribir = (email: string) =>
 const botonEnviar = () => screen.getByRole("button", { name: "Enviar Correo de Recuperación" });
 
 describe("PasswordRecoveryScreen", () => {
+  // Se llega desde «¿Has olvidado tu contraseña?»: el caso normal.
+  beforeEach(() => useAuthFlowStore.getState().reset());
+
   it("el email empieza vacío y el botón apagado hasta que el email es válido", async () => {
     renderWithProviders(<PasswordRecoveryScreen />);
 
@@ -79,5 +83,44 @@ describe("PasswordRecoveryScreen", () => {
     await settle();
 
     expect(screen.queryByText("Sin conexión. Revisa tu red e inténtalo de nuevo.")).toBeNull();
+  });
+
+  describe("cuando el club le dio de alta y aún no tiene contraseña", () => {
+    beforeEach(() =>
+      useAuthFlowStore
+        .getState()
+        .setCheckedEmail("ana@club.com", { isStudent: false, needsPasswordSetup: true }),
+    );
+
+    it("habla de crearla, trae su email escrito y deja enviar sin tocar nada", async () => {
+      renderWithProviders(<PasswordRecoveryScreen />);
+
+      expect(screen.getByText("Crea tu contraseña")).toBeTruthy();
+      expect(
+        screen.getByText(
+          "Tu club te ha dado de alta. Te enviaremos un correo para que crees tu contraseña.",
+        ),
+      ).toBeTruthy();
+      expect(screen.queryByText("¿Olvidaste tu contraseña?")).toBeNull();
+      expect(screen.getByLabelText("Correo electrónico")).toHaveProp("value", "ana@club.com");
+      await waitFor(() => expect(botonEnviar()).toBeEnabled());
+    });
+
+    it("al enviar le cuenta que cree la contraseña desde el correo y vuelva a entrar", async () => {
+      jest.mocked(passwordRecoveryService.requestRecovery).mockResolvedValue({ status: "ok" });
+      renderWithProviders(<PasswordRecoveryScreen />);
+
+      await waitFor(() => expect(botonEnviar()).toBeEnabled());
+      await act(async () => {
+        fireEvent.press(botonEnviar());
+      });
+
+      expect(passwordRecoveryService.requestRecovery).toHaveBeenCalledWith("ana@club.com");
+      expect(
+        await screen.findByText(
+          "Revisa tu correo y sigue el enlace para crear tu contraseña. Después vuelve aquí para entrar.",
+        ),
+      ).toBeTruthy();
+    });
   });
 });

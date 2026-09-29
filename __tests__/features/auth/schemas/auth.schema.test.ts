@@ -29,9 +29,26 @@ describe("PasswordFormSchema", () => {
 });
 
 describe("contratos de Core", () => {
-  it("check-email trae exists, is_student e is_teacher", () => {
-    const body = { email: "a@b.com", exists: true, is_student: false, is_teacher: true };
+  it("check-email trae exists, is_student, is_teacher y si le falta la contraseña", () => {
+    const body = {
+      email: "a@b.com",
+      exists: true,
+      is_student: false,
+      is_teacher: true,
+      teacher_needs_password_setup: true,
+    };
     expect(CheckEmailResponseSchema.parse(body)).toEqual(body);
+  });
+
+  it("check-email sin teacher_needs_password_setup no cumple el contrato", () => {
+    expect(() =>
+      CheckEmailResponseSchema.parse({
+        email: "a@b.com",
+        exists: true,
+        is_student: false,
+        is_teacher: true,
+      }),
+    ).toThrow();
   });
 
   it("check-email sin is_teacher no cumple el contrato", () => {

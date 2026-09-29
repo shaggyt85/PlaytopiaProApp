@@ -75,6 +75,9 @@ const fr: Translations = {
       sentTitle: "E-mail de récupération envoyé avec succès !",
       sentMessage: "Veuillez consulter votre e-mail pour obtenir des instructions sur la réinitialisation de votre mot de passe",
       backToLogin: "Retour à la connexion",
+      setupTitle: "Créez votre mot de passe",
+      setupSubtitle: "Votre club vous a inscrit. Nous vous enverrons un e-mail pour que vous puissiez créer votre mot de passe.",
+      setupSentMessage: "Consultez votre e-mail et suivez le lien pour créer votre mot de passe. Revenez ensuite ici pour vous connecter.",
     },
     biometric: {
       signIn: "Se connecter avec la biométrie",

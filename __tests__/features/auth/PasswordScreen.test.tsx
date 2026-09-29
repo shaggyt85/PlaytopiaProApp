@@ -47,7 +47,9 @@ const entrar = (password: string) => {
 
 describe("PasswordScreen", () => {
   beforeEach(() => {
-    useAuthFlowStore.getState().setCheckedEmail("ana@club.com", false);
+    useAuthFlowStore
+      .getState()
+      .setCheckedEmail("ana@club.com", { isStudent: false, needsPasswordSetup: false });
     jest.mocked(teacherProfileService.get).mockResolvedValue(terms(TERMS_VERSION));
   });
 
@@ -131,7 +133,9 @@ describe("PasswordScreen", () => {
   });
 
   it("si el email también es de alumno, aclara que es la contraseña de profesor", async () => {
-    useAuthFlowStore.getState().setCheckedEmail("ana@club.com", true);
+    useAuthFlowStore
+      .getState()
+      .setCheckedEmail("ana@club.com", { isStudent: true, needsPasswordSetup: false });
     jest.mocked(signInService.signIn).mockRejectedValue(HttpError.fromResponse(401, {}));
     renderWithProviders(<PasswordScreen />);
 

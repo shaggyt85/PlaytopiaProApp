@@ -75,6 +75,9 @@ const de: Translations = {
       sentTitle: "Wiederherstellungs-E-Mail erfolgreich gesendet!",
       sentMessage: "Bitte überprüfen Sie Ihre E-Mails für Anweisungen zum Zurücksetzen Ihres Passworts",
       backToLogin: "Zurück zur Anmeldung",
+      setupTitle: "Erstellen Sie Ihr Passwort",
+      setupSubtitle: "Ihr Club hat Sie registriert. Wir senden Ihnen eine E-Mail, damit Sie Ihr Passwort erstellen können.",
+      setupSentMessage: "Prüfen Sie Ihre E-Mails und folgen Sie dem Link, um Ihr Passwort zu erstellen. Kommen Sie danach hierher zurück, um sich anzumelden.",
     },
     biometric: {
       signIn: "Mit Biometrie anmelden",

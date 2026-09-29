@@ -75,6 +75,9 @@ const en: Translations = {
       sentTitle: "Recovery email sent successfully!",
       sentMessage: "Please check your email for instructions to reset your password",
       backToLogin: "Back to Login",
+      setupTitle: "Create your password",
+      setupSubtitle: "Your club has signed you up. We'll send you an email so you can create your password.",
+      setupSentMessage: "Check your email and follow the link to create your password. Then come back here to sign in.",
     },
     biometric: {
       signIn: "Sign in with biometrics",

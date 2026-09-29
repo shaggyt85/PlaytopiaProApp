@@ -1,20 +1,27 @@
 import { create } from "zustand";
 
-/**
- * Lo que la pantalla del email le pasa a la de contraseña. Solo estado de UI
- * del flujo: nunca la contraseña ni tokens.
- */
-interface AuthFlowState {
-  email: string;
+/** Lo que `check-email` dijo del email, con nombre para que no se crucen. */
+export interface CheckedEmailFacts {
   /** El email también es de alumno: la contraseña puede ser la de la otra cuenta. */
   isStudent: boolean;
-  setCheckedEmail: (email: string, isStudent: boolean) => void;
+  /** La cuenta de profesor aún no tiene contraseña: la recuperación la crea. */
+  needsPasswordSetup: boolean;
+}
+
+/**
+ * Lo que la pantalla del email le pasa a la siguiente (contraseña, registro o
+ * recuperación). Solo estado de UI del flujo: nunca la contraseña ni tokens.
+ */
+interface AuthFlowState extends CheckedEmailFacts {
+  email: string;
+  setCheckedEmail: (email: string, facts: CheckedEmailFacts) => void;
   reset: () => void;
 }
 
+const EMPTY = { email: "", isStudent: false, needsPasswordSetup: false };
+
 export const useAuthFlowStore = create<AuthFlowState>((set) => ({
-  email: "",
-  isStudent: false,
-  setCheckedEmail: (email, isStudent) => set({ email, isStudent }),
-  reset: () => set({ email: "", isStudent: false }),
+  ...EMPTY,
+  setCheckedEmail: (email, facts) => set({ email, ...facts }),
+  reset: () => set(EMPTY),
 }));

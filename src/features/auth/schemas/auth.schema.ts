@@ -29,6 +29,12 @@ export const CheckEmailResponseSchema = z.object({
   exists: z.boolean(),
   is_student: z.boolean(),
   is_teacher: z.boolean(),
+  /**
+   * La cuenta de profesor aún no tiene contraseña: la dio de alta su club
+   * desde el CRM. No se le pide (no la conoce): se le lleva a crearla por la
+   * recuperación. Solo habla de la cuenta de profesor.
+   */
+  teacher_needs_password_setup: z.boolean(),
 });
 export type CheckEmailResponse = z.infer<typeof CheckEmailResponseSchema>;
 

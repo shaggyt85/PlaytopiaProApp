@@ -52,6 +52,7 @@ describe("SignInScreen", () => {
       exists: true,
       is_student: true,
       is_teacher: true,
+      teacher_needs_password_setup: false,
     });
     renderWithProviders(<SignInScreen />);
 
@@ -62,6 +63,28 @@ describe("SignInScreen", () => {
     expect(useAuthFlowStore.getState()).toMatchObject({
       email: "ana@club.com",
       isStudent: true,
+      needsPasswordSetup: false,
+    });
+  });
+
+  it("si su club le dio de alta y aún no tiene contraseña, va a crearla", async () => {
+    jest.mocked(checkEmailService.checkEmail).mockResolvedValue({
+      email: "ana@club.com",
+      exists: true,
+      is_student: false,
+      is_teacher: true,
+      teacher_needs_password_setup: true,
+    });
+    renderWithProviders(<SignInScreen />);
+
+    escribirYContinuar("ana@club.com");
+
+    await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/password-recovery"));
+    expect(mockPush).not.toHaveBeenCalledWith("/password");
+    // La recuperación lo recibe ya escrito y sabe a qué viene.
+    expect(useAuthFlowStore.getState()).toMatchObject({
+      email: "ana@club.com",
+      needsPasswordSetup: true,
     });
   });
 
@@ -71,6 +94,7 @@ describe("SignInScreen", () => {
       exists: false,
       is_student: false,
       is_teacher: false,
+      teacher_needs_password_setup: false,
     });
     renderWithProviders(<SignInScreen />);
 
@@ -90,6 +114,7 @@ describe("SignInScreen", () => {
       exists: true,
       is_student: true,
       is_teacher: false,
+      teacher_needs_password_setup: false,
     });
     renderWithProviders(<SignInScreen />);
 
@@ -105,6 +130,7 @@ describe("SignInScreen", () => {
       exists: false,
       is_student: false,
       is_teacher: false,
+      teacher_needs_password_setup: false,
     });
     renderWithProviders(<SignInScreen />);
     escribirYContinuar("nuevo@club.com");
