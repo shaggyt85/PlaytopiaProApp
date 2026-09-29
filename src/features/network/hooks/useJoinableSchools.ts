@@ -1,16 +1,17 @@
 import { useInfiniteQuery, useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { useCallback } from "react";
 
+import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 import { useSessionUserId } from "@/shared/store/sessionStore";
+import { sedeKey } from "@/shared/utils/sedeKey";
 
-import type { JoinableSchoolsResponse, SchoolCard } from "../schemas/network.schema";
+import type { JoinableSchoolsResponse } from "../schemas/network.schema";
 import {
   joinableSchoolsQuery,
   networkKeys,
   networkService,
   type INetworkService,
 } from "../services/networkService";
-import { sedeKey } from "../utils/sedeKey";
 
 /** Lo que la pantalla pinta: la lista entera, sin saber cómo se pagina. */
 export interface JoinableSchools {

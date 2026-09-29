@@ -85,6 +85,20 @@ const textGlow = {
   textShadowRadius: 8,
 } as const;
 
+/** Degradado de marca (135°): botón principal, pestaña activa. */
+const brandGradient = [BRAND.brandFrom, BRAND.brandVia, BRAND.brandTo] as const;
+
+/** Colores de contadores y accesos rápidos (Hoy), cada uno con su degradado. */
+const accents = {
+  gold: { color: BRAND.gold, gradient: [BRAND.goldFrom, BRAND.goldTo] as const },
+  coral: { color: BRAND.coral, gradient: [BRAND.coralFrom, BRAND.coralTo] as const },
+  sky: { color: BRAND.sky, gradient: [BRAND.skyFrom, BRAND.skyTo] as const },
+  violet: { color: BRAND.purple, gradient: [BRAND.purpleFrom, BRAND.purpleTo] as const },
+} as const;
+
+/** Un color con su degradado: el de un acento o el de un club. */
+export type ColorPair = { color: string; gradient: readonly [string, string, ...string[]] };
+
 export const darkTheme = {
   colors: {
     background: BRAND.night,
@@ -125,16 +139,24 @@ export const darkTheme = {
     /** Brillo de los elementos de marca. */
     glowPrimary: BRAND.glowMagenta,
   },
-  /** Colores de contadores y accesos rápidos (Hoy), cada uno con su degradado. */
-  accents: {
-    gold: { color: BRAND.gold, gradient: [BRAND.goldFrom, BRAND.goldTo] as const },
-    coral: { color: BRAND.coral, gradient: [BRAND.coralFrom, BRAND.coralTo] as const },
-    sky: { color: BRAND.sky, gradient: [BRAND.skyFrom, BRAND.skyTo] as const },
-    violet: { color: BRAND.purple, gradient: [BRAND.purpleFrom, BRAND.purpleTo] as const },
-  },
+  accents,
+  /**
+   * El color de cada club en la agenda (chips y tarjetas), por su posición en
+   * «Mis clubes» y en ciclo: marca, violeta, azul, coral y oro. Son los mismos
+   * colores del tema, no otros: así cinco clubes nunca repiten color.
+   */
+  clubColors: [
+    { color: BRAND.magenta, gradient: brandGradient },
+    accents.violet,
+    accents.sky,
+    accents.coral,
+    accents.gold,
+  ] as const satisfies readonly ColorPair[],
+  /** El de una sede que ya no está en «Mis clubes» (acaban de darle de baja). */
+  clubColorUnknown: { color: BRAND.grey, gradient: [BRAND.grey, BRAND.grey] as const } satisfies ColorPair,
   gradients: {
     /** Degradado de marca (135°): botón principal, pestaña activa. */
-    brand: [BRAND.brandFrom, BRAND.brandVia, BRAND.brandTo] as const,
+    brand: brandGradient,
     /** Tarjetas oscuras. */
     ink: [BRAND.inkFrom, BRAND.inkTo] as const,
     /** Tarjeta de cristal de los modales. */

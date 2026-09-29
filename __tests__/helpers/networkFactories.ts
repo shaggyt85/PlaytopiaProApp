@@ -1,4 +1,5 @@
-import type { JoinableSchoolsResponse, SchoolCard } from "@/features/network/schemas/network.schema";
+import type { JoinableSchoolsResponse } from "@/features/network/schemas/network.schema";
+import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 
 /** Una sede de ejemplo; el nombre de la escuela sale de su `db_id`. */
 export const schoolCard = (db_id = 4, club_id = 7, overrides: Partial<SchoolCard> = {}): SchoolCard => ({

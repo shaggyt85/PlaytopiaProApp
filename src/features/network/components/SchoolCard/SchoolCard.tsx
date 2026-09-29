@@ -7,10 +7,10 @@ import { StyleSheet, View } from "react-native";
 import { Text } from "@/shared/components/Text";
 import { useReduceMotion } from "@/shared/hooks/useReduceMotion";
 import { useTheme } from "@/shared/hooks/useTheme";
+import type { SchoolCard as SchoolCardData } from "@/shared/schemas/schoolCard.schema";
+import { sedeKey } from "@/shared/utils/sedeKey";
 
-import type { SchoolCard as SchoolCardData } from "../../schemas/network.schema";
 import { schoolLocation } from "../../utils/schoolLocation";
-import { sedeKey } from "../../utils/sedeKey";
 import { Chip } from "../Chip";
 
 import { META_ICON_SIZE, useStyles } from "./SchoolCard.styles";

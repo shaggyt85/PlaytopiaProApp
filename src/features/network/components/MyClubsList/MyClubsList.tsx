@@ -1,8 +1,8 @@
 import type { ReactElement } from "react";
 
+import { useMyClubs } from "@/shared/hooks/useMyClubs";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
-import { useMyClubs } from "../../hooks/useMyClubs";
 import { useRefreshing } from "../../hooks/useRefreshing";
 import { SchoolCardList } from "../SchoolCardList";
 

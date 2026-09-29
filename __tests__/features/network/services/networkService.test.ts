@@ -17,15 +17,6 @@ const card = {
 };
 
 describe("NetworkService", () => {
-  it("pide sus clubes a /MobileTeacher/clubs y valida la respuesta", async () => {
-    const http = fakeHttp({ clubs: [card] });
-
-    const result = await new NetworkService(http).getMyClubs();
-
-    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/clubs");
-    expect(result.clubs).toEqual([card]);
-  });
-
   it("pide la página de sedes con su tamaño, sin depender del defecto de Core", async () => {
     const pagination = { page: 3, size: 10, total_count: 25, total_pages: 3 };
     const http = fakeHttp({ schools: [card], pagination });
@@ -39,7 +30,6 @@ describe("NetworkService", () => {
   });
 
   it("una respuesta que no cumple el contrato falla", async () => {
-    await expect(new NetworkService(fakeHttp({ clubs: "ninguno" })).getMyClubs()).rejects.toThrow();
     await expect(
       new NetworkService(fakeHttp({ schools: [card] })).getJoinableSchools(1),
     ).rejects.toThrow();
@@ -47,13 +37,8 @@ describe("NetworkService", () => {
 });
 
 describe("networkKeys", () => {
-  it("cada profesor tiene su propia caché", () => {
-    expect(networkKeys.myClubs(1)).not.toEqual(networkKeys.myClubs(2));
+  it("cada profesor tiene su propia caché, bajo la raíz de «Red de clubes»", () => {
     expect(networkKeys.joinableSchools(1)).not.toEqual(networkKeys.joinableSchools(2));
-  });
-
-  it("las dos listas cuelgan de la misma raíz, para poder invalidarlas juntas", () => {
-    expect(networkKeys.myClubs(1).slice(0, 1)).toEqual(networkKeys.all);
     expect(networkKeys.joinableSchools(1).slice(0, 1)).toEqual(networkKeys.all);
   });
 });

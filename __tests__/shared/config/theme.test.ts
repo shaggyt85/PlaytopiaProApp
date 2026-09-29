@@ -58,6 +58,13 @@ describe("darkTheme", () => {
     for (const style of [body, button]) expect(style.fontFamily).toMatch(/^Inter_/);
   });
 
+  it("los colores de los clubes son los del tema, no otros: la marca y los cuatro acentos", () => {
+    const { clubColors, accents, colors, gradients } = darkTheme;
+    expect(clubColors).toHaveLength(5);
+    expect(clubColors[0]).toEqual({ color: colors.primary, gradient: gradients.brand });
+    expect(clubColors.slice(1)).toEqual([accents.violet, accents.sky, accents.coral, accents.gold]);
+  });
+
   it("el brillo acepta cualquier color", () => {
     expect(darkTheme.shadows.glow.shadowColor).toBe(BRAND.glowMagenta);
   });

@@ -1,4 +1,4 @@
-import { sedeKey } from "@/features/network/utils/sedeKey";
+import { sedeKey } from "@/shared/utils/sedeKey";
 
 describe("sedeKey", () => {
   it("es la escuela y la sucursal: la misma sucursal en otra escuela es otra sede", () => {

@@ -1,4 +1,4 @@
-import type { SchoolCard } from "../schemas/network.schema";
+import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 
 /**
  * «Ciudad · Dirección» de una sede, sin separador sobrante si falta una de las

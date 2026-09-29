@@ -94,10 +94,10 @@ src/
       index.ts
     network/             = pantalla Red de clubes
       components/        SchoolCard, SchoolCardList, SegmentedTabs, MyClubsList…
-      hooks/             useMyClubs, useJoinableSchools, useRefreshing
-      services/          networkService (claves y recetas de TanStack)
+      hooks/             useJoinableSchools, useRefreshing
+      services/          networkService («Cerca de mí»: claves y receta de TanStack)
       schemas/
-      utils/             networkTabs, sedeKey, schoolLocation
+      utils/             networkTabs, schoolLocation
       NetworkScreen.tsx
       index.ts
     ...                  una carpeta por pantalla o flujo
@@ -563,7 +563,8 @@ useQuery({
 - **Selector:** `SegmentedTabs`, el del prototipo (píldora con la activa en `BrandGradient` y su brillo), sin contadores hasta la bolsa de trabajo. No guarda nada y pulsar la activa no avisa. Lovable lo usa en otras tres pantallas: a la segunda que lo necesite, pasa a `shared/components/` tal cual.
 - **Las dos listas quedan montadas** y la que no se ve, con `display: "none"` (fuera del dibujo y del lector de pantalla): cada pestaña conserva su scroll y «Mis clubes» no se vuelve a pedir. Las dos llevan la misma cabecera (título y pestañas), que se desplaza con la lista.
 - **Tarjeta:** `SchoolCard`, con el formato de las tarjetas del prototipo: franja de marca, chip de la sede, nombre de la escuela y «ciudad · dirección» (`schoolLocation`). Detrás, la portada con el velo `imageVeil`. Core siempre manda `background_url`: la propia de la escuela o la portada por defecto del bucket. Si no carga, queda el fondo del tema. Aún no se puede tocar («Solicitar» llega con las solicitudes de Core).
-- **Una sede** es su escuela y su sucursal: `sedeKey` da la clave de la fila, del reciclado de la portada y de la deduplicación de páginas.
+- **Una sede** es su escuela y su sucursal: `sedeKey` (`shared/utils`) da la clave de la fila, del reciclado de la portada, de la deduplicación de páginas y del club de cada clase de la agenda.
+- **«Mis clubes» es compartido** con la agenda (nombre y color de cada club): `shared/services/myClubsService` (receta `myClubsQuery`, `STANDARD`), `shared/hooks/useMyClubs` y `shared/schemas/schoolCard.schema`. Una sola caché para las dos pestañas.
 - **Caché:** «Mis clubes» con `STANDARD`; «Cerca de mí» con `STATIC` (cambia poco y no se pide hasta abrir su pestaña, con `enabled`). Las claves llevan el `teacherId`: dos cuentas en el mismo móvil no comparten datos.
 - **Paginación de «Cerca de mí»:** de 10 en 10, la siguiente al llegar al final (solo si hay más y no se está pidiendo ya). `mergePages` junta las páginas y quita la sede que salte de una página a otra. Si falla la página siguiente no se enseña nada: se vuelve a intentar al llegar otra vez al final.
 - **Tirar para refrescar:** «Mis clubes» vuelve a pedir; «Cerca de mí» recorta la caché a la primera página y pide solo esa, así la lista no se vacía mientras llega. `useRefreshing` lleva el spinner.

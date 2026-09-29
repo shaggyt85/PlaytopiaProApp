@@ -7,9 +7,9 @@ import { LoadingState } from "@/shared/components/LoadingState";
 import { TabFlatList } from "@/shared/components/TabFlatList";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { SchoolCard as SchoolCardData } from "@/shared/schemas/schoolCard.schema";
+import { sedeKey } from "@/shared/utils/sedeKey";
 
-import type { SchoolCard as SchoolCardData } from "../../schemas/network.schema";
-import { sedeKey } from "../../utils/sedeKey";
 import { SchoolCard } from "../SchoolCard";
 
 import { useStyles } from "./SchoolCardList.styles";

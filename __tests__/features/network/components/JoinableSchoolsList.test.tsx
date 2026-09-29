@@ -11,7 +11,7 @@ import { settle } from "../../../helpers/settle";
 jest.mock("expo-image", () => ({ Image: () => null }));
 jest.mock("@/features/network/services/networkService", () => ({
   ...jest.requireActual("@/features/network/services/networkService"),
-  networkService: { getMyClubs: jest.fn(), getJoinableSchools: jest.fn() },
+  networkService: { getJoinableSchools: jest.fn() },
 }));
 
 const getPage = () => jest.mocked(networkService.getJoinableSchools);

@@ -2,6 +2,7 @@ import { act, fireEvent, screen } from "@testing-library/react-native";
 
 import { NetworkScreen } from "@/features/network";
 import { networkService } from "@/features/network/services/networkService";
+import { myClubsService } from "@/shared/services/myClubsService";
 import { useSessionStore } from "@/shared/store/sessionStore";
 
 import { joinablePage, schoolCard } from "../../helpers/networkFactories";
@@ -11,7 +12,11 @@ import { settle } from "../../helpers/settle";
 jest.mock("expo-image", () => ({ Image: () => null }));
 jest.mock("@/features/network/services/networkService", () => ({
   ...jest.requireActual("@/features/network/services/networkService"),
-  networkService: { getMyClubs: jest.fn(), getJoinableSchools: jest.fn() },
+  networkService: { getJoinableSchools: jest.fn() },
+}));
+jest.mock("@/shared/services/myClubsService", () => ({
+  ...jest.requireActual("@/shared/services/myClubsService"),
+  myClubsService: { getMyClubs: jest.fn() },
 }));
 
 // Cada lista lleva la cabecera, pero la de la lista oculta no cuenta: una sola a la vista.
@@ -20,7 +25,7 @@ const pressTab = (name: string) => fireEvent.press(screen.getByRole("tab", { nam
 describe("NetworkScreen", () => {
   beforeEach(() => {
     useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 });
-    jest.mocked(networkService.getMyClubs).mockResolvedValue({ clubs: [schoolCard(4, 7)] });
+    jest.mocked(myClubsService.getMyClubs).mockResolvedValue({ clubs: [schoolCard(4, 7)] });
     jest.mocked(networkService.getJoinableSchools).mockResolvedValue(joinablePage(1, 1, [schoolCard(1, 1)], 1));
   });
 
@@ -58,7 +63,7 @@ describe("NetworkScreen", () => {
     pressTab("Cerca de mí");
     await settle();
 
-    expect(networkService.getMyClubs).toHaveBeenCalledTimes(1);
+    expect(myClubsService.getMyClubs).toHaveBeenCalledTimes(1);
     expect(networkService.getJoinableSchools).toHaveBeenCalledTimes(1);
   });
 

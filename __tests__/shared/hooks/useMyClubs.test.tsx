@@ -2,13 +2,13 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 
-import { useMyClubs } from "@/features/network/hooks/useMyClubs";
+import { useMyClubs } from "@/shared/hooks/useMyClubs";
 import { createQueryClient } from "@/shared/config/queryClient";
 import { HttpError } from "@/shared/services/HttpError";
 import { useSessionStore } from "@/shared/store/sessionStore";
 
-import { schoolCard } from "../../../helpers/networkFactories";
-import { settle } from "../../../helpers/settle";
+import { schoolCard } from "../../helpers/networkFactories";
+import { settle } from "../../helpers/settle";
 
 const card = schoolCard(4, 7, { name: "DN Padel Academy", club_name: "Sede Centro" });
 

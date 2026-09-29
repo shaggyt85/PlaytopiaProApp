@@ -8,7 +8,7 @@ import HomeRoute from "@/app/(app)/(tabs)/index";
 import NetworkRoute from "@/app/(app)/(tabs)/network";
 import ProfileRoute from "@/app/(app)/(tabs)/profile";
 import TabsLayout from "@/app/(app)/(tabs)/_layout";
-import { networkService } from "@/features/network/services/networkService";
+import { myClubsService } from "@/shared/services/myClubsService";
 import { createQueryClient } from "@/shared/config/queryClient";
 import { teacherProfileService } from "@/shared/services/teacherProfileService";
 import { useSessionStore } from "@/shared/store/sessionStore";
@@ -22,9 +22,9 @@ jest.mock("@/shared/services/teacherProfileService", () => ({
 }));
 
 jest.mock("expo-image", () => ({ Image: () => null }));
-jest.mock("@/features/network/services/networkService", () => ({
-  ...jest.requireActual("@/features/network/services/networkService"),
-  networkService: { getMyClubs: jest.fn(), getJoinableSchools: jest.fn() },
+jest.mock("@/shared/services/myClubsService", () => ({
+  ...jest.requireActual("@/shared/services/myClubsService"),
+  myClubsService: { getMyClubs: jest.fn() },
 }));
 
 // En la app lo pone AppProviders, en el layout raíz (Hoy pide el perfil).
@@ -45,7 +45,7 @@ describe("menú inferior", () => {
   beforeEach(() => {
     jest.mocked(teacherProfileService.get).mockResolvedValue(teacherProfile());
     useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 });
-    jest.mocked(networkService.getMyClubs).mockResolvedValue({ clubs: [schoolCard(4, 7)] });
+    jest.mocked(myClubsService.getMyClubs).mockResolvedValue({ clubs: [schoolCard(4, 7)] });
   });
 
   it("empieza en Agenda (la pantalla de inicio), con las 4 pestañas en orden y Agenda seleccionada", () => {
