@@ -16,9 +16,16 @@ export interface ScheduleClub {
   colors: ColorPair;
 }
 
+/** Un club de «Mis clubes» en la leyenda: su sede (`sedeKey`), nombre y color. */
+export interface LegendClub extends ScheduleClub {
+  key: string;
+}
+
 /**
- * El club de cada clase de la agenda, a partir de «Mis clubes» (misma caché que
- * «Red de clubes»): su nombre corto y su color, fijo por su posición.
+ * Los clubes de la agenda, a partir de «Mis clubes» (misma caché que «Red de
+ * clubes»): la lista para la leyenda y `clubOf` para el club de cada clase, con
+ * su nombre corto y su color, fijo por su posición. Las dos salen del mismo
+ * cálculo, así la leyenda y las tarjetas nunca dan colores distintos.
  *
  * Una sede que no esté en «Mis clubes» —le acaban de dar de baja y la caché aún
  * no lo sabe— sale sin nombre y con el color neutro: la clase se ve igual.
@@ -27,16 +34,14 @@ export function useScheduleClubs(service: IMyClubsService = myClubsService) {
   const theme = useTheme();
   const { data } = useMyClubs(service);
 
-  const byKey = useMemo(
-    () =>
-      new Map<string, ScheduleClub>(
-        (data?.clubs ?? []).map((club, index) => [
-          sedeKey(club),
-          { label: club.club_name ?? club.name, colors: colorAt(theme.clubColors, index) },
-        ]),
-      ),
-    [data, theme.clubColors],
-  );
+  const { clubs, byKey } = useMemo(() => {
+    const list: LegendClub[] = (data?.clubs ?? []).map((club, index) => ({
+      key: sedeKey(club),
+      label: club.club_name ?? club.name,
+      colors: colorAt(theme.clubColors, index),
+    }));
+    return { clubs: list, byKey: new Map<string, ScheduleClub>(list.map((club) => [club.key, club])) };
+  }, [data, theme.clubColors]);
 
   const clubOf = useCallback(
     (sede: Pick<SchoolCard, "db_id" | "club_id">): ScheduleClub =>
@@ -44,5 +49,5 @@ export function useScheduleClubs(service: IMyClubsService = myClubsService) {
     [byKey, theme.clubColorUnknown],
   );
 
-  return { clubOf };
+  return { clubs, clubOf };
 }

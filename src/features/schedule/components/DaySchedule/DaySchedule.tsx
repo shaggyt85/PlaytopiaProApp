@@ -6,7 +6,6 @@ import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 import { formatWeekdayDay } from "@/shared/utils/formatDate";
 
-import { useAnnounceOnChange } from "../../hooks/useAnnounceOnChange";
 import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import { useScheduleMonth } from "../../hooks/useScheduleMonth";
 import { useSelectedDay } from "../../hooks/useSelectedDay";
@@ -14,8 +13,8 @@ import { dayLabel } from "../../utils/dayLabel";
 import { localToday, wallNow } from "../../utils/scheduleDates";
 import { DayHeader } from "../DayHeader";
 import { DayTimeline } from "../DayTimeline";
-import { DayToolbar } from "../DayToolbar";
 import { FreeDayCard } from "../FreeDayCard";
+import { ScheduleToolbar } from "../ScheduleToolbar";
 
 import { useStyles } from "./DaySchedule.styles";
 
@@ -39,7 +38,6 @@ export function DaySchedule({ now, nextClassId, clubOf }: DayScheduleProps) {
   const { date, isToday, goPrevious, goNext } = useSelectedDay(localToday(now));
   const { dayClasses, hasData, error, refetch } = useScheduleMonth(date);
   const label = dayLabel(formatWeekdayDay(date), isToday, t);
-  useAnnounceOnChange(label);
 
   let content;
   if (!hasData) content = error ? <ErrorState error={error} onRetry={refetch} /> : <LoadingState />;
@@ -51,7 +49,14 @@ export function DaySchedule({ now, nextClassId, clubOf }: DayScheduleProps) {
 
   return (
     <View style={styles.container}>
-      <DayToolbar date={date} nowWall={wallNow(now)} onPrevious={goPrevious} onNext={goNext} />
+      <ScheduleToolbar
+        view="day"
+        date={date}
+        isToday={isToday}
+        nowWall={wallNow(now)}
+        onPrevious={() => goPrevious("day")}
+        onNext={() => goNext("day")}
+      />
       <DayHeader label={label} classCount={hasData ? dayClasses.length : undefined} />
       {content}
     </View>

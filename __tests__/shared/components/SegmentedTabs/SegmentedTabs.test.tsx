@@ -1,7 +1,7 @@
 import { IconLoMapPin } from "@playtopia/icons/react-native";
 import { fireEvent, render, screen } from "@testing-library/react-native";
 
-import { SegmentedTabs, type SegmentedTabOption } from "@/features/network/components/SegmentedTabs";
+import { SegmentedTabs, type SegmentedTabOption } from "@/shared/components/SegmentedTabs";
 
 const options: SegmentedTabOption<"a" | "b">[] = [
   { key: "a", label: "Primera", Icon: IconLoMapPin },
@@ -40,5 +40,24 @@ describe("SegmentedTabs", () => {
 
     expect(screen.getByTestId("tabs-a")).toBeTruthy();
     expect(screen.getByTestId("tabs-b")).toBeTruthy();
+  });
+});
+
+describe("SegmentedTabs compact", () => {
+  it("se comporta igual y completa el área táctil mínima con hitSlop", () => {
+    const onChange = jest.fn();
+    render(<SegmentedTabs options={options} value="a" onChange={onChange} variant="compact" />);
+
+    const second = screen.getByRole("tab", { name: "Segunda" });
+    fireEvent.press(second);
+
+    expect(onChange).toHaveBeenCalledWith("b");
+    expect(second.props.hitSlop).toBe(8);
+  });
+
+  it("el tamaño normal no lo necesita", () => {
+    render(<SegmentedTabs options={options} value="a" onChange={jest.fn()} />);
+
+    expect(screen.getByRole("tab", { name: "Segunda" }).props.hitSlop).toBeUndefined();
   });
 });

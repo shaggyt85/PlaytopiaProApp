@@ -1,12 +1,13 @@
 import {
   addDays,
+  addMonths,
+  daysBetween,
   localMinutes,
   localToday,
   mondayOf,
   monthCells,
   MONTH_GRID_DAYS,
   monthGrid,
-  stepDate,
   visibleWeekDays,
   wallNow,
   weekDays,
@@ -114,25 +115,6 @@ describe("monthCells", () => {
   });
 });
 
-describe("stepDate", () => {
-  it("en Día, un día", () => {
-    expect(stepDate("2026-10-31", "day", 1)).toBe("2026-11-01");
-    expect(stepDate("2026-10-01", "day", -1)).toBe("2026-09-30");
-  });
-
-  it("en Semana, siete", () => {
-    expect(stepDate("2026-10-29", "week", 1)).toBe("2026-11-05");
-    expect(stepDate("2026-10-01", "week", -1)).toBe("2026-09-24");
-  });
-
-  it("en Mes, el mismo día del mes siguiente o, si no lo tiene, el último", () => {
-    expect(stepDate("2026-11-18", "month", 1)).toBe("2026-12-18");
-    expect(stepDate("2027-01-31", "month", 1)).toBe("2027-02-28");
-    expect(stepDate("2028-01-31", "month", 1)).toBe("2028-02-29");
-    expect(stepDate("2026-03-31", "month", -1)).toBe("2026-02-28");
-  });
-});
-
 describe("visibleWeekDays", () => {
   const week = weekDays("2026-10-05");
 
@@ -151,5 +133,25 @@ describe("visibleWeekDays", () => {
 
   it("con un día tocado en la tira, solo ese", () => {
     expect(visibleWeekDays(week, "2026-10-08", "2026-10-06")).toEqual(["2026-10-06"]);
+  });
+});
+
+describe("addMonths", () => {
+  it("el mismo número de día o, si el mes no lo tiene, el último", () => {
+    expect(addMonths("2026-11-18", 1)).toBe("2026-12-18");
+    expect(addMonths("2027-01-31", 1)).toBe("2027-02-28");
+    expect(addMonths("2026-03-31", -1)).toBe("2026-02-28");
+  });
+});
+
+describe("daysBetween", () => {
+  it("los días de una fecha a otra, negativos hacia atrás", () => {
+    expect(daysBetween("2026-10-31", "2026-11-01")).toBe(1);
+    expect(daysBetween("2026-11-01", "2026-10-31")).toBe(-1);
+    expect(daysBetween("2026-10-05", "2026-10-05")).toBe(0);
+  });
+
+  it("sin moverse por el cambio de hora de octubre", () => {
+    expect(daysBetween("2026-10-24", "2026-10-26")).toBe(2);
   });
 });

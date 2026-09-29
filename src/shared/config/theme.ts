@@ -43,6 +43,8 @@ const typography = {
   small: { fontFamily: FONTS.regular, fontSize: 12 },
   /** Texto pequeño dentro de un control: el ✓ de una casilla, una pestaña (el `text-[12px] font-bold` de Lovable). */
   mark: { fontFamily: FONTS.bold, fontSize: 12 },
+  /** Opción de un selector pequeño (DÍA · SEMANA · MES): `text-[11px] font-bold uppercase tracking-wide`. */
+  segment: { fontFamily: FONTS.bold, fontSize: 11, letterSpacing: 0.3, textTransform: "uppercase" },
   /** Versión de la app. */
   micro: { fontFamily: FONTS.regular, fontSize: 11, letterSpacing: 1 },
   /** Nombre de una pestaña del menú inferior. */
@@ -97,6 +99,15 @@ export const halo = (color: string) => ({ boxShadow: `0 0 12px ${color}` }) as c
 /** Sombra de algo que flota sobre el contenido (el `shadow-lg` de Tailwind): la hora de la línea de «ahora». */
 const lifted = {
   boxShadow: `0 10px 15px -3px ${withAlpha(BRAND.black, 0.1)}, 0 4px 6px -4px ${withAlpha(BRAND.black, 0.1)}`,
+} as const;
+
+/**
+ * Lo elegido en relieve (el `btn-3d-lime` de Lovable): un borde oscuro de 4
+ * debajo y el brillo de marca. La pestaña activa del selector de la agenda y el
+ * día elegido de la semana y del mes.
+ */
+const raised = {
+  boxShadow: `0 4px 0 0 ${BRAND.raisedEdge}, 0 8px 22px -4px ${withAlpha(BRAND.raisedGlow, 0.6)}`,
 } as const;
 
 const textGlow = {
@@ -198,7 +209,7 @@ export const darkTheme = {
     { color: BRAND.backdropViolet, opacity: 0.32, x: 1, y: 0.05, reach: 0.55 },
     { color: BRAND.backdropPlum, opacity: 0.25, x: 0.5, y: 1.1, reach: 0.6 },
   ] as const,
-  shadows: { glow: glow(BRAND.glowMagenta), textGlow, lifted },
+  shadows: { glow: glow(BRAND.glowMagenta), textGlow, lifted, raised },
   spacing,
   radius,
   typography,

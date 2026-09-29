@@ -22,6 +22,8 @@ const BRAND = Object.freeze({
   brandVia: "#C122E0", // …magenta…
   brandTo: "#8434F4", // …violeta
   glowMagenta: "#DD00B1", // brillo de los elementos de marca
+  raisedEdge: "#A2007F", // borde de abajo de lo elegido en relieve (btn-3d-lime: oklch(0.45 0.27 340))
+  raisedGlow: "#CB00A1", // su brillo (oklch(0.55 0.27 340))
 
   // Resplandores del fondo.
   backdropMagenta: "#BB0093", // arriba a la izquierda

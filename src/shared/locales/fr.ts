@@ -142,9 +142,17 @@ const fr: Translations = {
     },
     /** La barra de las flechas: el día, la semana o el mes que se ve y la hora de ahora. */
     toolbar: "%{label} · %{time}",
+    /** La fila de los clubes con su color, encima de la agenda. */
+    legend: "Clubs",
     week: {
       /** Los extremos de la semana en la barra: «18 nov – 24 nov». */
       range: "%{from} – %{to}",
+      previous: "Semaine précédente",
+      next: "Semaine suivante",
+    },
+    month: {
+      previous: "Mois précédent",
+      next: "Mois suivant",
     },
     /** La tarjeta de la próxima clase, encima de la agenda. */
     next: {

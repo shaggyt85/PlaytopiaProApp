@@ -2,12 +2,12 @@ import { useMemo, useState } from "react";
 import { View } from "react-native";
 
 import { ScreenHeader } from "@/shared/components/ScreenHeader";
+import { SegmentedTabs } from "@/shared/components/SegmentedTabs";
 import { TabScreen } from "@/shared/components/TabScreen";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import { JoinableSchoolsList } from "./components/JoinableSchoolsList";
 import { MyClubsList } from "./components/MyClubsList";
-import { SegmentedTabs } from "./components/SegmentedTabs";
 import { useStyles } from "./NetworkScreen.styles";
 import { NETWORK_TABS, type NetworkTab } from "./utils/networkTabs";
 

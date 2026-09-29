@@ -2,7 +2,6 @@ import { dayjs } from "@/shared/config/dayjs";
 import { wallAsUtcMs } from "@/shared/utils/clubClock";
 
 import { MINUTES_PER_HOUR } from "./classTiming";
-import type { ScheduleView } from "./scheduleViews";
 
 // Fechas de la agenda como `YYYY-MM-DD`, el formato de Core. Las cuentas se
 // hacen en UTC (`dayjs.utc`): son fechas de pared, sin zona, y así un cambio de
@@ -11,7 +10,7 @@ import type { ScheduleView } from "./scheduleViews";
 const DATE_FORMAT = "YYYY-MM-DD";
 /** Días de la cuadrícula del mes: seis semanas, lo que abarca la vista Mes. */
 export const MONTH_GRID_DAYS = 42;
-const DAYS_PER_WEEK = 7;
+export const DAYS_PER_WEEK = 7;
 
 /**
  * «Ahora» como hora de pared del teléfono, en el mismo formato que las clases
@@ -83,19 +82,14 @@ export function monthCells(date: string): (string | null)[] {
 }
 
 /**
- * A dónde lleva cada flecha en cada vista: un día, una semana o un mes. En Mes
- * se mantiene el número de día y, si el mes no lo tiene, el último (31 de enero
- * → 28 de febrero).
+ * `date` más `months` meses, con el mismo número de día o, si el mes no lo
+ * tiene, el último (31 de enero → 28 de febrero).
  */
-const VIEW_STEPS = {
-  day: (date, direction) => addDays(date, direction),
-  week: (date, direction) => addDays(date, direction * DAYS_PER_WEEK),
-  month: (date, direction) => dayjs.utc(date).add(direction, "month").format(DATE_FORMAT),
-} satisfies Record<ScheduleView, (date: string, direction: 1 | -1) => string>;
+export const addMonths = (date: string, months: number): string =>
+  dayjs.utc(date).add(months, "month").format(DATE_FORMAT);
 
-/** La fecha a la que lleva la flecha `direction` (› 1, ‹ -1) en la vista `view`. */
-export const stepDate = (date: string, view: ScheduleView, direction: 1 | -1): string =>
-  VIEW_STEPS[view](date, direction);
+/** Cuántos días van de `from` a `to` (negativo si `to` es anterior). */
+export const daysBetween = (from: string, to: string): number => dayjs.utc(to).diff(dayjs.utc(from), "day");
 
 /**
  * Qué días salen en la vista Semana: el día tocado en la tira si hay uno; si
