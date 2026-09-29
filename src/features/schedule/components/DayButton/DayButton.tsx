@@ -3,26 +3,25 @@ import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
 
 import { BrandGradient } from "@/shared/components/BrandGradient";
 import { Text } from "@/shared/components/Text";
-import type { TextVariant } from "@/shared/config/theme";
 import { formatDayOfMonth } from "@/shared/utils/formatDate";
 
 import type { DayMark } from "../../utils/dayMark";
 import { DayDots } from "../DayDots";
 
-import { DAY_MARK_COLORS, useStyles } from "./DayButton.styles";
+import { DAY_BUTTON_VARIANTS, DAY_MARK_COLORS, useStyles, type DayButtonVariant } from "./DayButton.styles";
 
 interface DayButtonProps {
   /** El día, `YYYY-MM-DD`: se lo pasa a `onPick` al tocarlo. */
   date: string;
   mark: DayMark;
+  /** `strip` en la tira de la semana y `cell` en el mes (`DAY_BUTTON_VARIANTS`). */
+  variant: DayButtonVariant;
   /** La forma de quien lo usa: la pastilla de la tira o la celda del mes. */
   shape: StyleProp<ViewStyle>;
   /** El radio de esa forma, para el degradado del elegido. */
   radius: number;
   /** La letra del día encima del número (solo en la tira). */
   letter?: string;
-  /** El número: grande en la tira (`subtitle`) y más pequeño en el mes (`rowTitle`). */
-  numberVariant: TextVariant;
   dots: readonly string[];
   /** El punto coral de hoy arriba a la derecha (solo en la tira, si hoy no es el elegido). */
   todayMark?: boolean;
@@ -44,10 +43,10 @@ interface DayButtonProps {
 export const DayButton = memo(function DayButton({
   date,
   mark,
+  variant,
   shape,
   radius,
   letter,
-  numberVariant,
   dots,
   todayMark = false,
   onPick,
@@ -57,6 +56,7 @@ export const DayButton = memo(function DayButton({
   const styles = useStyles();
   const selected = mark === "selected";
   const colors = DAY_MARK_COLORS[mark];
+  const look = DAY_BUTTON_VARIANTS[variant];
 
   return (
     <Pressable
@@ -64,7 +64,7 @@ export const DayButton = memo(function DayButton({
       accessibilityRole="button"
       accessibilityState={{ selected }}
       accessibilityLabel={accessibilityLabel}
-      style={[styles.base, shape, styles[mark]]}
+      style={[styles.base, shape, styles[mark], mark === "other" && look.otherRing && styles.otherRing]}
       testID={testID}
     >
       {selected ? <BrandGradient style={[styles.fill, { borderRadius: radius }]} /> : null}
@@ -73,7 +73,7 @@ export const DayButton = memo(function DayButton({
           {letter}
         </Text>
       ) : null}
-      <Text variant={numberVariant} color={colors.number}>
+      <Text variant={look.number} color={colors.number}>
         {formatDayOfMonth(date)}
       </Text>
       <DayDots colors={dots} onBrand={selected} />

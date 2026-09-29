@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { halo, type ThemeColor } from "@/shared/config/theme";
+import { halo, type TextVariant, type ThemeColor } from "@/shared/config/theme";
 import { makeStyles } from "@/shared/hooks/makeStyles";
 import { withAlpha } from "@/shared/utils/color";
 
@@ -9,6 +9,19 @@ import type { DayMark } from "../../utils/dayMark";
 /** El punto coral de hoy (`h-2 w-2`), con su brillo de 8. */
 const TODAY_MARK = 8;
 const TODAY_MARK_BLUR = 8;
+
+/** Dónde va el día: la pastilla de la tira de la semana o la celda del mes. */
+export type DayButtonVariant = "strip" | "cell";
+
+/**
+ * Lo que cambia con cada sitio, como en el prototipo: el número (`text-lg` en la
+ * tira, `text-sm` en el mes) y si los demás días llevan aro (`ring-soft` en la
+ * tira; en el mes, solo el fondo).
+ */
+export const DAY_BUTTON_VARIANTS = {
+  strip: { number: "subtitle", otherRing: true },
+  cell: { number: "rowTitle", otherRing: false },
+} as const satisfies Record<DayButtonVariant, { number: TextVariant; otherRing: boolean }>;
 
 /** El color del texto de cada aspecto: la letra del día y su número. */
 export const DAY_MARK_COLORS = {
@@ -28,8 +41,9 @@ export const useStyles = makeStyles((theme) => ({
     borderColor: withAlpha(theme.colors.primary, 0.4),
     backgroundColor: withAlpha(theme.colors.primary, 0.15),
   },
-  // Los demás: `bg-surface ring-soft`.
-  other: { borderWidth: 1, borderColor: theme.colors.hairline, backgroundColor: theme.colors.surface },
+  // Los demás: `bg-surface`, y en la tira además `ring-soft` (`otherRing`).
+  other: { backgroundColor: theme.colors.surface },
+  otherRing: { borderWidth: 1, borderColor: theme.colors.hairline },
   // `absolute -top-1 right-1 h-2 w-2 rounded-full bg-coral shadow-[0_0_8px_var(--coral)]`.
   todayMark: {
     position: "absolute",

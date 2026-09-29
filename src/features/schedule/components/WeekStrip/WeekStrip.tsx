@@ -45,10 +45,10 @@ export const WeekStrip = memo(function WeekStrip({ days, today, active, dots, by
           key={day}
           date={day}
           mark={dayMark(day, active, today)}
+          variant="strip"
           shape={styles.pill}
           radius={theme.radius.xxl}
           letter={letters[index]}
-          numberVariant="subtitle"
           dots={dots.get(day) ?? NONE}
           todayMark
           onPick={onPick}

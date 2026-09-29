@@ -58,9 +58,9 @@ export const MonthGrid = memo(function MonthGrid({ date, today, dots, byDate, on
                 <DayButton
                   date={day}
                   mark={dayMark(day, date, today)}
+                  variant="cell"
                   shape={styles.cell}
                   radius={theme.radius.xxl}
-                  numberVariant="rowTitle"
                   dots={dots.get(day) ?? NONE}
                   onPick={onPick}
                   accessibilityLabel={t("schedule.day.a11y.summary", {

@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
+import { StyleSheet } from "react-native";
 
 import { DayButton } from "@/features/schedule/components/DayButton";
 import type { DayMark } from "@/features/schedule/utils/dayMark";
@@ -11,15 +12,18 @@ jest.mock("expo-linear-gradient", () => ({
   },
 }));
 
-function setup(mark: DayMark, extra: { letter?: string; todayMark?: boolean } = {}) {
+function setup(
+  mark: DayMark,
+  extra: { letter?: string; todayMark?: boolean; variant?: "strip" | "cell" } = {},
+) {
   const onPick = jest.fn();
   render(
     <DayButton
       date="2026-11-18"
       mark={mark}
+      variant="strip"
       shape={{ borderRadius: 32 }}
       radius={32}
-      numberVariant="rowTitle"
       dots={["#111111"]}
       onPick={onPick}
       accessibilityLabel="miércoles 18, 1 clase"
@@ -62,6 +66,23 @@ describe("DayButton", () => {
   it("elegido, aunque se pida, sin punto coral", () => {
     setup("selected", { todayMark: true });
     expect(screen.queryByTestId("day-today-mark")).toBeNull();
+  });
+
+  it("los demás días llevan aro en la tira y solo el fondo en el mes, como el prototipo", () => {
+    setup("other");
+    expect(StyleSheet.flatten(screen.getByTestId("day").props.style).borderWidth).toBe(1);
+  });
+
+  it("en el mes, sin aro", () => {
+    setup("other", { variant: "cell" });
+    const style = StyleSheet.flatten(screen.getByTestId("day").props.style);
+    expect(style.borderWidth).toBeUndefined();
+    expect(style.backgroundColor).toBeDefined();
+  });
+
+  it("hoy lleva su aro también en el mes", () => {
+    setup("today", { variant: "cell" });
+    expect(StyleSheet.flatten(screen.getByTestId("day").props.style).borderWidth).toBe(1);
   });
 
   it("tocarlo avisa con su fecha", () => {

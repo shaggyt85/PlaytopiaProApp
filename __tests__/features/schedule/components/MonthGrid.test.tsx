@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
+import { StyleSheet } from "react-native";
 
 import { MonthGrid } from "@/features/schedule/components/MonthGrid";
 
@@ -33,6 +34,15 @@ describe("MonthGrid", () => {
     expect(screen.getByRole("button", { name: "jueves 19, 2 clases" }).props.accessibilityState).toEqual({
       selected: false,
     });
+  });
+
+  it("con otro día elegido, hoy sigue marcado como hoy", () => {
+    setup("2026-11-20");
+
+    const todayCell = screen.getByRole("button", { name: "miércoles 18, 0 clases" });
+    expect(todayCell.props.accessibilityState).toEqual({ selected: false });
+    expect(StyleSheet.flatten(todayCell.props.style).borderWidth).toBe(1);
+    expect(StyleSheet.flatten(screen.getByTestId("month-day-2026-11-19").props.style).borderWidth).toBeUndefined();
   });
 
   it("tocar un día avisa con su fecha", () => {
