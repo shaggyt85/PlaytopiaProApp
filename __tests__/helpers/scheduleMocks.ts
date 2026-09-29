@@ -1,0 +1,23 @@
+import { useSessionStore } from "@/shared/store/sessionStore";
+
+// Lo que comparten los tests de la agenda. Jest obliga a escribir el
+// `jest.mock` en cada fichero, pero la fábrica es esta:
+//
+//   jest.mock("@/features/schedule/services/scheduleService", () =>
+//     require("../../../helpers/scheduleMocks").scheduleServiceModule(),
+//   );
+
+/** El módulo del servicio de la agenda con `getClasses` simulado. */
+export const scheduleServiceModule = () => ({
+  ...jest.requireActual("@/features/schedule/services/scheduleService"),
+  scheduleService: { getClasses: jest.fn() },
+});
+
+/** El módulo de «Mis clubes» con `getMyClubs` simulado. */
+export const myClubsServiceModule = () => ({
+  ...jest.requireActual("@/shared/services/myClubsService"),
+  myClubsService: { getMyClubs: jest.fn() },
+});
+
+/** La sesión abierta del profesor de ejemplo (las claves de la agenda llevan su id). */
+export const signInTeacher = () => useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 });

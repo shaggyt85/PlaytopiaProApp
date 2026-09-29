@@ -2,6 +2,8 @@ import type { t as translate } from "@/shared/config/i18n";
 import type { TranslationKey } from "@/shared/locales";
 import { formatMonthYear, formatWeekdayDay } from "@/shared/utils/formatDate";
 
+import type { ClubOf } from "../hooks/useScheduleClubs";
+
 import { dayLabel } from "./dayLabel";
 import { addDays, addMonths, DAYS_PER_WEEK } from "./scheduleDates";
 import { dayToolbarLabel, monthToolbarLabel, weekRange, weekToolbarLabel } from "./toolbarLabel";
@@ -24,6 +26,26 @@ export const SCHEDULE_VIEWS = [
 export type ScheduleView = (typeof SCHEDULE_VIEWS)[number]["key"];
 
 type Translate = typeof translate;
+
+/**
+ * Lo que reciben las tres vistas (Día, Semana y Mes), lo mismo para todas: así
+ * `ScheduleAgenda` las pinta desde un mapa. Solo lo que no se puede deducir: si
+ * el día es hoy sale de `date` y `today`.
+ */
+export interface ScheduleViewProps {
+  /** El reloj de la pantalla (`useForegroundNow` cada minuto): el instante. */
+  now: number;
+  /** «Ahora» como hora de pared (`wallNow(now)`), calculado una vez. */
+  nowWall: number;
+  /** El día elegido de la agenda, `YYYY-MM-DD`. */
+  date: string;
+  today: string;
+  /** La próxima clase según Core (`useNextClass`), la misma de su tarjeta. */
+  nextClassId: number | undefined;
+  clubOf: ClubOf;
+  /** Tocar un día lo elige en la agenda (estable: `useSelectedDay().select`). */
+  onSelect: (date: string) => void;
+}
 
 /** Todo lo que cambia con cada vista, junto. */
 interface ScheduleViewConfig {

@@ -14,6 +14,7 @@ export { MonthGrid } from "./MonthGrid";
 export { MonthSchedule } from "./MonthSchedule";
 export { NextClassCard } from "./NextClassCard";
 export { NowLine } from "./NowLine";
+export { ScheduleAgenda } from "./ScheduleAgenda";
 export { ScheduleClassBlock } from "./ScheduleClassBlock";
 export { ScheduleDataState } from "./ScheduleDataState";
 export { ScheduleToolbar } from "./ScheduleToolbar";

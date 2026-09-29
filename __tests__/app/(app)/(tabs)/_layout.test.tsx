@@ -1,5 +1,5 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, renderRouter, screen } from "expo-router/testing-library";
+import { fireEvent, renderRouter, screen, within } from "expo-router/testing-library";
 import type { ReactNode } from "react";
 
 import CalendarRoute from "@/app/(app)/(tabs)/calendar";
@@ -52,7 +52,9 @@ describe("menú inferior", () => {
     renderRouter(routes, { initialUrl: "/", wrapper });
 
     expect(screen.getByTestId("schedule-screen")).toBeTruthy();
-    expect(screen.getAllByRole("tab").map((tab) => tab.props.accessibilityLabel)).toEqual([
+    // Las del menú: la agenda tiene además su selector Día · Semana · Mes.
+    const menu = within(screen.getByTestId("tab-bar"));
+    expect(menu.getAllByRole("tab").map((tab) => tab.props.accessibilityLabel)).toEqual([
       "Agenda",
       "Grupos",
       "Red",
@@ -91,6 +93,6 @@ describe("menú inferior", () => {
     fireEvent.press(screen.getByRole("tab", { name: "Agenda" }));
 
     expect(screen.getByTestId("schedule-screen")).toBeTruthy();
-    expect(screen.getAllByRole("tab")).toHaveLength(4);
+    expect(within(screen.getByTestId("tab-bar")).getAllByRole("tab")).toHaveLength(4);
   });
 });

@@ -7,7 +7,7 @@ import { wallAsUtcMs } from "@/shared/utils/clubClock";
 
 const NOW = wallAsUtcMs("2026-10-05", "15:21:00");
 
-function setup(view: ScheduleView = "day", withViews = true) {
+function setup(view: ScheduleView = "day") {
   const onPrevious = jest.fn();
   const onNext = jest.fn();
   const onViewChange = jest.fn();
@@ -19,7 +19,7 @@ function setup(view: ScheduleView = "day", withViews = true) {
       nowWall={NOW}
       onPrevious={onPrevious}
       onNext={onNext}
-      onViewChange={withViews ? onViewChange : undefined}
+      onViewChange={onViewChange}
     />,
   );
   return { ...utils, onPrevious, onNext, onViewChange };
@@ -55,6 +55,7 @@ describe("ScheduleToolbar", () => {
         nowWall={NOW}
         onPrevious={jest.fn()}
         onNext={jest.fn()}
+        onViewChange={jest.fn()}
       />,
     );
     expect(screen.getByText("octubre de 2026")).toBeTruthy();
@@ -70,12 +71,6 @@ describe("ScheduleToolbar", () => {
     expect(onViewChange).toHaveBeenCalledWith("month");
   });
 
-  it("sin onViewChange no hay selector", () => {
-    setup("day", false);
-
-    expect(screen.queryByRole("tablist")).toBeNull();
-  });
-
   it("anuncia a dónde se llega al cambiar, sin la hora; al abrir, no", () => {
     const announce = jest.spyOn(AccessibilityInfo, "announceForAccessibility").mockImplementation(() => undefined);
     const { rerender } = setup();
@@ -89,6 +84,7 @@ describe("ScheduleToolbar", () => {
         nowWall={NOW}
         onPrevious={jest.fn()}
         onNext={jest.fn()}
+        onViewChange={jest.fn()}
       />,
     );
 

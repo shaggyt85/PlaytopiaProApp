@@ -6,21 +6,20 @@ import { useScheduleDays } from "@/features/schedule/hooks/useScheduleDays";
 import { scheduleService } from "@/features/schedule/services/scheduleService";
 import { createQueryClient } from "@/shared/config/queryClient";
 import { darkTheme } from "@/shared/config/theme";
-import { useSessionStore } from "@/shared/store/sessionStore";
 
 import { scheduleClass, scheduleResponse } from "../../../helpers/scheduleFactories";
+import { signInTeacher } from "../../../helpers/scheduleMocks";
 
-jest.mock("@/features/schedule/services/scheduleService", () => ({
-  ...jest.requireActual("@/features/schedule/services/scheduleService"),
-  scheduleService: { getClasses: jest.fn() },
-}));
+jest.mock("@/features/schedule/services/scheduleService", () =>
+  require("../../../helpers/scheduleMocks").scheduleServiceModule(),
+);
 
 const wave = { label: "Wave", colors: darkTheme.clubColors[2] };
 const reset = { label: "Reset", colors: darkTheme.clubColors[1] };
 const clubOf = ({ club_id }: { club_id: number }) => (club_id === 7 ? wave : reset);
 
 describe("useScheduleDays", () => {
-  beforeEach(() => useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 }));
+  beforeEach(signInTeacher);
 
   it("las clases de cada día y sus puntos, con el color de cada club", async () => {
     jest.mocked(scheduleService.getClasses).mockResolvedValue(

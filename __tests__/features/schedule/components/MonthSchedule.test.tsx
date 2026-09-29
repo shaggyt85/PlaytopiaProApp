@@ -3,16 +3,16 @@ import { useState } from "react";
 
 import { MonthSchedule } from "@/features/schedule/components/MonthSchedule";
 import { scheduleService } from "@/features/schedule/services/scheduleService";
+import { wallNow } from "@/features/schedule/utils/scheduleDates";
 import { darkTheme } from "@/shared/config/theme";
-import { useSessionStore } from "@/shared/store/sessionStore";
 
 import { renderWithProviders } from "../../../helpers/renderWithProviders";
+import { signInTeacher } from "../../../helpers/scheduleMocks";
 import { scheduleClass, scheduleResponse } from "../../../helpers/scheduleFactories";
 
-jest.mock("@/features/schedule/services/scheduleService", () => ({
-  ...jest.requireActual("@/features/schedule/services/scheduleService"),
-  scheduleService: { getClasses: jest.fn() },
-}));
+jest.mock("@/features/schedule/services/scheduleService", () =>
+  require("../../../helpers/scheduleMocks").scheduleServiceModule(),
+);
 
 // Miércoles 18 de noviembre de 2026 a las 10:00 del teléfono.
 const NOW = new Date(2026, 10, 18, 10, 0).getTime();
@@ -25,12 +25,22 @@ const friday = scheduleClass({ id: 3, class_date: "2026-11-20", class_time: "18:
 // La pantalla guarda el día elegido; aquí, un estado que hace lo mismo.
 function Harness() {
   const [date, setDate] = useState(TODAY);
-  return <MonthSchedule now={NOW} date={date} today={TODAY} clubOf={clubOf} onSelect={setDate} />;
+  return (
+    <MonthSchedule
+      now={NOW}
+      nowWall={wallNow(NOW)}
+      date={date}
+      today={TODAY}
+      nextClassId={undefined}
+      clubOf={clubOf}
+      onSelect={setDate}
+    />
+  );
 }
 
 describe("MonthSchedule", () => {
   beforeEach(() => {
-    useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 });
+    signInTeacher();
     jest.mocked(scheduleService.getClasses).mockResolvedValue(scheduleResponse({ classes: [morning, evening, friday] }));
   });
 

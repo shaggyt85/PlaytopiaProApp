@@ -30,8 +30,7 @@ interface ScheduleToolbarProps {
   nowWall: number;
   onPrevious: () => void;
   onNext: () => void;
-  /** Sin él no hay selector de vistas (mientras solo existe la vista Día). */
-  onViewChange?: (view: ScheduleView) => void;
+  onViewChange: (view: ScheduleView) => void;
 }
 
 /**
@@ -69,15 +68,7 @@ export function ScheduleToolbar({
       <Text variant="meta" color="textSecondary" numberOfLines={1} style={styles.label}>
         {toolbarLabel(view, date, nowWall, t)}
       </Text>
-      {onViewChange ? (
-        <SegmentedTabs
-          options={options}
-          value={view}
-          onChange={onViewChange}
-          variant="compact"
-          testID="schedule-views"
-        />
-      ) : null}
+      <SegmentedTabs options={options} value={view} onChange={onViewChange} variant="compact" testID="schedule-views" />
     </View>
   );
 }

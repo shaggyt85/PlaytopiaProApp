@@ -1,12 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 import { View } from "react-native";
 
-import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
-
-import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import { useScheduleDays } from "../../hooks/useScheduleDays";
 import type { ScheduleClass } from "../../schemas/schedule.schema";
-import { dayTense, visibleWeekDays, wallNow, weekDays } from "../../utils/scheduleDates";
+import { dayTense, visibleWeekDays, weekDays } from "../../utils/scheduleDates";
+import type { ScheduleViewProps } from "../../utils/scheduleViews";
 import { ScheduleDataState } from "../ScheduleDataState";
 import { WeekDayCard } from "../WeekDayCard";
 import { WeekFilter } from "../WeekFilter";
@@ -17,17 +15,6 @@ import { useStyles } from "./WeekSchedule.styles";
 /** Un día sin clases: siempre la misma lista, para que `memo` no vea un cambio. */
 const NO_CLASSES: readonly ScheduleClass[] = [];
 
-interface WeekScheduleProps {
-  /** El reloj de la pantalla (`useForegroundNow` cada minuto). */
-  now: number;
-  /** El día elegido de la agenda: su semana es la que se ve. */
-  date: string;
-  today: string;
-  clubOf: (sede: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
-  /** Tocar un día también lo elige en la agenda (al pasar a Día, se ve ese). */
-  onSelect: (date: string) => void;
-}
-
 /**
  * La vista Semana: la tira de 7 días y una tarjeta por día, de hoy al domingo en
  * la semana actual y los 7 días en las demás. Tocar un día deja solo ese, con
@@ -35,9 +22,10 @@ interface WeekScheduleProps {
  *
  * El día tocado solo vale en su semana (\`weekDays(date).includes\`): al cambiar
  * de semana con las flechas deja de valer solo, sin un efecto que lo borre.
- * Los datos salen de la misma respuesta del mes que Día.
+ * Los datos salen de la misma respuesta del mes que Día. Tocar un día también lo
+ * elige en la agenda: al pasar a Día, se ve ese.
  */
-export function WeekSchedule({ now, date, today, clubOf, onSelect }: WeekScheduleProps) {
+export function WeekSchedule({ nowWall, date, today, clubOf, onSelect }: ScheduleViewProps) {
   const styles = useStyles();
   const [picked, setPicked] = useState<string | null>(null);
   const { byDate, dots, hasData, error, refetch } = useScheduleDays(date, clubOf);
@@ -46,7 +34,6 @@ export function WeekSchedule({ now, date, today, clubOf, onSelect }: WeekSchedul
   const filter = picked && days.includes(picked) && picked !== today ? picked : null;
   const active = filter ?? (days.includes(today) ? today : null);
   const visible = visibleWeekDays(days, today, filter);
-  const nowWall = wallNow(now);
 
   const onPick = useCallback(
     (day: string) => {

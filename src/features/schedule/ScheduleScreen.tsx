@@ -11,7 +11,7 @@ import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 import { session } from "@/shared/services/session";
 
 import { useStyles } from "./ScheduleScreen.styles";
-import { DaySchedule, NextClassCard } from "./components";
+import { NextClassCard, ScheduleAgenda } from "./components";
 import { useForegroundNow } from "./hooks/useForegroundNow";
 import { useNextClass } from "./hooks/useNextClass";
 import { useScheduleClubs } from "./hooks/useScheduleClubs";
@@ -24,8 +24,8 @@ const selectName = (profile: TeacherProfile) => profile.name;
 
 /**
  * Agenda (Hoy): saludo según la hora, el nombre del profesor y la fecha, con la
- * hora del móvil; debajo, la próxima clase (si hay) y la vista Día. Si el perfil
- * no llega, la cabecera sale igual sin el nombre.
+ * hora del móvil; debajo, la próxima clase (si hay) y la agenda, con sus vistas
+ * Día, Semana y Mes. Si el perfil no llega, la cabecera sale igual sin el nombre.
  *
  * Provisional: la campana se ve pero aún no hace nada (las notificaciones
  * vendrán después) y el botón de cerrar sesión sigue hasta que exista Perfil.
@@ -38,7 +38,7 @@ export function ScheduleScreen() {
   const header = useTodayHeader(now);
   const today = localToday(now);
   const nextClass = useNextClass(today, now);
-  const { clubOf } = useScheduleClubs();
+  const { clubs, clubOf } = useScheduleClubs();
   const name = useTeacherProfile({ select: selectName });
 
   return (
@@ -56,7 +56,7 @@ export function ScheduleScreen() {
             <NextClassCard item={nextClass} club={clubOf(nextClass)} today={today} />
           </View>
         ) : null}
-        <DaySchedule now={now} nextClassId={nextClass?.id} clubOf={clubOf} />
+        <ScheduleAgenda now={now} today={today} nextClassId={nextClass?.id} clubs={clubs} clubOf={clubOf} />
         <View style={styles.signOut}>
           <Button title={t("common.signOut")} variant="secondary" onPress={() => session.end()} />
         </View>

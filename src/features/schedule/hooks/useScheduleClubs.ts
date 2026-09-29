@@ -16,6 +16,9 @@ export interface ScheduleClub {
   colors: ColorPair;
 }
 
+/** El club de una clase por su sede (`useScheduleClubs().clubOf`). */
+export type ClubOf = (sede: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
+
 /** Un club de «Mis clubes» en la leyenda: su sede (`sedeKey`), nombre y color. */
 export interface LegendClub extends ScheduleClub {
   key: string;
@@ -43,8 +46,8 @@ export function useScheduleClubs(service: IMyClubsService = myClubsService) {
     return { clubs: list, byKey: new Map<string, ScheduleClub>(list.map((club) => [club.key, club])) };
   }, [data, theme.clubColors]);
 
-  const clubOf = useCallback(
-    (sede: Pick<SchoolCard, "db_id" | "club_id">): ScheduleClub =>
+  const clubOf = useCallback<ClubOf>(
+    (sede): ScheduleClub =>
       byKey.get(sedeKey(sede)) ?? { label: "", colors: theme.clubColorUnknown },
     [byKey, theme.clubColorUnknown],
   );
