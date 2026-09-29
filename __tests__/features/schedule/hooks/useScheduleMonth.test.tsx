@@ -6,7 +6,7 @@ import { useScheduleMonth } from "@/features/schedule/hooks/useScheduleMonth";
 import { createQueryClient } from "@/shared/config/queryClient";
 import { useSessionStore } from "@/shared/store/sessionStore";
 
-import { nextClass, scheduleClass, scheduleResponse } from "../../../helpers/scheduleFactories";
+import { scheduleClass, scheduleResponse } from "../../../helpers/scheduleFactories";
 import { settle } from "../../../helpers/settle";
 
 const monday = scheduleClass({ id: 1, class_date: "2026-10-05", class_time: "09:00:00" });
@@ -26,15 +26,12 @@ function setup(getClasses: jest.Mock, date = "2026-10-05") {
 describe("useScheduleMonth", () => {
   beforeEach(() => useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 }));
 
-  it("pide la cuadrícula del mes y da las clases de ese día y la próxima", async () => {
-    const getClasses = jest
-      .fn()
-      .mockResolvedValue(scheduleResponse({ classes: [monday, mondayLater, tuesday], next_class: nextClass({ id: 2 }) }));
+  it("pide la cuadrícula del mes y da las clases de ese día", async () => {
+    const getClasses = jest.fn().mockResolvedValue(scheduleResponse({ classes: [monday, mondayLater, tuesday] }));
     const { result } = setup(getClasses);
 
     await waitFor(() => expect(result.current.dayClasses).toEqual([monday, mondayLater]));
     expect(getClasses).toHaveBeenCalledWith("2026-09-28", "2026-11-08");
-    expect(result.current.nextClass?.id).toBe(2);
   });
 
   it("cambiar de día dentro del mes no vuelve a pedir nada", async () => {
@@ -59,13 +56,12 @@ describe("useScheduleMonth", () => {
     await waitFor(() => expect(getClasses).toHaveBeenLastCalledWith("2026-10-26", "2026-12-06"));
   });
 
-  it("un día sin clases da la lista vacía; sin próxima, null", async () => {
-    const getClasses = jest.fn().mockResolvedValue(scheduleResponse({ classes: [tuesday], next_class: null }));
+  it("un día sin clases da la lista vacía", async () => {
+    const getClasses = jest.fn().mockResolvedValue(scheduleResponse({ classes: [tuesday] }));
     const { result } = setup(getClasses);
 
     await waitFor(() => expect(result.current.isPending).toBe(false));
     expect(result.current.dayClasses).toEqual([]);
-    expect(result.current.nextClass).toBeNull();
   });
 
   it("un día sin clases da siempre la misma lista vacía, para no repintar", async () => {

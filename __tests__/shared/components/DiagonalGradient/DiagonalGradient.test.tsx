@@ -1,6 +1,7 @@
 import { render } from "@testing-library/react-native";
 
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
+import { gradientPoints } from "@/shared/utils/gradientPoints";
 
 const mockGradient = jest.fn();
 jest.mock("expo-linear-gradient", () => ({
@@ -22,5 +23,11 @@ describe("DiagonalGradient", () => {
         style: { flex: 1 },
       }),
     );
+  });
+
+  it("con otro ángulo, sus puntos", () => {
+    render(<DiagonalGradient colors={["#000", "#fff"]} angle={160} />);
+
+    expect(mockGradient).toHaveBeenCalledWith(expect.objectContaining(gradientPoints(160)));
   });
 });

@@ -11,7 +11,7 @@ import { serverNow } from "@/shared/utils/serverClock";
 import { teacherProfile } from "../../helpers/authFactories";
 import { schoolCard } from "../../helpers/networkFactories";
 import { renderWithProviders } from "../../helpers/renderWithProviders";
-import { scheduleClass, scheduleResponse } from "../../helpers/scheduleFactories";
+import { nextClass, scheduleClass, scheduleResponse } from "../../helpers/scheduleFactories";
 
 jest.mock("@/shared/services/session", () => ({
   session: { end: jest.fn().mockResolvedValue(undefined) },
@@ -40,8 +40,27 @@ describe("ScheduleScreen", () => {
     jest.mocked(teacherProfileService.get).mockResolvedValue(teacherProfile());
     jest.mocked(myClubsService.getMyClubs).mockResolvedValue({ clubs: [schoolCard(4, 7)] });
     jest.mocked(scheduleService.getClasses).mockResolvedValue(
-      scheduleResponse({ classes: [scheduleClass({ id: 31, class_date: "2026-11-20", class_time: "16:00:00" })] }),
+      scheduleResponse({
+        classes: [scheduleClass({ id: 31, class_date: "2026-11-20", class_time: "16:00:00" })],
+        next_class: nextClass({ id: 31, class_date: "2026-11-20", class_time: "16:00:00", starts_at: "2026-11-20T15:00:00Z" }),
+      }),
     );
+  });
+
+  it("encima de la agenda, la tarjeta de la próxima clase, que es la marcada en la tira", async () => {
+    renderWithProviders(<ScheduleScreen />);
+
+    expect(await screen.findByTestId("next-class")).toBeTruthy();
+    expect(screen.getByText("Próxima clase")).toBeTruthy();
+    expect(screen.getByTestId("class-31-next")).toBeTruthy();
+  });
+
+  it("sin próxima clase, no hay tarjeta", async () => {
+    jest.mocked(scheduleService.getClasses).mockResolvedValue(scheduleResponse({ classes: [], next_class: null }));
+    renderWithProviders(<ScheduleScreen />);
+
+    expect(await screen.findByText("Día libre · sin compromisos")).toBeTruthy();
+    expect(screen.queryByTestId("next-class")).toBeNull();
   });
 
   it("debajo de la cabecera, la vista Día de hoy con sus clases", async () => {

@@ -7,7 +7,7 @@ import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 import { myClubsService, type IMyClubsService } from "@/shared/services/myClubsService";
 import { sedeKey } from "@/shared/utils/sedeKey";
 
-import { clubColor } from "../utils/clubColor";
+import { colorAt } from "../utils/colorAt";
 
 /** Lo que la agenda enseña del club de una clase. */
 export interface ScheduleClub {
@@ -32,7 +32,7 @@ export function useScheduleClubs(service: IMyClubsService = myClubsService) {
       new Map<string, ScheduleClub>(
         (data?.clubs ?? []).map((club, index) => [
           sedeKey(club),
-          { label: club.club_name ?? club.name, colors: clubColor(theme.clubColors, index) },
+          { label: club.club_name ?? club.name, colors: colorAt(theme.clubColors, index) },
         ]),
       ),
     [data, theme.clubColors],

@@ -134,6 +134,13 @@ const de: Translations = {
       evening: "Guten Abend, Trainer",
     },
     notifications: "Benachrichtigungen",
+    /** La tarjeta de la próxima clase, encima de la agenda. */
+    next: {
+      title: "Nächster Kurs",
+      tomorrow: "Morgen",
+      level: "Niveau %{range}",
+      students: "%{taken}/%{max} Schüler",
+    },
     day: {
       today: "Heute · %{day}",
       /** La barra de las flechas: el día que se ve y la hora de ahora. */

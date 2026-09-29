@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react-native";
+import { render, screen, within } from "@testing-library/react-native";
 import { StyleSheet } from "react-native";
 
 import { ScheduleClassBlock } from "@/features/schedule/components/ScheduleClassBlock";
@@ -64,8 +64,8 @@ describe("ScheduleClassBlock", () => {
   it("la pastilla del club lleva delante un punto de su color", () => {
     setup();
 
-    const dot = screen.getByTestId("class-31-club").children[0] as { props: { style: unknown } };
-    expect(StyleSheet.flatten(dot.props.style as never)).toMatchObject({ backgroundColor: club.colors.color });
+    const dot = within(screen.getByTestId("class-31-club")).getByTestId("club-dot");
+    expect(StyleSheet.flatten(dot.props.style)).toMatchObject({ backgroundColor: club.colors.color });
   });
 
   it("la próxima lleva su marca, un aro claro y el brillo de su club", () => {

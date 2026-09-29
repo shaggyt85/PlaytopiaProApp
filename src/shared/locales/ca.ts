@@ -134,6 +134,13 @@ const ca: Translations = {
       evening: "Bona nit, entrenador",
     },
     notifications: "Notificacions",
+    /** La tarjeta de la próxima clase, encima de la agenda. */
+    next: {
+      title: "Propera classe",
+      tomorrow: "Demà",
+      level: "Nivell %{range}",
+      students: "%{taken}/%{max} alumnes",
+    },
     day: {
       today: "Avui · %{day}",
       /** La barra de las flechas: el día que se ve y la hora de ahora. */

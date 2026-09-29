@@ -3,9 +3,10 @@ import { View } from "react-native";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { LoadingState } from "@/shared/components/LoadingState";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 
 import { useAnnounceOnChange } from "../../hooks/useAnnounceOnChange";
-import { useScheduleClubs } from "../../hooks/useScheduleClubs";
+import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import { useScheduleMonth } from "../../hooks/useScheduleMonth";
 import { useSelectedDay } from "../../hooks/useSelectedDay";
 import { dayLabel } from "../../utils/dayLabel";
@@ -20,6 +21,9 @@ import { useStyles } from "./DaySchedule.styles";
 interface DayScheduleProps {
   /** El reloj de la pantalla (`useForegroundNow` cada minuto). */
   now: number;
+  /** La próxima clase (`useNextClass`), la misma de su tarjeta. */
+  nextClassId: number | undefined;
+  clubOf: (sede: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
 }
 
 /**
@@ -28,12 +32,11 @@ interface DayScheduleProps {
  * El error solo se enseña si no hay nada que pintar: si falla una recarga, se
  * siguen viendo las clases.
  */
-export function DaySchedule({ now }: DayScheduleProps) {
+export function DaySchedule({ now, nextClassId, clubOf }: DayScheduleProps) {
   const styles = useStyles();
   const { t } = useTranslation();
   const { date, isToday, goPrevious, goNext } = useSelectedDay(localToday(now));
-  const { dayClasses, nextClass, hasData, error, refetch } = useScheduleMonth(date);
-  const { clubOf } = useScheduleClubs();
+  const { dayClasses, hasData, error, refetch } = useScheduleMonth(date);
   const label = dayLabel(date, isToday, t);
   useAnnounceOnChange(label);
 
@@ -42,7 +45,7 @@ export function DaySchedule({ now }: DayScheduleProps) {
   else if (dayClasses.length === 0) content = <FreeDayCard />;
   else
     content = (
-      <DayTimeline classes={dayClasses} isToday={isToday} now={now} nextClassId={nextClass?.id} clubOf={clubOf} />
+      <DayTimeline classes={dayClasses} isToday={isToday} now={now} nextClassId={nextClassId} clubOf={clubOf} />
     );
 
   return (

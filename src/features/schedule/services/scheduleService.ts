@@ -6,6 +6,8 @@ import { httpClient } from "@/shared/services/httpClient";
 
 import { ScheduleResponseSchema, type ScheduleResponse } from "../schemas/schedule.schema";
 
+import { monthGrid } from "../utils/scheduleDates";
+
 import { SCHEDULE_ENDPOINTS } from "./scheduleEndpoints";
 
 /**
@@ -54,3 +56,17 @@ export const scheduleQuery = (
     queryFn: teacherId === undefined ? skipToken : () => service.getClasses(from, to),
     ...CachePolicy.LIVE,
   });
+
+/**
+ * La agenda del mes de `date`: la cuadrícula de 42 días (`monthGrid`). La usan
+ * la vista Día (el mes del día que se ve) y la próxima clase (el mes de hoy):
+ * cuando coinciden, es la misma caché.
+ */
+export const monthScheduleQuery = (
+  teacherId: number | undefined,
+  date: string,
+  service: IScheduleService = scheduleService,
+) => {
+  const { from, to } = monthGrid(date);
+  return scheduleQuery(teacherId, from, to, service);
+};

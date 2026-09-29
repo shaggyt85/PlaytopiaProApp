@@ -1,8 +1,11 @@
+export { ClubDot } from "./ClubDot";
 export { DayHeader } from "./DayHeader";
 export { DaySchedule } from "./DaySchedule";
 export { DayTimeline } from "./DayTimeline";
 export { DayToolbar } from "./DayToolbar";
 export { FreeDayCard } from "./FreeDayCard";
 export { HourGrid } from "./HourGrid";
+export { NextClassCard } from "./NextClassCard";
 export { NowLine } from "./NowLine";
 export { ScheduleClassBlock } from "./ScheduleClassBlock";
+export { MAX_AVATARS, StudentAvatars } from "./StudentAvatars";

@@ -61,6 +61,8 @@ const typography = {
    * del prototipo, que lo usa 27 veces.
    */
   badge: { fontFamily: FONTS.bold, fontSize: 9, letterSpacing: 0.5, textTransform: "uppercase" },
+  /** Iniciales en el círculo de un alumno (`font-display font-bold text-[10px]` del `CoachAvatar` pequeño). */
+  avatarInitials: { fontFamily: FONTS.display, fontSize: 10 },
   /** Lema bajo la marca (splash). */
   tagline: { fontFamily: FONTS.regular, fontSize: 14, letterSpacing: 1 },
   button: { fontFamily: FONTS.bold, fontSize: 16 },

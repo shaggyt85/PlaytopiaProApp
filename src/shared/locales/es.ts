@@ -136,6 +136,13 @@ const es = {
       evening: "Buenas noches, entrenador",
     },
     notifications: "Notificaciones",
+    /** La tarjeta de la próxima clase, encima de la agenda. */
+    next: {
+      title: "Próxima clase",
+      tomorrow: "Mañana",
+      level: "Nivel %{range}",
+      students: "%{taken}/%{max} alumnos",
+    },
     day: {
       today: "Hoy · %{day}",
       /** La barra de las flechas: el día que se ve y la hora de ahora. */

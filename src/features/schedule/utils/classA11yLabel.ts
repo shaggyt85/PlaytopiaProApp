@@ -1,5 +1,6 @@
 import type { t as translate } from "@/shared/config/i18n";
 import { formatClubTime } from "@/shared/utils/formatDate";
+import { joinParts } from "@/shared/utils/joinParts";
 
 import type { ScheduleClass } from "../schemas/schedule.schema";
 
@@ -23,14 +24,16 @@ export function classA11yLabel(
   status: ClassStatus,
   t: typeof translate,
 ): string {
-  const parts = [
-    c.title,
-    formatClubTime(c.class_time),
-    t("schedule.day.a11y.duration", { count: c.duration_minutes }),
-    c.track_name,
-    clubLabel,
-    t("schedule.day.a11y.seats", { taken: c.current_participants, max: c.max_participants }),
-    status === "upcoming" ? "" : t(STATUS_KEY[status]),
-  ];
-  return parts.filter(Boolean).join(", ");
+  return joinParts(
+    [
+      c.title,
+      formatClubTime(c.class_time),
+      t("schedule.day.a11y.duration", { count: c.duration_minutes }),
+      c.track_name,
+      clubLabel,
+      t("schedule.day.a11y.seats", { taken: c.current_participants, max: c.max_participants }),
+      status === "upcoming" ? "" : t(STATUS_KEY[status]),
+    ],
+    ", ",
+  );
 }
