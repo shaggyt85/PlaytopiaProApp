@@ -247,8 +247,10 @@ Tabla viva: se actualiza cada vez que una pantalla empieza a usar un endpoint o 
 | PATCH | `/api/UserTeacher/password` | profile | real |
 | GET | `/api/MobileTeacher/avatar` | profile | real |
 | POST | `/api/MobileTeacher/UploadMobileTeacherAvatar` (multipart, campo `avatarFile`) | profile | real |
+| GET | `/api/MobileTeacher/clubs` | network («Mis clubes») | real |
+| GET | `/api/MobileTeacher/schools?page=&size=` | network («Cerca de mí») | real |
 
-Clases, alumnos, asistencia, calendario y la lista de clubes del profesor **todavía no tienen endpoints `Mobile`** en Core: se construyen con la regla siguiente.
+Clases, alumnos, asistencia y calendario **todavía no tienen endpoints `Mobile`** en Core: se construyen con la regla siguiente.
 
 ### Si el endpoint no existe o no devuelve lo necesario: mock + petición a Core
 
