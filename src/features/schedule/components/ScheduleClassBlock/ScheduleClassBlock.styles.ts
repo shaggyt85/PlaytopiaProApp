@@ -5,22 +5,29 @@ import { withAlpha } from "@/shared/utils/color";
 
 /** Opacidad de una clase que ya terminó (`opacity-50`). */
 export const PAST_OPACITY = 0.5;
+/** El punto del color del club delante de su nombre (el 🟢 de la captura). */
+const CLUB_DOT = 8;
 
 export const useStyles = makeStyles((theme) => ({
   // Hueco entre tarjetas: el `- 4` de su alto y entre columnas.
   slot: { position: "absolute", paddingRight: theme.spacing.xs, paddingBottom: theme.spacing.xs },
   past: { opacity: PAST_OPACITY },
-  // `rounded-2xl p-2.5`, con el degradado de su club.
+  // `rounded-2xl p-2.5`, con el degradado de su club. Sin `overflow: hidden`:
+  // recortaría el brillo de la próxima; el degradado lleva su propio radio.
   card: {
     flex: 1,
-    overflow: "hidden",
     padding: theme.spacing.sm + theme.spacing.xs / 2,
     borderRadius: theme.radius.xxl,
   },
-  fill: StyleSheet.absoluteFill,
+  // La próxima, resaltada como en la captura: un aro claro y el brillo de su club
+  // (el brillo lo pone el componente, con el color del club).
+  next: { borderWidth: 2, borderColor: withAlpha(theme.colors.onPrimary, 0.35) },
+  fill: { ...StyleSheet.absoluteFill, borderRadius: theme.radius.xxl },
   header: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", gap: theme.spacing.sm },
   title: { flexShrink: 1 },
   meta: { marginTop: theme.spacing.xs / 2 },
+  clubPill: { flexDirection: "row", alignItems: "center", gap: theme.spacing.xs, flexShrink: 1 },
+  clubDot: { width: CLUB_DOT, height: CLUB_DOT, borderRadius: CLUB_DOT / 2 },
   details: { flexDirection: "row", alignItems: "center", gap: theme.spacing.xs, marginTop: theme.spacing.xs },
   // `bg-black/30 rounded-full px-1.5 py-0.5` (el club) y `bg-background/30 ring-1`
   // (la marca «PRÓXIMA»): la tarjeta de fondo, oscurecida.

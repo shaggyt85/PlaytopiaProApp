@@ -617,7 +617,7 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 
 | Lo que llega de Core | Qué es | Cómo se trata |
 |---|---|---|
-| `class_date` + `class_time` (`"2026-09-26"`, `"18:00:00"`) | **Hora de pared del club**, sin zona: las 18:00 en la pista | Se muestra tal cual (`formatClubDate`, `formatClubTime`). **Nunca** se convierte con la zona del móvil |
+| `class_date` + `class_time` (`"2026-09-26"`, `"18:00:00"`) | **Hora de pared del club**, sin zona: las 18:00 en la pista | Se muestra tal cual (`formatClubDate`, `formatClubTime`, la hora siempre con dos cifras: «08:00», como el prototipo). **Nunca** se convierte con la zona del móvil |
 | Timestamps e ISO con `Z` (`created_at`, `payment_date`…) | Instante real | Se muestra en la zona del club (`formatInstant`, `toClubTime`) |
 
 - **Zona del club:** es por escuela (`db_id`), un identificador IANA. Core no la expone todavía a la app: se usa `DEFAULT_CLUB_TIMEZONE` (`Europe/Madrid`, el mismo valor por defecto que Core) y está pedida en `docs/endpoints-pendientes/clubs-timezone.md`. Todas las funciones reciben la zona como parámetro: cuando llegue, se pasa la de la escuela de la sucursal activa.
@@ -653,15 +653,15 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 - **Tokens de color** (`theme.colors`): `background` `#0C0B1A`, `surface`, `surfaceStrong`, `card`, `elevated`, `text`, `textSecondary`, `border`, `primary` (magenta `#EF1EC1`), `accent` (violeta `#A63DF8`), `success`, `warning`, `danger`, `glass` / `glassBorder` (campos), `glassPanel` (barra de pestañas), `field`, `option`, `overlay` (velo de modal), `sheetOverlay` (velo de panel inferior, al 60 %), `hairline` / `hairlineStrong` (líneas finas), `glowPrimary`.
 - **Acentos** (`theme.accents`): `gold`, `coral`, `sky` y `violet`, cada uno con su color y su degradado, para contadores y accesos rápidos.
 - **Degradados** (`theme.gradients`): `brand` (`#FF2FB5` → `#C122E0` → `#8434F4`, en diagonal: botón principal y pestaña activa), `ink` (tarjetas oscuras), `modal`, `imageVeil` (velo sobre una foto de fondo, de izquierda a derecha) y `disabled`.
-- **El de marca se pinta con `BrandGradient`** (`shared/components/`), que lleva los colores y el ángulo de 135°; con `inactive`, el mismo en gris. Nadie escribe ese `LinearGradient` a mano.
+- **Los degradados en diagonal (135°) se pintan con `DiagonalGradient`** (`shared/components/`), único sitio que decide el ángulo; los colores los pone quien lo usa, del tema. El de marca, con `BrandGradient`, que lleva sus colores (con `inactive`, el mismo en gris). Nadie escribe ese `LinearGradient` a mano: lo usan el botón principal, la tarjeta de los modales y el color de cada club en la agenda.
 - **Fondo de marca** (`BrandBackground`): el color de fondo con los tres resplandores radiales del prototipo (`theme.backdrop`), dibujados con `react-native-svg`.
-- **Brillos:** `glow(color)` da la sombra de brillo de cualquier color; `theme.shadows.glow` es la de marca.
+- **Brillos y sombras:** `glow(color)` da la sombra de brillo de cualquier color; `theme.shadows.glow` es la de marca. `halo(color)` es el resplandor sin desplazamiento (`shadow-[0_0_12px_…]`, la línea de «ahora») y `theme.shadows.lifted` la sombra de algo que flota (`shadow-lg`); los dos con `boxShadow`, que React Native pinta igual en iOS y Android.
 
 ### Fuentes y tipografía
 
 - **Sora** para títulos y marca, **Inter** para el resto. Solo se cargan los pesos que se usan (Inter 400, 500, 600 y 700; Sora 700 y 800), cada uno desde su subcarpeta (`@expo-google-fonts/inter/400Regular`): el índice del paquete haría `require` de los 18 pesos de Inter y Metro los metería todos en la app.
 - **Con fuentes propias el peso va en el nombre de la fuente, nunca en `fontWeight`** (en Android se ignora y sale la letra normal). `shared/config/fonts.ts` da los nombres por uso (`FONTS.regular`, `FONTS.semibold`, `FONTS.display`…) y cada variante de `theme.typography` lleva su `fontFamily`. Un test falla si alguna variante usa `fontWeight` o una fuente sin cargar.
-- **Nada de estilos de letra sueltos:** si hace falta un estilo nuevo, se añade una variante con nombre de uso (`strong`, `mark`, `tab`, `tagline`, `link`…).
+- **Nada de estilos de letra sueltos:** si hace falta un estilo nuevo, se añade una variante con nombre de uso (`strong`, `mark`, `tab`, `tagline`, `link`, `badge`…).
 - Las fuentes se cargan en `useAppReady`, con el idioma, la sesión y el logo: no hay salto de letra al aparecer. Si fallan, la app arranca con las del sistema.
 
 ### Iconos
@@ -690,7 +690,7 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 
 - **Solo tema oscuro por ahora:** la app está fijada en `userInterfaceStyle: "dark"` y `useTheme()` devuelve siempre `darkTheme`. Cuando se defina el claro, se añade `lightTheme` con las mismas claves y `useTheme()` elige con `useColorScheme()`, sin tocar los componentes.
 - **Estilos:** cada `<Comp>.styles.ts` exporta `useStyles = makeStyles((theme) => ({…}))` y el componente hace `const styles = useStyles()`.
-- **Componentes base** en `shared/components/<Comp>/`: `Text`, `Button` (`primary` con el degradado de marca, `solid`, `secondary`, `link`; ignora pulsaciones mientras está ocupado), `Input` (`glass` o `solid`), `Checkbox`, `FieldError`, `PhoneInput`, `DateInput`, `GenderSelector`, `BackButton`, `BrandBackground`, `BrandLogo`, `Screen`, `LoadingState`, `ErrorState`, `EmptyState`, `IconButton` (botón redondo con icono: la campana, la X de los paneles), `BottomSheet` y `BlurTarget` (paneles inferiores), los de cada pestaña (`TabScreen`, `TabScrollView`, `ScreenHeader`, `BrandWordmark`) y los del menú (`AppTabs`, `TabBar`, `TabButton`, `ComingSoonScreen`).
+- **Componentes base** en `shared/components/<Comp>/`: `Text`, `Button` (`primary` con el degradado de marca, `solid`, `secondary`, `link`; ignora pulsaciones mientras está ocupado), `Input` (`glass` o `solid`), `Checkbox`, `FieldError`, `PhoneInput`, `DateInput`, `GenderSelector`, `BackButton`, `BrandBackground`, `BrandLogo`, `Screen`, `LoadingState`, `ErrorState`, `EmptyState`, `IconButton` (botón redondo con icono: la campana, la X de los paneles), `Chip` (punto y texto sobre el color de marca: la sede en «Red de clubes» y la pastilla del día en la agenda), `DiagonalGradient`, `BottomSheet` y `BlurTarget` (paneles inferiores), los de cada pestaña (`TabScreen`, `TabScrollView`, `ScreenHeader`, `BrandWordmark`) y los del menú (`AppTabs`, `TabBar`, `TabButton`, `ComingSoonScreen`).
 - **Nada de `zIndex` en elementos que se desmontan** (botón de volver, splash, overlays): se colocan como último hijo y se pintan encima por orden. En Android, un hijo con `zIndex` que se desmonta durante una transición cierra la app (`IndexOutOfBoundsException` en `getChildDrawingOrder`).
 - **Accesibilidad mínima:** `accessibilityLabel` en los controles, roles (`tab`, `tablist`, `checkbox`…), áreas táctiles de al menos 44 y contraste suficiente.
 - **Responsive:** la app está bloqueada en vertical (`orientation: "portrait"`), pero en tablets y plegables Android 16 ignora el bloqueo. Las pantallas no dependen de un ancho fijo: `flex`, `useWindowDimensions`, `onLayout` y anchos máximos.

@@ -22,7 +22,7 @@ export function DayHeader({ date, isToday, classCount }: DayHeaderProps) {
 
   return (
     <View style={styles.container}>
-      <Chip label={isToday ? `${t("schedule.day.today")} · ${day}` : day} />
+      <Chip label={isToday ? t("schedule.day.today", { day }) : day} />
       <Text variant="meta" color="textSecondary">
         {t("schedule.day.classes", { count: classCount })}
       </Text>

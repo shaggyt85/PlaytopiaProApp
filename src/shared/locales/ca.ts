@@ -135,7 +135,7 @@ const ca: Translations = {
     },
     notifications: "Notificacions",
     day: {
-      today: "Avui",
+      today: "Avui · %{day}",
       classes: {
         one: "%{count} classe",
         other: "%{count} classes",

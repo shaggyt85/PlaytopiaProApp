@@ -135,7 +135,7 @@ const de: Translations = {
     },
     notifications: "Benachrichtigungen",
     day: {
-      today: "Heute",
+      today: "Heute · %{day}",
       classes: {
         one: "%{count} Kurs",
         other: "%{count} Kurse",

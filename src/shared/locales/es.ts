@@ -137,7 +137,7 @@ const es = {
     },
     notifications: "Notificaciones",
     day: {
-      today: "Hoy",
+      today: "Hoy · %{day}",
       classes: {
         one: "%{count} clase",
         other: "%{count} clases",

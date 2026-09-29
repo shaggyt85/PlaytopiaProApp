@@ -61,9 +61,27 @@ describe("ScheduleClassBlock", () => {
     expect(screen.getByText("Cantera Tarde")).toBeTruthy();
   });
 
-  it("la próxima lleva su marca; en curso, no", () => {
+  it("la pastilla del club lleva delante un punto de su color", () => {
+    setup();
+
+    const dot = screen.getByTestId("class-31-club").children[0] as { props: { style: unknown } };
+    expect(StyleSheet.flatten(dot.props.style as never)).toMatchObject({ backgroundColor: club.colors.color });
+  });
+
+  it("la próxima lleva su marca, un aro claro y el brillo de su club", () => {
     setup({ status: "next" });
+
     expect(screen.getByTestId("class-31-next")).toBeTruthy();
+    const card = StyleSheet.flatten(screen.getByTestId("class-31").children[0].props.style);
+    expect(card).toMatchObject({ borderWidth: 2, shadowColor: club.colors.color, backgroundColor: club.colors.color });
+  });
+
+  it("las demás, sin aro ni brillo", () => {
+    setup();
+
+    const card = StyleSheet.flatten(screen.getByTestId("class-31").children[0].props.style);
+    expect(card.borderWidth).toBeUndefined();
+    expect(card.shadowColor).toBeUndefined();
   });
 
   it("en curso, sin la marca de próxima", () => {

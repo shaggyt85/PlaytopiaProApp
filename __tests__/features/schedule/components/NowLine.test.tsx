@@ -14,4 +14,10 @@ describe("NowLine", () => {
     expect(StyleSheet.flatten(screen.getByTestId("now-line", hidden).props.style).top).toBe(96);
     expect(screen.getByText("09:30", hidden)).toBeTruthy();
   });
+
+  it("sin zIndex: se desmonta cuando el día no es hoy, y en Android eso cerraría la app", () => {
+    render(<NowLine top={0} wallMs={wallAsUtcMs("2026-10-05", "09:30:00")} />);
+
+    expect(StyleSheet.flatten(screen.getByTestId("now-line", hidden).props.style).zIndex).toBeUndefined();
+  });
 });

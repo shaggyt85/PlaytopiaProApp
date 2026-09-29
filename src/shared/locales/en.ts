@@ -135,7 +135,7 @@ const en: Translations = {
     },
     notifications: "Notifications",
     day: {
-      today: "Today",
+      today: "Today · %{day}",
       classes: {
         one: "%{count} class",
         other: "%{count} classes",

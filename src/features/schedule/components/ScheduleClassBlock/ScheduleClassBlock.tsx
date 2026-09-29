@@ -2,6 +2,7 @@ import { memo } from "react";
 import { View } from "react-native";
 
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
+import { glow } from "@/shared/config/theme";
 import { Text } from "@/shared/components/Text";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { formatClubTime } from "@/shared/utils/formatDate";
@@ -15,6 +16,10 @@ import type { BlockGeometry } from "../../utils/timelineGeometry";
 import { BLOCK_DETAIL_MIN_HEIGHT } from "../../utils/timelineMetrics";
 
 import { useStyles } from "./ScheduleClassBlock.styles";
+
+// En Android la sombra (`elevation`) solo se pinta con fondo: el del color del
+// club, que el degradado tapa.
+const nextGlow = (color: string) => ({ ...glow(color), backgroundColor: color });
 
 interface ScheduleClassBlockProps {
   item: ScheduleClass;
@@ -61,7 +66,7 @@ export const ScheduleClassBlock = memo(function ScheduleClassBlock({
       accessibilityLabel={classA11yLabel(item, club.label, status, t)}
       testID={`class-${item.id}`}
     >
-      <View style={styles.card}>
+      <View style={[styles.card, status === "next" && [styles.next, nextGlow(club.colors.color)]]}>
         <DiagonalGradient colors={club.colors.gradient} style={styles.fill} />
         <View style={styles.header}>
           <Text variant="mark" color="onPrimary" numberOfLines={1} style={styles.title}>
@@ -81,7 +86,8 @@ export const ScheduleClassBlock = memo(function ScheduleClassBlock({
         {geometry.height > BLOCK_DETAIL_MIN_HEIGHT ? (
           <View style={styles.details} testID={`class-${item.id}-details`}>
             {club.label ? (
-              <View style={styles.pill}>
+              <View style={[styles.pill, styles.clubPill]} testID={`class-${item.id}-club`}>
+                <View style={[styles.clubDot, { backgroundColor: club.colors.color }]} />
                 <Text variant="badge" color="onPrimary" numberOfLines={1}>
                   {club.label}
                 </Text>

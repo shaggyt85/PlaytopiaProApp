@@ -85,6 +85,18 @@ export const glow = (color: string) =>
     elevation: 6,
   }) as const;
 
+/**
+ * Resplandor alrededor de un elemento, sin desplazamiento (el
+ * `shadow-[0_0_12px_var(--coral)]` de Lovable): la línea de «ahora» de la
+ * agenda. Con `boxShadow`, que React Native pinta igual en iOS y Android.
+ */
+export const halo = (color: string) => ({ boxShadow: `0 0 12px ${color}` }) as const;
+
+/** Sombra de algo que flota sobre el contenido (el `shadow-lg` de Tailwind): la hora de la línea de «ahora». */
+const lifted = {
+  boxShadow: `0 10px 15px -3px ${withAlpha(BRAND.black, 0.1)}, 0 4px 6px -4px ${withAlpha(BRAND.black, 0.1)}`,
+} as const;
+
 const textGlow = {
   textShadowColor: withAlpha(BRAND.magenta, 0.5),
   textShadowOffset: { width: 0, height: 2 },
@@ -184,7 +196,7 @@ export const darkTheme = {
     { color: BRAND.backdropViolet, opacity: 0.32, x: 1, y: 0.05, reach: 0.55 },
     { color: BRAND.backdropPlum, opacity: 0.25, x: 0.5, y: 1.1, reach: 0.6 },
   ] as const,
-  shadows: { glow: glow(BRAND.glowMagenta), textGlow },
+  shadows: { glow: glow(BRAND.glowMagenta), textGlow, lifted },
   spacing,
   radius,
   typography,
