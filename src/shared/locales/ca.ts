@@ -138,6 +138,14 @@ const ca: Translations = {
       myClubs: "Els meus clubs",
       nearMe: "A prop meu",
     },
+    myClubs: {
+      emptyTitle: "Encara no treballes a cap club",
+      emptyMessage: "Mira a «A prop meu» les escoles a les quals et pots unir.",
+    },
+    nearMe: {
+      emptyTitle: "No hi ha escoles noves",
+      emptyMessage: "De moment no hi ha més escoles a les quals unir-te.",
+    },
   },
   phone: {
     label: "Número de telèfon",

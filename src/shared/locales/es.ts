@@ -140,6 +140,14 @@ const es = {
       myClubs: "Mis clubes",
       nearMe: "Cerca de mí",
     },
+    myClubs: {
+      emptyTitle: "Aún no trabajas en ningún club",
+      emptyMessage: "Mira en «Cerca de mí» las escuelas a las que puedes unirte.",
+    },
+    nearMe: {
+      emptyTitle: "No hay escuelas nuevas",
+      emptyMessage: "Por ahora no hay más escuelas a las que unirte.",
+    },
   },
   phone: {
     label: "Número de teléfono",

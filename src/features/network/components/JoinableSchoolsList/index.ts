@@ -1,0 +1,1 @@
+export { JoinableSchoolsList } from "./JoinableSchoolsList";

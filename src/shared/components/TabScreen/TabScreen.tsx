@@ -11,8 +11,8 @@ interface TabScreenProps {
 /**
  * Marco de cada pestaña del menú: la zona segura de arriba, transparente (el
  * fondo de marca lo pone `AppTabs` por detrás). El desplazamiento lo elige cada
- * pantalla: `TabScrollView` para contenido libre o una `FlatList` para listas
- * largas, con `BrandWordmark` arriba y `useTabBarInset()` abajo.
+ * pantalla: `TabScrollView` para contenido libre o `TabFlatList` para listas
+ * largas; las dos llevan `BrandWordmark` arriba y el hueco de la barra abajo.
  */
 export function TabScreen({ children, testID }: TabScreenProps) {
   const styles = useStyles();

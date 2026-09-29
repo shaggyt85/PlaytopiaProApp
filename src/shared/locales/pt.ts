@@ -138,6 +138,14 @@ const pt: Translations = {
       myClubs: "Meus clubes",
       nearMe: "Perto de mim",
     },
+    myClubs: {
+      emptyTitle: "Você ainda não trabalha em nenhum clube",
+      emptyMessage: "Veja em “Perto de mim” as escolas em que você pode entrar.",
+    },
+    nearMe: {
+      emptyTitle: "Nenhuma escola nova",
+      emptyMessage: "Por enquanto não há mais escolas para entrar.",
+    },
   },
   phone: {
     label: "Número de telefone",

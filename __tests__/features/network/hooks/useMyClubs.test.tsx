@@ -7,17 +7,10 @@ import { createQueryClient } from "@/shared/config/queryClient";
 import { HttpError } from "@/shared/services/HttpError";
 import { useSessionStore } from "@/shared/store/sessionStore";
 
+import { schoolCard } from "../../../helpers/networkFactories";
 import { settle } from "../../../helpers/settle";
 
-const card = {
-  db_id: 4,
-  club_id: 7,
-  name: "DN Padel Academy",
-  club_name: "Sede Centro",
-  city: "Sevilla",
-  address: "Calle Mayor 3",
-  background_url: "https://core-dev.playtopiax.com/api/img/x.jpg",
-};
+const card = schoolCard(4, 7, { name: "DN Padel Academy", club_name: "Sede Centro" });
 
 function setup(getMyClubs: jest.Mock) {
   const wrapper = ({ children }: { children: ReactNode }) => (

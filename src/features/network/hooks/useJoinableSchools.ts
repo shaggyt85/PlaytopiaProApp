@@ -10,6 +10,7 @@ import {
   networkService,
   type INetworkService,
 } from "../services/networkService";
+import { sedeKey } from "../utils/sedeKey";
 
 /** Lo que la pantalla pinta: la lista entera, sin saber cómo se pagina. */
 export interface JoinableSchools {
@@ -17,9 +18,6 @@ export interface JoinableSchools {
   /** Todas las sedes a las que puede unirse, no solo las cargadas. */
   totalCount: number;
 }
-
-/** La identidad de una sede es su escuela y su sucursal. */
-const sedeKey = (card: SchoolCard) => `${card.db_id}-${card.club_id}`;
 
 /**
  * Junta las páginas en una lista. Core pagina por posición: si entre dos páginas
@@ -51,6 +49,8 @@ interface Options {
  *
  * `refresh()` vuelve a la primera página y solo pide esa: el `refetch()` de una
  * lista infinita pediría otra vez todas las páginas cargadas, una detrás de otra.
+ * Recorta la caché a la primera página antes de pedirla, así la lista no se
+ * vacía mientras llega (tirar para refrescar no enseña «Cargando…»).
  */
 export function useJoinableSchools({ enabled, service = networkService }: Options) {
   const teacherId = useSessionUserId();
@@ -61,10 +61,13 @@ export function useJoinableSchools({ enabled, service = networkService }: Option
     enabled,
   });
 
-  const refresh = useCallback(
-    () => queryClient.resetQueries({ queryKey: networkKeys.joinableSchools(teacherId) }),
-    [queryClient, teacherId],
-  );
+  const refresh = useCallback(() => {
+    const queryKey = networkKeys.joinableSchools(teacherId);
+    queryClient.setQueryData<InfiniteData<JoinableSchoolsResponse>>(queryKey, (data) =>
+      data && { pages: data.pages.slice(0, 1), pageParams: data.pageParams.slice(0, 1) },
+    );
+    return queryClient.refetchQueries({ queryKey, exact: true });
+  }, [queryClient, teacherId]);
 
   // Solo lo que pinta la lista, y leído propiedad a propiedad: copiar la query
   // entera (`...query`) haría que TanStack avisara de cualquier cambio.

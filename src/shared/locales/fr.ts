@@ -138,6 +138,14 @@ const fr: Translations = {
       myClubs: "Mes clubs",
       nearMe: "Près de moi",
     },
+    myClubs: {
+      emptyTitle: "Vous ne travaillez encore dans aucun club",
+      emptyMessage: "Consultez « Près de moi » pour trouver les écoles que vous pouvez rejoindre.",
+    },
+    nearMe: {
+      emptyTitle: "Aucune nouvelle école",
+      emptyMessage: "Il n'y a pas d'autres écoles à rejoindre pour le moment.",
+    },
   },
   phone: {
     label: "Numéro de téléphone",

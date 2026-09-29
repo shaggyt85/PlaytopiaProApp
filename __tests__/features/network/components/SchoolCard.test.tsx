@@ -1,8 +1,9 @@
 import { act, render, screen } from "@testing-library/react-native";
 
 import { SchoolCard } from "@/features/network/components/SchoolCard";
-import type { SchoolCard as SchoolCardData } from "@/features/network/schemas/network.schema";
 import { useReduceMotion } from "@/shared/hooks/useReduceMotion";
+
+import { schoolCard } from "../../../helpers/networkFactories";
 
 type ImageProps = { onError: () => void; transition: number; recyclingKey: string; source: { uri: string } };
 
@@ -15,15 +16,13 @@ jest.mock("expo-image", () => ({
 }));
 jest.mock("@/shared/hooks/useReduceMotion", () => ({ useReduceMotion: jest.fn(() => false) }));
 
-const card: SchoolCardData = {
-  db_id: 3,
-  club_id: 7,
+const card = schoolCard(3, 7, {
   name: "Escuela Norte",
   club_name: "Sede Centro",
   city: "Madrid",
   address: "Calle Mayor 1",
   background_url: "https://img.test/norte.jpg",
-};
+});
 
 const lastImageProps = () => mockImage.mock.calls.at(-1)?.[0] as ImageProps;
 
