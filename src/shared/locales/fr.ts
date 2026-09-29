@@ -134,6 +134,18 @@ const fr: Translations = {
       evening: "Bonsoir, coach",
     },
     notifications: "Notifications",
+    /** El selector de vistas (DÍA · SEMANA · MES). */
+    views: {
+      day: "Jour",
+      week: "Semaine",
+      month: "Mois",
+    },
+    /** La barra de las flechas: el día, la semana o el mes que se ve y la hora de ahora. */
+    toolbar: "%{label} · %{time}",
+    week: {
+      /** Los extremos de la semana en la barra: «18 nov – 24 nov». */
+      range: "%{from} – %{to}",
+    },
     /** La tarjeta de la próxima clase, encima de la agenda. */
     next: {
       title: "Prochain cours",
@@ -143,8 +155,6 @@ const fr: Translations = {
     },
     day: {
       today: "Aujourd'hui · %{day}",
-      /** La barra de las flechas: el día que se ve y la hora de ahora. */
-      toolbar: "%{day} · %{time}",
       previousDay: "Jour précédent",
       nextDay: "Jour suivant",
       free: "Jour libre · aucun engagement",

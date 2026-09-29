@@ -4,7 +4,8 @@ import { View } from "react-native";
 import { IconButton } from "@/shared/components/IconButton";
 import { Text } from "@/shared/components/Text";
 import { useTranslation } from "@/shared/hooks/useTranslation";
-import { formatWallTime, formatWeekdayDay } from "@/shared/utils/formatDate";
+
+import { toolbarLabel } from "../../utils/toolbarLabel";
 
 import { useStyles } from "./DayToolbar.styles";
 
@@ -44,7 +45,7 @@ export function DayToolbar({ date, nowWall, onPrevious, onNext }: DayToolbarProp
         onPress={onNext}
       />
       <Text variant="meta" color="textSecondary" numberOfLines={1} style={styles.label}>
-        {t("schedule.day.toolbar", { day: formatWeekdayDay(date), time: formatWallTime(nowWall) })}
+        {toolbarLabel("day", date, nowWall, t)}
       </Text>
     </View>
   );

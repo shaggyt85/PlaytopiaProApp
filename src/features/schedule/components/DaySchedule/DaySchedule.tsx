@@ -4,6 +4,7 @@ import { ErrorState } from "@/shared/components/ErrorState";
 import { LoadingState } from "@/shared/components/LoadingState";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
+import { formatWeekdayDay } from "@/shared/utils/formatDate";
 
 import { useAnnounceOnChange } from "../../hooks/useAnnounceOnChange";
 import type { ScheduleClub } from "../../hooks/useScheduleClubs";
@@ -37,7 +38,7 @@ export function DaySchedule({ now, nextClassId, clubOf }: DayScheduleProps) {
   const { t } = useTranslation();
   const { date, isToday, goPrevious, goNext } = useSelectedDay(localToday(now));
   const { dayClasses, hasData, error, refetch } = useScheduleMonth(date);
-  const label = dayLabel(date, isToday, t);
+  const label = dayLabel(formatWeekdayDay(date), isToday, t);
   useAnnounceOnChange(label);
 
   let content;

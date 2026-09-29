@@ -1,12 +1,11 @@
 import type { t as translate } from "@/shared/config/i18n";
-import { formatWeekdayDay } from "@/shared/utils/formatDate";
 
 /**
- * El nombre del día que se ve: «Hoy · lunes 18» si es hoy y «martes 19» si no.
- * Lo pintan la pastilla del día y lo anuncia el lector de pantalla al cambiar de
- * día, así los dos dicen lo mismo.
+ * El nombre del día, con «Hoy · » delante si es hoy: «Hoy · lunes 18» en Día y
+ * «Hoy · 18 de noviembre» en Mes (cada vista da su día ya formateado). Lo pintan
+ * la pastilla y el título de la lista, y lo anuncia el lector de pantalla al
+ * cambiar de día, así todos dicen lo mismo.
  */
-export function dayLabel(date: string, isToday: boolean, t: typeof translate): string {
-  const day = formatWeekdayDay(date);
+export function dayLabel(day: string, isToday: boolean, t: typeof translate): string {
   return isToday ? t("schedule.day.today", { day }) : day;
 }

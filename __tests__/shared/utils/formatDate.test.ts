@@ -1,13 +1,18 @@
 import { changeLanguage } from "@/shared/config/i18n";
 import { wallAsUtcMs } from "@/shared/utils/clubClock";
 import {
+  capitalize,
   formatClubDate,
   formatClubTime,
+  formatDayMonth,
+  formatDayMonthShort,
+  formatMonthYear,
   formatInstant,
   formatNumericDate,
   formatWallTime,
   formatWeekdayDate,
   formatWeekdayDay,
+  formatWeekdayInitials,
 } from "@/shared/utils/formatDate";
 
 describe("formatDate", () => {
@@ -84,5 +89,45 @@ describe("formatWeekdayDay", () => {
 
     await changeLanguage("en");
     expect(formatWeekdayDay("2026-10-05")).toBe("Monday 5");
+  });
+});
+
+describe("formatDayMonth y formatDayMonthShort", () => {
+  it("día y mes, en largo y en corto, en el idioma activo", async () => {
+    expect(formatDayMonth("2026-11-18")).toBe("18 de noviembre");
+    expect(formatDayMonthShort("2026-11-18")).toBe("18 nov");
+
+    await changeLanguage("en");
+    expect(formatDayMonth("2026-11-18")).toBe("November 18");
+    expect(formatDayMonthShort("2026-11-18")).toBe("Nov 18");
+  });
+});
+
+describe("formatMonthYear", () => {
+  it("mes y año en la forma de cada idioma", async () => {
+    expect(formatMonthYear("2026-11-18")).toBe("noviembre de 2026");
+
+    await changeLanguage("en");
+    expect(formatMonthYear("2026-11-18")).toBe("November 2026");
+  });
+});
+
+describe("capitalize", () => {
+  it("la primera letra en mayúscula, el resto igual", () => {
+    expect(capitalize("lunes 18")).toBe("Lunes 18");
+    expect(capitalize("")).toBe("");
+  });
+});
+
+describe("formatWeekdayInitials", () => {
+  it("las letras de lunes a domingo, en el idioma activo", async () => {
+    expect(formatWeekdayInitials()).toEqual(["L", "M", "X", "J", "V", "S", "D"]);
+
+    await changeLanguage("en");
+    expect(formatWeekdayInitials()).toEqual(["M", "T", "W", "T", "F", "S", "S"]);
+  });
+
+  it("se calculan una vez por idioma", () => {
+    expect(formatWeekdayInitials()).toBe(formatWeekdayInitials());
   });
 });

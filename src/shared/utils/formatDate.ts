@@ -62,6 +62,46 @@ export function formatWeekdayDay(date: string): string {
   return `${weekday} ${day}`;
 }
 
+/** `class_date` como día y mes: "18 de noviembre" (el título de la lista del mes). */
+export function formatDayMonth(date: string): string {
+  return formatter({ day: "numeric", month: "long", timeZone: "UTC" }).format(wallAsUtcMs(date));
+}
+
+/** `class_date` como día y mes en corto: "18 nov" (los extremos de una semana). */
+export function formatDayMonthShort(date: string): string {
+  return formatter({ day: "numeric", month: "short", timeZone: "UTC" }).format(wallAsUtcMs(date));
+}
+
+/** `class_date` como mes y año, en la forma de cada idioma: "noviembre de 2026". */
+export function formatMonthYear(date: string): string {
+  return formatter({ month: "long", year: "numeric", timeZone: "UTC" }).format(wallAsUtcMs(date));
+}
+
+/** La primera letra en mayúscula, según el idioma activo: "lunes 18" → "Lunes 18". */
+export function capitalize(text: string): string {
+  return `${text.charAt(0).toLocaleUpperCase(getLocale())}${text.slice(1)}`;
+}
+
+// Un lunes cualquiera: sus 7 días dan las letras de la semana en orden.
+const A_MONDAY = "2024-01-01";
+const weekdayInitialsByLocale = new Map<string, readonly string[]>();
+
+/**
+ * Las letras de los días, de lunes a domingo, en el idioma activo: "L M X J V S
+ * D" en español, "M T W T F S S" en inglés. Se calculan una vez por idioma.
+ */
+export function formatWeekdayInitials(): readonly string[] {
+  const locale = getLocale();
+  let letters = weekdayInitialsByLocale.get(locale);
+  if (!letters) {
+    const narrow = formatter({ weekday: "narrow", timeZone: "UTC" });
+    const monday = wallAsUtcMs(A_MONDAY);
+    letters = Array.from({ length: 7 }, (_, i) => narrow.format(monday + i * 86_400_000));
+    weekdayInitialsByLocale.set(locale, letters);
+  }
+  return letters;
+}
+
 /** Un instante real (timestamp o ISO) mostrado en la hora del club. */
 export function formatInstant(
   instant: number | string | Date,
@@ -82,5 +122,5 @@ export function formatInstant(
 export function formatWeekdayDate(instant: number | Date): string {
   const weekday = formatter({ weekday: "long" }).format(instant);
   const dayMonth = formatter({ day: "numeric", month: "long" }).format(instant);
-  return `${weekday.charAt(0).toLocaleUpperCase(getLocale())}${weekday.slice(1)} · ${dayMonth}`;
+  return `${capitalize(weekday)} · ${dayMonth}`;
 }
