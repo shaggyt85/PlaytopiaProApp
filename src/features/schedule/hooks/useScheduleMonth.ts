@@ -3,8 +3,19 @@ import { useMemo } from "react";
 
 import { useSessionUserId } from "@/shared/store/sessionStore";
 
+import type { ScheduleClass, ScheduleResponse } from "../schemas/schedule.schema";
 import { scheduleQuery, scheduleService, type IScheduleService } from "../services/scheduleService";
+import { classesByDate } from "../utils/classesByDate";
 import { monthGrid } from "../utils/scheduleDates";
+
+/** Un día sin clases: siempre la misma lista, para que `memo` no vea un cambio. */
+const NO_CLASSES: readonly ScheduleClass[] = [];
+
+// Fuera del hook: TanStack solo vuelve a agrupar si cambia la respuesta.
+const selectByDate = (data: ScheduleResponse) => ({
+  byDate: classesByDate(data.classes),
+  nextClass: data.next_class,
+});
 
 /**
  * La agenda del día `date` (`YYYY-MM-DD`). Pide la cuadrícula de su mes entera
@@ -17,17 +28,13 @@ import { monthGrid } from "../utils/scheduleDates";
 export function useScheduleMonth(date: string, service: IScheduleService = scheduleService) {
   const teacherId = useSessionUserId();
   const { from, to } = useMemo(() => monthGrid(date), [date]);
-  const query = useQuery(scheduleQuery(teacherId, from, to, service));
-
-  // Core las manda por fecha y hora: basta con quedarse con las del día.
-  const dayClasses = useMemo(
-    () => (query.data?.classes ?? []).filter((c) => c.class_date === date),
-    [query.data, date],
-  );
+  const query = useQuery({ ...scheduleQuery(teacherId, from, to, service), select: selectByDate });
 
   return {
-    dayClasses,
-    nextClass: query.data?.next_class ?? null,
+    dayClasses: query.data?.byDate.get(date) ?? NO_CLASSES,
+    nextClass: query.data?.nextClass ?? null,
+    /** Ya hay datos que pintar (aunque falle una recarga). */
+    hasData: query.data !== undefined,
     isPending: query.isPending,
     error: query.error,
     refetch: query.refetch,

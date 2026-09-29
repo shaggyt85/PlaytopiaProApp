@@ -68,6 +68,26 @@ describe("useScheduleMonth", () => {
     expect(result.current.nextClass).toBeNull();
   });
 
+  it("un día sin clases da siempre la misma lista vacía, para no repintar", async () => {
+    const getClasses = jest.fn().mockResolvedValue(scheduleResponse({ classes: [tuesday] }));
+    const { result, rerender } = setup(getClasses);
+    await waitFor(() => expect(result.current.hasData).toBe(true));
+    const empty = result.current.dayClasses;
+
+    rerender({ day: "2026-10-07" });
+
+    expect(result.current.dayClasses).toBe(empty);
+  });
+
+  it("sin datos todavía, hasData es false; si falla, llega el error", async () => {
+    const getClasses = jest.fn().mockRejectedValue(new Error("sin red"));
+    const { result } = setup(getClasses);
+    expect(result.current.hasData).toBe(false);
+
+    await waitFor(() => expect(result.current.error).toBeTruthy());
+    expect(result.current.hasData).toBe(false);
+  });
+
   it("sin sesión no pide nada", async () => {
     useSessionStore.getState().setAnonymous();
     const getClasses = jest.fn();

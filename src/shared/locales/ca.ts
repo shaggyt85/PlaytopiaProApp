@@ -136,6 +136,11 @@ const ca: Translations = {
     notifications: "Notificacions",
     day: {
       today: "Avui · %{day}",
+      /** La barra de las flechas: el día que se ve y la hora de ahora. */
+      toolbar: "%{day} · %{time}",
+      previousDay: "Dia anterior",
+      nextDay: "Dia següent",
+      free: "Dia lliure · sense compromisos",
       classes: {
         one: "%{count} classe",
         other: "%{count} classes",

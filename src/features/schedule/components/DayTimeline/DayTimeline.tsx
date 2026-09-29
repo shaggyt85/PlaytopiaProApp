@@ -3,7 +3,6 @@ import { View } from "react-native";
 
 import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 
-import { useForegroundNow } from "../../hooks/useForegroundNow";
 import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import { useScheduleHours } from "../../hooks/useScheduleHours";
 import type { ScheduleClass } from "../../schemas/schedule.schema";
@@ -23,6 +22,8 @@ interface DayTimelineProps {
   /** Las clases del día que se ve. */
   classes: readonly ScheduleClass[];
   isToday: boolean;
+  /** El reloj de la pantalla (`useForegroundNow` cada minuto). */
+  now: number;
   /** La próxima clase según Core (`next_class`), para su marca. */
   nextClassId: number | undefined;
   clubOf: (sede: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
@@ -37,10 +38,9 @@ interface DayTimelineProps {
  * minuto es su estado y la línea, y las tarjetas con `memo` solo se vuelven a
  * pintar si su estado cambia.
  */
-export function DayTimeline({ classes, isToday, nextClassId, clubOf }: DayTimelineProps) {
+export function DayTimeline({ classes, isToday, now, nextClassId, clubOf }: DayTimelineProps) {
   const styles = useStyles();
   const configured = useScheduleHours();
-  const now = useForegroundNow({ everyMinute: true });
 
   const { span, blocks } = useMemo(() => {
     const timed = classes.map((item) => ({ item, minutes: classMinutes(item) }));

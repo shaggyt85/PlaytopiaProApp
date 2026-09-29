@@ -136,6 +136,11 @@ const fr: Translations = {
     notifications: "Notifications",
     day: {
       today: "Aujourd'hui · %{day}",
+      /** La barra de las flechas: el día que se ve y la hora de ahora. */
+      toolbar: "%{day} · %{time}",
+      previousDay: "Jour précédent",
+      nextDay: "Jour suivant",
+      free: "Jour libre · aucun engagement",
       classes: {
         one: "%{count} cours",
         other: "%{count} cours",

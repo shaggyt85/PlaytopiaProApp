@@ -3,8 +3,6 @@ import { formatWeekdayDate } from "@/shared/utils/formatDate";
 
 import { greetingFor } from "../utils/greeting";
 
-import { useForegroundNow } from "./useForegroundNow";
-
 interface TodayHeader {
   /** Clave del saludo según la hora del móvil. */
   greeting: TranslationKey;
@@ -13,11 +11,11 @@ interface TodayHeader {
 }
 
 /**
- * Saludo y fecha de la cabecera de Hoy, con la hora del móvil (`serverNow()`),
- * al día cada vez que la app vuelve al primer plano. La pantalla solo los pinta.
+ * Saludo y fecha de la cabecera de Hoy para `now` (el reloj de la pantalla,
+ * `useForegroundNow`), así la cabecera y la agenda nunca dicen días distintos.
+ * La pantalla solo los pinta.
  */
-export function useTodayHeader(): TodayHeader {
-  const now = useForegroundNow();
+export function useTodayHeader(now: number): TodayHeader {
   return {
     greeting: `schedule.greeting.${greetingFor(new Date(now).getHours())}`,
     date: formatWeekdayDate(now),

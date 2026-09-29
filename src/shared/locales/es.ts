@@ -138,6 +138,11 @@ const es = {
     notifications: "Notificaciones",
     day: {
       today: "Hoy · %{day}",
+      /** La barra de las flechas: el día que se ve y la hora de ahora. */
+      toolbar: "%{day} · %{time}",
+      previousDay: "Día anterior",
+      nextDay: "Día siguiente",
+      free: "Día libre · sin compromisos",
       classes: {
         one: "%{count} clase",
         other: "%{count} clases",

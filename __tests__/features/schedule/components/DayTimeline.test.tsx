@@ -3,12 +3,9 @@ import { StyleSheet } from "react-native";
 
 import { DayTimeline } from "@/features/schedule/components/DayTimeline";
 import { PAST_OPACITY } from "@/features/schedule/components/ScheduleClassBlock/ScheduleClassBlock.styles";
-import { useForegroundNow } from "@/features/schedule/hooks/useForegroundNow";
 import { darkTheme } from "@/shared/config/theme";
 
 import { scheduleClass } from "../../../helpers/scheduleFactories";
-
-jest.mock("@/features/schedule/hooks/useForegroundNow", () => ({ useForegroundNow: jest.fn() }));
 
 const hidden = { includeHiddenElements: true };
 // 5 de octubre a las 16:30 del teléfono.
@@ -25,18 +22,10 @@ const clubOf = () => ({ label: "Sede Centro", colors: darkTheme.clubColors[0] })
 const styleOf = (id: number) => StyleSheet.flatten(screen.getByTestId(`class-${id}`).props.style);
 
 function setup(classes = [morning, live, next, sameTime], isToday = true) {
-  render(<DayTimeline classes={classes} isToday={isToday} nextClassId={next.id} clubOf={clubOf} />);
+  render(<DayTimeline classes={classes} isToday={isToday} now={now} nextClassId={next.id} clubOf={clubOf} />);
 }
 
 describe("DayTimeline", () => {
-  beforeEach(() => jest.mocked(useForegroundNow).mockReturnValue(now));
-
-  it("pide la hora cada minuto", () => {
-    setup();
-
-    expect(useForegroundNow).toHaveBeenCalledWith({ everyMinute: true });
-  });
-
   it("cada clase a su hora; las que coinciden, lado a lado", () => {
     setup();
 

@@ -1,13 +1,17 @@
 import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
 
 import { ScheduleScreen } from "@/features/schedule/ScheduleScreen";
+import { scheduleService } from "@/features/schedule/services/scheduleService";
+import { myClubsService } from "@/shared/services/myClubsService";
 import { session } from "@/shared/services/session";
 import { teacherProfileService } from "@/shared/services/teacherProfileService";
 import { useSessionStore } from "@/shared/store/sessionStore";
 import { serverNow } from "@/shared/utils/serverClock";
 
 import { teacherProfile } from "../../helpers/authFactories";
+import { schoolCard } from "../../helpers/networkFactories";
 import { renderWithProviders } from "../../helpers/renderWithProviders";
+import { scheduleClass, scheduleResponse } from "../../helpers/scheduleFactories";
 
 jest.mock("@/shared/services/session", () => ({
   session: { end: jest.fn().mockResolvedValue(undefined) },
@@ -17,6 +21,14 @@ jest.mock("@/shared/services/teacherProfileService", () => ({
   teacherProfileService: { get: jest.fn(), update: jest.fn() },
 }));
 jest.mock("@/shared/utils/serverClock", () => ({ serverNow: jest.fn() }));
+jest.mock("@/features/schedule/services/scheduleService", () => ({
+  ...jest.requireActual("@/features/schedule/services/scheduleService"),
+  scheduleService: { getClasses: jest.fn() },
+}));
+jest.mock("@/shared/services/myClubsService", () => ({
+  ...jest.requireActual("@/shared/services/myClubsService"),
+  myClubsService: { getMyClubs: jest.fn() },
+}));
 
 // Viernes 20 de noviembre de 2026, a las 9:30 de la hora del móvil.
 const MORNING = new Date(2026, 10, 20, 9, 30).getTime();
@@ -26,6 +38,30 @@ describe("ScheduleScreen", () => {
     useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 });
     jest.mocked(serverNow).mockReturnValue(MORNING);
     jest.mocked(teacherProfileService.get).mockResolvedValue(teacherProfile());
+    jest.mocked(myClubsService.getMyClubs).mockResolvedValue({ clubs: [schoolCard(4, 7)] });
+    jest.mocked(scheduleService.getClasses).mockResolvedValue(
+      scheduleResponse({ classes: [scheduleClass({ id: 31, class_date: "2026-11-20", class_time: "16:00:00" })] }),
+    );
+  });
+
+  it("debajo de la cabecera, la vista Día de hoy con sus clases", async () => {
+    renderWithProviders(<ScheduleScreen />);
+
+    expect(await screen.findByTestId("class-31")).toBeTruthy();
+    expect(screen.getByText("Hoy · viernes 20")).toBeTruthy();
+    expect(screen.getByText("viernes 20 · 09:30")).toBeTruthy();
+    // El mes entero de la cuadrícula, en una sola petición.
+    expect(scheduleService.getClasses).toHaveBeenCalledWith("2026-10-26", "2026-12-06");
+  });
+
+  it("las flechas cambian de día", async () => {
+    renderWithProviders(<ScheduleScreen />);
+    await screen.findByTestId("class-31");
+
+    fireEvent.press(screen.getByRole("button", { name: "Día siguiente" }));
+
+    expect(screen.getByText("sábado 21")).toBeTruthy();
+    expect(screen.getByText("Día libre · sin compromisos")).toBeTruthy();
   });
 
   it("saluda según la hora con el nombre del profesor y la fecha", async () => {
