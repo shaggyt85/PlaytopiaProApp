@@ -4,6 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { memo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
+import { Chip } from "@/shared/components/Chip";
 import { Text } from "@/shared/components/Text";
 import { useReduceMotion } from "@/shared/hooks/useReduceMotion";
 import { useTheme } from "@/shared/hooks/useTheme";
@@ -11,7 +12,6 @@ import type { SchoolCard as SchoolCardData } from "@/shared/schemas/schoolCard.s
 import { sedeKey } from "@/shared/utils/sedeKey";
 
 import { schoolLocation } from "../../utils/schoolLocation";
-import { Chip } from "../Chip";
 
 import { META_ICON_SIZE, useStyles } from "./SchoolCard.styles";
 

@@ -1,15 +1,22 @@
 import { changeLanguage } from "@/shared/config/i18n";
+import { wallAsUtcMs } from "@/shared/utils/clubClock";
 import {
   formatClubDate,
   formatClubTime,
   formatInstant,
   formatNumericDate,
+  formatWallTime,
   formatWeekdayDate,
+  formatWeekdayDay,
 } from "@/shared/utils/formatDate";
 
 describe("formatDate", () => {
   it("la hora de pared del club se muestra tal cual, sin desplazarla", () => {
     expect(formatClubTime("18:00:00")).toBe("18:00");
+  });
+
+  it("la hora siempre con dos cifras, como el prototipo", () => {
+    expect(formatClubTime("08:05:00")).toBe("08:05");
   });
 
   it("la fecha de clase se muestra en el idioma activo", async () => {
@@ -62,5 +69,20 @@ describe("formatDate", () => {
 
     expect(create.mock.calls.length).toBe(afterFirst);
     create.mockRestore();
+  });
+});
+
+describe("formatWallTime", () => {
+  it("una hora de pared se muestra tal cual, sin desplazarla", () => {
+    expect(formatWallTime(wallAsUtcMs("2026-10-05", "15:21:40"))).toBe("15:21");
+  });
+});
+
+describe("formatWeekdayDay", () => {
+  it("el día de la semana y su número, en el idioma activo y sin moverse de día", async () => {
+    expect(formatWeekdayDay("2026-10-05")).toBe("lunes 5");
+
+    await changeLanguage("en");
+    expect(formatWeekdayDay("2026-10-05")).toBe("Monday 5");
   });
 });

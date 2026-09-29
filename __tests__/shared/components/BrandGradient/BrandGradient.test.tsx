@@ -11,25 +11,18 @@ jest.mock("expo-linear-gradient", () => ({
   },
 }));
 
+// El ángulo lo pone `DiagonalGradient` (su test); aquí, los colores.
 describe("BrandGradient", () => {
-  it("pinta el degradado de marca a 135°, de arriba a la izquierda a abajo a la derecha", () => {
+  it("pinta el degradado de marca", () => {
     render(<BrandGradient />);
 
-    expect(mockGradient).toHaveBeenCalledWith(
-      expect.objectContaining({
-        colors: darkTheme.gradients.brand,
-        start: { x: 0, y: 0 },
-        end: { x: 1, y: 1 },
-      }),
-    );
+    expect(mockGradient).toHaveBeenCalledWith(expect.objectContaining({ colors: darkTheme.gradients.brand }));
   });
 
-  it("apagado, el mismo ángulo en gris", () => {
+  it("apagado, en gris", () => {
     render(<BrandGradient inactive />);
 
-    expect(mockGradient).toHaveBeenCalledWith(
-      expect.objectContaining({ colors: darkTheme.gradients.disabled, start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }),
-    );
+    expect(mockGradient).toHaveBeenCalledWith(expect.objectContaining({ colors: darkTheme.gradients.disabled }));
   });
 
   it("deja pasar el estilo", () => {

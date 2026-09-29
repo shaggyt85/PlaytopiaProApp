@@ -134,6 +134,22 @@ const de: Translations = {
       evening: "Guten Abend, Trainer",
     },
     notifications: "Benachrichtigungen",
+    day: {
+      today: "Heute",
+      classes: {
+        one: "%{count} Kurs",
+        other: "%{count} Kurse",
+      },
+      minutes: "%{count} Min.",
+      next: "Nächster",
+      a11y: {
+        duration: "%{count} Minuten",
+        seats: "%{taken} von %{max} Plätzen",
+        past: "beendet",
+        live: "läuft gerade",
+        next: "nächster Kurs",
+      },
+    },
   },
   network: {
     title: "Club-Netzwerk",

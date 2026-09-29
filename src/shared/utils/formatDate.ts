@@ -41,9 +41,25 @@ export function formatNumericDate(date: string): string {
   );
 }
 
-/** `class_time` de Core ("18:00:00") → "18:00" (o "6:00 PM" según idioma). */
+/** `class_time` de Core ("08:00:00") → "08:00" (o "08:00 AM" según idioma). */
 export function formatClubTime(time: string): string {
-  return formatter({ timeStyle: "short", timeZone: "UTC" }).format(wallAsUtcMs("1970-01-01", time));
+  return formatWallTime(wallAsUtcMs("1970-01-01", time));
+}
+
+/**
+ * Una hora de pared ya como `wallAsUtcMs` (la de «ahora» en la agenda) → "09:21".
+ * La hora siempre con dos cifras, como el prototipo («08:00» en la tira).
+ */
+export function formatWallTime(wallMs: number): string {
+  return formatter({ hour: "2-digit", minute: "2-digit", timeZone: "UTC" }).format(wallMs);
+}
+
+/** `class_date` de Core ("2026-10-05") como día de la semana y número: "lunes 5". */
+export function formatWeekdayDay(date: string): string {
+  const wall = wallAsUtcMs(date);
+  const weekday = formatter({ weekday: "long", timeZone: "UTC" }).format(wall);
+  const day = formatter({ day: "numeric", timeZone: "UTC" }).format(wall);
+  return `${weekday} ${day}`;
 }
 
 /** Un instante real (timestamp o ISO) mostrado en la hora del club. */

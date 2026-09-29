@@ -1,6 +1,8 @@
 import { dayjs } from "@/shared/config/dayjs";
 import { wallAsUtcMs } from "@/shared/utils/clubClock";
 
+import { MINUTES_PER_HOUR } from "./classTiming";
+
 // Fechas de la agenda como `YYYY-MM-DD`, el formato de Core. Las cuentas se
 // hacen en UTC (`dayjs.utc`): son fechas de pared, sin zona, y así un cambio de
 // hora nunca mueve un día.
@@ -22,6 +24,12 @@ const DAYS_PER_WEEK = 7;
 export function wallNow(nowMs: number): number {
   const local = dayjs(nowMs);
   return wallAsUtcMs(local.format(DATE_FORMAT), local.format("HH:mm:ss"));
+}
+
+/** Minutos desde las 00:00 del teléfono, para la línea de «ahora». */
+export function localMinutes(nowMs: number): number {
+  const local = dayjs(nowMs);
+  return local.hour() * MINUTES_PER_HOUR + local.minute();
 }
 
 /** El día de hoy del teléfono. */

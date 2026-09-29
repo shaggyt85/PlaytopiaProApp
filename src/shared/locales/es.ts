@@ -136,6 +136,22 @@ const es = {
       evening: "Buenas noches, entrenador",
     },
     notifications: "Notificaciones",
+    day: {
+      today: "Hoy",
+      classes: {
+        one: "%{count} clase",
+        other: "%{count} clases",
+      },
+      minutes: "%{count} min",
+      next: "Próxima",
+      a11y: {
+        duration: "%{count} minutos",
+        seats: "%{taken} de %{max} plazas",
+        past: "ya terminó",
+        live: "en curso",
+        next: "próxima clase",
+      },
+    },
   },
   network: {
     title: "Red de clubes",

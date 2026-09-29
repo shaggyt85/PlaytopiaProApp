@@ -10,9 +10,9 @@ interface ChipProps {
 }
 
 /**
- * El chip de las tarjetas del prototipo (`● INDOOR MAD`): punto y texto sobre
- * el color de marca al 20 %. Lo usará también la bolsa de trabajo; se queda en
- * la feature hasta que otra lo necesite.
+ * El chip del prototipo (`● INDOOR MAD`): punto y texto sobre el color de marca
+ * al 20 %. Lo usan la tarjeta de sede de «Red de clubes» y la pastilla del día
+ * de la agenda («● HOY · LUNES 18»).
  */
 export function Chip({ label }: ChipProps) {
   const styles = useStyles();

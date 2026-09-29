@@ -134,6 +134,22 @@ const ca: Translations = {
       evening: "Bona nit, entrenador",
     },
     notifications: "Notificacions",
+    day: {
+      today: "Avui",
+      classes: {
+        one: "%{count} classe",
+        other: "%{count} classes",
+      },
+      minutes: "%{count} min",
+      next: "Propera",
+      a11y: {
+        duration: "%{count} minuts",
+        seats: "%{taken} de %{max} places",
+        past: "ja ha acabat",
+        live: "en curs",
+        next: "propera classe",
+      },
+    },
   },
   network: {
     title: "Xarxa de clubs",

@@ -1,0 +1,1 @@
+export { ScheduleClassBlock } from "./ScheduleClassBlock";

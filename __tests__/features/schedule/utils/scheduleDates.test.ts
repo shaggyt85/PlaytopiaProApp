@@ -1,5 +1,6 @@
 import {
   addDays,
+  localMinutes,
   localToday,
   MONTH_GRID_DAYS,
   monthGrid,
@@ -14,6 +15,13 @@ const localInstant = (y: number, m: number, d: number, h = 0, min = 0) =>
 describe("wallNow", () => {
   it("es la hora del teléfono en el mismo formato que las clases", () => {
     expect(wallNow(localInstant(2026, 10, 5, 16, 30))).toBe(wallAsUtcMs("2026-10-05", "16:30:00"));
+  });
+});
+
+describe("localMinutes", () => {
+  it("son los minutos desde las 00:00 del teléfono", () => {
+    expect(localMinutes(localInstant(2026, 10, 5, 16, 30))).toBe(990);
+    expect(localMinutes(localInstant(2026, 10, 5))).toBe(0);
   });
 });
 

@@ -1,9 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
 import { Alert, Animated, Linking, Modal, Pressable, ScrollView, View } from "react-native";
 
 import { Button } from "@/shared/components/Button";
+import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
 import { Text } from "@/shared/components/Text";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
@@ -66,7 +66,7 @@ export function LegalModal({ document, onClose, onAccept, error }: LegalModalPro
         <Pressable style={styles.overlay} onPress={onClose} accessibilityLabel={t("common.close")} />
         {document ? (
           <Animated.View style={[styles.card, { transform: [{ scale }] }]}>
-            <LinearGradient colors={theme.gradients.modal} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+            <DiagonalGradient colors={theme.gradients.modal}>
               <View style={styles.header}>
                 <Text variant="subtitle" style={styles.title} accessibilityRole="header">
                   {t(`legalDocs.${document}.title`)}
@@ -95,7 +95,7 @@ export function LegalModal({ document, onClose, onAccept, error }: LegalModalPro
                   ) : null}
                 </View>
               </ScrollView>
-            </LinearGradient>
+            </DiagonalGradient>
           </Animated.View>
         ) : null}
       </View>

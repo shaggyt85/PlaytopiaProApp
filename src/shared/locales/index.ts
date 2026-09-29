@@ -28,9 +28,17 @@ export const loadDictionary = (locale: Locale): Translations =>
 export const isLocale = (value: unknown): value is Locale =>
   typeof value === "string" && (LOCALES as readonly string[]).includes(value);
 
-/** Rutas "a.b.c" de todas las hojas de texto del diccionario. */
+/**
+ * Rutas "a.b.c" de todas las hojas de texto del diccionario. Un plural
+ * (`{ one, other }`, lo que elige i18n-js con `count`) también es una clave: se
+ * pide entero, `t("x.classes", { count })`, y no cada forma por separado.
+ */
 type Paths<T> = {
-  [K in keyof T & string]: T[K] extends string ? K : `${K}.${Paths<T[K]>}`;
+  [K in keyof T & string]: T[K] extends string
+    ? K
+    : T[K] extends { one: string; other: string }
+      ? K | `${K}.${Paths<T[K]>}`
+      : `${K}.${Paths<T[K]>}`;
 }[keyof T & string];
 
 export type TranslationKey = Paths<Translations>;

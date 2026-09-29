@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react-native";
 
-import { Chip } from "@/features/network/components/Chip";
+import { Chip } from "@/shared/components/Chip";
 
 describe("Chip", () => {
   it("muestra su texto en una sola línea", () => {

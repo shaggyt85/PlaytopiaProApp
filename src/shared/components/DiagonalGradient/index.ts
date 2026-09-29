@@ -1,0 +1,1 @@
+export { DiagonalGradient } from "./DiagonalGradient";

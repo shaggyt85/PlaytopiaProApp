@@ -134,6 +134,22 @@ const pt: Translations = {
       evening: "Boa noite, treinador",
     },
     notifications: "Notificações",
+    day: {
+      today: "Hoje",
+      classes: {
+        one: "%{count} aula",
+        other: "%{count} aulas",
+      },
+      minutes: "%{count} min",
+      next: "Próxima",
+      a11y: {
+        duration: "%{count} minutos",
+        seats: "%{taken} de %{max} vagas",
+        past: "já terminou",
+        live: "em andamento",
+        next: "próxima aula",
+      },
+    },
   },
   network: {
     title: "Rede de clubes",

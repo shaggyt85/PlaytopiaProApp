@@ -55,6 +55,12 @@ const typography = {
   chip: { fontFamily: FONTS.bold, fontSize: 10, letterSpacing: 0.5, textTransform: "uppercase" },
   /** Línea de datos bajo un título (ciudad y dirección, día y hora). */
   meta: { fontFamily: FONTS.regular, fontSize: 11 },
+  /**
+   * Marca diminuta dentro de una tarjeta pequeña (el club de una clase de la
+   * agenda, «PRÓXIMA», la hora de la línea de ahora): el `text-[9px] font-bold`
+   * del prototipo, que lo usa 27 veces.
+   */
+  badge: { fontFamily: FONTS.bold, fontSize: 9, letterSpacing: 0.5, textTransform: "uppercase" },
   /** Lema bajo la marca (splash). */
   tagline: { fontFamily: FONTS.regular, fontSize: 14, letterSpacing: 1 },
   button: { fontFamily: FONTS.bold, fontSize: 16 },

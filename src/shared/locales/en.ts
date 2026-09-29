@@ -134,6 +134,22 @@ const en: Translations = {
       evening: "Good evening, coach",
     },
     notifications: "Notifications",
+    day: {
+      today: "Today",
+      classes: {
+        one: "%{count} class",
+        other: "%{count} classes",
+      },
+      minutes: "%{count} min",
+      next: "Next",
+      a11y: {
+        duration: "%{count} minutes",
+        seats: "%{taken} of %{max} spots",
+        past: "finished",
+        live: "in progress",
+        next: "next class",
+      },
+    },
   },
   network: {
     title: "Club Network",
