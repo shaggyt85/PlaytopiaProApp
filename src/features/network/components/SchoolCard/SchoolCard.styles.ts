@@ -15,7 +15,6 @@ export const useStyles = makeStyles((theme) => ({
     borderColor: theme.colors.hairline,
     backgroundColor: theme.colors.surface,
   },
-  fill: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0 },
   stripe: { position: "absolute", top: 0, bottom: 0, left: 0, width: STRIPE_WIDTH },
   content: {
     gap: theme.spacing.xs,

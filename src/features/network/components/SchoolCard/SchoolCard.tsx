@@ -2,7 +2,7 @@ import { IconLoMapPin } from "@playtopia/icons/react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { memo, useState } from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { Text } from "@/shared/components/Text";
 import { useReduceMotion } from "@/shared/hooks/useReduceMotion";
@@ -44,7 +44,7 @@ export const SchoolCard = memo(function SchoolCard({ card, testID }: SchoolCardP
       {showImage ? (
         <Image
           source={{ uri: card.background_url }}
-          style={styles.fill}
+          style={StyleSheet.absoluteFill}
           contentFit="cover"
           cachePolicy="memory-disk"
           recyclingKey={`${card.db_id}-${card.club_id}`}
@@ -58,7 +58,7 @@ export const SchoolCard = memo(function SchoolCard({ card, testID }: SchoolCardP
         colors={theme.gradients.imageVeil}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
-        style={styles.fill}
+        style={StyleSheet.absoluteFill}
       />
       <LinearGradient
         colors={theme.gradients.brand}

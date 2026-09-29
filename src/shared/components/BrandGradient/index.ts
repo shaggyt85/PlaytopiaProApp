@@ -1,0 +1,1 @@
+export { BrandGradient } from "./BrandGradient";

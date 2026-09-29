@@ -133,6 +133,12 @@ const pt: Translations = {
     },
     notifications: "Notificações",
   },
+  network: {
+    tabs: {
+      myClubs: "Meus clubes",
+      nearMe: "Perto de mim",
+    },
+  },
   phone: {
     label: "Número de telefone",
     placeholder: "Seu número de telefone",

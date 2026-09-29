@@ -135,6 +135,12 @@ const es = {
     },
     notifications: "Notificaciones",
   },
+  network: {
+    tabs: {
+      myClubs: "Mis clubes",
+      nearMe: "Cerca de mí",
+    },
+  },
   phone: {
     label: "Número de teléfono",
     placeholder: "Tu número de teléfono",

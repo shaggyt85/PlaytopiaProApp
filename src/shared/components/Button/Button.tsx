@@ -1,4 +1,3 @@
-import { LinearGradient } from "expo-linear-gradient";
 import { useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -9,6 +8,7 @@ import {
   type ViewStyle,
 } from "react-native";
 
+import { BrandGradient } from "@/shared/components/BrandGradient";
 import { Text } from "@/shared/components/Text";
 import type { ThemeColor } from "@/shared/config/theme";
 import { useTheme } from "@/shared/hooks/useTheme";
@@ -108,14 +108,9 @@ export function Button({
       {...rest}
     >
       {variant === "primary" ? (
-        <LinearGradient
-          colors={inactive ? theme.gradients.disabled : theme.gradients.brand}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.body}
-        >
+        <BrandGradient inactive={inactive} style={styles.body}>
           {label}
-        </LinearGradient>
+        </BrandGradient>
       ) : (
         <View style={bodyStyle[variant]}>{label}</View>
       )}

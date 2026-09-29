@@ -1,3 +1,5 @@
+import { StyleSheet } from "react-native";
+
 import { makeStyles } from "@/shared/hooks/makeStyles";
 import { withAlpha } from "@/shared/utils/color";
 
@@ -28,15 +30,7 @@ export const useStyles = makeStyles((theme) => {
     track: { position: "absolute", top: inset, right: inset, bottom: inset, left: inset },
     drop: { position: "absolute", top: 0, bottom: 0, left: 0, borderRadius: theme.radius.xxl },
     dropShadow: theme.shadows.glow,
-    fill: {
-      position: "absolute",
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      borderRadius: theme.radius.xxl,
-      overflow: "hidden",
-    },
+    fill: { ...StyleSheet.absoluteFill, borderRadius: theme.radius.xxl, overflow: "hidden" },
     /** Brillo extra al llegar: un halo del color de marca que aparece y se apaga. */
     glow: {
       transform: [{ scale: 1.15 }],

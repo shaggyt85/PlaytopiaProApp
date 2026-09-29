@@ -41,7 +41,7 @@ const typography = {
   label: { fontFamily: FONTS.regular, fontSize: 14, lineHeight: 20 },
   /** Texto legal, pies. */
   small: { fontFamily: FONTS.regular, fontSize: 12 },
-  /** Marca pequeña dentro de un control (el ✓ de una casilla). */
+  /** Texto pequeño dentro de un control: el ✓ de una casilla, una pestaña (el `text-[12px] font-bold` de Lovable). */
   mark: { fontFamily: FONTS.bold, fontSize: 12 },
   /** Versión de la app. */
   micro: { fontFamily: FONTS.regular, fontSize: 11, letterSpacing: 1 },

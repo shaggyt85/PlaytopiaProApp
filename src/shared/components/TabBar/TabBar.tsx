@@ -1,4 +1,3 @@
-import { LinearGradient } from "expo-linear-gradient";
 import { usePathname } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { View, type LayoutChangeEvent, type ViewProps } from "react-native";
@@ -12,6 +11,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { BrandGradient } from "@/shared/components/BrandGradient";
 import { TABS, tabIndexForPath } from "@/shared/config/tabs";
 import { useReduceMotion } from "@/shared/hooks/useReduceMotion";
 import { useTheme } from "@/shared/hooks/useTheme";
@@ -96,11 +96,11 @@ export function TabBar({ style, children, ...rest }: ViewProps) {
           {tabWidth > 0 && activeIndex >= 0 ? (
             <>
               <Animated.View style={[styles.drop, size, trailStyle]} testID="tab-trail">
-                <LinearGradient colors={theme.gradients.brand} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.fill} />
+                <BrandGradient style={styles.fill} />
               </Animated.View>
               <Animated.View style={[styles.drop, styles.dropShadow, size, dropStyle]} testID="tab-indicator">
                 <Animated.View style={[styles.fill, styles.glow, glowStyle]} />
-                <LinearGradient colors={theme.gradients.brand} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.fill} />
+                <BrandGradient style={styles.fill} />
               </Animated.View>
             </>
           ) : null}

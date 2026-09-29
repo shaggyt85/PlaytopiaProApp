@@ -133,6 +133,12 @@ const ca: Translations = {
     },
     notifications: "Notificacions",
   },
+  network: {
+    tabs: {
+      myClubs: "Els meus clubs",
+      nearMe: "A prop meu",
+    },
+  },
   phone: {
     label: "Número de telèfon",
     placeholder: "El teu número de telèfon",
