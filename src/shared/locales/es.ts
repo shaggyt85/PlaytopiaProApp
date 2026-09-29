@@ -39,6 +39,8 @@ const es = {
       "request-timeout": "El servidor tardó demasiado en responder. Inténtalo de nuevo.",
       "server-overloaded": "El servidor está saturado. Inténtalo en unos minutos.",
       "internal-error": "Error del servidor. Inténtalo más tarde.",
+      "date-range-inverted": "La fecha de inicio no puede ser posterior a la de fin.",
+      "date-range-too-long": "El rango de fechas es demasiado largo.",
     },
   },
   auth: {

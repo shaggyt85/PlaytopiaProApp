@@ -257,6 +257,7 @@ Tabla viva: se actualiza cada vez que una pantalla empieza a usar un endpoint o 
 | POST | `/api/MobileTeacher/UploadMobileTeacherAvatar` (multipart, campo `avatarFile`) | profile | real |
 | GET | `/api/MobileTeacher/clubs` | network («Mis clubes») | real |
 | GET | `/api/MobileTeacher/schools?page=&size=` | network («Cerca de mí») | real |
+| GET | `/api/MobileTeacher/classes?from=&to=` | schedule (la agenda: clases del rango y la próxima) | real |
 
 Clases, alumnos, asistencia y calendario **todavía no tienen endpoints `Mobile`** en Core: se construyen con la regla siguiente.
 

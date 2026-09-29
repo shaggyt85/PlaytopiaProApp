@@ -37,6 +37,8 @@ const fr: Translations = {
       "request-timeout": "Le serveur a mis trop de temps à répondre. Veuillez réessayer.",
       "server-overloaded": "Le serveur est surchargé. Réessayez dans quelques minutes.",
       "internal-error": "Erreur du serveur. Veuillez réessayer plus tard.",
+      "date-range-inverted": "La date de début ne peut pas être postérieure à la date de fin.",
+      "date-range-too-long": "La période est trop longue.",
     },
   },
   auth: {

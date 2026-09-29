@@ -37,6 +37,8 @@ const de: Translations = {
       "request-timeout": "Der Server hat zu lange gebraucht. Bitte versuchen Sie es erneut.",
       "server-overloaded": "Der Server ist ausgelastet. Bitte versuchen Sie es in ein paar Minuten erneut.",
       "internal-error": "Serverfehler. Bitte versuchen Sie es später erneut.",
+      "date-range-inverted": "Das Startdatum darf nicht nach dem Enddatum liegen.",
+      "date-range-too-long": "Der Datumsbereich ist zu lang.",
     },
   },
   auth: {

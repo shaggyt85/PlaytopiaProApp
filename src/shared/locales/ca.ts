@@ -37,6 +37,8 @@ const ca: Translations = {
       "request-timeout": "El servidor ha trigat massa a respondre. Torna-ho a provar.",
       "server-overloaded": "El servidor està saturat. Torna-ho a provar d'aquí a uns minuts.",
       "internal-error": "Error del servidor. Torna-ho a provar més tard.",
+      "date-range-inverted": "La data d'inici no pot ser posterior a la de fi.",
+      "date-range-too-long": "L'interval de dates és massa llarg.",
     },
   },
   auth: {

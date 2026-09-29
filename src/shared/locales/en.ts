@@ -37,6 +37,8 @@ const en: Translations = {
       "request-timeout": "The server took too long to respond. Please try again.",
       "server-overloaded": "The server is busy. Please try again in a few minutes.",
       "internal-error": "Server error. Please try again later.",
+      "date-range-inverted": "The start date cannot be after the end date.",
+      "date-range-too-long": "The date range is too long.",
     },
   },
   auth: {

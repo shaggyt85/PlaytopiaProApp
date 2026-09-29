@@ -12,6 +12,15 @@ describe("getErrorMessage", () => {
     );
   });
 
+  it("los dos errores de un rango de fechas tienen su propio texto", () => {
+    expect(getErrorMessage(problem("urn:playtopia:problem:date-range-inverted", 400))).toBe(
+      "La fecha de inicio no puede ser posterior a la de fin.",
+    );
+    expect(getErrorMessage(problem("urn:playtopia:problem:date-range-too-long", 400))).toBe(
+      "El rango de fechas es demasiado largo.",
+    );
+  });
+
   it("si el type no está traducido, usa el texto de su status", () => {
     expect(getErrorMessage(problem("urn:playtopia:problem:group-full", 409))).toBe(
       "Esta acción choca con datos que ya existen.",
