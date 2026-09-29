@@ -39,13 +39,13 @@ describe("WeekStrip", () => {
   it("hoy, si no es el marcado, lleva el punto coral", () => {
     setup("2026-11-19");
 
-    expect(screen.getByTestId("week-strip-today")).toBeTruthy();
+    expect(screen.getByTestId("day-today-mark")).toBeTruthy();
   });
 
   it("hoy marcado no lleva el punto", () => {
     setup();
 
-    expect(screen.queryByTestId("week-strip-today")).toBeNull();
+    expect(screen.queryByTestId("day-today-mark")).toBeNull();
   });
 
   it("tocar un día avisa con su fecha", () => {

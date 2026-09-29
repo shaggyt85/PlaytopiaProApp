@@ -4,9 +4,8 @@ import { View } from "react-native";
 import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 
 import type { ScheduleClub } from "../../hooks/useScheduleClubs";
-import { useScheduleMonth } from "../../hooks/useScheduleMonth";
+import { useScheduleDays } from "../../hooks/useScheduleDays";
 import type { ScheduleClass } from "../../schemas/schedule.schema";
-import { dotsByDate } from "../../utils/dotsByDate";
 import { dayTense, visibleWeekDays, wallNow, weekDays } from "../../utils/scheduleDates";
 import { ScheduleDataState } from "../ScheduleDataState";
 import { WeekDayCard } from "../WeekDayCard";
@@ -41,13 +40,12 @@ interface WeekScheduleProps {
 export function WeekSchedule({ now, date, today, clubOf, onSelect }: WeekScheduleProps) {
   const styles = useStyles();
   const [picked, setPicked] = useState<string | null>(null);
-  const { byDate, hasData, error, refetch } = useScheduleMonth(date);
+  const { byDate, dots, hasData, error, refetch } = useScheduleDays(date, clubOf);
 
   const days = useMemo(() => weekDays(date), [date]);
   const filter = picked && days.includes(picked) && picked !== today ? picked : null;
   const active = filter ?? (days.includes(today) ? today : null);
   const visible = visibleWeekDays(days, today, filter);
-  const dots = useMemo(() => dotsByDate(byDate, (c) => clubOf(c).colors.color), [byDate, clubOf]);
   const nowWall = wallNow(now);
 
   const onPick = useCallback(

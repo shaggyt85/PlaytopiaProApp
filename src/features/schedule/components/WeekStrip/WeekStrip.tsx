@@ -1,12 +1,13 @@
 import { memo } from "react";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 
-import { BrandGradient } from "@/shared/components/BrandGradient";
-import { Text } from "@/shared/components/Text";
+import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
-import { formatDayOfMonth, formatWeekdayDay, formatWeekdayInitials } from "@/shared/utils/formatDate";
+import { formatWeekdayDay, formatWeekdayInitials } from "@/shared/utils/formatDate";
 
 import type { ScheduleClass } from "../../schemas/schedule.schema";
+import { dayMark } from "../../utils/dayMark";
+import { DayButton } from "../DayButton";
 
 import { useStyles } from "./WeekStrip.styles";
 
@@ -27,52 +28,37 @@ interface WeekStripProps {
 }
 
 /**
- * La tira de la semana: una pastilla por día con su letra, su número y hasta
- * tres puntos con los colores de sus clubes. El marcado, con el degradado de
- * marca en relieve; hoy, si no es el marcado, con el aro de marca y el punto
- * coral arriba.
+ * La tira de la semana: una pastilla por día (`DayButton`) con su letra, su
+ * número y hasta tres puntos con los colores de sus clubes. Hoy, si no es el
+ * marcado, lleva además el punto coral arriba.
  */
 export const WeekStrip = memo(function WeekStrip({ days, today, active, dots, byDate, onPick }: WeekStripProps) {
   const styles = useStyles();
+  const theme = useTheme();
   const { t } = useTranslation();
   const letters = formatWeekdayInitials();
 
   return (
     <View style={styles.row}>
-      {days.map((day, index) => {
-        const selected = day === active;
-        const isToday = day === today && !selected;
-        const count = (byDate.get(day) ?? NONE).length;
-        const color = selected ? "onPrimary" : isToday ? "primary" : "textSecondary";
-        return (
-          <Pressable
-            key={day}
-            onPress={() => onPick(day)}
-            accessibilityRole="button"
-            accessibilityState={{ selected }}
-            accessibilityLabel={t("schedule.week.dayA11y", {
-              day: formatWeekdayDay(day),
-              classes: t("schedule.day.classes", { count }),
-            })}
-            style={[styles.pill, selected ? styles.selected : isToday ? styles.today : styles.other]}
-            testID={`week-strip-${day}`}
-          >
-            {selected ? <BrandGradient style={styles.fill} /> : null}
-            <Text variant="chip" color={color}>
-              {letters[index]}
-            </Text>
-            <Text variant="subtitle" color={selected ? "onPrimary" : isToday ? "primary" : "text"}>
-              {formatDayOfMonth(day)}
-            </Text>
-            <View style={styles.dots}>
-              {(dots.get(day) ?? NONE).map((dotColor, i) => (
-                <View key={i} style={[styles.dot, { backgroundColor: selected ? undefined : dotColor }, selected && styles.dotOnBrand]} />
-              ))}
-            </View>
-            {isToday ? <View style={styles.todayMark} testID="week-strip-today" /> : null}
-          </Pressable>
-        );
-      })}
+      {days.map((day, index) => (
+        <DayButton
+          key={day}
+          date={day}
+          mark={dayMark(day, active, today)}
+          shape={styles.pill}
+          radius={theme.radius.xxl}
+          letter={letters[index]}
+          numberVariant="subtitle"
+          dots={dots.get(day) ?? NONE}
+          todayMark
+          onPick={onPick}
+          accessibilityLabel={t("schedule.day.a11y.summary", {
+            day: formatWeekdayDay(day),
+            classes: t("schedule.day.classes", { count: (byDate.get(day) ?? NONE).length }),
+          })}
+          testID={`week-strip-${day}`}
+        />
+      ))}
     </View>
   );
 });

@@ -32,5 +32,4 @@ export const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing.sm + theme.spacing.xs,
   },
   title: { flexDirection: "row", alignItems: "center", gap: theme.spacing.sm, flexShrink: 1 },
-  rows: { gap: theme.spacing.sm },
 }));

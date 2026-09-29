@@ -10,6 +10,7 @@ import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { classA11yLabel } from "../../utils/classA11yLabel";
 import { classMeta } from "../../utils/classMeta";
+import { seatsLabel } from "../../utils/seatsLabel";
 import type { ClassStatus } from "../../utils/classTiming";
 import type { Placement } from "../../utils/dayLayout";
 import type { BlockGeometry } from "../../utils/timelineGeometry";
@@ -92,7 +93,7 @@ export const ScheduleClassBlock = memo(function ScheduleClassBlock({
               </View>
             ) : null}
             <Text variant="tab" color="onPrimary">
-              {`${item.current_participants}/${item.max_participants}`}
+              {seatsLabel(item)}
             </Text>
           </View>
         ) : null}

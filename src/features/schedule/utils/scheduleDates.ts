@@ -91,6 +91,13 @@ export const addMonths = (date: string, months: number): string =>
 /** Cuántos días van de `from` a `to` (negativo si `to` es anterior). */
 export const daysBetween = (from: string, to: string): number => dayjs.utc(to).diff(dayjs.utc(from), "day");
 
+/** Las celdas del mes (`monthCells`) en semanas de 7: una fila de la cuadrícula cada una. */
+export function chunkWeeks<T>(cells: readonly T[]): T[][] {
+  const weeks: T[][] = [];
+  for (let i = 0; i < cells.length; i += DAYS_PER_WEEK) weeks.push(cells.slice(i, i + DAYS_PER_WEEK));
+  return weeks;
+}
+
 /** Un día respecto a hoy: ya pasó, es hoy o está por venir. */
 export type DayTense = "past" | "today" | "future";
 

@@ -1,6 +1,7 @@
 import {
   addDays,
   addMonths,
+  chunkWeeks,
   daysBetween,
   dayTense,
   localMinutes,
@@ -162,5 +163,15 @@ describe("dayTense", () => {
     expect(dayTense("2026-10-04", "2026-10-05")).toBe("past");
     expect(dayTense("2026-10-05", "2026-10-05")).toBe("today");
     expect(dayTense("2026-11-01", "2026-10-05")).toBe("future");
+  });
+});
+
+describe("chunkWeeks", () => {
+  it("las celdas del mes en semanas de 7", () => {
+    const weeks = chunkWeeks(monthCells("2026-10-18"));
+
+    expect(weeks).toHaveLength(5);
+    expect(weeks.every((week) => week.length === 7)).toBe(true);
+    expect(weeks[0].slice(0, 4)).toEqual([null, null, null, "2026-10-01"]);
   });
 });

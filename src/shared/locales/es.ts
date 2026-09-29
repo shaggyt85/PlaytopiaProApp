@@ -157,8 +157,6 @@ const es = {
       showAll: "Ver toda la semana",
       /** La marca de la clase en curso («EN VIVO»). */
       live: "En vivo",
-      /** Cada día de la tira para el lector de pantalla: «martes 19, 3 clases». */
-      dayA11y: "%{day}, %{classes}",
     },
     month: {
       previous: "Mes anterior",
@@ -183,6 +181,8 @@ const es = {
       minutes: "%{count} min",
       next: "Próxima",
       a11y: {
+        /** Un día en la tira de la semana y en el mes: «martes 19, 3 clases». */
+        summary: "%{day}, %{classes}",
         duration: "%{count} minutos",
         seats: "%{taken} de %{max} plazas",
         past: "ya terminó",

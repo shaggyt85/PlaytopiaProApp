@@ -13,6 +13,7 @@ import { classA11yLabel } from "../../utils/classA11yLabel";
 import { durationMeta } from "../../utils/classMeta";
 import type { ClassStatus } from "../../utils/classTiming";
 import { occupancy } from "../../utils/occupancy";
+import { seatsLabel } from "../../utils/seatsLabel";
 import { ClubBadge } from "../ClubBadge";
 import { TimeSquare } from "../TimeSquare";
 
@@ -73,7 +74,7 @@ export const WeekClassRow = memo(function WeekClassRow({ item, club, status }: W
             </View>
           </View>
           <Text variant="chip" color="textSecondary">
-            {`${item.current_participants}/${item.max_participants}`}
+            {seatsLabel(item)}
           </Text>
         </View>
       </View>

@@ -9,9 +9,8 @@ import { capitalize, formatWallTime, formatWeekdayDay } from "@/shared/utils/for
 
 import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import type { ScheduleClass } from "../../schemas/schedule.schema";
-import { statusOnDay } from "../../utils/classTiming";
 import type { DayTense } from "../../utils/scheduleDates";
-import { FreeDayCard } from "../FreeDayCard";
+import { DayClassList } from "../DayClassList";
 import { WeekClassRow } from "../WeekClassRow";
 
 import { useStyles } from "./WeekDayCard.styles";
@@ -61,15 +60,7 @@ export const WeekDayCard = memo(function WeekDayCard({
           {t("schedule.day.classes", { count: classes.length })}
         </Text>
       </View>
-      {classes.length === 0 ? (
-        <FreeDayCard />
-      ) : (
-        <View style={styles.rows}>
-          {classes.map((item) => (
-            <WeekClassRow key={item.id} item={item} club={clubOf(item)} status={statusOnDay(item, tense, nowWall)} />
-          ))}
-        </View>
-      )}
+      <DayClassList classes={classes} tense={tense} nowWall={nowWall} clubOf={clubOf} Row={WeekClassRow} />
     </View>
   );
 });
