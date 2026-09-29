@@ -2,6 +2,7 @@ import {
   addDays,
   addMonths,
   daysBetween,
+  dayTense,
   localMinutes,
   localToday,
   mondayOf,
@@ -153,5 +154,13 @@ describe("daysBetween", () => {
 
   it("sin moverse por el cambio de hora de octubre", () => {
     expect(daysBetween("2026-10-24", "2026-10-26")).toBe(2);
+  });
+});
+
+describe("dayTense", () => {
+  it("si ya pasó, es hoy o está por venir", () => {
+    expect(dayTense("2026-10-04", "2026-10-05")).toBe("past");
+    expect(dayTense("2026-10-05", "2026-10-05")).toBe("today");
+    expect(dayTense("2026-11-01", "2026-10-05")).toBe("future");
   });
 });

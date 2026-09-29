@@ -62,6 +62,11 @@ export function formatWeekdayDay(date: string): string {
   return `${weekday} ${day}`;
 }
 
+/** `class_date` como número del día: "18" (la tira de la semana y la cuadrícula del mes). */
+export function formatDayOfMonth(date: string): string {
+  return formatter({ day: "numeric", timeZone: "UTC" }).format(wallAsUtcMs(date));
+}
+
 /** `class_date` como día y mes: "18 de noviembre" (el título de la lista del mes). */
 export function formatDayMonth(date: string): string {
   return formatter({ day: "numeric", month: "long", timeZone: "UTC" }).format(wallAsUtcMs(date));

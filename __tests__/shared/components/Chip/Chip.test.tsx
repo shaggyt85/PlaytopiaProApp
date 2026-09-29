@@ -9,3 +9,14 @@ describe("Chip", () => {
     expect(screen.getByText("Sede Centro").props.numberOfLines).toBe(1);
   });
 });
+
+describe("Chip sin punto", () => {
+  it("con punto por defecto; sin él, solo el texto", () => {
+    const { rerender } = render(<Chip label="Hoy · 23:10" />);
+    expect(screen.getByTestId("chip-dot")).toBeTruthy();
+
+    rerender(<Chip label="Hoy · 23:10" dot={false} />);
+    expect(screen.queryByTestId("chip-dot")).toBeNull();
+    expect(screen.getByText("Hoy · 23:10")).toBeTruthy();
+  });
+});

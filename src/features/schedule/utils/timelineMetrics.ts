@@ -1,3 +1,6 @@
+/** Opacidad de una clase que ya terminó (`opacity-50`), la misma en Día, Semana y Mes. */
+export const PAST_OPACITY = 0.5;
+
 // Las medidas de la vista Día del prototipo (`DayView` de `calendar.tsx`). Las
 // comparten la tira, su rejilla de horas y las tarjetas.
 

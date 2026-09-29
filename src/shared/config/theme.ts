@@ -1,3 +1,5 @@
+import type { TextStyle } from "react-native";
+
 import { withAlpha } from "@/shared/utils/color";
 
 import { BRAND } from "./brand";
@@ -12,6 +14,9 @@ import { FONTS } from "./fonts";
  */
 
 const spacing = { xs: 4, sm: 8, md: 16, lg: 24, xl: 32 } as const;
+
+/** Cifras de ancho fijo (el `num` de Lovable): las horas no bailan al cambiar. Fuera del `as const`: `StyleSheet` pide una lista normal. */
+const TABULAR_NUMS: TextStyle["fontVariant"] = ["tabular-nums"];
 
 // Escala de radios del prototipo de Lovable (base 20).
 const radius = { sm: 14, md: 17, lg: 20, xl: 26, xxl: 32, xxxl: 40, pill: 999 } as const;
@@ -57,12 +62,20 @@ const typography = {
   chip: { fontFamily: FONTS.bold, fontSize: 10, letterSpacing: 0.5, textTransform: "uppercase" },
   /** Línea de datos bajo un título (ciudad y dirección, día y hora). */
   meta: { fontFamily: FONTS.regular, fontSize: 11 },
+  /** Un dato remarcado dentro de esa línea (el día en «Filtrado por **martes 19**»). */
+  metaStrong: { fontFamily: FONTS.semibold, fontSize: 11 },
   /**
    * Marca diminuta dentro de una tarjeta pequeña (el club de una clase de la
    * agenda, «PRÓXIMA», la hora de la línea de ahora): el `text-[9px] font-bold`
    * del prototipo, que lo usa 27 veces.
    */
   badge: { fontFamily: FONTS.bold, fontSize: 9, letterSpacing: 0.5, textTransform: "uppercase" },
+  /** Título de una fila de clase en Semana y Mes (`text-sm font-bold`). */
+  rowTitle: { fontFamily: FONTS.bold, fontSize: 14 },
+  /** La hora en el cuadrado de una fila (`text-[11px] font-bold`), con cifras de ancho fijo. */
+  timeBadge: { fontFamily: FONTS.bold, fontSize: 11, fontVariant: TABULAR_NUMS },
+  /** Marca diminuta en mayúsculas sobre una fila («EN VIVO»: `text-[9px] font-bold uppercase`). */
+  statusBadge: { fontFamily: FONTS.bold, fontSize: 9, textTransform: "uppercase" },
   /** Iniciales en el círculo de un alumno (`font-display font-bold text-[10px]` del `CoachAvatar` pequeño). */
   avatarInitials: { fontFamily: FONTS.display, fontSize: 10 },
   /** Lema bajo la marca (splash). */
@@ -94,7 +107,7 @@ export const glow = (color: string) =>
  * `shadow-[0_0_12px_var(--coral)]` de Lovable): la línea de «ahora» de la
  * agenda. Con `boxShadow`, que React Native pinta igual en iOS y Android.
  */
-export const halo = (color: string) => ({ boxShadow: `0 0 12px ${color}` }) as const;
+export const halo = (color: string, blur = 12) => ({ boxShadow: `0 0 ${blur}px ${color}` }) as const;
 
 /** Sombra de algo que flota sobre el contenido (el `shadow-lg` de Tailwind): la hora de la línea de «ahora». */
 const lifted = {

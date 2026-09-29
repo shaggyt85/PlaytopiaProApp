@@ -1,7 +1,5 @@
 import { View } from "react-native";
 
-import { ErrorState } from "@/shared/components/ErrorState";
-import { LoadingState } from "@/shared/components/LoadingState";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 import { formatWeekdayDay } from "@/shared/utils/formatDate";
@@ -14,6 +12,7 @@ import { localToday, wallNow } from "../../utils/scheduleDates";
 import { DayHeader } from "../DayHeader";
 import { DayTimeline } from "../DayTimeline";
 import { FreeDayCard } from "../FreeDayCard";
+import { ScheduleDataState } from "../ScheduleDataState";
 import { ScheduleToolbar } from "../ScheduleToolbar";
 
 import { useStyles } from "./DaySchedule.styles";
@@ -39,13 +38,6 @@ export function DaySchedule({ now, nextClassId, clubOf }: DayScheduleProps) {
   const { dayClasses, hasData, error, refetch } = useScheduleMonth(date);
   const label = dayLabel(formatWeekdayDay(date), isToday, t);
 
-  let content;
-  if (!hasData) content = error ? <ErrorState error={error} onRetry={refetch} /> : <LoadingState />;
-  else if (dayClasses.length === 0) content = <FreeDayCard />;
-  else
-    content = (
-      <DayTimeline classes={dayClasses} isToday={isToday} now={now} nextClassId={nextClassId} clubOf={clubOf} />
-    );
 
   return (
     <View style={styles.container}>
@@ -58,7 +50,13 @@ export function DaySchedule({ now, nextClassId, clubOf }: DayScheduleProps) {
         onNext={() => goNext("day")}
       />
       <DayHeader label={label} classCount={hasData ? dayClasses.length : undefined} />
-      {content}
+      <ScheduleDataState hasData={hasData} error={error} onRetry={refetch}>
+        {dayClasses.length === 0 ? (
+          <FreeDayCard />
+        ) : (
+          <DayTimeline classes={dayClasses} isToday={isToday} now={now} nextClassId={nextClassId} clubOf={clubOf} />
+        )}
+      </ScheduleDataState>
     </View>
   );
 }

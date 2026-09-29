@@ -151,6 +151,14 @@ const es = {
       range: "%{from} – %{to}",
       previous: "Semana anterior",
       next: "Semana siguiente",
+      /** La pastilla de la tarjeta de hoy. */
+      todayNow: "Hoy · %{time}",
+      filteredBy: "Filtrado por %{day}",
+      showAll: "Ver toda la semana",
+      /** La marca de la clase en curso («EN VIVO»). */
+      live: "En vivo",
+      /** Cada día de la tira para el lector de pantalla: «martes 19, 3 clases». */
+      dayA11y: "%{day}, %{classes}",
     },
     month: {
       previous: "Mes anterior",

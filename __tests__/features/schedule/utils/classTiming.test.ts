@@ -1,4 +1,4 @@
-import { classMinutes, classSpan, classStatus } from "@/features/schedule/utils/classTiming";
+import { classMinutes, classSpan, classStatus, statusOnDay } from "@/features/schedule/utils/classTiming";
 import { wallAsUtcMs } from "@/shared/utils/clubClock";
 
 import { scheduleClass } from "../../../helpers/scheduleFactories";
@@ -38,5 +38,18 @@ describe("classStatus", () => {
     expect(classStatus(cantera, at("15:21:00"), 31)).toBe("next");
     expect(classStatus(cantera, at("15:21:00"), 99)).toBe("upcoming");
     expect(classStatus(cantera, at("15:21:00"), undefined)).toBe("upcoming");
+  });
+});
+
+describe("statusOnDay", () => {
+  it("un día que ya pasó, pasada; uno por venir, por venir", () => {
+    expect(statusOnDay(cantera, "past", undefined)).toBe("past");
+    expect(statusOnDay(cantera, "future", undefined)).toBe("upcoming");
+  });
+
+  it("hoy, según la hora: en curso o pasada; nunca «próxima»", () => {
+    expect(statusOnDay(cantera, "today", at("16:30:00"))).toBe("live");
+    expect(statusOnDay(cantera, "today", at("18:00:00"))).toBe("past");
+    expect(statusOnDay(cantera, "today", at("10:00:00"))).toBe("upcoming");
   });
 });

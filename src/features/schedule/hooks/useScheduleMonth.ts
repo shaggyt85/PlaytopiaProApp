@@ -9,6 +9,8 @@ import { classesByDate } from "../utils/classesByDate";
 
 /** Un día sin clases: siempre la misma lista, para que `memo` no vea un cambio. */
 const NO_CLASSES: readonly ScheduleClass[] = [];
+/** Sin datos todavía: siempre el mismo `Map` vacío. */
+const NO_DAYS: ReadonlyMap<string, readonly ScheduleClass[]> = new Map();
 
 // Fuera del hook: TanStack solo vuelve a agrupar si cambia la respuesta.
 const selectByDate = (data: ScheduleResponse) => classesByDate(data.classes);
@@ -29,6 +31,8 @@ export function useScheduleMonth(date: string, service: IScheduleService = sched
 
   return {
     dayClasses: query.data?.get(date) ?? NO_CLASSES,
+    /** Las clases de cada día de la cuadrícula: la semana lee de aquí sus 7 días. */
+    byDate: query.data ?? NO_DAYS,
     /** Ya hay datos que pintar (aunque falle una recarga). */
     hasData: query.data !== undefined,
     isPending: query.isPending,

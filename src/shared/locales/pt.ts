@@ -149,6 +149,14 @@ const pt: Translations = {
       range: "%{from} – %{to}",
       previous: "Semana anterior",
       next: "Próxima semana",
+      /** La pastilla de la tarjeta de hoy. */
+      todayNow: "Hoje · %{time}",
+      filteredBy: "Filtrado por %{day}",
+      showAll: "Ver a semana toda",
+      /** La marca de la clase en curso («EN VIVO»). */
+      live: "Ao vivo",
+      /** Cada día de la tira para el lector de pantalla: «martes 19, 3 clases». */
+      dayA11y: "%{day}, %{classes}",
     },
     month: {
       previous: "Mês anterior",

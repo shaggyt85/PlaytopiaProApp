@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react-native";
 import { StyleSheet } from "react-native";
 
 import { DayTimeline } from "@/features/schedule/components/DayTimeline";
-import { PAST_OPACITY } from "@/features/schedule/components/ScheduleClassBlock/ScheduleClassBlock.styles";
+import { PAST_OPACITY } from "@/features/schedule/utils/timelineMetrics";
 import { darkTheme } from "@/shared/config/theme";
 
 import { scheduleClass } from "../../../helpers/scheduleFactories";

@@ -91,6 +91,15 @@ export const addMonths = (date: string, months: number): string =>
 /** Cuántos días van de `from` a `to` (negativo si `to` es anterior). */
 export const daysBetween = (from: string, to: string): number => dayjs.utc(to).diff(dayjs.utc(from), "day");
 
+/** Un día respecto a hoy: ya pasó, es hoy o está por venir. */
+export type DayTense = "past" | "today" | "future";
+
+/** Si `date` ya pasó, es hoy o está por venir (las fechas `YYYY-MM-DD` se comparan como texto). */
+export function dayTense(date: string, today: string): DayTense {
+  if (date === today) return "today";
+  return date < today ? "past" : "future";
+}
+
 /**
  * Qué días salen en la vista Semana: el día tocado en la tira si hay uno; si
  * no, de hoy al domingo en la semana actual (lo que ya pasó se ve en Día) y los

@@ -94,3 +94,16 @@ describe("useScheduleMonth", () => {
     expect(getClasses).not.toHaveBeenCalled();
   });
 });
+
+describe("useScheduleMonth: el Map por día", () => {
+  beforeEach(() => useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 }));
+
+  it("da las clases de cada día de la cuadrícula, para la semana", async () => {
+    const getClasses = jest.fn().mockResolvedValue(scheduleResponse({ classes: [monday, mondayLater, tuesday] }));
+    const { result } = setup(getClasses);
+
+    await waitFor(() => expect(result.current.hasData).toBe(true));
+    expect(result.current.byDate.get("2026-10-05")).toEqual([monday, mondayLater]);
+    expect(result.current.byDate.get("2026-10-06")).toEqual([tuesday]);
+  });
+});

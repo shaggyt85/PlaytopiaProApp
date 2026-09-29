@@ -3,8 +3,7 @@ import { StyleSheet } from "react-native";
 import { makeStyles } from "@/shared/hooks/makeStyles";
 import { withAlpha } from "@/shared/utils/color";
 
-/** Opacidad de una clase que ya terminó (`opacity-50`). */
-export const PAST_OPACITY = 0.5;
+import { PAST_OPACITY } from "../../utils/timelineMetrics";
 
 export const useStyles = makeStyles((theme) => ({
   // Hueco entre tarjetas: el `- 4` de su alto y entre columnas.

@@ -5,6 +5,7 @@ import {
   formatClubDate,
   formatClubTime,
   formatDayMonth,
+  formatDayOfMonth,
   formatDayMonthShort,
   formatMonthYear,
   formatInstant,
@@ -129,5 +130,12 @@ describe("formatWeekdayInitials", () => {
 
   it("se calculan una vez por idioma", () => {
     expect(formatWeekdayInitials()).toBe(formatWeekdayInitials());
+  });
+});
+
+describe("formatDayOfMonth", () => {
+  it("el número del día, sin moverse de día", () => {
+    expect(formatDayOfMonth("2026-11-08")).toBe("8");
+    expect(formatDayOfMonth("2026-11-18")).toBe("18");
   });
 });
