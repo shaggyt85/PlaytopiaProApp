@@ -92,6 +92,14 @@ src/
       store/             solo si la pantalla tiene estado de UI propio (Zustand)
       HomeScreen.tsx
       index.ts
+    network/             = pantalla Red de clubes
+      components/        SchoolCard, SchoolCardList, SegmentedTabs, MyClubsList…
+      hooks/             useMyClubs, useJoinableSchools, useRefreshing
+      services/          networkService (claves y recetas de TanStack)
+      schemas/
+      utils/             networkTabs, sedeKey, schoolLocation
+      NetworkScreen.tsx
+      index.ts
     ...                  una carpeta por pantalla o flujo
   shared/                lo usado por 2 o más features, por tipo
     components/          Button, ErrorState, LoadingState, Navbar…
@@ -532,7 +540,7 @@ useQuery({
 - **La gota** (degradado de marca bajo la pestaña activa) es un único indicador en `TabBar`: su posición sale de `onLayout` (ancho ÷ número de pestañas) y salta con anticipación, muelle, estela y brillo (valores en `TabBar.animation.ts`). Con «reducir movimiento» va directa.
 - **Hueco bajo la barra:** como flota sobre el contenido, cada pantalla del menú deja abajo `useTabBarInset()` para que no quede nada tapado.
 - **Fondo de las pestañas:** `AppTabs` dibuja el fondo de marca **una sola vez**, detrás de todas (como el `body` de Lovable); las pestañas son transparentes y el fondo no se redibuja al cambiar.
-- **Marco de cada pestaña: `TabScreen`**, solo la zona segura de arriba. El desplazamiento lo elige cada pantalla: `TabScrollView` (logo `BrandWordmark` arriba, que se desplaza con el contenido, y el hueco de la barra abajo) para contenido libre; para listas largas, una `FlatList` con el logo como cabecera y `useTabBarInset()` abajo. Nunca una `FlatList` dentro de un `ScrollView`.
+- **Marco de cada pestaña: `TabScreen`**, solo la zona segura de arriba. El desplazamiento lo elige cada pantalla: `TabScrollView` (logo `BrandWordmark` arriba, que se desplaza con el contenido, y el hueco de la barra abajo) para contenido libre; para listas largas, `TabFlatList`, lo mismo pero virtualizado, con lo de encima de la lista en `header`. Las dos sacan ese marco de `useTabContentStyle`. Nunca una `FlatList` dentro de un `ScrollView`.
 - **El logo se anuncia como imagen** («Playtopia»): el título de la pantalla es el de su cabecera. De momento el logo blanco; el isotipo con degradado está pendiente de la librería.
 - **Cabecera: `ScreenHeader`** (la de Lovable): saludo en mayúsculas (`eyebrow`), título grande (`hero`), subtítulo y un hueco a la derecha. Solo pinta lo que recibe. Con `loading` reserva la altura del título mientras llega; sin título y sin `loading` no deja hueco. Un título largo baja a una segunda línea antes de cortarse.
 
@@ -543,6 +551,20 @@ useQuery({
 - **Si el perfil no llega,** la cabecera sale igual sin el nombre.
 - **Provisional:** la campana se ve pero no hace nada hasta las notificaciones (sin punto rojo), y el botón de cerrar sesión sigue hasta que exista Perfil.
 - **Pestaña sin contenido:** su ruta reexporta `ComingSoonScreen`, que muestra el nombre de la pestaña (de `TABS`, según la ruta) y «Próximamente».
+
+### Red de clubes
+
+- **Qué es:** la pestaña Red (`features/network`, título «Red de clubes»). Dos pestañas dentro de la pantalla, de `utils/networkTabs.ts` (`NETWORK_TABS`): **«Mis clubes»**, las sedes donde trabaja (`GET /api/MobileTeacher/clubs`), y **«Cerca de mí»**, las escuelas a las que puede pedir unirse (`GET /api/MobileTeacher/schools`), sin las sedes donde ya trabaja.
+- **Siempre abre en «Mis clubes».** La pestaña elegida es estado de la pantalla (`useState`), no de la ruta ni de Zustand.
+- **Selector:** `SegmentedTabs`, el del prototipo (píldora con la activa en `BrandGradient` y su brillo), sin contadores hasta la bolsa de trabajo. No guarda nada y pulsar la activa no avisa. Lovable lo usa en otras tres pantallas: a la segunda que lo necesite, pasa a `shared/components/` tal cual.
+- **Las dos listas quedan montadas** y la que no se ve, con `display: "none"` (fuera del dibujo y del lector de pantalla): cada pestaña conserva su scroll y «Mis clubes» no se vuelve a pedir. Las dos llevan la misma cabecera (título y pestañas), que se desplaza con la lista.
+- **Tarjeta:** `SchoolCard`, con el formato de las tarjetas del prototipo: franja de marca, chip de la sede, nombre de la escuela y «ciudad · dirección» (`schoolLocation`). Detrás, la portada con el velo `imageVeil`. Core siempre manda `background_url`: la propia de la escuela o la portada por defecto del bucket. Si no carga, queda el fondo del tema. Aún no se puede tocar («Solicitar» llega con las solicitudes de Core).
+- **Una sede** es su escuela y su sucursal: `sedeKey` da la clave de la fila, del reciclado de la portada y de la deduplicación de páginas.
+- **Caché:** «Mis clubes» con `STANDARD`; «Cerca de mí» con `STATIC` (cambia poco y no se pide hasta abrir su pestaña, con `enabled`). Las claves llevan el `teacherId`: dos cuentas en el mismo móvil no comparten datos.
+- **Paginación de «Cerca de mí»:** de 10 en 10, la siguiente al llegar al final (solo si hay más y no se está pidiendo ya). `mergePages` junta las páginas y quita la sede que salte de una página a otra. Si falla la página siguiente no se enseña nada: se vuelve a intentar al llegar otra vez al final.
+- **Tirar para refrescar:** «Mis clubes» vuelve a pedir; «Cerca de mí» recorta la caché a la primera página y pide solo esa, así la lista no se vacía mientras llega. `useRefreshing` lleva el spinner.
+- **Estados** (`SchoolCardList`, dentro de la lista para que la cabecera no desaparezca): «Cargando…», error con «Reintentar» si no hay nada que enseñar, y vacía. «Mis clubes» vacía le manda a mirar en «Cerca de mí», sin botón. Si falla una recarga habiendo datos, se siguen viendo.
+- **Pendiente:** pedir unirse a un club y ver sus solicitudes (C4 en Core), y la bolsa de clases para cubrir.
 
 ### Escuela y sucursal
 
@@ -625,7 +647,8 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 - **Nadie más importa `brand.js`:** el tema asigna cada color a un uso y los componentes usan `useTheme()` / `makeStyles()`. Un test falla si algún fichero importa la paleta fuera del tema, y otro si el tema escribe un color a mano (cada uno es de la paleta o una transparencia suya con `withAlpha`).
 - **Tokens de color** (`theme.colors`): `background` `#0C0B1A`, `surface`, `surfaceStrong`, `card`, `elevated`, `text`, `textSecondary`, `border`, `primary` (magenta `#EF1EC1`), `accent` (violeta `#A63DF8`), `success`, `warning`, `danger`, `glass` / `glassBorder` (campos), `glassPanel` (barra de pestañas), `field`, `option`, `overlay` (velo de modal), `sheetOverlay` (velo de panel inferior, al 60 %), `hairline` / `hairlineStrong` (líneas finas), `glowPrimary`.
 - **Acentos** (`theme.accents`): `gold`, `coral`, `sky` y `violet`, cada uno con su color y su degradado, para contadores y accesos rápidos.
-- **Degradados** (`theme.gradients`): `brand` (`#FF2FB5` → `#C122E0` → `#8434F4`, en diagonal: botón principal y pestaña activa), `ink` (tarjetas oscuras), `modal` y `disabled`.
+- **Degradados** (`theme.gradients`): `brand` (`#FF2FB5` → `#C122E0` → `#8434F4`, en diagonal: botón principal y pestaña activa), `ink` (tarjetas oscuras), `modal`, `imageVeil` (velo sobre una foto de fondo, de izquierda a derecha) y `disabled`.
+- **El de marca se pinta con `BrandGradient`** (`shared/components/`), que lleva los colores y el ángulo de 135°; con `inactive`, el mismo en gris. Nadie escribe ese `LinearGradient` a mano.
 - **Fondo de marca** (`BrandBackground`): el color de fondo con los tres resplandores radiales del prototipo (`theme.backdrop`), dibujados con `react-native-svg`.
 - **Brillos:** `glow(color)` da la sombra de brillo de cualquier color; `theme.shadows.glow` es la de marca.
 

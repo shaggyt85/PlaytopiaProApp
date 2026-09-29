@@ -136,6 +136,7 @@ const es = {
     notifications: "Notificaciones",
   },
   network: {
+    title: "Red de clubes",
     tabs: {
       myClubs: "Mis clubes",
       nearMe: "Cerca de mí",

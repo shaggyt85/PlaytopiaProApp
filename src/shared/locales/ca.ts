@@ -134,6 +134,7 @@ const ca: Translations = {
     notifications: "Notificacions",
   },
   network: {
+    title: "Xarxa de clubs",
     tabs: {
       myClubs: "Els meus clubs",
       nearMe: "A prop meu",

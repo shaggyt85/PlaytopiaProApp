@@ -134,6 +134,7 @@ const en: Translations = {
     notifications: "Notifications",
   },
   network: {
+    title: "Club Network",
     tabs: {
       myClubs: "My clubs",
       nearMe: "Near me",

@@ -1,4 +1,3 @@
-import { ComingSoonScreen } from "@/shared/components/ComingSoonScreen";
+import { NetworkScreen } from "@/features/network";
 
-// Sin contenido todavía.
-export default ComingSoonScreen;
+export default NetworkScreen;
