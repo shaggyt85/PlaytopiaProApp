@@ -6,7 +6,7 @@ import { useAnnounceOnChange } from "@/features/schedule/hooks/useAnnounceOnChan
 describe("useAnnounceOnChange", () => {
   it("no dice nada al montar; cada cambio, sí", () => {
     const announce = jest.spyOn(AccessibilityInfo, "announceForAccessibility").mockImplementation(() => undefined);
-    const { rerender } = renderHook(({ message }) => useAnnounceOnChange(message), {
+    const { rerender } = renderHook(({ message }: { message: string }) => useAnnounceOnChange(message), {
       initialProps: { message: "Hoy · lunes 5" },
     });
     expect(announce).not.toHaveBeenCalled();

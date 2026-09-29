@@ -53,7 +53,7 @@ describe("BottomSheet", () => {
 
     const [event, handler] = addListener.mock.calls[0];
     expect(event).toBe("hardwareBackPress");
-    expect(handler()).toBe(true);
+    expect(handler({ type: "hardwareBackPress", timeStamp: 0 })).toBe(true);
     expect(onClose).toHaveBeenCalled();
 
     rerender(

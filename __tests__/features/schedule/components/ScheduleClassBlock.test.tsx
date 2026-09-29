@@ -72,14 +72,14 @@ describe("ScheduleClassBlock", () => {
     setup({ status: "next" });
 
     expect(screen.getByTestId("class-31-next")).toBeTruthy();
-    const card = StyleSheet.flatten(screen.getByTestId("class-31").children[0].props.style);
+    const card = StyleSheet.flatten(screen.getByTestId("class-31-card").props.style);
     expect(card).toMatchObject({ borderWidth: 2, shadowColor: club.colors.color, backgroundColor: club.colors.color });
   });
 
   it("las demás, sin aro ni brillo", () => {
     setup();
 
-    const card = StyleSheet.flatten(screen.getByTestId("class-31").children[0].props.style);
+    const card = StyleSheet.flatten(screen.getByTestId("class-31-card").props.style);
     expect(card.borderWidth).toBeUndefined();
     expect(card.shadowColor).toBeUndefined();
   });

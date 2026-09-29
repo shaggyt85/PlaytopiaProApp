@@ -18,7 +18,7 @@ describe("useReduceMotion", () => {
     jest.spyOn(AccessibilityInfo, "isReduceMotionEnabled").mockResolvedValue(false);
     let notify: (enabled: boolean) => void = () => undefined;
     jest.spyOn(AccessibilityInfo, "addEventListener").mockImplementation((_event, handler) => {
-      notify = handler as (enabled: boolean) => void;
+      notify = handler as unknown as (enabled: boolean) => void;
       return { remove: jest.fn() } as never;
     });
 

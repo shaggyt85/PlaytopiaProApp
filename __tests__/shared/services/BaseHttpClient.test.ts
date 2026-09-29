@@ -76,9 +76,10 @@ describe("BaseHttpClient", () => {
       handler: () => ({ status: 409, data: PROBLEM_409 }),
     });
 
-    const error = await client.post("/UserTeacher", {}).catch((e) => e);
+    const error: unknown = await client.post("/UserTeacher", {}).catch((e: unknown) => e);
 
     expect(error).toBeInstanceOf(HttpError);
+    if (!(error instanceof HttpError)) return;
     expect(error.kind).toBe("http");
     expect(error.status).toBe(409);
     expect(error.type).toBe(PROBLEM_409.type);

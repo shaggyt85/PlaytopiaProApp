@@ -17,7 +17,7 @@ function setup(getClasses: jest.Mock, now = BEFORE) {
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={createQueryClient()}>{children}</QueryClientProvider>
   );
-  return renderHook(({ at }) => useNextClass("2026-10-05", at, { getClasses }), {
+  return renderHook(({ at }: { at: number }) => useNextClass("2026-10-05", at, { getClasses }), {
     wrapper,
     initialProps: { at: now },
   });

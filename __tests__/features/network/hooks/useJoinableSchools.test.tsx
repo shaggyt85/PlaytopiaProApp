@@ -13,7 +13,7 @@ function setup(getJoinableSchools: jest.Mock, enabled = true) {
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={createQueryClient()}>{children}</QueryClientProvider>
   );
-  return renderHook(({ on }) => useJoinableSchools({ enabled: on, service: { getJoinableSchools } }), {
+  return renderHook(({ on }: { on: boolean }) => useJoinableSchools({ enabled: on, service: { getJoinableSchools } }), {
     wrapper,
     initialProps: { on: enabled },
   });

@@ -61,7 +61,10 @@ export const ScheduleClassBlock = memo(function ScheduleClassBlock({
       accessibilityLabel={classA11yLabel(item, club.label, status, t)}
       testID={`class-${item.id}`}
     >
-      <View style={[styles.card, status === "next" && [styles.next, nextGlow(club.colors.color)]]}>
+      <View
+        style={[styles.card, status === "next" && [styles.next, nextGlow(club.colors.color)]]}
+        testID={`class-${item.id}-card`}
+      >
         <DiagonalGradient colors={club.colors.gradient} style={styles.fill} />
         <View style={styles.header}>
           <Text variant="mark" color="onPrimary" numberOfLines={1} style={styles.title}>

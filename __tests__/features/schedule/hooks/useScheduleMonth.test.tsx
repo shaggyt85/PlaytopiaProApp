@@ -17,7 +17,7 @@ function setup(getClasses: jest.Mock, date = "2026-10-05") {
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={createQueryClient()}>{children}</QueryClientProvider>
   );
-  return renderHook(({ day }) => useScheduleMonth(day, { getClasses }), {
+  return renderHook(({ day }: { day: string }) => useScheduleMonth(day, { getClasses }), {
     wrapper,
     initialProps: { day: date },
   });
