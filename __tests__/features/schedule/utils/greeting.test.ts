@@ -1,4 +1,4 @@
-import { greetingFor } from "@/features/home/utils/greeting";
+import { greetingFor } from "@/features/schedule/utils/greeting";
 
 describe("greetingFor", () => {
   it.each([

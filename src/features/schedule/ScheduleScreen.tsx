@@ -10,7 +10,7 @@ import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 import { session } from "@/shared/services/session";
 
-import { useStyles } from "./HomeScreen.styles";
+import { useStyles } from "./ScheduleScreen.styles";
 import { useTeacherProfile } from "./hooks/useTeacherProfile";
 import { useTodayHeader } from "./hooks/useTodayHeader";
 
@@ -24,21 +24,21 @@ const selectName = (profile: TeacherProfile) => profile.name;
  * Provisional: la campana se ve pero aún no hace nada (las notificaciones
  * vendrán después) y el botón de cerrar sesión sigue hasta que exista Perfil.
  */
-export function HomeScreen() {
+export function ScheduleScreen() {
   const styles = useStyles();
   const { t } = useTranslation();
   const header = useTodayHeader();
   const name = useTeacherProfile({ select: selectName });
 
   return (
-    <TabScreen testID="home-screen">
+    <TabScreen testID="schedule-screen">
       <TabScrollView>
         <ScreenHeader
           greeting={t(header.greeting)}
           title={name.data}
           loading={name.isPending}
           subtitle={header.date}
-          right={<IconButton Icon={IconLoBell} accessibilityLabel={t("home.notifications")} />}
+          right={<IconButton Icon={IconLoBell} accessibilityLabel={t("schedule.notifications")} />}
         />
         <View style={styles.signOut}>
           <Button title={t("common.signOut")} variant="secondary" onPress={() => session.end()} />

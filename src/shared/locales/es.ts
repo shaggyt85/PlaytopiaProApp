@@ -127,7 +127,7 @@ const es = {
     viewFullDocument: "Ver Documento Completo",
     openFailed: "Error al abrir el documento. Inténtalo de nuevo.",
   },
-  home: {
+  schedule: {
     greeting: {
       morning: "Buenos días, entrenador",
       afternoon: "Buenas tardes, entrenador",

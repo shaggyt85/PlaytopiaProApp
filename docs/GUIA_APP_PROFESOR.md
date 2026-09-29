@@ -84,13 +84,13 @@ src/
       store/             estado del flujo (email entre pasos)
       SignInScreen.tsx  PasswordScreen.tsx  …
       index.ts
-    home/                = pantalla Home
+    schedule/            = pantalla Agenda (la de inicio: Hoy y Agenda unificadas)
       components/
       hooks/
       services/
       schemas/
       store/             solo si la pantalla tiene estado de UI propio (Zustand)
-      HomeScreen.tsx
+      ScheduleScreen.tsx
       index.ts
     network/             = pantalla Red de clubes
       components/        SchoolCard, SchoolCardList, SegmentedTabs, MyClubsList…
@@ -249,7 +249,7 @@ Tabla viva: se actualiza cada vez que una pantalla empieza a usar un endpoint o 
 | POST | `/api/UserTeacher` | auth (registro) | real |
 | POST | `/api/PassRecovery/request` (con `scope: "teacher"`) | auth (recuperar) | real |
 | POST | `/api/PassRecovery/validate` | la web de recuperación, no la app | real |
-| GET | `/api/UserTeacher/{id}` | auth (términos tras el login), home (nombre), profile | real |
+| GET | `/api/UserTeacher/{id}` | auth (términos tras el login), schedule (nombre), profile | real |
 | PATCH | `/api/UserTeacher/{id}` | auth (aceptar términos), profile | real |
 | DELETE | `/api/UserTeacher/{id}` | settings (borrar cuenta) | real |
 | PATCH | `/api/UserTeacher/password` | profile | real |
@@ -549,7 +549,7 @@ useQuery({
 
 - **Es la pantalla de inicio,** bajo el nombre «Agenda»: el prototipo junta aquí la cabecera de Hoy, la próxima clase y el calendario de día, semana y mes. Hoy solo tiene la cabecera.
 
-- **Cabecera:** «Buenos días / Buenas tardes / Buenas noches, entrenador» (6-12, 12-20 y el resto; `home/utils/greeting.ts`), el nombre del profesor (`useTeacherProfile` con `select` del nombre: solo se vuelve a pintar si cambia; la receta `teacherProfileQuery` con `queryOptions` lleva clave, función y caché `STANDARD`, y el acceso escribe con su `queryKey` tipada) y la fecha («Viernes · 22 de noviembre», `formatWeekdayDate`).
+- **Cabecera:** «Buenos días / Buenas tardes / Buenas noches, entrenador» (6-12, 12-20 y el resto; `schedule/utils/greeting.ts`), el nombre del profesor (`useTeacherProfile` con `select` del nombre: solo se vuelve a pintar si cambia; la receta `teacherProfileQuery` con `queryOptions` lleva clave, función y caché `STANDARD`, y el acceso escribe con su `queryKey` tipada) y la fecha («Viernes · 22 de noviembre», `formatWeekdayDate`).
 - **La hora es la del móvil** con `serverNow()`: es el día del profesor, no de un club (puede dar clases en clubes de zonas distintas). Las horas de las clases, cuando lleguen, van en la hora de su club. Saludo y fecha se renuevan al volver la app al primer plano (`useForegroundNow`), sin temporizadores. `useTodayHeader` los junta y los da listos: la pantalla solo los pinta.
 - **Si el perfil no llega,** la cabecera sale igual sin el nombre.
 - **Provisional:** la campana se ve pero no hace nada hasta las notificaciones (sin punto rojo), y el botón de cerrar sesión sigue hasta que exista Perfil.
@@ -629,10 +629,10 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 ## 12. i18n
 
 - Todo texto visible sale de `shared/locales/`. **Los 6 idiomas son obligatorios** (es, en, pt, ca, de, fr): una clave que no está en los 6 no se mergea.
-- Claves agrupadas por pantalla: `signIn.title`, `home.emptyState`. Textos comunes en `common.*`; errores en `errors.byType.*` y `errors.byStatus.*` (ver [sección 6](#6-manejo-de-errores-rfc-9457)). Un `type` nuevo de Core se traduce añadiéndolo a `errors.byType` en los 6 idiomas.
+- Claves agrupadas por pantalla: `signIn.title`, `schedule.emptyState`. Textos comunes en `common.*`; errores en `errors.byType.*` y `errors.byStatus.*` (ver [sección 6](#6-manejo-de-errores-rfc-9457)). Un `type` nuevo de Core se traduce añadiéndolo a `errors.byType` en los 6 idiomas.
 - En componentes se usa el hook `useTranslation()`, que vuelve a pintar al cambiar de idioma; el `t` suelto solo fuera de React. Las claves están tipadas: una clave que no existe no compila.
 - Solo se carga en memoria el diccionario del idioma activo (los 6 van en el bundle). El idioma elegido a mano se guarda en AsyncStorage (solo el código, p. ej. `"es"`) y se aplica antes de pintar la app; si no hay ninguno, se usa el del móvil y, si no está soportado, inglés.
-- Nada de concatenar frases: se interpola con parámetros (`t("home.classesToday", { count })`), con plurales cuando haga falta.
+- Nada de concatenar frases: se interpola con parámetros (`t("schedule.classesToday", { count })`), con plurales cuando haga falta.
 - **«Biometría», nunca «huella»**, en los 6 idiomas: el móvil puede usar huella, cara o su código.
 
 ---

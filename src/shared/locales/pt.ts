@@ -125,7 +125,7 @@ const pt: Translations = {
     viewFullDocument: "Ver Documento Completo",
     openFailed: "Falha ao abrir o documento. Tente novamente.",
   },
-  home: {
+  schedule: {
     greeting: {
       morning: "Bom dia, treinador",
       afternoon: "Boa tarde, treinador",

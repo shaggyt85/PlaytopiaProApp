@@ -125,7 +125,7 @@ const ca: Translations = {
     viewFullDocument: "Veure Document Complet",
     openFailed: "Error en obrir el document. Torna-ho a provar.",
   },
-  home: {
+  schedule: {
     greeting: {
       morning: "Bon dia, entrenador",
       afternoon: "Bona tarda, entrenador",

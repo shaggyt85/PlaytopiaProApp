@@ -51,7 +51,7 @@ describe("menú inferior", () => {
   it("empieza en Agenda (la pantalla de inicio), con las 4 pestañas en orden y Agenda seleccionada", () => {
     renderRouter(routes, { initialUrl: "/", wrapper });
 
-    expect(screen.getByTestId("home-screen")).toBeTruthy();
+    expect(screen.getByTestId("schedule-screen")).toBeTruthy();
     expect(screen.getAllByRole("tab").map((tab) => tab.props.accessibilityLabel)).toEqual([
       "Agenda",
       "Grupos",
@@ -90,7 +90,7 @@ describe("menú inferior", () => {
 
     fireEvent.press(screen.getByRole("tab", { name: "Agenda" }));
 
-    expect(screen.getByTestId("home-screen")).toBeTruthy();
+    expect(screen.getByTestId("schedule-screen")).toBeTruthy();
     expect(screen.getAllByRole("tab")).toHaveLength(4);
   });
 });

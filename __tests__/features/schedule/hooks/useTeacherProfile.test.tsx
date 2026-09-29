@@ -2,7 +2,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 
-import { useTeacherProfile } from "@/features/home/hooks/useTeacherProfile";
+import { useTeacherProfile } from "@/features/schedule/hooks/useTeacherProfile";
 import { createQueryClient } from "@/shared/config/queryClient";
 import { teacherKeys } from "@/shared/services/teacherProfileService";
 import { useSessionStore } from "@/shared/store/sessionStore";

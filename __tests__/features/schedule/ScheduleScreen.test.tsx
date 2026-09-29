@@ -1,6 +1,6 @@
 import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
 
-import { HomeScreen } from "@/features/home/HomeScreen";
+import { ScheduleScreen } from "@/features/schedule/ScheduleScreen";
 import { session } from "@/shared/services/session";
 import { teacherProfileService } from "@/shared/services/teacherProfileService";
 import { useSessionStore } from "@/shared/store/sessionStore";
@@ -21,7 +21,7 @@ jest.mock("@/shared/utils/serverClock", () => ({ serverNow: jest.fn() }));
 // Viernes 20 de noviembre de 2026, a las 9:30 de la hora del móvil.
 const MORNING = new Date(2026, 10, 20, 9, 30).getTime();
 
-describe("HomeScreen", () => {
+describe("ScheduleScreen", () => {
   beforeEach(() => {
     useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 });
     jest.mocked(serverNow).mockReturnValue(MORNING);
@@ -29,7 +29,7 @@ describe("HomeScreen", () => {
   });
 
   it("saluda según la hora con el nombre del profesor y la fecha", async () => {
-    renderWithProviders(<HomeScreen />);
+    renderWithProviders(<ScheduleScreen />);
 
     expect(await screen.findByRole("header", { name: "David" })).toBeTruthy();
     expect(screen.getByText("Buenos días, entrenador")).toBeTruthy();
@@ -38,14 +38,14 @@ describe("HomeScreen", () => {
 
   it("por la tarde cambia el saludo", async () => {
     jest.mocked(serverNow).mockReturnValue(new Date(2026, 10, 20, 17, 0).getTime());
-    renderWithProviders(<HomeScreen />);
+    renderWithProviders(<ScheduleScreen />);
 
     expect(await screen.findByText("Buenas tardes, entrenador")).toBeTruthy();
   });
 
   it("si el perfil no llega, la cabecera sale igual sin el nombre", async () => {
     jest.mocked(teacherProfileService.get).mockRejectedValue(new Error("400"));
-    renderWithProviders(<HomeScreen />);
+    renderWithProviders(<ScheduleScreen />);
 
     expect(await screen.findByText("Buenos días, entrenador")).toBeTruthy();
     expect(screen.queryByRole("header", { name: "David" })).toBeNull();
@@ -55,19 +55,19 @@ describe("HomeScreen", () => {
 
   it("mientras llega el nombre reserva su hueco", () => {
     jest.mocked(teacherProfileService.get).mockReturnValue(new Promise(() => undefined));
-    renderWithProviders(<HomeScreen />);
+    renderWithProviders(<ScheduleScreen />);
 
     expect(screen.getByTestId("screen-header-title-placeholder")).toBeTruthy();
   });
 
   it("muestra la campana de notificaciones, desactivada hasta que existan", async () => {
-    renderWithProviders(<HomeScreen />);
+    renderWithProviders(<ScheduleScreen />);
 
     expect(await screen.findByRole("button", { name: "Notificaciones" })).toBeDisabled();
   });
 
   it("Cerrar sesión (provisional) cierra la sesión", async () => {
-    renderWithProviders(<HomeScreen />);
+    renderWithProviders(<ScheduleScreen />);
 
     await act(async () => {
       fireEvent.press(await screen.findByRole("button", { name: "Cerrar sesión" }));

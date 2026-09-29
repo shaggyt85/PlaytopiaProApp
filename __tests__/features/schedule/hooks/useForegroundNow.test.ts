@@ -1,7 +1,7 @@
 import { act, renderHook } from "@testing-library/react-native";
 import { AppState, type AppStateStatus } from "react-native";
 
-import { useForegroundNow } from "@/features/home/hooks/useForegroundNow";
+import { useForegroundNow } from "@/features/schedule/hooks/useForegroundNow";
 import { serverNow } from "@/shared/utils/serverClock";
 
 jest.mock("@/shared/utils/serverClock", () => ({ serverNow: jest.fn() }));

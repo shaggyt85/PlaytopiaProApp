@@ -19,7 +19,7 @@ interface TodayHeader {
 export function useTodayHeader(): TodayHeader {
   const now = useForegroundNow();
   return {
-    greeting: `home.greeting.${greetingFor(new Date(now).getHours())}`,
+    greeting: `schedule.greeting.${greetingFor(new Date(now).getHours())}`,
     date: formatWeekdayDate(now),
   };
 }

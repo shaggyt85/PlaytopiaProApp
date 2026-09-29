@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react-native";
 
-import { useTodayHeader } from "@/features/home/hooks/useTodayHeader";
+import { useTodayHeader } from "@/features/schedule/hooks/useTodayHeader";
 import { serverNow } from "@/shared/utils/serverClock";
 
 jest.mock("@/shared/utils/serverClock", () => ({ serverNow: jest.fn() }));
@@ -11,7 +11,7 @@ describe("useTodayHeader", () => {
 
     const { result } = renderHook(() => useTodayHeader());
 
-    expect(result.current).toEqual({ greeting: "home.greeting.morning", date: "Viernes · 20 de noviembre" });
+    expect(result.current).toEqual({ greeting: "schedule.greeting.morning", date: "Viernes · 20 de noviembre" });
   });
 
   it("de noche cambia el saludo", () => {
@@ -19,6 +19,6 @@ describe("useTodayHeader", () => {
 
     const { result } = renderHook(() => useTodayHeader());
 
-    expect(result.current.greeting).toBe("home.greeting.evening");
+    expect(result.current.greeting).toBe("schedule.greeting.evening");
   });
 });

@@ -35,7 +35,7 @@ describe("guards de navegación", () => {
     renderRouter(routes, { initialUrl: "/" });
 
     expect(screen.getByTestId("sign-in-screen")).toBeTruthy();
-    expect(screen.queryByTestId("home-screen")).toBeNull();
+    expect(screen.queryByTestId("schedule-screen")).toBeNull();
   });
 
   it("con sesión de profesor se entra al inicio y el login no existe", () => {
@@ -43,14 +43,14 @@ describe("guards de navegación", () => {
 
     renderRouter(routes, { initialUrl: "/sign-in" });
 
-    expect(screen.getByTestId("home-screen")).toBeTruthy();
+    expect(screen.getByTestId("schedule-screen")).toBeTruthy();
     expect(screen.queryByTestId("sign-in-screen")).toBeNull();
   });
 
   it("si la sesión se cierra, vuelve sola al login", () => {
     useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 });
     renderRouter(routes, { initialUrl: "/" });
-    expect(screen.getByTestId("home-screen")).toBeTruthy();
+    expect(screen.getByTestId("schedule-screen")).toBeTruthy();
 
     act(() => useSessionStore.getState().setAnonymous());
 
