@@ -16,7 +16,7 @@ pnpm start              # desarrollo contra core-dev
 pnpm test               # Jest
 pnpm lint
 pnpm typecheck          # tsc de la app y de __tests__
-pnpm verificar:ota      # obligatorio antes de cualquier eas update
+pnpm verificar:ota preview   # obligatorio antes de cualquier eas update (o production)
 ```
 
 ## Backend

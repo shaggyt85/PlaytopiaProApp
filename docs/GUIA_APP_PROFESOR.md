@@ -871,11 +871,21 @@ Si algo pasa a usarse en una segunda pantalla, se mueve a `shared/<su tipo>/` y 
 
 **R8 (Android):** `expo-build-properties` activa `enableMinifyInReleaseBuilds` y `enableShrinkResourcesInReleaseBuilds`. Solo afecta a los builds de release: ofusca y elimina código y recursos sin usar, que es lo que Google Play mide como "optimización de código DEX" (por debajo del 25 % en ofuscación limita la visibilidad de la app). Cada librería nativa nueva se valida en el siguiente build de release; si R8 la rompe, sus reglas van en `android.extraProguardRules`. El `mapping.txt` se sube a Play y a Sentry cuando se configuren.
 
+**EAS:** el proyecto es `react_native_pro` de la cuenta `playtopiateam` (slug `reactnativepro`, que tiene que coincidir con el de `app.config.js`, y su `projectId` en `extra.eas`). `eas.json` tiene dos perfiles, cada uno con su entorno de variables de EAS y su canal de OTA:
+
+| Perfil | App | Android | iOS | Entorno y canal |
+|---|---|---|---|---|
+| `preview` | Playtopia Pro DEV (`APP_VARIANT=development`), contra core-dev | APK | TestFlight | `preview` |
+| `production` | Playtopia Pro, la de tienda | app-bundle | App Store | `production` |
+
+- **Variables:** se gestionan en el dashboard de Expo (Environment variables), por entorno. El secreto del registro va como **Sensitive**, no como Secret: `eas update` genera el bundle en local y no puede leer las Secret. Sin `EXPO_PUBLIC_API_BASE_URL` o sin el secreto la app no arranca (`env.ts`).
+- **Primer build de cada plataforma:** lo lanza el equipo en su terminal, porque es interactivo (el keystore de Android y el login de Apple con doble factor). iOS necesita además su ficha en App Store Connect. Después, los builds y los OTA ya no preguntan.
+- No hay perfil `development`: necesita `expo-dev-client`, que la app no tiene.
+
 | Comando | Para qué |
 |---|---|
 | `pnpm start` | desarrollo contra el servidor de dev |
-| `eas build --profile development` | dev client interno |
-| `eas build --profile preview` | build interno de pruebas (EAS sube el build) |
+| `eas build --profile preview --platform all` | build de pruebas: APK y TestFlight (EAS sube el build) |
 | `eas build --profile production --platform all` | release a tienda (ver [sección 14](#14-versionado-android-e-ios)) |
-| `pnpm verificar:ota` | **obligatorio** antes de cualquier OTA: comprueba que el bundle apunta al entorno correcto y que el update llega a binarios que pueden ejecutarlo |
+| `pnpm verificar:ota preview` / `pnpm verificar:ota production` | **obligatorio** antes de cualquier OTA: comprueba que el bundle apunta al Core de ese canal y que algún build del canal tiene el mismo runtime |
 | `pnpm eas:update:preview` / `pnpm eas:update:production` | OTA por canal |

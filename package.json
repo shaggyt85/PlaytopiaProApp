@@ -15,7 +15,10 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p __tests__",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "eas:update:preview": "eas update --channel preview --environment preview",
+    "eas:update:production": "eas update --channel production --environment production",
+    "verificar:ota": "node scripts/verify-ota.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",
@@ -47,6 +50,7 @@
     "expo-splash-screen": "~57.0.9",
     "expo-status-bar": "~57.0.1",
     "expo-system-ui": "~57.0.4",
+    "expo-updates": "~57.0.24",
     "i18n-js": "^4.5.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",

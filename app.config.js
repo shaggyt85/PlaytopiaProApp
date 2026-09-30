@@ -19,7 +19,8 @@ const SPLASH_BACKGROUND = BRAND.night;
 export default {
   expo: {
     name: IS_DEV ? "Playtopia Pro DEV" : "Playtopia Pro",
-    slug: "playtopia-app-pro",
+    // El del proyecto de EAS (react_native_pro en expo.dev): EAS exige que coincida.
+    slug: "reactnativepro",
     version: "1.0.0",
     scheme: IS_DEV ? "playtopia-pro-dev" : "playtopia-pro",
     // Vertical en móvil. En tablets y plegables Android 16 (targetSdk 36) ignora
@@ -109,5 +110,22 @@ export default {
         },
       ],
     ],
+    // OTA con EAS Update (guía §14). Cada perfil de eas.json tiene su canal.
+    updates: {
+      url: "https://u.expo.dev/7dbed37c-c130-4928-9984-6c691f49d354",
+      fallbackToCacheTimeout: 0,
+    },
+    // `fingerprint`: el runtime cambia en cuanto cambian las dependencias nativas
+    // o la configuración nativa, y EAS deja de entregar el update a los binarios
+    // que no lo pueden ejecutar. Un cambio nativo obliga a un build nuevo.
+    runtimeVersion: {
+      policy: "fingerprint",
+    },
+    extra: {
+      eas: {
+        projectId: "7dbed37c-c130-4928-9984-6c691f49d354",
+      },
+    },
+    owner: "playtopiateam",
   },
 };
