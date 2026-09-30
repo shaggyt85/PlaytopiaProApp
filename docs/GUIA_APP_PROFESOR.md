@@ -881,10 +881,13 @@ Si algo pasa a usarse en una segunda pantalla, se mueve a `shared/<su tipo>/` y 
 - **Variables:** se gestionan en el dashboard de Expo (Environment variables), por entorno. El secreto del registro va como **Sensitive**, no como Secret: `eas update` genera el bundle en local y no puede leer las Secret. Sin `EXPO_PUBLIC_API_BASE_URL` o sin el secreto la app no arranca (`env.ts`).
 - **Primer build de cada plataforma:** lo lanza el equipo en su terminal, porque es interactivo (el keystore de Android y el login de Apple con doble factor). iOS necesita además su ficha en App Store Connect. Después, los builds y los OTA ya no preguntan.
 - No hay perfil `development`: necesita `expo-dev-client`, que la app no tiene.
+- **`node_modules` como el de EAS:** el fingerprint del runtime incluye los ficheros de los que dependen los plugins de configuración, y con `nodeLinker: hoisted` cada `pnpm add` o `expo install` recoloca solo lo que cambia. Con el tiempo, el `node_modules` local deja de ser el de una instalación limpia, que es la que hace EAS: mismo lockfile, otro runtime. Pasó el 30-sep-2026 con `lru-cache` (tres versiones, cada una pedida por un solo paquete: la que sube a la raíz depende del orden de instalación). Por eso, tras cada cambio de paquetes y antes de un build o un OTA, `pnpm reinstalar`. Instala solo lo del lockfile (`--frozen-lockfile`, mismas versiones y hashes de integridad) y casi todo sale del almacén local de pnpm.
+- **Si el build falla en «Configure expo-updates» con `Runtime version mismatch`:** es ese desfase. `pnpm reinstalar` y volver a lanzarlo.
 
 | Comando | Para qué |
 |---|---|
 | `pnpm start` | desarrollo contra el servidor de dev |
+| `pnpm reinstalar` | `node_modules` limpio desde el lockfile, tras cambiar paquetes y antes de un build o un OTA |
 | `eas build --profile preview --platform all` | build de pruebas: APK y TestFlight (EAS sube el build) |
 | `eas build --profile production --platform all` | release a tienda (ver [sección 14](#14-versionado-android-e-ios)) |
 | `pnpm verificar:ota preview` / `pnpm verificar:ota production` | **obligatorio** antes de cualquier OTA: comprueba que el bundle apunta al Core de ese canal y que algún build del canal tiene el mismo runtime |

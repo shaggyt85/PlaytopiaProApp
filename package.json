@@ -18,7 +18,8 @@
     "test:coverage": "jest --coverage",
     "eas:update:preview": "eas update --channel preview --environment preview",
     "eas:update:production": "eas update --channel production --environment production",
-    "verificar:ota": "node scripts/verify-ota.mjs"
+    "verificar:ota": "node scripts/verify-ota.mjs",
+    "reinstalar": "node -e \"require('fs').rmSync('node_modules', { recursive: true, force: true })\" && pnpm install --frozen-lockfile"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",
