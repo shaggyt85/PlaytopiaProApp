@@ -7,6 +7,7 @@ import { Text } from "@/shared/components/Text";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
+import { useOpenClass } from "../../hooks/useOpenClass";
 import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { classA11yLabel } from "../../utils/classA11yLabel";
@@ -15,6 +16,7 @@ import type { ClassStatus } from "../../utils/classTiming";
 import { occupancy } from "../../utils/occupancy";
 import { seatsLabel } from "../../utils/seatsLabel";
 import { ClubBadge } from "../ClubBadge";
+import { PressableScale } from "../PressableScale";
 import { TimeSquare } from "../TimeSquare";
 
 import { CHEVRON_SIZE, CLOCK_SIZE, TIME_SQUARE_SIZE, useStyles } from "./WeekClassRow.styles";
@@ -29,7 +31,7 @@ interface WeekClassRowProps {
  * Una clase en la vista Semana (las capturas): la hora en su cuadrado, el
  * título con la pastilla del club y «EN VIVO» si está en curso, «60 min · club ·
  * pista», la barra de ocupación con «2/4» y la flecha. Apagada si ya terminó,
- * como en Día. Aún no se puede tocar: el detalle de la clase llega en su paso.
+ * como en Día. Al tocarla se abre su detalle.
  *
  * `memo`: cada minuto solo se vuelve a pintar la fila que cambia de estado.
  */
@@ -37,13 +39,15 @@ export const WeekClassRow = memo(function WeekClassRow({ item, club, status }: W
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
+  const openClass = useOpenClass();
   const live = status === "live";
 
   return (
-    <View
-      style={[styles.row, live && styles.live, status === "past" && styles.past]}
-      accessible
+    <PressableScale
+      onPress={() => openClass(item)}
       accessibilityLabel={classA11yLabel(item, club.label, status, t)}
+      accessibilityHint={t("schedule.detail.openHint")}
+      style={[styles.row, live && styles.live, status === "past" && styles.past]}
       testID={`week-class-${item.id}`}
     >
       <TimeSquare time={item.class_time} colors={club.colors} size={TIME_SQUARE_SIZE} />
@@ -79,6 +83,6 @@ export const WeekClassRow = memo(function WeekClassRow({ item, club, status }: W
         </View>
       </View>
       <IconLoChevronRight size={CHEVRON_SIZE} color={theme.colors.textSecondary} />
-    </View>
+    </PressableScale>
   );
 });

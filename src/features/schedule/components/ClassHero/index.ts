@@ -1,0 +1,1 @@
+export { ClassHero } from "./ClassHero";

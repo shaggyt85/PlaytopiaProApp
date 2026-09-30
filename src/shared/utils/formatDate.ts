@@ -29,17 +29,22 @@ function formatter(options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
 // Las fechas/horas de pared del club se formatean con timeZone "UTC" sobre
 // wallAsUtcMs: se ve exactamente lo que dice Core, sin desplazamientos.
 
-/** `class_date` de Core ("2026-09-26") → "26 sept 2026" (según idioma y estilo). */
-export function formatClubDate(date: string, style: DateStyle = "medium"): string {
-  return formatter({ dateStyle: style, timeZone: "UTC" }).format(wallAsUtcMs(date));
+/**
+ * Una fecha de pared del club (`class_date`, "2026-11-18") con las opciones de
+ * `Intl` de cada formato. Único sitio que pone el `timeZone: "UTC"` y hace el
+ * `wallAsUtcMs`: cada formato de abajo solo dice sus opciones.
+ */
+function formatWallDate(date: string, options: Intl.DateTimeFormatOptions): string {
+  return formatter({ ...options, timeZone: "UTC" }).format(wallAsUtcMs(date));
 }
 
+/** `class_date` de Core ("2026-09-26") → "26 sept 2026" (según idioma y estilo). */
+export const formatClubDate = (date: string, style: DateStyle = "medium"): string =>
+  formatWallDate(date, { dateStyle: style });
+
 /** Fecha de calendario ("1990-05-03") en cifras: "03/05/1990" en español, "05/03/1990" en inglés. */
-export function formatNumericDate(date: string): string {
-  return formatter({ day: "2-digit", month: "2-digit", year: "numeric", timeZone: "UTC" }).format(
-    wallAsUtcMs(date),
-  );
-}
+export const formatNumericDate = (date: string): string =>
+  formatWallDate(date, { day: "2-digit", month: "2-digit", year: "numeric" });
 
 /** `class_time` de Core ("08:00:00") → "08:00" (o "08:00 AM" según idioma). */
 export function formatClubTime(time: string): string {
@@ -55,32 +60,29 @@ export function formatWallTime(wallMs: number): string {
 }
 
 /** `class_date` de Core ("2026-10-05") como día de la semana y número: "lunes 5". */
-export function formatWeekdayDay(date: string): string {
-  const wall = wallAsUtcMs(date);
-  const weekday = formatter({ weekday: "long", timeZone: "UTC" }).format(wall);
-  const day = formatter({ day: "numeric", timeZone: "UTC" }).format(wall);
-  return `${weekday} ${day}`;
-}
+export const formatWeekdayDay = (date: string): string =>
+  `${formatWallDate(date, { weekday: "long" })} ${formatDayOfMonth(date)}`;
 
 /** `class_date` como número del día: "18" (la tira de la semana y la cuadrícula del mes). */
-export function formatDayOfMonth(date: string): string {
-  return formatter({ day: "numeric", timeZone: "UTC" }).format(wallAsUtcMs(date));
-}
+export const formatDayOfMonth = (date: string): string => formatWallDate(date, { day: "numeric" });
+
+/**
+ * `class_date` con el día de la semana, el número y el mes, como lo escribe
+ * cada idioma y con la primera en mayúscula: "Lunes, 18 de noviembre" (la
+ * cabecera del detalle de una clase).
+ */
+export const formatClassDate = (date: string): string =>
+  capitalize(formatWallDate(date, { weekday: "long", day: "numeric", month: "long" }));
 
 /** `class_date` como día y mes: "18 de noviembre" (el título de la lista del mes). */
-export function formatDayMonth(date: string): string {
-  return formatter({ day: "numeric", month: "long", timeZone: "UTC" }).format(wallAsUtcMs(date));
-}
+export const formatDayMonth = (date: string): string => formatWallDate(date, { day: "numeric", month: "long" });
 
 /** `class_date` como día y mes en corto: "18 nov" (los extremos de una semana). */
-export function formatDayMonthShort(date: string): string {
-  return formatter({ day: "numeric", month: "short", timeZone: "UTC" }).format(wallAsUtcMs(date));
-}
+export const formatDayMonthShort = (date: string): string =>
+  formatWallDate(date, { day: "numeric", month: "short" });
 
 /** `class_date` como mes y año, en la forma de cada idioma: "noviembre de 2026". */
-export function formatMonthYear(date: string): string {
-  return formatter({ month: "long", year: "numeric", timeZone: "UTC" }).format(wallAsUtcMs(date));
-}
+export const formatMonthYear = (date: string): string => formatWallDate(date, { month: "long", year: "numeric" });
 
 /** La primera letra en mayúscula, según el idioma activo: "lunes 18" → "Lunes 18". */
 export function capitalize(text: string): string {

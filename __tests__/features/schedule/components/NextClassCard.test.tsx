@@ -1,9 +1,12 @@
-import { render, screen } from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import { NextClassCard } from "@/features/schedule/components/NextClassCard";
 import { darkTheme } from "@/shared/config/theme";
 
 import { nextClass } from "../../../helpers/scheduleFactories";
+
+const mockPush = jest.fn();
+jest.mock("expo-router", () => ({ useRouter: () => ({ push: mockPush }) }));
 
 const mockGradient = jest.fn();
 jest.mock("expo-linear-gradient", () => ({
@@ -13,7 +16,10 @@ jest.mock("expo-linear-gradient", () => ({
   },
 }));
 
-const club = { label: "Club Padel Indoor Madrid", colors: darkTheme.clubColors[0] };
+const club = {
+  label: "Club Padel Indoor Madrid",
+  colors: darkTheme.clubColors[0],
+};
 // Cantera Tarde, el 5 de octubre a las 16:00, 75 min, Pista 1, nivel 2.5 - 3, 3/4.
 const cantera = nextClass();
 
@@ -32,19 +38,33 @@ describe("NextClassCard", () => {
   it("el fondo es el `ink` del prototipo, a 160°", () => {
     render(<NextClassCard item={cantera} club={club} today="2026-10-05" />);
 
-    expect(mockGradient).toHaveBeenCalledWith(expect.objectContaining({ colors: darkTheme.gradients.ink }));
+    expect(mockGradient).toHaveBeenCalledWith(
+      expect.objectContaining({ colors: darkTheme.gradients.ink }),
+    );
   });
 
   it("si es mañana u otro día, lo dice delante de la hora", () => {
-    const { rerender } = render(<NextClassCard item={cantera} club={club} today="2026-10-04" />);
-    expect(screen.getByText("Mañana · 16:00 · 75 min · Nivel 2.5 - 3")).toBeTruthy();
+    const { rerender } = render(
+      <NextClassCard item={cantera} club={club} today="2026-10-04" />,
+    );
+    expect(
+      screen.getByText("Mañana · 16:00 · 75 min · Nivel 2.5 - 3"),
+    ).toBeTruthy();
 
     rerender(<NextClassCard item={cantera} club={club} today="2026-10-01" />);
-    expect(screen.getByText("lunes 5 · 16:00 · 75 min · Nivel 2.5 - 3")).toBeTruthy();
+    expect(
+      screen.getByText("lunes 5 · 16:00 · 75 min · Nivel 2.5 - 3"),
+    ).toBeTruthy();
   });
 
   it("sin pista, solo el club", () => {
-    render(<NextClassCard item={nextClass({ track_name: "" })} club={club} today="2026-10-05" />);
+    render(
+      <NextClassCard
+        item={nextClass({ track_name: "" })}
+        club={club}
+        today="2026-10-05"
+      />,
+    );
 
     expect(screen.queryByText(/Pista/)).toBeNull();
   });
@@ -57,5 +77,15 @@ describe("NextClassCard", () => {
         "Mañana, Cantera Tarde, 16:00, 75 minutos, Pista 1, Club Padel Indoor Madrid, 3 de 4 plazas, próxima clase, Nivel 2.5 - 3",
       ),
     ).toBeTruthy();
+  });
+  it("al tocarla abre su detalle", () => {
+    render(<NextClassCard item={cantera} club={club} today="2026-10-05" />);
+
+    fireEvent.press(screen.getByTestId("next-class"));
+
+    expect(mockPush).toHaveBeenCalledWith({
+      pathname: "/class/[dbId]/[classId]",
+      params: { dbId: "4", classId: "31", date: "2026-10-05" },
+    });
   });
 });

@@ -1,3 +1,4 @@
+export { ClassHero } from "./ClassHero";
 export { ClubBadge } from "./ClubBadge";
 export { ClubDot } from "./ClubDot";
 export { ClubLegend } from "./ClubLegend";
@@ -14,10 +15,12 @@ export { MonthGrid } from "./MonthGrid";
 export { MonthSchedule } from "./MonthSchedule";
 export { NextClassCard } from "./NextClassCard";
 export { NowLine } from "./NowLine";
+export { PressableScale } from "./PressableScale";
 export { ScheduleAgenda } from "./ScheduleAgenda";
 export { ScheduleClassBlock } from "./ScheduleClassBlock";
 export { ScheduleDataState } from "./ScheduleDataState";
 export { ScheduleToolbar } from "./ScheduleToolbar";
+export { StatTile } from "./StatTile";
 export { MAX_AVATARS, StudentAvatars } from "./StudentAvatars";
 export { TimeSquare } from "./TimeSquare";
 export { WeekClassRow } from "./WeekClassRow";

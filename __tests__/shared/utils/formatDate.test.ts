@@ -2,6 +2,7 @@ import { changeLanguage } from "@/shared/config/i18n";
 import { wallAsUtcMs } from "@/shared/utils/clubClock";
 import {
   capitalize,
+  formatClassDate,
   formatClubDate,
   formatClubTime,
   formatDayMonth,
@@ -137,5 +138,14 @@ describe("formatDayOfMonth", () => {
   it("el número del día, sin moverse de día", () => {
     expect(formatDayOfMonth("2026-11-08")).toBe("8");
     expect(formatDayOfMonth("2026-11-18")).toBe("18");
+  });
+});
+
+describe("formatClassDate", () => {
+  it("el día de la semana, el número y el mes, como lo escribe cada idioma", async () => {
+    expect(formatClassDate("2026-11-16")).toBe("Lunes, 16 de noviembre");
+
+    await changeLanguage("en");
+    expect(formatClassDate("2026-11-16")).toBe("Monday, November 16");
   });
 });

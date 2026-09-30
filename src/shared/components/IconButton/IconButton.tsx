@@ -3,7 +3,7 @@ import { Pressable, type PressableProps } from "react-native";
 import type { IconComponent } from "@/shared/config/icons";
 import { useTheme } from "@/shared/hooks/useTheme";
 
-import { useStyles } from "./IconButton.styles";
+import { useStyles, type IconButtonVariant } from "./IconButton.styles";
 
 export interface IconButtonProps extends Omit<PressableProps, "children" | "style"> {
   Icon: IconComponent;
@@ -11,6 +11,8 @@ export interface IconButtonProps extends Omit<PressableProps, "children" | "styl
   accessibilityLabel: string;
   /** Diámetro del círculo (por defecto el área táctil mínima, 44). */
   size?: number;
+  /** `surface` (por defecto) o `onColor`, sobre un degradado. */
+  variant?: IconButtonVariant;
 }
 
 /**
@@ -19,7 +21,7 @@ export interface IconButtonProps extends Omit<PressableProps, "children" | "styl
  * mínima, la completa con `hitSlop`. Sin `onPress` queda desactivado: el lector
  * de pantalla lo anuncia así y no se anima al tocarlo.
  */
-export function IconButton({ Icon, size, hitSlop, onPress, disabled, ...rest }: IconButtonProps) {
+export function IconButton({ Icon, size, variant = "surface", hitSlop, onPress, disabled, ...rest }: IconButtonProps) {
   const theme = useTheme();
   const diameter = size ?? theme.touchTarget;
   const styles = useStyles();
@@ -34,12 +36,13 @@ export function IconButton({ Icon, size, hitSlop, onPress, disabled, ...rest }: 
       hitSlop={hitSlop ?? Math.max(0, (theme.touchTarget - diameter) / 2)}
       style={({ pressed }) => [
         styles.circle,
+        styles[variant],
         { width: diameter, height: diameter, borderRadius: diameter / 2 },
         pressed && styles.pressed,
       ]}
       {...rest}
     >
-      <Icon size={Math.round(diameter * ICON_RATIO)} color={theme.colors.text} />
+      <Icon size={Math.round(diameter * ICON_RATIO)} color={variant === "onColor" ? theme.colors.onPrimary : theme.colors.text} />
     </Pressable>
   );
 }

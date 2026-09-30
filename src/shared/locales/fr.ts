@@ -167,6 +167,16 @@ const fr: Translations = {
       level: "Niveau %{range}",
       students: "%{taken}/%{max} élèves",
     },
+    /** El detalle de una clase (se abre al tocarla en la agenda). */
+    detail: {
+      openHint: "Ouvre le détail du cours",
+      timeRange: "%{start}–%{end}",
+      /** Una cifra de la cabecera para el lector de pantalla: «Alumnos: 2/4». */
+      stat: "%{label}: %{value}",
+      students: "Élèves",
+      level: "Niveau",
+      notFound: "Cours introuvable",
+    },
     day: {
       today: "Aujourd'hui · %{day}",
       previousDay: "Jour précédent",

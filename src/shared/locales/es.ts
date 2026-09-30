@@ -169,6 +169,16 @@ const es = {
       level: "Nivel %{range}",
       students: "%{taken}/%{max} alumnos",
     },
+    /** El detalle de una clase (se abre al tocarla en la agenda). */
+    detail: {
+      openHint: "Abre el detalle de la clase",
+      timeRange: "%{start}–%{end}",
+      /** Una cifra de la cabecera para el lector de pantalla: «Alumnos: 2/4». */
+      stat: "%{label}: %{value}",
+      students: "Alumnos",
+      level: "Nivel",
+      notFound: "Clase no encontrada",
+    },
     day: {
       today: "Hoy · %{day}",
       previousDay: "Día anterior",

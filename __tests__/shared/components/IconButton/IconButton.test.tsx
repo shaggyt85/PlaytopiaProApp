@@ -1,5 +1,6 @@
 import { IconLoBell } from "@playtopia/icons/react-native";
 import { fireEvent, render, screen } from "@testing-library/react-native";
+import { StyleSheet } from "react-native";
 
 import { IconButton } from "@/shared/components/IconButton";
 import { darkTheme } from "@/shared/config/theme";
@@ -40,5 +41,15 @@ describe("IconButton", () => {
 
     expect(screen.getByRole("button")).toHaveStyle({ width: 36 });
     expect(screen.getByRole("button").props.hitSlop).toBe((darkTheme.touchTarget - 36) / 2);
+  });
+});
+
+describe("IconButton sobre un color", () => {
+  it("sin borde y con el icono en blanco", () => {
+    render(<IconButton Icon={IconLoBell} accessibilityLabel="Volver" variant="onColor" onPress={jest.fn()} />);
+
+    const style = StyleSheet.flatten(screen.getByRole("button", { name: "Volver" }).props.style);
+    expect(style.borderWidth).toBeUndefined();
+    expect(style.backgroundColor).not.toBe(darkTheme.colors.surfaceStrong);
   });
 });
