@@ -26,7 +26,7 @@ export function StatTile({ Icon, value, label }: StatTileProps) {
       <View style={styles.icon}>
         <Icon size={ICON_SIZE} color={theme.colors.onPrimary} />
       </View>
-      <Text variant="statValue" color="onPrimary" numberOfLines={1}>
+      <Text variant="smallTitle" color="onPrimary" numberOfLines={1}>
         {value}
       </Text>
       <Text variant="statLabel" color="onPrimary" style={styles.label}>

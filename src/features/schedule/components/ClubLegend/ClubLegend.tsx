@@ -1,11 +1,11 @@
 import { memo } from "react";
 import { View } from "react-native";
 
-import { Text } from "@/shared/components/Text";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import type { LegendClub } from "../../hooks/useScheduleClubs";
 import { ClubBadge } from "../ClubBadge";
+import { SectionLabel } from "../SectionLabel";
 
 import { useStyles } from "./ClubLegend.styles";
 
@@ -26,9 +26,7 @@ export const ClubLegend = memo(function ClubLegend({ clubs }: ClubLegendProps) {
 
   return (
     <View style={styles.container} testID="club-legend">
-      <Text variant="chip" color="textSecondary">
-        {t("schedule.legend")}
-      </Text>
+      <SectionLabel label={t("schedule.legend")} />
       {clubs.map((club) => (
         <ClubBadge key={club.key} club={club} size="legend" />
       ))}

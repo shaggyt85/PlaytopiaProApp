@@ -76,8 +76,8 @@ const typography = {
   timeBadge: { fontFamily: FONTS.bold, fontSize: 11, fontVariant: TABULAR_NUMS },
   /** Marca diminuta en mayúsculas sobre una fila («EN VIVO»: `text-[9px] font-bold uppercase`). */
   statusBadge: { fontFamily: FONTS.bold, fontSize: 9, textTransform: "uppercase" },
-  /** El valor de una cifra de la cabecera del detalle («2/4», «2.5 - 3»): `font-display text-sm font-bold`. */
-  statValue: { fontFamily: FONTS.display, fontSize: 14 },
+  /** Título pequeño (`font-display text-sm font-bold`): una cifra del detalle («2/4»), el nombre de su club. */
+  smallTitle: { fontFamily: FONTS.display, fontSize: 14 },
   /** Lo que es esa cifra («Alumnos»): `text-[10px]`. */
   statLabel: { fontFamily: FONTS.regular, fontSize: 10 },
   /** Un dato remarcado de 12 (el club en la cabecera del detalle: `text-xs font-semibold`). */

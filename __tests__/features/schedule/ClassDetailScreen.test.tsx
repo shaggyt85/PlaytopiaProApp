@@ -28,15 +28,26 @@ describe("ClassDetailScreen", () => {
   beforeEach(() => {
     signInTeacher();
     jest.mocked(useRouter).mockReturnValue(router as never);
-    jest.mocked(myClubsService.getMyClubs).mockResolvedValue({ clubs: [schoolCard(4, 7, { club_name: "Sede Centro" })] });
+    jest.mocked(myClubsService.getMyClubs).mockResolvedValue({
+      clubs: [schoolCard(4, 7, { club_name: "Sede Centro", address: "Pº de la Castellana 300" })],
+    });
     jest.mocked(scheduleService.getClasses).mockResolvedValue(scheduleResponse({ classes: [cantera] }));
   });
 
-  it("la cabecera de la clase, con el nombre de su club", async () => {
+  it("la cabecera de la clase y, debajo, su club con la calle", async () => {
     openWith({ dbId: "4", classId: "31", date: "2026-11-18" });
 
     expect(await screen.findByRole("header", { name: "Cantera Tarde" })).toBeTruthy();
-    expect(await screen.findByText("Sede Centro")).toBeTruthy();
+    expect(await screen.findByLabelText("Club: Sede Centro, Pº de la Castellana 300")).toBeTruthy();
+    expect(screen.getByRole("header", { name: "Club" })).toBeTruthy();
+  });
+
+  it("si la sede ya no está en «Mis clubes», sin la tarjeta del club", async () => {
+    jest.mocked(myClubsService.getMyClubs).mockResolvedValue({ clubs: [] });
+    openWith({ dbId: "4", classId: "31", date: "2026-11-18" });
+
+    expect(await screen.findByRole("header", { name: "Cantera Tarde" })).toBeTruthy();
+    expect(screen.queryByTestId("club-section")).toBeNull();
   });
 
   it("← vuelve a donde se vino", async () => {

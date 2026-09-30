@@ -26,9 +26,10 @@ export interface LegendClub extends ScheduleClub {
 
 /**
  * Los clubes de la agenda, a partir de «Mis clubes» (misma caché que «Red de
- * clubes»): la lista para la leyenda y `clubOf` para el club de cada clase, con
- * su nombre corto y su color, fijo por su posición. Las dos salen del mismo
- * cálculo, así la leyenda y las tarjetas nunca dan colores distintos.
+ * clubes»): la lista para la leyenda, `clubOf` para el club de cada clase, con
+ * su nombre corto y su color, fijo por su posición, y `cardOf` para su tarjeta de
+ * sede (la dirección, en el detalle). Todo sale del mismo cálculo, así la
+ * leyenda, las tarjetas y el detalle nunca dan colores ni datos distintos.
  *
  * Una sede que no esté en «Mis clubes» —le acaban de dar de baja y la caché aún
  * no lo sabe— sale sin nombre y con el color neutro: la clase se ve igual.
@@ -37,13 +38,17 @@ export function useScheduleClubs(service: IMyClubsService = myClubsService) {
   const theme = useTheme();
   const { data } = useMyClubs(service);
 
-  const { clubs, byKey } = useMemo(() => {
+  const { clubs, byKey, cards } = useMemo(() => {
     const list: LegendClub[] = (data?.clubs ?? []).map((club, index) => ({
       key: sedeKey(club),
       label: club.club_name ?? club.name,
       colors: colorAt(theme.clubColors, index),
     }));
-    return { clubs: list, byKey: new Map<string, ScheduleClub>(list.map((club) => [club.key, club])) };
+    return {
+      clubs: list,
+      byKey: new Map<string, ScheduleClub>(list.map((club) => [club.key, club])),
+      cards: new Map<string, SchoolCard>((data?.clubs ?? []).map((card) => [sedeKey(card), card])),
+    };
   }, [data, theme.clubColors]);
 
   const clubOf = useCallback<ClubOf>(
@@ -52,5 +57,11 @@ export function useScheduleClubs(service: IMyClubsService = myClubsService) {
     [byKey, theme.clubColorUnknown],
   );
 
-  return { clubs, clubOf };
+  /** La tarjeta de sede de un club de «Mis clubes»; `undefined` si ya no está. */
+  const cardOf = useCallback(
+    (sede: Pick<SchoolCard, "db_id" | "club_id">): SchoolCard | undefined => cards.get(sedeKey(sede)),
+    [cards],
+  );
+
+  return { clubs, clubOf, cardOf };
 }

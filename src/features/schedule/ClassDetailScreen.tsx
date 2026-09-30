@@ -8,7 +8,7 @@ import { EmptyState } from "@/shared/components/EmptyState";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import { useStyles } from "./ClassDetailScreen.styles";
-import { ClassHero, ScheduleDataState } from "./components";
+import { ClassHero, ClubCard, DetailSection, ScheduleDataState } from "./components";
 import { useClassDetail } from "./hooks/useClassDetail";
 import { useScheduleClubs } from "./hooks/useScheduleClubs";
 import { ClassDetailParamsSchema, type ClassDetailParams } from "./utils/classRoute";
@@ -20,8 +20,8 @@ function useGoBack() {
 }
 
 /**
- * El detalle de una clase, encima de las pestañas y sin barra: por ahora, su
- * cabecera. Lo que aún no tiene datos en Core (asistencia, objetivos, notas…)
+ * El detalle de una clase, encima de las pestañas y sin barra: su cabecera y su
+ * club. Lo que aún no tiene datos en Core (asistencia, objetivos, notas…)
  * no se enseña; cada cosa llega con su fase.
  *
  * Los parámetros de la ruta llegan como texto: si no son válidos, «Clase no
@@ -35,8 +35,11 @@ export function ClassDetailScreen() {
 function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
   const styles = useStyles();
   const goBack = useGoBack();
+  const { t } = useTranslation();
   const { item, hasData, error, refetch } = useClassDetail(dbId, classId, date);
-  const { clubOf } = useScheduleClubs();
+  const { clubOf, cardOf } = useScheduleClubs();
+  // Si la sede ya no está en «Mis clubes» (le acaban de dar de baja), su tarjeta no sale.
+  const card = item ? cardOf(item) : undefined;
 
   return (
     <DetailFrame>
@@ -44,6 +47,11 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
         {item ? (
           <ScrollView contentContainerStyle={styles.content}>
             <ClassHero item={item} club={clubOf(item)} onBack={goBack} />
+            {card ? (
+              <DetailSection title={t("schedule.detail.club")} testID="club-section">
+                <ClubCard club={clubOf(item)} card={card} />
+              </DetailSection>
+            ) : null}
           </ScrollView>
         ) : (
           <ClassNotFoundState onBack={goBack} />

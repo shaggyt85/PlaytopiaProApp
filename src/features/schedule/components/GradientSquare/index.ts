@@ -1,0 +1,1 @@
+export { GradientSquare } from "./GradientSquare";

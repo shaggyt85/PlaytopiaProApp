@@ -173,6 +173,10 @@ const de: Translations = {
       timeRange: "%{start}–%{end}",
       /** Una cifra de la cabecera para el lector de pantalla: «Alumnos: 2/4». */
       stat: "%{label}: %{value}",
+      /** El título de la sección del club. */
+      club: "Club",
+      /** La tarjeta del club para el lector de pantalla: «Club: Wave Padel Club, Pº de la Castellana 300». */
+      clubA11y: "Club: %{details}",
       students: "Schüler",
       level: "Niveau",
       notFound: "Kurs nicht gefunden",

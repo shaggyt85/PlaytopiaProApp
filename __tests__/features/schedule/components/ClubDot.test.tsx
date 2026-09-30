@@ -19,3 +19,11 @@ describe("ClubDot con aro", () => {
     expect(StyleSheet.flatten(screen.getByTestId("club-dot").props.style).borderWidth).toBe(1);
   });
 });
+
+describe("ClubDot grande", () => {
+  it("el de la tarjeta del club, de 20", () => {
+    render(<ClubDot color="#0EA5E9" size="lg" ring />);
+
+    expect(StyleSheet.flatten(screen.getByTestId("club-dot").props.style)).toMatchObject({ width: 20, height: 20 });
+  });
+});
