@@ -47,6 +47,7 @@ const ca: Translations = {
       emailPlaceholder: "el.teu@correu.com",
       continue: "Continuar",
       register: "Registrar-se",
+      noStudents: "Encara no hi ha alumnes apuntats",
       notFound: "Correu no trobat. Verifica el teu correu o registra't",
     },
     password: {
@@ -179,6 +180,7 @@ const ca: Translations = {
       clubA11y: "Club: %{details}",
       students: "Alumnes",
       level: "Nivell",
+      noStudents: "Encara no hi ha alumnes apuntats",
       notFound: "Classe no trobada",
     },
     day: {

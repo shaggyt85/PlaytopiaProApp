@@ -49,6 +49,7 @@ const es = {
       emailPlaceholder: "tu@correo.com",
       continue: "Continuar",
       register: "Registrarse",
+      noStudents: "Aún no hay alumnos apuntados",
       notFound: "Correo no encontrado. Verifica tu correo o regístrate",
     },
     password: {
@@ -181,6 +182,7 @@ const es = {
       clubA11y: "Club: %{details}",
       students: "Alumnos",
       level: "Nivel",
+      noStudents: "Aún no hay alumnos apuntados",
       notFound: "Clase no encontrada",
     },
     day: {

@@ -42,6 +42,14 @@ describe("ClassDetailScreen", () => {
     expect(screen.getByRole("header", { name: "Club" })).toBeTruthy();
   });
 
+  it("debajo, sus alumnos", async () => {
+    openWith({ dbId: "4", classId: "31", date: "2026-11-18" });
+
+    expect(await screen.findByRole("header", { name: "Alumnos" })).toBeTruthy();
+    expect(screen.getByLabelText("Diego Pérez")).toBeTruthy();
+    expect(screen.getByLabelText("Lucía Romero")).toBeTruthy();
+  });
+
   it("si la sede ya no está en «Mis clubes», sin la tarjeta del club", async () => {
     jest.mocked(myClubsService.getMyClubs).mockResolvedValue({ clubs: [] });
     openWith({ dbId: "4", classId: "31", date: "2026-11-18" });

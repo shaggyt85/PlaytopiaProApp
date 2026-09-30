@@ -47,6 +47,7 @@ const en: Translations = {
       emailPlaceholder: "your@email.com",
       continue: "Continue",
       register: "Sign Up",
+      noStudents: "No students signed up yet",
       notFound: "Email not found. Please check your email or sign up",
     },
     password: {
@@ -179,6 +180,7 @@ const en: Translations = {
       clubA11y: "Club: %{details}",
       students: "Students",
       level: "Level",
+      noStudents: "No students signed up yet",
       notFound: "Class not found",
     },
     day: {

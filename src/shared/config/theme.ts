@@ -84,6 +84,10 @@ const typography = {
   labelStrong: { fontFamily: FONTS.semibold, fontSize: 12 },
   /** Iniciales en el círculo de un alumno (`font-display font-bold text-[10px]` del `CoachAvatar` pequeño). */
   avatarInitials: { fontFamily: FONTS.display, fontSize: 10 },
+  /** Iniciales en el círculo mediano (el `CoachAvatar md` de la lista de alumnos: `text-xs`). */
+  avatarInitialsMd: { fontFamily: FONTS.display, fontSize: 12 },
+  /** El nombre en una fila de lista (un alumno: `text-sm font-semibold`). */
+  rowLabel: { fontFamily: FONTS.semibold, fontSize: 14 },
   /** Lema bajo la marca (splash). */
   tagline: { fontFamily: FONTS.regular, fontSize: 14, letterSpacing: 1 },
   button: { fontFamily: FONTS.bold, fontSize: 16 },

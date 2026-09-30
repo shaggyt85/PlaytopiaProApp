@@ -47,6 +47,7 @@ const fr: Translations = {
       emailPlaceholder: "votre@email.com",
       continue: "Continuer",
       register: "S'inscrire",
+      noStudents: "Aucun élève inscrit pour l'instant",
       notFound: "E-mail introuvable. Vérifiez votre e-mail ou inscrivez-vous",
     },
     password: {
@@ -179,6 +180,7 @@ const fr: Translations = {
       clubA11y: "Club : %{details}",
       students: "Élèves",
       level: "Niveau",
+      noStudents: "Aucun élève inscrit pour l'instant",
       notFound: "Cours introuvable",
     },
     day: {

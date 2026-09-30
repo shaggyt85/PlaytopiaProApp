@@ -47,6 +47,7 @@ const de: Translations = {
       emailPlaceholder: "ihre@email.com",
       continue: "Weiter",
       register: "Registrieren",
+      noStudents: "Noch keine Schüler angemeldet",
       notFound: "E-Mail nicht gefunden. Überprüfen Sie Ihre E-Mail oder registrieren Sie sich",
     },
     password: {
@@ -179,6 +180,7 @@ const de: Translations = {
       clubA11y: "Club: %{details}",
       students: "Schüler",
       level: "Niveau",
+      noStudents: "Noch keine Schüler angemeldet",
       notFound: "Kurs nicht gefunden",
     },
     day: {

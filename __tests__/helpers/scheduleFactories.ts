@@ -22,9 +22,10 @@ export const scheduleClass = (overrides: Partial<ScheduleClass> = {}): ScheduleC
   is_private: 0,
   group_id: 11,
   number_of_classes: 40,
+  // Ya en el orden en que los deja el contrato (por nombre).
   students: [
-    { name: "Lucía", last_name: "Romero" },
     { name: "Diego", last_name: "Pérez" },
+    { name: "Lucía", last_name: "Romero" },
   ],
   ...overrides,
 });

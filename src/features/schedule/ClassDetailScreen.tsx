@@ -8,7 +8,7 @@ import { EmptyState } from "@/shared/components/EmptyState";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import { useStyles } from "./ClassDetailScreen.styles";
-import { ClassHero, ClubCard, DetailSection, ScheduleDataState } from "./components";
+import { ClassHero, ClubCard, DetailSection, ScheduleDataState, StudentList } from "./components";
 import { useClassDetail } from "./hooks/useClassDetail";
 import { useScheduleClubs } from "./hooks/useScheduleClubs";
 import { ClassDetailParamsSchema, type ClassDetailParams } from "./utils/classRoute";
@@ -20,8 +20,8 @@ function useGoBack() {
 }
 
 /**
- * El detalle de una clase, encima de las pestañas y sin barra: su cabecera y su
- * club. Lo que aún no tiene datos en Core (asistencia, objetivos, notas…)
+ * El detalle de una clase, encima de las pestañas y sin barra: su cabecera, su
+ * club y sus alumnos. Lo que aún no tiene datos en Core (asistencia, objetivos, notas…)
  * no se enseña; cada cosa llega con su fase.
  *
  * Los parámetros de la ruta llegan como texto: si no son válidos, «Clase no
@@ -52,6 +52,9 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
                 <ClubCard club={clubOf(item)} card={card} />
               </DetailSection>
             ) : null}
+            <DetailSection title={t("schedule.detail.students")} testID="students-section">
+              <StudentList students={item.students} />
+            </DetailSection>
           </ScrollView>
         ) : (
           <ClassNotFoundState onBack={goBack} />

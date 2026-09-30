@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { compareText } from "@/shared/utils/compareText";
+
 // Contrato de Core (Scalar, grupo Mobile Teacher): la agenda del profesor,
 // `GET /api/MobileTeacher/classes?from=&to=` (`TeacherClassesResponse`).
 
@@ -9,6 +11,16 @@ export const StudentNameSchema = z.object({
   last_name: z.string(),
 });
 export type StudentName = z.infer<typeof StudentNameSchema>;
+
+/** Por nombre y, si coincide, por apellido, como los ordena el idioma activo. */
+const byName = (a: StudentName, b: StudentName) => compareText(a.name, b.name) || compareText(a.last_name, b.last_name);
+
+/**
+ * Los alumnos de una clase, ordenados al validarlos: Core los junta sin orden, y
+ * así la tarjeta de la próxima clase y el detalle los ponen igual (con el mismo
+ * color para cada uno, que sale de su posición).
+ */
+const StudentsSchema = z.array(StudentNameSchema).transform((students) => [...students].sort(byName));
 
 /** Una clase de la agenda (`TeacherClassDto`). */
 export const ScheduleClassSchema = z.object({
@@ -38,7 +50,7 @@ export const ScheduleClassSchema = z.object({
   group_id: z.number().int().nullable(),
   /** Cuántas clases tiene su grupo («una de 40»). */
   number_of_classes: z.number().int().nullable(),
-  students: z.array(StudentNameSchema),
+  students: StudentsSchema,
 });
 export type ScheduleClass = z.infer<typeof ScheduleClassSchema>;
 

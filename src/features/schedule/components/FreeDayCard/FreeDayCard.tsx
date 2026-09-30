@@ -1,20 +1,9 @@
-import { View } from "react-native";
-
-import { Text } from "@/shared/components/Text";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
-import { useStyles } from "./FreeDayCard.styles";
+import { EmptyNote } from "../EmptyNote";
 
-/** Un día sin clases: «Día libre · sin compromisos», como en la vista Semana del prototipo. */
+/** Un día sin clases: «Día libre · sin compromisos», el mismo en Día, Semana y Mes. */
 export function FreeDayCard() {
-  const styles = useStyles();
   const { t } = useTranslation();
-
-  return (
-    <View style={styles.container} testID="free-day">
-      <Text variant="small" color="textSecondary" align="center">
-        {t("schedule.day.free")}
-      </Text>
-    </View>
-  );
+  return <EmptyNote message={t("schedule.day.free")} testID="free-day" />;
 }

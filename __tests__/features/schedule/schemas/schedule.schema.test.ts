@@ -28,4 +28,26 @@ describe("ScheduleResponseSchema", () => {
     const { starts_at: _startsAt, ...withoutStart } = nextClass();
     expect(ScheduleResponseSchema.safeParse({ classes: [], next_class: withoutStart }).success).toBe(false);
   });
+
+  it("ordena a los alumnos por nombre y apellido, como el idioma: el mismo orden y color en todas partes", () => {
+    const parsed = ScheduleResponseSchema.parse(
+      scheduleResponse({
+        classes: [
+          scheduleClass({
+            students: [
+              { name: "Lucía", last_name: "Romero" },
+              { name: "Álvaro", last_name: "Zamora" },
+              { name: "lucía", last_name: "Blanco" },
+            ],
+          }),
+        ],
+      }),
+    );
+
+    expect(parsed.classes[0].students.map((s) => `${s.name} ${s.last_name}`)).toEqual([
+      "Álvaro Zamora",
+      "lucía Blanco",
+      "Lucía Romero",
+    ]);
+  });
 });
