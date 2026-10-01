@@ -5,12 +5,16 @@ import { useCallback, useState } from "react";
 
 import { AnimatedSplash } from "@/features/splash";
 import { AppProviders } from "@/shared/components/AppProviders";
+import { initSentry, wrapWithSentry } from "@/shared/config/sentry";
 import { useAppReady } from "@/shared/hooks/useAppReady";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useSessionStore } from "@/shared/store/sessionStore";
 // Valida las variables de entorno al arrancar: si falta alguna, la app
 // falla aquí con un mensaje claro y no más tarde en una pantalla cualquiera.
 import "@/shared/config/env";
+
+// Lo antes posible, para que un fallo al arrancar también llegue.
+initSentry();
 
 // El splash nativo (fondo `BRAND.night`) se mantiene hasta que la app está lista y
 // el animado ya está pintado encima: si se quitara antes, durante un instante
@@ -19,7 +23,7 @@ SplashScreen.preventAutoHideAsync();
 
 // Layout raíz: providers y guards. Con sesión de profesor solo existe (app);
 // sin ella, solo (auth). Stack.Protected lleva a la otra rama cuando cambia.
-export default function RootLayout() {
+function RootLayout() {
   const theme = useTheme();
   const ready = useAppReady();
   const isAuthenticated = useSessionStore((s) => s.status === "authenticated");
@@ -59,3 +63,5 @@ export default function RootLayout() {
     </AppProviders>
   );
 }
+
+export default wrapWithSentry(RootLayout);

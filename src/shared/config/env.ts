@@ -14,7 +14,12 @@ const envSchema = z.object({
     .int()
     .positive()
     .default(300),
+  // Sin DSN, Sentry no arranca (shared/config/sentry.ts).
   EXPO_PUBLIC_SENTRY_DSN: z.url().optional(),
+  // Entorno de los eventos, declarado por cada perfil de eas.json. Hace falta
+  // porque `preview` se compila en Release y `__DEV__` no lo distingue de
+  // producción.
+  EXPO_PUBLIC_SENTRY_ENV: z.enum(["preview", "production"]).optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -48,4 +53,5 @@ export const env = parseEnv({
     process.env.EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET,
   EXPO_PUBLIC_TOKEN_SKEW_SECONDS: process.env.EXPO_PUBLIC_TOKEN_SKEW_SECONDS,
   EXPO_PUBLIC_SENTRY_DSN: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  EXPO_PUBLIC_SENTRY_ENV: process.env.EXPO_PUBLIC_SENTRY_ENV,
 });

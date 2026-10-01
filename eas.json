@@ -9,7 +9,8 @@
       "distribution": "store",
       "environment": "preview",
       "env": {
-        "APP_VARIANT": "development"
+        "APP_VARIANT": "development",
+        "EXPO_PUBLIC_SENTRY_ENV": "preview"
       },
       "android": {
         "buildType": "apk",
@@ -24,6 +25,9 @@
       "autoIncrement": true,
       "distribution": "store",
       "environment": "production",
+      "env": {
+        "EXPO_PUBLIC_SENTRY_ENV": "production"
+      },
       "android": {
         "buildType": "app-bundle",
         "gradleCommand": ":app:bundleRelease"

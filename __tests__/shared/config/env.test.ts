@@ -5,6 +5,7 @@ const base = {
   EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET: "secreto",
   EXPO_PUBLIC_TOKEN_SKEW_SECONDS: undefined,
   EXPO_PUBLIC_SENTRY_DSN: undefined,
+  EXPO_PUBLIC_SENTRY_ENV: undefined,
 };
 
 describe("parseEnv", () => {
@@ -40,6 +41,15 @@ describe("parseEnv", () => {
     ).toThrow(/EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET/);
     expect(() => parseEnv({ ...base, EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET: "" })).toThrow(
       /EXPO_PUBLIC_USER_TEACHER_SHARED_SECRET/,
+    );
+  });
+
+  it("acepta los dos entornos de Sentry y rechaza cualquier otro", () => {
+    expect(parseEnv({ ...base, EXPO_PUBLIC_SENTRY_ENV: "preview" }).EXPO_PUBLIC_SENTRY_ENV).toBe(
+      "preview",
+    );
+    expect(() => parseEnv({ ...base, EXPO_PUBLIC_SENTRY_ENV: "staging" })).toThrow(
+      /EXPO_PUBLIC_SENTRY_ENV/,
     );
   });
 

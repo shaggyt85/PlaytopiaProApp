@@ -115,6 +115,16 @@ export default {
           },
         },
       ],
+      [
+        // Sube los source maps al compilar, para que los fallos se lean con el
+        // código original. El token va en SENTRY_AUTH_TOKEN, solo en EAS.
+        "@sentry/react-native/expo",
+        {
+          url: "https://sentry.io/",
+          organization: "playtopia-ab",
+          project: "playtopia-pro",
+        },
+      ],
     ],
     // OTA con EAS Update (guía §14). Cada perfil de eas.json tiene su canal.
     updates: {
