@@ -42,9 +42,15 @@ export default {
         dark: icon("ios-dark"),
         tinted: icon("ios-tinted"),
       },
-      // Permite que los textos del sistema (permisos) salgan en el idioma del
-      // móvil, desde `locales` más abajo.
-      infoPlist: { CFBundleAllowMixedLocalizations: true },
+      infoPlist: {
+        // Permite que los textos del sistema (permisos) salgan en el idioma del
+        // móvil, desde `locales` más abajo.
+        CFBundleAllowMixedLocalizations: true,
+        // Sin cifrado propio que declarar: HTTPS y el llavero los pone iOS, y
+        // crypto-js solo firma con HMAC el token de registro, que es
+        // autenticación. Con esto App Store Connect no pregunta en cada build.
+        ITSAppUsesNonExemptEncryption: false,
+      },
     },
     // Textos del sistema por idioma (src/shared/locales/native.js).
     locales: Object.fromEntries(
