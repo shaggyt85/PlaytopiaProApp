@@ -750,11 +750,11 @@ Hay **dos números**, y cada uno se gestiona de una forma. Aplican igual en Andr
 
 | Número | Android | iOS | Quién lo cambia |
 |---|---|---|---|
-| **Versión** SemVer `MAJOR.MINOR.PATCH` (la que ve el usuario) | `versionName` | `CFBundleShortVersionString` | **Manual**, siguiendo el estándar |
+| **Versión** SemVer `MAJOR.MINOR.PATCH` (la que ve el usuario y la que compara Core en el version-check) | `versionName` | `CFBundleShortVersionString` | **`pnpm release`**, al sacar una release |
 | **Build** (número interno de la tienda) | `versionCode` | `buildNumber` | **Automático**, lo sube EAS |
 
 - **Build:** `eas.json` lleva `"appVersionSource": "remote"` y `autoIncrement: true` en `preview` y `production`. No se escribe `versionCode` ni `buildNumber` en `app.config.js`: con fuente remota se ignoran y solo confunden.
-- **Versión:** se cambia a mano en `app.config.js` (`expo.version`) y la misma en `package.json`. La app arranca en `1.0.0`.
+- **Versión:** vive **solo en `package.json`**; `app.config.js` la lee de ahí (`require("./package.json").version`), así que no hay dos copias que puedan separarse. Se sube con `pnpm release patch|minor|major` (`scripts/release.js`), nunca a mano. La app arranca en `1.0.0`. Elegir cuál:
   - **PATCH** (`1.0.0 → 1.0.1`): solo correcciones (`fix`).
   - **MINOR** (`1.0.1 → 1.1.0`): funcionalidad nueva compatible (`feat`), como una pantalla nueva.
   - **MAJOR** (`1.1.0 → 2.0.0`): cambios incompatibles, rediseño completo o fin de soporte de versiones antiguas.
@@ -764,12 +764,12 @@ Hay **dos números**, y cada uno se gestiona de una forma. Aplican igual en Andr
   - La versión solo sube cuando se genera **un binario nuevo para la tienda**.
   - Si el cambio toca código nativo, el fingerprint cambia solo y obliga a ese binario nuevo.
 - **Release a tienda:**
-  1. Decidir la versión con SemVer, mirando los commits desde la última etiqueta.
-  2. Cambiarla en `app.config.js` y `package.json`.
-  3. Commit `chore(release): X.Y.Z` y etiqueta `vX.Y.Z`.
-  4. `eas build --profile production --platform all` (EAS asigna el build de cada plataforma).
-  5. `eas submit --profile production` a Play Store y App Store.
-- **Previews internas** (`preview`): usan la versión actual y EAS sube solo el build.
+  1. Decidir el tipo de subida con SemVer, mirando los commits desde la última etiqueta (`git log $(git describe --tags --abbrev=0)..HEAD --oneline`).
+  2. `pnpm release patch|minor|major`, con el árbol limpio: sube `package.json`, hace el commit `chore(release): X.Y.Z` y la etiqueta `vX.Y.Z`. No hace push.
+  3. `git push --follow-tags`.
+  4. `eas build --profile production --platform all --auto-submit` (EAS asigna el build de cada plataforma y lo sube a la app de cada tienda, fijada en `submit` de `eas.json`).
+  5. Cuando la tienda la publique, actualizar `latest_version` (y `minimum_version` si hay que obligar a actualizar) en el version-check de Core.
+- **Previews internas** (`preview`): usan la versión actual y EAS sube solo el build. No se lanza `pnpm release` para una preview.
 
 ---
 

@@ -19,6 +19,7 @@
     "eas:update:preview": "eas update --channel preview --environment preview",
     "eas:update:production": "eas update --channel production --environment production",
     "verificar:ota": "node scripts/verify-ota.mjs",
+    "release": "node scripts/release.js",
     "reinstalar": "node -e \"require('fs').rmSync('node_modules', { recursive: true, force: true })\" && pnpm install --frozen-lockfile"
   },
   "dependencies": {

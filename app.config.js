@@ -5,8 +5,10 @@ const { NATIVE_STRINGS } = require("./src/shared/locales/native");
 //
 // bundleIdentifier y package no se pueden cambiar una vez publicada la app.
 //
-// La versión (SemVer) se cambia a mano aquí y en package.json. versionCode y
+// La versión (SemVer) vive solo en package.json y se sube con `pnpm release`;
+// aquí se lee de allí para que no haya dos copias que se separen. versionCode y
 // buildNumber no se escriben: los sube EAS (ver docs/GUIA_APP_PROFESOR.md §14).
+const { version } = require("./package.json");
 const IS_DEV = process.env.APP_VARIANT === "development";
 
 // Iconos de Playtopia; la variante DEV lleva su versión -dev para distinguirlas.
@@ -21,7 +23,7 @@ export default {
     name: IS_DEV ? "Playtopia Pro DEV" : "Playtopia Pro",
     // El del proyecto de EAS (react_native_pro en expo.dev): EAS exige que coincida.
     slug: "reactnativepro",
-    version: "1.0.0",
+    version,
     scheme: IS_DEV ? "playtopia-pro-dev" : "playtopia-pro",
     // Vertical en móvil. En tablets y plegables Android 16 (targetSdk 36) ignora
     // el bloqueo: las pantallas se diseñan responsive (guía §13).

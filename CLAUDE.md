@@ -18,6 +18,7 @@ pnpm lint
 pnpm typecheck          # tsc de la app y de __tests__
 pnpm verificar:ota preview   # obligatorio antes de cualquier eas update (o production)
 pnpm reinstalar         # node_modules limpio desde el lockfile, tras cambiar paquetes
+pnpm release patch      # sube la versión (patch|minor|major), commit + etiqueta, sin push
 ```
 
 ## Backend
@@ -74,7 +75,7 @@ docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 - **Iconos:** de `@playtopia/icons/react-native` (los del prototipo son `IconLo…`). Un icono nuevo se añade a la librería (repo IconsPlaytopia), no a la app.
 - **Menú:** las pestañas salen de `TABS` (`shared/config/tabs.ts`); el fondo de marca lo dibuja `AppTabs` una vez; cada pestaña usa `TabScreen` (zona segura) y `TabScrollView` (logo, scroll y hueco de la barra) o, para listas largas, una `FlatList` con lo mismo; nunca una `FlatList` dentro de un `ScrollView`. Cabecera con `ScreenHeader`. Rutas en inglés, textos traducidos (sin spanglish).
 - **Animación:** Reanimated, solo `transform` y `opacity`; respeta `useReduceMotion()`. Vibración con `selectionFeedback()`.
-- **Versionado:** versión SemVer manual en `app.config.js` y `package.json`, igual en Android e iOS. El build (`versionCode` / `buildNumber`) lo sube EAS: no lo toques. Un OTA no cambia la versión.
+- **Versionado:** versión SemVer solo en `package.json` (`app.config.js` la lee de ahí), igual en Android e iOS, y se sube con `pnpm release patch|minor|major`, nunca a mano. El build (`versionCode` / `buildNumber`) lo sube EAS: no lo toques. Un OTA no cambia la versión.
 - **Plataforma:** R8 activo en release de Android (`expo-build-properties`); si una librería nativa se rompe en release, reglas en `extraProguardRules`. Mínimos de Android/iOS: los del SDK, no se fijan a mano. Vertical en móvil, pero pantallas responsive (Android 16 deja girar en tablets). Edge-to-edge obligatorio: usa safe areas, no las APIs antiguas de barra de estado. Barra de navegación de Android sin capa de contraste (plugin de `expo-navigation-bar`; en Expo Go no se aplica).
 - **Dependencias:** respeta `minimumReleaseAge` de pnpm; nunca añadas `minimumReleaseAgeExclude`, salvo para `@playtopia/icons` (librería propia) y por versión exacta. Si una versión de otro paquete es demasiado reciente, instala la anterior. Tras cada `pnpm add`, revisa `git diff pnpm-workspace.yaml`. Tras cada cambio de paquetes (`pnpm add`, `pnpm remove`, `expo install`) y antes de un build o un OTA, `pnpm reinstalar`: el fingerprint depende de dónde queda cada paquete en `node_modules`, y solo una instalación limpia coincide con la de EAS (guía §19). Versiones nativas: las que fija Expo (`expo install --check`).
 - **Finales de línea:** no toques `.gitattributes`; git no convierte finales de línea en este repo (el fingerprint depende de ello).
