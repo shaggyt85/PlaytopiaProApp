@@ -13,7 +13,7 @@ jest.mock("expo-linear-gradient", () => ({
   },
 }));
 
-const club = { label: "Wave Padel Club", colors: darkTheme.clubColors[2] };
+const colors = darkTheme.clubColors[3];
 const item = scheduleClass({
   title: "Mini Padel · Grupo A",
   class_date: "2026-11-16",
@@ -25,35 +25,44 @@ const item = scheduleClass({
   max_participants: 4,
 });
 
+const renderHero = (props: Partial<Parameters<typeof ClassHero>[0]> = {}) =>
+  render(<ClassHero item={item} clubLabel="Wave Padel Club" colors={colors} onBack={jest.fn()} {...props} />);
+
 describe("ClassHero", () => {
-  it("lo de la captura: nivel, título, club, día y hora, pista y las cifras", () => {
-    render(<ClassHero item={item} club={club} onBack={jest.fn()} />);
+  it("como el prototipo: título, club, el día y la hora, y la pista, el nivel y los alumnos", () => {
+    renderHero();
 
     expect(screen.getByRole("header", { name: "Mini Padel · Grupo A" })).toBeTruthy();
     expect(screen.getByText("Wave Padel Club")).toBeTruthy();
     expect(screen.getByText("Lunes, 16 de noviembre · 08:30–09:30")).toBeTruthy();
     expect(screen.getByText("Pista 2")).toBeTruthy();
-    expect(screen.getByLabelText("Alumnos: 2/4")).toBeTruthy();
-    expect(screen.getByLabelText("Nivel: 2.5 - 3")).toBeTruthy();
-    // El nivel también arriba, en su pastilla.
-    expect(screen.getAllByText("2.5 - 3", { includeHiddenElements: true })).toHaveLength(2);
+    expect(screen.getByText("2.5 - 3")).toBeTruthy();
+    expect(screen.getByText("2/4 alumnos")).toBeTruthy();
   });
 
-  it("con el degradado de su club", () => {
-    render(<ClassHero item={item} club={club} onBack={jest.fn()} />);
+  it("con el degradado de la clase", () => {
+    renderHero();
 
-    expect(mockGradient).toHaveBeenCalledWith(expect.objectContaining({ colors: club.colors.gradient }));
+    expect(mockGradient).toHaveBeenCalledWith(expect.objectContaining({ colors: colors.gradient }));
   });
 
-  it("solo las cifras con datos: sin «Objetivos» hasta que existan los planes", () => {
-    render(<ClassHero item={item} club={club} onBack={jest.fn()} />);
+  it("el título en el tamaño de los títulos de tarjeta, no en el de pantalla", () => {
+    renderHero();
 
-    expect(screen.queryByText("Objetivos")).toBeNull();
+    expect(screen.getByRole("header", { name: "Mini Padel · Grupo A" })).toHaveStyle({
+      fontSize: darkTheme.typography.subtitle.fontSize,
+    });
+  });
+
+  it("sin el club (la sede ya no está en «Mis clubes»), ni su línea", () => {
+    renderHero({ clubLabel: "" });
+
+    expect(screen.queryByTestId("club-dot")).toBeNull();
   });
 
   it("sin pista, no sale; ← vuelve", () => {
     const onBack = jest.fn();
-    render(<ClassHero item={scheduleClass({ track_name: "" })} club={club} onBack={onBack} />);
+    renderHero({ item: scheduleClass({ track_name: "" }), onBack });
 
     expect(screen.queryByText(/Pista/)).toBeNull();
     fireEvent.press(screen.getByRole("button", { name: "Volver" }));

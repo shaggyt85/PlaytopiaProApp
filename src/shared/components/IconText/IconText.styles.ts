@@ -9,12 +9,12 @@ export type IconTextSize = "meta" | "card" | "hero";
  * - `meta`: la línea de datos de una tarjeta o fila (`h-3 w-3` y `text-[11px]`):
  *   la sede en «Red de clubes», la duración en Semana, la calle del club.
  * - `card`: la tarjeta de arriba de la agenda (`h-3.5 w-3.5`, `text-[13px]`).
- * - `hero`: la cabecera del detalle de una clase, sobre su color (`text-xs`).
+ * - `hero`: la cabecera del detalle de una clase, sobre su color (`text-xs font-semibold`).
  */
 export const ICON_TEXT_SIZES = {
   meta: { icon: 12, variant: "meta" },
   card: { icon: 14, variant: "caption" },
-  hero: { icon: 14, variant: "small" },
+  hero: { icon: 14, variant: "labelStrong" },
 } as const satisfies Record<IconTextSize, { icon: number; variant: TextVariant }>;
 
 export const useStyles = makeStyles((theme) => ({

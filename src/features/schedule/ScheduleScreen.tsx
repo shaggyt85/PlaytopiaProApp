@@ -94,7 +94,7 @@ export function ScheduleScreen() {
         {hasData ? (
           <View style={styles.stats} testID="today-stats">
             {TODAY_STATS.map(({ Icon, label, color, value }) => (
-              <StatTile key={label} variant="today" Icon={Icon} color={color(theme)} value={value(stats, t)} label={t(label)} />
+              <StatTile key={label} Icon={Icon} color={color(theme)} value={value(stats, t)} label={t(label)} />
             ))}
           </View>
         ) : null}

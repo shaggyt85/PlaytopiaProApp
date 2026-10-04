@@ -199,14 +199,13 @@ const pt: Translations = {
     detail: {
       openHint: "Abre os detalhes da aula",
       timeRange: "%{start}–%{end}",
-      /** Una cifra de la cabecera para el lector de pantalla: «Alumnos: 2/4». */
+      /** Una cifra del día encima de la agenda para el lector de pantalla: «clases hoy: 3». */
       stat: "%{label}: %{value}",
       /** El título de la sección del club. */
       club: "Clube",
       /** La tarjeta del club para el lector de pantalla: «Club: Wave Padel Club, Pº de la Castellana 300». */
       clubA11y: "Clube: %{details}",
       students: "Alunos",
-      level: "Nível",
       noStudents: "Ainda não há alunos inscritos",
       notFound: "Aula não encontrada",
     },

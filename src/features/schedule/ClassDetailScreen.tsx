@@ -36,7 +36,7 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
   const styles = useStyles();
   const goBack = useGoBack();
   const { t } = useTranslation();
-  const { item, hasData, error, refetch } = useClassDetail(dbId, classId, date);
+  const { item, colors, hasData, error, refetch } = useClassDetail(dbId, classId, date);
   const { clubOf, cardOf } = useScheduleClubs();
   // Si la sede ya no está en «Mis clubes» (le acaban de dar de baja), su tarjeta no sale.
   const card = item ? cardOf(item) : undefined;
@@ -44,9 +44,9 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
   return (
     <DetailFrame>
       <ScheduleDataState hasData={hasData} error={error} onRetry={refetch}>
-        {item ? (
+        {item && colors ? (
           <ScrollView contentContainerStyle={styles.content}>
-            <ClassHero item={item} club={clubOf(item)} onBack={goBack} />
+            <ClassHero item={item} clubLabel={clubOf(item).label} colors={colors} onBack={goBack} />
             {card ? (
               <DetailSection title={t("schedule.detail.club")} testID="club-section">
                 <ClubCard club={clubOf(item)} card={card} />

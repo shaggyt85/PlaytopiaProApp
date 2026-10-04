@@ -27,11 +27,13 @@ describe("IconText", () => {
     expect(StyleSheet.flatten(screen.getByText("Pista 1").props.style).fontSize).toBe(darkTheme.typography.caption.fontSize);
   });
 
-  it("sobre un color, todo en blanco", () => {
+  it("sobre un color, todo en blanco y en seminegrita, como la cabecera del detalle", () => {
     render(<IconText Icon={Icon} label="Pista 1" size="hero" color="onPrimary" />);
 
     expect(iconProps()?.color).toBe(darkTheme.colors.onPrimary);
-    expect(StyleSheet.flatten(screen.getByText("Pista 1").props.style).color).toBe(darkTheme.colors.onPrimary);
+    const style = StyleSheet.flatten(screen.getByText("Pista 1").props.style);
+    expect(style.color).toBe(darkTheme.colors.onPrimary);
+    expect(style.fontFamily).toBe(darkTheme.typography.labelStrong.fontFamily);
   });
 
   it("si no cabe, se encoge el texto y se corta en las líneas que se le digan", () => {
