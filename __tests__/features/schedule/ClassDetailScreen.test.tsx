@@ -1,9 +1,10 @@
-import { fireEvent, screen } from "@testing-library/react-native";
+import { fireEvent, screen, waitFor } from "@testing-library/react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { ClassDetailScreen } from "@/features/schedule/ClassDetailScreen";
 import { scheduleService } from "@/features/schedule/services/scheduleService";
 import { myClubsService } from "@/shared/services/myClubsService";
+import { serverNow } from "@/shared/utils/serverClock";
 
 import { schoolCard } from "../../helpers/networkFactories";
 import { renderWithProviders } from "../../helpers/renderWithProviders";
@@ -15,8 +16,20 @@ jest.mock("@/features/schedule/services/scheduleService", () =>
   require("../../helpers/scheduleMocks").scheduleServiceModule(),
 );
 jest.mock("@/shared/services/myClubsService", () => require("../../helpers/scheduleMocks").myClubsServiceModule());
+jest.mock("@/shared/utils/serverClock", () => ({ serverNow: jest.fn() }));
 
-const cantera = scheduleClass({ db_id: 4, club_id: 7, id: 31, class_date: "2026-11-18", title: "Cantera Tarde" });
+// La clase de ejemplo es el 18 de noviembre a las 16:00.
+const BEFORE_CLASS = new Date(2026, 10, 18, 15, 0).getTime();
+const DURING_CLASS = new Date(2026, 10, 18, 16, 30).getTime();
+
+const cantera = scheduleClass({
+  db_id: 4,
+  club_id: 7,
+  id: 31,
+  class_date: "2026-11-18",
+  class_time: "16:00:00",
+  title: "Cantera Tarde",
+});
 const router = { back: jest.fn(), replace: jest.fn(), canGoBack: jest.fn(() => true) };
 
 const openWith = (params: Record<string, string>) => {
@@ -27,6 +40,7 @@ const openWith = (params: Record<string, string>) => {
 describe("ClassDetailScreen", () => {
   beforeEach(() => {
     signInTeacher();
+    jest.mocked(serverNow).mockReturnValue(BEFORE_CLASS);
     jest.mocked(useRouter).mockReturnValue(router as never);
     jest.mocked(myClubsService.getMyClubs).mockResolvedValue({
       clubs: [schoolCard(4, 7, { club_name: "Sede Centro" })],
@@ -42,12 +56,34 @@ describe("ClassDetailScreen", () => {
     expect(screen.queryByRole("header", { name: "Club" })).toBeNull();
   });
 
-  it("debajo, sus alumnos", async () => {
+  it("debajo, sus alumnos con su nivel y cuántos han venido", async () => {
     openWith({ dbId: "4", classId: "31", date: "2026-11-18" });
 
-    expect(await screen.findByRole("header", { name: "Alumnos" })).toBeTruthy();
-    expect(screen.getByLabelText("Diego Pérez")).toBeTruthy();
-    expect(screen.getByLabelText("Lucía Romero")).toBeTruthy();
+    expect(await screen.findByRole("header", { name: "Alumnos y asistencia" })).toBeTruthy();
+    expect(screen.getByLabelText("Diego Pérez, Nivel 3,0")).toBeTruthy();
+    expect(screen.getByLabelText("Lucía Romero, Nivel 2,5")).toBeTruthy();
+    expect(screen.getByText("0/2 presentes")).toBeTruthy();
+  });
+
+  it("antes de que empiece la clase, sin botones de asistencia", async () => {
+    openWith({ dbId: "4", classId: "31", date: "2026-11-18" });
+
+    expect(await screen.findByLabelText("Lucía Romero, Nivel 2,5")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Marcar presente a Lucía Romero" })).toBeNull();
+  });
+
+  it("desde que empieza, se marca a cada alumno en la clase en la que está inscrito y se ve al instante", async () => {
+    jest.mocked(serverNow).mockReturnValue(DURING_CLASS);
+    // Core aún no ha contestado: lo que se ve es la marca puesta en la caché.
+    jest.mocked(scheduleService.markAttendance).mockReturnValue(new Promise(() => undefined));
+    openWith({ dbId: "4", classId: "31", date: "2026-11-18" });
+
+    fireEvent.press(await screen.findByRole("button", { name: "Marcar presente a Lucía Romero" }));
+
+    expect(await screen.findByText("1/2 presentes")).toBeTruthy();
+    await waitFor(() =>
+      expect(scheduleService.markAttendance).toHaveBeenCalledWith({ dbId: 4, classId: 31, studentId: 55 }, "present"),
+    );
   });
 
   it("si la sede ya no está en «Mis clubes», la cabecera sin la línea del club", async () => {

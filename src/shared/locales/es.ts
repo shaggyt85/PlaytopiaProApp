@@ -41,6 +41,11 @@ const es = {
       "internal-error": "Error del servidor. Inténtalo más tarde.",
       "date-range-inverted": "La fecha de inicio no puede ser posterior a la de fin.",
       "date-range-too-long": "El rango de fechas es demasiado largo.",
+      "not-class-teacher": "Esta clase la da otro profesor.",
+      "class-not-found": "Esta clase ya no existe.",
+      "student-not-in-class": "Este alumno ya no está en la clase.",
+      "attendance-not-open": "La asistencia se marca cuando empieza la clase.",
+      "attendance-closed": "Ya pasó el plazo para marcar la asistencia de esta clase.",
     },
   },
   auth: {
@@ -203,8 +208,16 @@ const es = {
       timeRange: "%{start}–%{end}",
       /** Una cifra del día encima de la agenda para el lector de pantalla: «clases hoy: 3». */
       stat: "%{label}: %{value}",
-      students: "Alumnos",
+      students: "Alumnos y asistencia",
       noStudents: "Aún no hay alumnos apuntados",
+      /** A la derecha de «Alumnos y asistencia»: cuántos han venido. */
+      presentCount: "%{present}/%{total} presentes",
+      /** Lo mismo cuando ya tienen marca todos. */
+      attendanceDone: "Asistencia registrada · %{present}/%{total}",
+      /** La etiqueta de quien está en la clase por una plaza de recuperación. */
+      recovery: "Recuperación",
+      markPresent: "Marcar presente a %{name}",
+      markAbsent: "Marcar ausente a %{name}",
       notFound: "Clase no encontrada",
     },
     day: {

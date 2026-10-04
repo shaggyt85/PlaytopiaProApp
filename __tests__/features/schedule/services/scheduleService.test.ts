@@ -4,12 +4,12 @@ import {
   ScheduleService,
   scheduleKeys,
   scheduleQuery,
-  type IScheduleService,
+  type ScheduleReader,
 } from "@/features/schedule/services/scheduleService";
 import { CachePolicy } from "@/shared/config/cachePolicies";
 
 import { createFakeHttpClient as fakeHttp } from "../../../helpers/fakeHttpClient";
-import { scheduleResponse } from "../../../helpers/scheduleFactories";
+import { attendanceMark, scheduleResponse } from "../../../helpers/scheduleFactories";
 
 describe("ScheduleService", () => {
   it("pide las clases del rango a /MobileTeacher/classes y valida la respuesta", async () => {
@@ -29,6 +29,25 @@ describe("ScheduleService", () => {
       new ScheduleService(fakeHttp({ classes: "ninguna" })).getClasses("2026-10-05", "2026-10-05"),
     ).rejects.toThrow();
   });
+
+  it("marca la asistencia con PUT en la clase del alumno y valida la marca guardada", async () => {
+    const body = attendanceMark({ status: "absent" });
+    const http = fakeHttp(body);
+
+    const result = await new ScheduleService(http).markAttendance(
+      { dbId: 4, classId: 90, studentId: 55 },
+      "absent",
+    );
+
+    expect(http.put).toHaveBeenCalledWith("/MobileTeacher/classes/4/90/attendance/55", { status: "absent" });
+    expect(result).toEqual(body);
+  });
+
+  it("una marca que no cumple el contrato falla", async () => {
+    await expect(
+      new ScheduleService(fakeHttp({ status: "late" })).markAttendance({ dbId: 4, classId: 31, studentId: 55 }, "present"),
+    ).rejects.toThrow();
+  });
 });
 
 describe("scheduleKeys", () => {
@@ -44,7 +63,7 @@ describe("scheduleKeys", () => {
 });
 
 describe("scheduleQuery", () => {
-  const service: IScheduleService = { getClasses: jest.fn().mockResolvedValue(scheduleResponse()) };
+  const service: ScheduleReader = { getClasses: jest.fn().mockResolvedValue(scheduleResponse()) };
 
   it("pide el rango al servicio con la caché LIVE", async () => {
     const recipe = scheduleQuery(1, "2026-10-05", "2026-10-11", service);

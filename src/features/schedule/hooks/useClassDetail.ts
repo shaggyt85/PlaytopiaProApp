@@ -6,7 +6,7 @@ import { useTheme } from "@/shared/hooks/useTheme";
 import { useSessionUserId } from "@/shared/store/sessionStore";
 
 import type { ScheduleClass, ScheduleResponse } from "../schemas/schedule.schema";
-import { monthScheduleQuery, scheduleService, type IScheduleService } from "../services/scheduleService";
+import { monthScheduleQuery, scheduleService, type ScheduleReader } from "../services/scheduleService";
 import { classColors } from "../utils/classColors";
 
 /** La clase y su color en su día: el mismo que lleva en Día, Semana y Mes. */
@@ -30,7 +30,7 @@ export function useClassDetail(
   dbId: number,
   classId: number,
   date: string,
-  service: IScheduleService = scheduleService,
+  service: ScheduleReader = scheduleService,
 ) {
   const teacherId = useSessionUserId();
   const palette = useTheme().clubColors;

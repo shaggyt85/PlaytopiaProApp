@@ -1,0 +1,48 @@
+import { Pressable } from "react-native";
+
+import { BrandGradient } from "@/shared/components/BrandGradient";
+import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
+import { useTheme } from "@/shared/hooks/useTheme";
+
+import type { AttendanceStatus } from "../../schemas/schedule.schema";
+
+import { TOGGLE_ICON, TOGGLE_ICON_SIZE, TOGGLE_SIZE, useStyles } from "./AttendanceToggle.styles";
+
+interface AttendanceToggleProps {
+  /** La marca que pone: ✓ presente o ✗ ausente. */
+  status: AttendanceStatus;
+  /** Si es la marca que tiene el alumno. */
+  selected: boolean;
+  onPress: () => void;
+  /** Ya traducido: «Marcar presente a Lucía Romero». */
+  accessibilityLabel: string;
+}
+
+/**
+ * Un botón de la asistencia de un alumno, como el prototipo: el cuadrado gris
+ * con ✓ o ✗ y, si es su marca, en relieve con el degradado de marca (presente)
+ * o el coral (ausente). El lector de pantalla dice si está elegido.
+ */
+export function AttendanceToggle({ status, selected, onPress, accessibilityLabel }: AttendanceToggleProps) {
+  const styles = useStyles();
+  const theme = useTheme();
+  const Icon = TOGGLE_ICON[status];
+
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+      accessibilityLabel={accessibilityLabel}
+      hitSlop={(theme.touchTarget - TOGGLE_SIZE) / 2}
+      style={({ pressed }) => [styles.box, selected && styles[status], pressed && styles.pressed]}
+      testID={`attendance-${status}`}
+    >
+      {selected && status === "present" ? <BrandGradient style={styles.fill} /> : null}
+      {selected && status === "absent" ? (
+        <DiagonalGradient colors={theme.accents.coral.gradient} style={styles.fill} />
+      ) : null}
+      <Icon size={TOGGLE_ICON_SIZE} color={selected ? theme.colors.onPrimary : theme.colors.textSecondary} />
+    </Pressable>
+  );
+}

@@ -4,7 +4,7 @@ import { NextClassCard } from "@/features/schedule/components/NextClassCard";
 import { darkTheme } from "@/shared/config/theme";
 import { useReduceMotion } from "@/shared/hooks/useReduceMotion";
 
-import { nextClass, scheduleClass } from "../../../helpers/scheduleFactories";
+import { classStudent, nextClass, scheduleClass } from "../../../helpers/scheduleFactories";
 
 const mockPush = jest.fn();
 jest.mock("expo-router", () => ({ useRouter: () => ({ push: mockPush }) }));
@@ -82,8 +82,8 @@ describe("NextClassCard", () => {
   it("quien viene a recuperar lleva su «R», y debajo de las plazas, cuántos recuperan", () => {
     const item = nextClass({
       students: [
-        { name: "Diego", last_name: "Pérez", is_recovery: false },
-        { name: "Lucía", last_name: "Romero", is_recovery: true },
+        classStudent({ student_id: 54, name: "Diego", last_name: "Pérez" }),
+        classStudent({ is_recovery: true }),
       ],
     });
     render(<NextClassCard hero={{ item, live: false }} club={club} today="2026-10-05" now={START - 3 * 60 * MINUTE} />);

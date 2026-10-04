@@ -39,6 +39,11 @@ const de: Translations = {
       "internal-error": "Serverfehler. Bitte versuchen Sie es später erneut.",
       "date-range-inverted": "Das Startdatum darf nicht nach dem Enddatum liegen.",
       "date-range-too-long": "Der Datumsbereich ist zu lang.",
+      "not-class-teacher": "Diese Stunde gibt ein anderer Trainer.",
+      "class-not-found": "Diese Stunde gibt es nicht mehr.",
+      "student-not-in-class": "Dieser Schüler ist nicht mehr in der Stunde.",
+      "attendance-not-open": "Die Anwesenheit wird erfasst, sobald die Stunde beginnt.",
+      "attendance-closed": "Die Frist für die Anwesenheit dieser Stunde ist abgelaufen.",
     },
   },
   auth: {
@@ -201,8 +206,16 @@ const de: Translations = {
       timeRange: "%{start}–%{end}",
       /** Una cifra del día encima de la agenda para el lector de pantalla: «clases hoy: 3». */
       stat: "%{label}: %{value}",
-      students: "Schüler",
+      students: "Schüler und Anwesenheit",
       noStudents: "Noch keine Schüler angemeldet",
+      /** A la derecha de «Alumnos y asistencia»: cuántos han venido. */
+      presentCount: "%{present}/%{total} anwesend",
+      /** Lo mismo cuando ya tienen marca todos. */
+      attendanceDone: "Anwesenheit erfasst · %{present}/%{total}",
+      /** La etiqueta de quien está en la clase por una plaza de recuperación. */
+      recovery: "Nachholstunde",
+      markPresent: "%{name} als anwesend markieren",
+      markAbsent: "%{name} als abwesend markieren",
       notFound: "Kurs nicht gefunden",
     },
     day: {

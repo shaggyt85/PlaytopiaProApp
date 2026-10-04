@@ -4,7 +4,13 @@ import { CachePolicy } from "@/shared/config/cachePolicies";
 import type { IHttpClient } from "@/shared/services/BaseHttpClient";
 import { httpClient } from "@/shared/services/httpClient";
 
-import { ScheduleResponseSchema, type ScheduleResponse } from "../schemas/schedule.schema";
+import {
+  AttendanceMarkSchema,
+  ScheduleResponseSchema,
+  type AttendanceMark,
+  type AttendanceStatus,
+  type ScheduleResponse,
+} from "../schemas/schedule.schema";
 
 import { monthGrid } from "../utils/scheduleDates";
 
@@ -21,10 +27,23 @@ export const scheduleKeys = {
     [...scheduleKeys.all, "classes", teacherId, from, to] as const,
 };
 
-/** El profesor sale del token. `from` y `to`, `YYYY-MM-DD`, incluidos. */
-export interface IScheduleService {
-  getClasses(from: string, to: string): Promise<ScheduleResponse>;
+/** A quién se marca: la escuela, la clase del alumno (su plaza, si recupera) y el alumno. */
+export interface AttendanceTarget {
+  dbId: number;
+  classId: number;
+  studentId: number;
 }
+
+/** El profesor sale del token. */
+export interface IScheduleService {
+  /** Las clases entre `from` y `to` (`YYYY-MM-DD`, incluidos) y la próxima. */
+  getClasses(from: string, to: string): Promise<ScheduleResponse>;
+  /** Marca si un alumno vino. Marcar lo mismo otra vez devuelve la marca que había. */
+  markAttendance(target: AttendanceTarget, status: AttendanceStatus): Promise<AttendanceMark>;
+}
+
+/** Lo único que necesitan las consultas de la agenda: leer las clases. */
+export type ScheduleReader = Pick<IScheduleService, "getClasses">;
 
 export class ScheduleService implements IScheduleService {
   constructor(private readonly http: IHttpClient) {}
@@ -34,6 +53,14 @@ export class ScheduleService implements IScheduleService {
       params: { from, to },
     });
     return ScheduleResponseSchema.parse(data);
+  }
+
+  async markAttendance(
+    { dbId, classId, studentId }: AttendanceTarget,
+    status: AttendanceStatus,
+  ): Promise<AttendanceMark> {
+    const data = await this.http.put<unknown>(SCHEDULE_ENDPOINTS.ATTENDANCE(dbId, classId, studentId), { status });
+    return AttendanceMarkSchema.parse(data);
   }
 }
 
@@ -49,7 +76,7 @@ export const scheduleQuery = (
   teacherId: number | undefined,
   from: string,
   to: string,
-  service: IScheduleService = scheduleService,
+  service: ScheduleReader = scheduleService,
 ) =>
   queryOptions({
     queryKey: scheduleKeys.classes(teacherId, from, to),
@@ -65,7 +92,7 @@ export const scheduleQuery = (
 export const monthScheduleQuery = (
   teacherId: number | undefined,
   date: string,
-  service: IScheduleService = scheduleService,
+  service: ScheduleReader = scheduleService,
 ) => {
   const { from, to } = monthGrid(date);
   return scheduleQuery(teacherId, from, to, service);

@@ -3,6 +3,8 @@ import { render, screen } from "@testing-library/react-native";
 import { MAX_AVATARS, StudentAvatars } from "@/features/schedule/components/StudentAvatars";
 import { darkTheme } from "@/shared/config/theme";
 
+import { classStudent } from "../../../helpers/scheduleFactories";
+
 const mockGradient = jest.fn();
 jest.mock("expo-linear-gradient", () => ({
   LinearGradient: (props: Record<string, unknown>) => {
@@ -12,7 +14,8 @@ jest.mock("expo-linear-gradient", () => ({
 }));
 
 const hidden = { includeHiddenElements: true };
-const student = (name: string, last_name: string, is_recovery = false) => ({ name, last_name, is_recovery });
+const student = (name: string, last_name: string, is_recovery = false) =>
+  classStudent({ name, last_name, is_recovery });
 
 describe("StudentAvatars", () => {
   it("un círculo por alumno con sus iniciales y el color de su posición", () => {

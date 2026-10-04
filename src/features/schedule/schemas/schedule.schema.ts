@@ -5,22 +5,49 @@ import { compareText } from "@/shared/utils/compareText";
 // Contrato de Core (Scalar, grupo Mobile Teacher): la agenda del profesor,
 // `GET /api/MobileTeacher/classes?from=&to=` (`TeacherClassesResponse`).
 
-/** Un alumno de la clase: solo el nombre, para las iniciales de la tarjeta. */
+/** El nombre de un alumno: lo que necesitan sus iniciales y su fila. */
 export const StudentNameSchema = z.object({
   name: z.string(),
   last_name: z.string(),
 });
 export type StudentName = z.infer<typeof StudentNameSchema>;
 
-/**
- * Un alumno de la clase (`ClassStudentDto`): su nombre y si viene a recuperar
- * (está en la clase por una plaza de recuperación). Core manda además su id, su
- * clase y su asistencia; se añaden cuando una pantalla los necesite.
- */
+/** Si el alumno vino (`present`) o no (`absent`). */
+export const AttendanceStatusSchema = z.enum(["present", "absent"]);
+export type AttendanceStatus = z.infer<typeof AttendanceStatusSchema>;
+
+/** Un alumno de la clase (`ClassStudentDto`). */
 export const ClassStudentSchema = StudentNameSchema.extend({
+  /**
+   * La clase en la que está inscrito: la de la tarjeta o, si recupera, su plaza
+   * de recuperación. Es la que va en la ruta para marcar su asistencia.
+   */
+  class_id: z.number().int(),
+  /** id global del alumno. */
+  student_id: z.number().int(),
+  /** Su nivel en la sede de la clase; `null` si no tiene matrícula en ella. */
+  level: z.number().nullable(),
+  /** Su marca de asistencia; `null` si aún no la tiene. */
+  attendance: AttendanceStatusSchema.nullable(),
+  /** Si está en la clase por una plaza de recuperación. */
   is_recovery: z.boolean(),
 });
 export type ClassStudent = z.infer<typeof ClassStudentSchema>;
+
+/**
+ * La marca guardada (`AttendanceMarkDto`), la respuesta de
+ * `PUT /MobileTeacher/classes/{db_id}/{class_id}/attendance/{student_id}`.
+ * Marcar otra vez el mismo estado devuelve la que había.
+ */
+export const AttendanceMarkSchema = z.object({
+  student_id: z.number().int(),
+  status: AttendanceStatusSchema,
+  /** id global del profesor que la marcó. */
+  marked_by: z.number().int(),
+  /** Instante UTC, RFC 3339. */
+  marked_at: z.string(),
+});
+export type AttendanceMark = z.infer<typeof AttendanceMarkSchema>;
 
 /** Por nombre y, si coincide, por apellido, como los ordena el idioma activo. */
 const byName = (a: StudentName, b: StudentName) => compareText(a.name, b.name) || compareText(a.last_name, b.last_name);

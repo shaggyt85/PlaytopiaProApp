@@ -132,14 +132,19 @@ const lifted = {
   boxShadow: `0 10px 15px -3px ${withAlpha(BRAND.black, 0.1)}, 0 4px 6px -4px ${withAlpha(BRAND.black, 0.1)}`,
 } as const;
 
+/** Un relieve del prototipo (`btn-3d-*`): un borde oscuro de 4 debajo y su brillo. */
+const raisedWith = (edge: string, glow: string, blur: number, alpha: number) =>
+  ({ boxShadow: `0 4px 0 0 ${edge}, 0 8px ${blur}px -4px ${withAlpha(glow, alpha)}` }) as const;
+
 /**
- * Lo elegido en relieve (el `btn-3d-lime` de Lovable): un borde oscuro de 4
- * debajo y el brillo de marca. La pestaña activa del selector de la agenda y el
- * día elegido de la semana y del mes.
+ * Lo elegido en relieve (el `btn-3d-lime` de Lovable), con el brillo de marca:
+ * la pestaña activa del selector de la agenda, el día elegido de la semana y
+ * del mes y «presente» en la asistencia.
  */
-const raised = {
-  boxShadow: `0 4px 0 0 ${BRAND.raisedEdge}, 0 8px 22px -4px ${withAlpha(BRAND.raisedGlow, 0.6)}`,
-} as const;
+const raised = raisedWith(BRAND.raisedEdge, BRAND.raisedGlow, 22, 0.6);
+
+/** Lo elegido en coral y en relieve (`btn-3d-coral`): «ausente» en la asistencia. */
+const raisedCoral = raisedWith(BRAND.coralEdge, BRAND.coralGlow, 20, 0.55);
 
 const textGlow = {
   textShadowColor: withAlpha(BRAND.magenta, 0.5),
@@ -256,7 +261,7 @@ export const darkTheme = {
     { color: BRAND.backdropViolet, opacity: 0.32, x: 1, y: 0.05, reach: 0.55 },
     { color: BRAND.backdropPlum, opacity: 0.25, x: 0.5, y: 1.1, reach: 0.6 },
   ] as const,
-  shadows: { glow: glow(BRAND.glowMagenta), textGlow, lifted, raised },
+  shadows: { glow: glow(BRAND.glowMagenta), textGlow, lifted, raised, raisedCoral },
   spacing,
   radius,
   typography,

@@ -39,6 +39,11 @@ const fr: Translations = {
       "internal-error": "Erreur du serveur. Veuillez réessayer plus tard.",
       "date-range-inverted": "La date de début ne peut pas être postérieure à la date de fin.",
       "date-range-too-long": "La période est trop longue.",
+      "not-class-teacher": "Ce cours est donné par un autre coach.",
+      "class-not-found": "Ce cours n'existe plus.",
+      "student-not-in-class": "Cet élève n'est plus dans le cours.",
+      "attendance-not-open": "Les présences se marquent quand le cours commence.",
+      "attendance-closed": "Le délai pour marquer les présences de ce cours est passé.",
     },
   },
   auth: {
@@ -201,8 +206,16 @@ const fr: Translations = {
       timeRange: "%{start}–%{end}",
       /** Una cifra del día encima de la agenda para el lector de pantalla: «clases hoy: 3». */
       stat: "%{label}: %{value}",
-      students: "Élèves",
+      students: "Élèves et présences",
       noStudents: "Aucun élève inscrit pour l'instant",
+      /** A la derecha de «Alumnos y asistencia»: cuántos han venido. */
+      presentCount: "%{present}/%{total} présents",
+      /** Lo mismo cuando ya tienen marca todos. */
+      attendanceDone: "Présences enregistrées · %{present}/%{total}",
+      /** La etiqueta de quien está en la clase por una plaza de recuperación. */
+      recovery: "Rattrapage",
+      markPresent: "Marquer %{name} présent",
+      markAbsent: "Marquer %{name} absent",
       notFound: "Cours introuvable",
     },
     day: {

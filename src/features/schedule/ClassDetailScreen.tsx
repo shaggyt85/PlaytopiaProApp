@@ -6,12 +6,36 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BrandBackground } from "@/shared/components/BrandBackground";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import { selectionFeedback } from "@/shared/utils/haptics";
 
 import { useStyles } from "./ClassDetailScreen.styles";
-import { ClassHero, DetailSection, ScheduleDataState, StudentList } from "./components";
+import { AttendanceCount, ClassHero, DetailSection, ScheduleDataState, StudentList } from "./components";
 import { useClassDetail } from "./hooks/useClassDetail";
+import { useForegroundNow } from "./hooks/useForegroundNow";
+import { useMarkAttendance } from "./hooks/useMarkAttendance";
 import { useScheduleClubs } from "./hooks/useScheduleClubs";
+import type { AttendanceStatus, ClassStudent } from "./schemas/schedule.schema";
+import { attendanceSummary } from "./utils/attendanceSummary";
+import { classStatus } from "./utils/classTiming";
 import { ClassDetailParamsSchema, type ClassDetailParams } from "./utils/classRoute";
+import { wallNow } from "./utils/scheduleDates";
+
+/**
+ * Marcar a un alumno de la clase, con la vibración de elegir. La marca va a la
+ * clase en la que está inscrito (su plaza, si recupera). Volver a tocar la que
+ * ya tiene no pide nada. Estable: las filas no se repintan por ella.
+ */
+function useMarkStudent(dbId: number) {
+  const { mutate } = useMarkAttendance();
+  return useCallback(
+    (student: ClassStudent, status: AttendanceStatus) => {
+      if (student.attendance === status) return;
+      selectionFeedback();
+      mutate({ target: { dbId, classId: student.class_id, studentId: student.student_id }, status });
+    },
+    [dbId, mutate],
+  );
+}
 
 /** Volver: a donde se vino o, si no hay (se abrió desde un aviso), a la Agenda. */
 function useGoBack() {
@@ -21,8 +45,8 @@ function useGoBack() {
 
 /**
  * El detalle de una clase, encima de las pestañas y sin barra: su cabecera y
- * sus alumnos. Lo que aún no tiene datos en Core (asistencia, objetivos, notas…)
- * no se enseña; cada cosa llega con su fase.
+ * sus alumnos con su asistencia. Lo que aún no tiene datos en Core (objetivos,
+ * notas, el feedback…) no se enseña; cada cosa llega con su fase.
  *
  * Los parámetros de la ruta llegan como texto: si no son válidos, «Clase no
  * encontrada», igual que si la respuesta del mes ya no trae la clase.
@@ -38,6 +62,11 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
   const { t } = useTranslation();
   const { item, colors, hasData, error, refetch } = useClassDetail(dbId, classId, date);
   const { clubOf } = useScheduleClubs();
+  const onMark = useMarkStudent(dbId);
+  // Cada minuto: los botones aparecen solos cuando empieza la clase.
+  const now = useForegroundNow({ everyMinute: true });
+  // Se pasa lista desde que empieza; hasta cuándo lo decide Core (`attendance-closed`).
+  const started = item ? classStatus(item, wallNow(now), undefined) !== "upcoming" : false;
 
   return (
     <DetailFrame>
@@ -45,8 +74,12 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
         {item && colors ? (
           <ScrollView contentContainerStyle={styles.content}>
             <ClassHero item={item} clubLabel={clubOf(item).label} colors={colors} onBack={goBack} />
-            <DetailSection title={t("schedule.detail.students")} testID="students-section">
-              <StudentList students={item.students} />
+            <DetailSection
+              title={t("schedule.detail.students")}
+              aside={item.students.length > 0 ? <AttendanceCount summary={attendanceSummary(item.students)} /> : null}
+              testID="students-section"
+            >
+              <StudentList students={item.students} onMark={started ? onMark : undefined} />
             </DetailSection>
           </ScrollView>
         ) : (

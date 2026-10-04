@@ -1,6 +1,16 @@
-import { ScheduleResponseSchema } from "@/features/schedule/schemas/schedule.schema";
+import { AttendanceMarkSchema, ScheduleResponseSchema } from "@/features/schedule/schemas/schedule.schema";
 
-import { nextClass, scheduleClass, scheduleResponse } from "../../../helpers/scheduleFactories";
+import {
+  attendanceMark,
+  classStudent,
+  nextClass,
+  scheduleClass,
+  scheduleResponse,
+} from "../../../helpers/scheduleFactories";
+
+/** La agenda con una clase con estos alumnos, validada. */
+const parseStudents = (students: unknown[]) =>
+  ScheduleResponseSchema.safeParse(scheduleResponse({ classes: [scheduleClass({ students: students as never })] }));
 
 describe("ScheduleResponseSchema", () => {
   it("acepta la agenda tal como la manda Core", () => {
@@ -24,13 +34,23 @@ describe("ScheduleResponseSchema", () => {
     );
   });
 
-  it("cada alumno dice si viene a recuperar", () => {
-    const { is_recovery: _recovery, ...withoutRecovery } = scheduleClass().students[0];
-    const parsed = ScheduleResponseSchema.safeParse(
-      scheduleResponse({ classes: [scheduleClass({ students: [withoutRecovery as never] })] }),
-    );
+  it.each(["class_id", "student_id", "level", "attendance", "is_recovery"] as const)(
+    "cada alumno trae su %s",
+    (field) => {
+      const { [field]: _dropped, ...without } = classStudent();
+      expect(parseStudents([without]).success).toBe(false);
+    },
+  );
 
-    expect(parsed.success).toBe(false);
+  it("sin matrícula en la sede llega sin nivel, y sin marca, sin asistencia", () => {
+    const parsed = parseStudents([classStudent({ level: null, attendance: null })]);
+
+    expect(parsed.success && parsed.data.classes[0].students[0]).toMatchObject({ level: null, attendance: null });
+  });
+
+  it("la asistencia solo es presente o ausente", () => {
+    expect(parseStudents([classStudent({ attendance: "absent" })]).success).toBe(true);
+    expect(parseStudents([{ ...classStudent(), attendance: "late" }]).success).toBe(false);
   });
 
   it("la próxima clase necesita su instante de inicio", () => {
@@ -44,9 +64,9 @@ describe("ScheduleResponseSchema", () => {
         classes: [
           scheduleClass({
             students: [
-              { name: "Lucía", last_name: "Romero", is_recovery: false },
-              { name: "Álvaro", last_name: "Zamora", is_recovery: true },
-              { name: "lucía", last_name: "Blanco", is_recovery: false },
+              classStudent({ student_id: 1, name: "Lucía", last_name: "Romero" }),
+              classStudent({ student_id: 2, name: "Álvaro", last_name: "Zamora", is_recovery: true }),
+              classStudent({ student_id: 3, name: "lucía", last_name: "Blanco" }),
             ],
           }),
         ],
@@ -58,5 +78,17 @@ describe("ScheduleResponseSchema", () => {
       "lucía Blanco",
       "Lucía Romero",
     ]);
+  });
+});
+
+describe("AttendanceMarkSchema", () => {
+  it("acepta la marca guardada tal como la devuelve Core", () => {
+    const body = attendanceMark({ status: "absent" });
+    expect(AttendanceMarkSchema.parse(body)).toEqual(body);
+  });
+
+  it("sin quién la marcó no cumple el contrato", () => {
+    const { marked_by: _by, ...withoutAuthor } = attendanceMark();
+    expect(AttendanceMarkSchema.safeParse(withoutAuthor).success).toBe(false);
   });
 });

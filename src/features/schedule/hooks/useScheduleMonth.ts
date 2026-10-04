@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useSessionUserId } from "@/shared/store/sessionStore";
 
 import type { ScheduleClass, ScheduleResponse } from "../schemas/schedule.schema";
-import { monthScheduleQuery, scheduleService, type IScheduleService } from "../services/scheduleService";
+import { monthScheduleQuery, scheduleService, type ScheduleReader } from "../services/scheduleService";
 import { classesByDate } from "../utils/classesByDate";
 
 /** Un día sin clases: siempre la misma lista, para que `memo` no vea un cambio. */
@@ -24,7 +24,7 @@ const selectByDate = (data: ScheduleResponse) => classesByDate(data.classes);
  * Solo lo que pinta la vista, leído propiedad a propiedad: copiar la query
  * entera haría que TanStack avisara de cualquier cambio.
  */
-export function useScheduleMonth(date: string, service: IScheduleService = scheduleService) {
+export function useScheduleMonth(date: string, service: ScheduleReader = scheduleService) {
   const teacherId = useSessionUserId();
   const recipe = useMemo(() => monthScheduleQuery(teacherId, date, service), [teacherId, date, service]);
   const query = useQuery({ ...recipe, select: selectByDate });

@@ -1,3 +1,5 @@
+export { AttendanceCount } from "./AttendanceCount";
+export { AttendanceToggle } from "./AttendanceToggle";
 export { ClassHero } from "./ClassHero";
 export { ClubDot } from "./ClubDot";
 export { DayButton, DAY_MARK_COLORS } from "./DayButton";

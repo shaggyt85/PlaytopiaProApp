@@ -7,10 +7,10 @@ import { useSessionStore } from "@/shared/store/sessionStore";
 //     require("../../../helpers/scheduleMocks").scheduleServiceModule(),
 //   );
 
-/** El módulo del servicio de la agenda con `getClasses` simulado. */
+/** El módulo del servicio de la agenda con `getClasses` y `markAttendance` simulados. */
 export const scheduleServiceModule = () => ({
   ...jest.requireActual("@/features/schedule/services/scheduleService"),
-  scheduleService: { getClasses: jest.fn() },
+  scheduleService: { getClasses: jest.fn(), markAttendance: jest.fn() },
 });
 
 /** El módulo de «Mis clubes» con `getMyClubs` simulado. */

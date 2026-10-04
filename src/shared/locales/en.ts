@@ -39,6 +39,11 @@ const en: Translations = {
       "internal-error": "Server error. Please try again later.",
       "date-range-inverted": "The start date cannot be after the end date.",
       "date-range-too-long": "The date range is too long.",
+      "not-class-teacher": "Another coach teaches this class.",
+      "class-not-found": "This class no longer exists.",
+      "student-not-in-class": "This student is no longer in the class.",
+      "attendance-not-open": "Attendance can be taken once the class starts.",
+      "attendance-closed": "The time to take attendance for this class is over.",
     },
   },
   auth: {
@@ -201,8 +206,16 @@ const en: Translations = {
       timeRange: "%{start}–%{end}",
       /** Una cifra del día encima de la agenda para el lector de pantalla: «clases hoy: 3». */
       stat: "%{label}: %{value}",
-      students: "Students",
+      students: "Students & attendance",
       noStudents: "No students signed up yet",
+      /** A la derecha de «Alumnos y asistencia»: cuántos han venido. */
+      presentCount: "%{present}/%{total} present",
+      /** Lo mismo cuando ya tienen marca todos. */
+      attendanceDone: "Attendance recorded · %{present}/%{total}",
+      /** La etiqueta de quien está en la clase por una plaza de recuperación. */
+      recovery: "Make-up",
+      markPresent: "Mark %{name} as present",
+      markAbsent: "Mark %{name} as absent",
       notFound: "Class not found",
     },
     day: {

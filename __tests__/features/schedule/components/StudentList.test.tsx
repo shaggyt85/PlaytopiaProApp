@@ -2,9 +2,11 @@ import { render, screen } from "@testing-library/react-native";
 
 import { StudentList } from "@/features/schedule/components/StudentList";
 
+import { classStudent } from "../../../helpers/scheduleFactories";
+
 const students = [
-  { name: "Diego", last_name: "Pérez" },
-  { name: "Lucía", last_name: "Romero" },
+  classStudent({ student_id: 54, name: "Diego", last_name: "Pérez", level: null }),
+  classStudent({ level: null }),
 ];
 
 describe("StudentList", () => {
@@ -15,6 +17,12 @@ describe("StudentList", () => {
     expect(screen.getAllByTestId("student-row")).toHaveLength(2);
     expect(screen.getByLabelText("Diego Pérez")).toBeTruthy();
     expect(screen.getByLabelText("Lucía Romero")).toBeTruthy();
+  });
+
+  it("con `onMark`, cada fila con sus botones", () => {
+    render(<StudentList students={students} onMark={jest.fn()} />);
+
+    expect(screen.getAllByRole("button")).toHaveLength(4);
   });
 
   it("sin alumnos, «Aún no hay alumnos apuntados»", () => {

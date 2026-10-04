@@ -37,6 +37,8 @@ const BRAND = Object.freeze({
   coral: "#FF396A",
   coralFrom: "#FF5468",
   coralTo: "#F50069",
+  coralEdge: "#C00038", // borde de abajo de lo coral en relieve (btn-3d-coral: oklch(0.5 0.22 15))
+  coralGlow: "#EC0050", // su brillo (oklch(0.6 0.24 15))
   sky: "#00B0FF",
   skyFrom: "#00B9FF",
   skyTo: "#007DF3",
