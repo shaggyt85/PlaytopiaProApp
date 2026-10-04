@@ -52,7 +52,7 @@ describe("ScheduleClassBlock", () => {
     expect(screen.getByText("Pista 1", hidden)).toBeTruthy();
     expect(screen.getByText("75 min", hidden)).toBeTruthy();
     expect(screen.getByText("2.5 - 3", hidden)).toBeTruthy();
-    expect(screen.getByText("3/4", hidden)).toBeTruthy();
+    expect(screen.getByText("3/4 alumnos", hidden)).toBeTruthy();
     expect(screen.queryByText("Sede Centro", hidden)).toBeNull();
     // El lector de pantalla la sigue leyendo entera, con su club.
     expect(screen.getByLabelText(/^Cantera Tarde, 16:00, 75 minutos/)).toBeTruthy();

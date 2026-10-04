@@ -20,15 +20,15 @@ const NO_CLASSES: readonly ScheduleClass[] = [];
  * la semana actual y los 7 días en las demás. Tocar un día deja solo ese, con
  * «Filtrado por…» y «Ver toda la semana»; tocar hoy o el ya tocado lo quita.
  *
- * El día tocado solo vale en su semana (\`weekDays(date).includes\`): al cambiar
+ * El día tocado solo vale en su semana (`weekDays(date).includes`): al cambiar
  * de semana con las flechas deja de valer solo, sin un efecto que lo borre.
  * Los datos salen de la misma respuesta del mes que Día. Tocar un día también lo
  * elige en la agenda: al pasar a Día, se ve ese.
  */
-export function WeekSchedule({ nowWall, date, today, clubOf, onSelect }: ScheduleViewProps) {
+export function WeekSchedule({ nowWall, date, today, nextClassId, clubOf, onSelect }: ScheduleViewProps) {
   const styles = useStyles();
   const [picked, setPicked] = useState<string | null>(null);
-  const { byDate, dots, hasData, error, refetch } = useScheduleDays(date, clubOf);
+  const { byDate, dots, hasData, error, refetch } = useScheduleDays(date);
 
   const days = useMemo(() => weekDays(date), [date]);
   const filter = picked && days.includes(picked) && picked !== today ? picked : null;
@@ -60,6 +60,7 @@ export function WeekSchedule({ nowWall, date, today, clubOf, onSelect }: Schedul
                 picked={day === filter}
                 classes={byDate.get(day) ?? NO_CLASSES}
                 nowWall={tense === "today" ? nowWall : undefined}
+                nextClassId={tense === "today" ? nextClassId : undefined}
                 clubOf={clubOf}
               />
             );

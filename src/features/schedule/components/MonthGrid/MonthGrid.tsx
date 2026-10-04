@@ -28,10 +28,10 @@ interface MonthGridProps {
 /**
  * La cuadrícula de la vista Mes: L … D arriba y una fila por semana, con los
  * huecos de antes del día 1 y de después del último vacíos. Cada día es un
- * \`DayButton\` con su número y sus puntos: el elegido, hoy o los demás. Tocar
+ * `DayButton` con su número y sus puntos: el elegido, hoy o los demás. Tocar
  * uno lo elige en la agenda y la lista de debajo pasa a ese día.
  *
- * Las semanas en filas de 7 (\`chunkWeeks\`) y cada celda con \`flex: 1\`: miden lo
+ * Las semanas en filas de 7 (`chunkWeeks`) y cada celda con `flex: 1`: miden lo
  * mismo en un móvil que en una tablet, sin calcular anchos.
  */
 export const MonthGrid = memo(function MonthGrid({ date, today, dots, byDate, onPick }: MonthGridProps) {

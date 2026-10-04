@@ -7,7 +7,7 @@ import { joinParts } from "@/shared/utils/joinParts";
 
 import { useOpenClass } from "../../hooks/useOpenClass";
 import { classA11yLabel } from "../../utils/classA11yLabel";
-import { seatsLabel } from "../../utils/seatsLabel";
+import { studentsLabel } from "../../utils/seatsLabel";
 import { ClubBadge } from "../ClubBadge";
 import type { DayClassRowProps } from "../DayClassList";
 import { PressableScale } from "../PressableScale";
@@ -43,7 +43,7 @@ export const MonthClassRow = memo(function MonthClassRow({ item, club, status }:
           <ClubBadge club={club} size="mini" />
         </View>
         <Text variant="meta" color="textSecondary" numberOfLines={1}>
-          {joinParts([club.label, item.track_name, seatsLabel(item)])}
+          {joinParts([club.label, item.track_name, studentsLabel(item, t)])}
         </Text>
       </View>
     </PressableScale>

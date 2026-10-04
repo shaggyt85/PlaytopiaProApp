@@ -11,6 +11,8 @@ const mockPush = jest.fn();
 jest.mock("expo-router", () => ({ useRouter: () => ({ push: mockPush }) }));
 
 const club = { label: "Wave Padel Club", colors: darkTheme.clubColors[2] };
+// Su color en el día (la fila del Mes aún usa el de su club).
+const colors = darkTheme.clubColors[0];
 const item = scheduleClass({
   id: 7,
   title: "Mini Padel · Grupo A",
@@ -20,16 +22,16 @@ const item = scheduleClass({
 
 describe("MonthClassRow", () => {
   it("la hora, el título con su club y «club · pista · plazas», como la captura", () => {
-    render(<MonthClassRow item={item} club={club} status="upcoming" />);
+    render(<MonthClassRow item={item} colors={colors} club={club} status="upcoming" />);
 
     expect(screen.getByText("08:30")).toBeTruthy();
     expect(screen.getByText("Mini Padel · Grupo A")).toBeTruthy();
     expect(screen.getByTestId("club-badge")).toBeTruthy();
-    expect(screen.getByText("Wave Padel Club · Pista 2 · 3/4")).toBeTruthy();
+    expect(screen.getByText("Wave Padel Club · Pista 2 · 3/4 alumnos")).toBeTruthy();
   });
 
   it("si ya terminó, apagada como en Día y Semana", () => {
-    render(<MonthClassRow item={item} club={club} status="past" />);
+    render(<MonthClassRow item={item} colors={colors} club={club} status="past" />);
 
     expect(
       StyleSheet.flatten(screen.getByTestId("month-class-7").props.style)
@@ -38,7 +40,7 @@ describe("MonthClassRow", () => {
   });
 
   it("el lector de pantalla la lee entera", () => {
-    render(<MonthClassRow item={item} club={club} status="upcoming" />);
+    render(<MonthClassRow item={item} colors={colors} club={club} status="upcoming" />);
 
     expect(
       screen.getByLabelText(
@@ -47,7 +49,7 @@ describe("MonthClassRow", () => {
     ).toBeTruthy();
   });
   it("al tocarla abre su detalle", () => {
-    render(<MonthClassRow item={item} club={club} status="upcoming" />);
+    render(<MonthClassRow item={item} colors={colors} club={club} status="upcoming" />);
 
     fireEvent.press(screen.getByTestId("month-class-7"));
 

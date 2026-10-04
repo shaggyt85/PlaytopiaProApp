@@ -24,10 +24,10 @@ const NO_CLASSES: readonly ScheduleClass[] = [];
  * día elegido («Hoy · 18 de noviembre») con sus clases en filas compactas, o
  * «Día libre». Los datos salen de la misma respuesta del mes que Día y Semana.
  */
-export function MonthSchedule({ nowWall, date, today, clubOf, onSelect }: ScheduleViewProps) {
+export function MonthSchedule({ nowWall, date, today, nextClassId, clubOf, onSelect }: ScheduleViewProps) {
   const styles = useStyles();
   const { t } = useTranslation();
-  const { byDate, dots, hasData, error, refetch } = useScheduleDays(date, clubOf);
+  const { byDate, dots, hasData, error, refetch } = useScheduleDays(date);
   const tense = dayTense(date, today);
 
   return (
@@ -42,6 +42,7 @@ export function MonthSchedule({ nowWall, date, today, clubOf, onSelect }: Schedu
             classes={byDate.get(date) ?? NO_CLASSES}
             tense={tense}
             nowWall={tense === "today" ? nowWall : undefined}
+            nextClassId={tense === "today" ? nextClassId : undefined}
             clubOf={clubOf}
             Row={MonthClassRow}
           />

@@ -21,20 +21,12 @@ import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { classA11yLabel } from "../../utils/classA11yLabel";
 import type { ClassStatus } from "../../utils/classTiming";
-import { seatsLabel } from "../../utils/seatsLabel";
+import { studentsLabel } from "../../utils/seatsLabel";
 import type { BlockGeometry } from "../../utils/timelineGeometry";
 import { PressableScale } from "../PressableScale";
-import { StatusPill } from "../StatusPill";
+import { STATUS_PILL_OF, StatusPill } from "../StatusPill";
 
 import { CHEVRON_SIZE, useStyles } from "./ScheduleClassBlock.styles";
-
-/** La marca de cada estado: «EN VIVO», «PRÓXIMA», «COMPLETADA» o ninguna. */
-const STATUS_PILL_OF = {
-  live: "live",
-  next: "next",
-  past: "done",
-  upcoming: null,
-} as const satisfies Record<ClassStatus, "live" | "next" | "done" | null>;
 
 interface ScheduleClassBlockProps {
   item: ScheduleClass;
@@ -108,7 +100,7 @@ export const ScheduleClassBlock = memo(function ScheduleClassBlock({
             <View style={styles.metaRow}>
               <IconText Icon={IconLoClock} label={t("schedule.day.minutes", { count: item.duration_minutes })} />
               <IconText Icon={IconLoActivity} label={item.level_range} />
-              <IconText Icon={IconLoUsers} label={seatsLabel(item)} />
+              <IconText Icon={IconLoUsers} label={studentsLabel(item, t)} />
             </View>
           </View>
           <View style={styles.chevron}>

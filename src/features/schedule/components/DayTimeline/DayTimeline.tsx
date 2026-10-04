@@ -8,6 +8,7 @@ import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import { useScheduleHours } from "../../hooks/useScheduleHours";
 import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { classMinutes, classStatus } from "../../utils/classTiming";
+import { classColors } from "../../utils/classColors";
 import { colorAt } from "../../utils/colorAt";
 import { layoutDay, type Stacked } from "../../utils/dayLayout";
 import { visibleHours } from "../../utils/hourSpan";
@@ -70,10 +71,8 @@ export function DayTimeline({ classes, isToday, now, nextClassId, clubOf }: DayT
       BLOCK_MIN_HEIGHT,
     );
     const dayScale = timelineScale(hours, HOUR_HEIGHT, layout.stretches);
-    // Cada clase con su color, por su orden en el día y en ciclo, como el prototipo
-    // (que da vida a la agenda): fijo, no al azar, para que no cambie al repintar.
-    const ordered = [...timed].sort((a, b) => a.minutes.start - b.minutes.start || a.item.id - b.item.id);
-    const colorOf = new Map(ordered.map(({ item }, index) => [item.id, colorAt(theme.clubColors, index)]));
+    // Cada clase con su color en el día (el mismo que en Semana y en la tira).
+    const colorOf = classColors(classes, theme.clubColors);
     const colorsOf = (id: number) => colorOf.get(id) ?? colorAt(theme.clubColors, 0);
     return {
       span: hours,

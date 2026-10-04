@@ -7,8 +7,18 @@ import type { TranslationKey } from "@/shared/locales";
 import { makeStyles } from "@/shared/hooks/makeStyles";
 import { withAlpha } from "@/shared/utils/color";
 
+import type { ClassStatus } from "../../utils/classTiming";
+
 /** El estado de una clase que se marca con una pastilla. */
 export type StatusPillVariant = "live" | "next" | "done";
+
+/** La marca de cada estado de una clase: «EN VIVO», «PRÓXIMA», «COMPLETADA» o ninguna (Día y Semana). */
+export const STATUS_PILL_OF = {
+  live: "live",
+  next: "next",
+  past: "done",
+  upcoming: null,
+} as const satisfies Record<ClassStatus, StatusPillVariant | null>;
 
 /** El icono de delante (`h-3 w-3`). */
 export const PILL_ICON_SIZE = 12;

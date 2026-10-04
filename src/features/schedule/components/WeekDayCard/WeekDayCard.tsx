@@ -24,6 +24,8 @@ interface WeekDayCardProps {
   classes: readonly ScheduleClass[];
   /** «Ahora» como hora de pared, solo en la tarjeta de hoy: las demás no la necesitan. */
   nowWall?: number;
+  /** La próxima según Core, solo en la tarjeta de hoy: se marca «PRÓXIMA». */
+  nextClassId?: number;
   clubOf: (sede: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
 }
 
@@ -41,6 +43,7 @@ export const WeekDayCard = memo(function WeekDayCard({
   picked,
   classes,
   nowWall,
+  nextClassId,
   clubOf,
 }: WeekDayCardProps) {
   const styles = useStyles();
@@ -60,7 +63,14 @@ export const WeekDayCard = memo(function WeekDayCard({
           {t("schedule.day.classes", { count: classes.length })}
         </Text>
       </View>
-      <DayClassList classes={classes} tense={tense} nowWall={nowWall} clubOf={clubOf} Row={WeekClassRow} />
+      <DayClassList
+        classes={classes}
+        tense={tense}
+        nowWall={nowWall}
+        nextClassId={nextClassId}
+        clubOf={clubOf}
+        Row={WeekClassRow}
+      />
     </View>
   );
 });

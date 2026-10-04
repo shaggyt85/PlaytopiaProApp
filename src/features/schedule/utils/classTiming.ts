@@ -51,15 +51,16 @@ export function classStatus(
 /**
  * El estado de una clase en las vistas Semana y Mes, según su día: si el día ya
  * pasó, pasada; si está por venir, por venir; hoy, según `nowWall` (en curso o
- * pasada). Solo la tarjeta de hoy recibe la hora, así el reloj no repinta las
- * demás. Aquí no se marca la próxima: solo sale en Día y en su tarjeta.
+ * pasada, o la próxima si es la que dice Core, como el prototipo). Solo la
+ * tarjeta de hoy recibe la hora, así el reloj no repinta las demás.
  */
 export function statusOnDay(
   c: Timed & Pick<ScheduleClass, "id">,
   tense: DayTense,
   nowWall: number | undefined,
+  nextClassId?: number,
 ): ClassStatus {
   if (tense === "past") return "past";
   if (tense === "future" || nowWall === undefined) return "upcoming";
-  return classStatus(c, nowWall, undefined);
+  return classStatus(c, nowWall, nextClassId);
 }

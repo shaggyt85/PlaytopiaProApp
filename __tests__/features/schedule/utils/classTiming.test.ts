@@ -47,9 +47,14 @@ describe("statusOnDay", () => {
     expect(statusOnDay(cantera, "future", undefined)).toBe("upcoming");
   });
 
-  it("hoy, según la hora: en curso o pasada; nunca «próxima»", () => {
+  it("hoy, según la hora: en curso, pasada o por venir", () => {
     expect(statusOnDay(cantera, "today", at("16:30:00"))).toBe("live");
     expect(statusOnDay(cantera, "today", at("18:00:00"))).toBe("past");
     expect(statusOnDay(cantera, "today", at("10:00:00"))).toBe("upcoming");
+  });
+
+  it("hoy, la próxima si es la que dice Core; otro día, nunca", () => {
+    expect(statusOnDay(cantera, "today", at("10:00:00"), cantera.id)).toBe("next");
+    expect(statusOnDay(cantera, "future", undefined, cantera.id)).toBe("upcoming");
   });
 });

@@ -28,6 +28,7 @@ import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import { classA11yLabel } from "../../utils/classA11yLabel";
 import { classTimeRange } from "../../utils/classTimeRange";
 import { heroLabel, type HeroClass } from "../../utils/heroClass";
+import { studentsLabel } from "../../utils/seatsLabel";
 import { PressableScale } from "../PressableScale";
 import { StudentAvatars } from "../StudentAvatars";
 
@@ -61,7 +62,7 @@ export function NextClassCard({ hero, club, today, now }: NextClassCardProps) {
   const { item } = hero;
 
   const label = heroLabel(hero, today, now, t);
-  const seats = t("schedule.next.students", { taken: item.current_participants, max: item.max_participants });
+  const seats = studentsLabel(item, t);
   const recoveries = item.students.filter((s) => s.is_recovery).length;
   const recoveriesLabel = recoveries > 0 ? t("schedule.next.recoveries", { count: recoveries }) : null;
   const a11y = joinParts(

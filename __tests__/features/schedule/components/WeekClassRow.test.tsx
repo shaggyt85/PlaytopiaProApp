@@ -12,6 +12,8 @@ const mockPush = jest.fn();
 jest.mock("expo-router", () => ({ useRouter: () => ({ push: mockPush }) }));
 
 const club = { label: "Wave Padel Club", colors: darkTheme.clubColors[2] };
+// Su color en el día, distinto del de su club.
+const colors = darkTheme.clubColors[4];
 // Mini Padel, 08:30, 60 min, Pista 2, 2/4… con los datos de la fábrica: 3/4.
 const item = scheduleClass({
   id: 7,
@@ -22,19 +24,28 @@ const item = scheduleClass({
 });
 
 const setup = (status: ClassStatus = "upcoming") =>
-  render(<WeekClassRow item={item} club={club} status={status} />);
+  render(<WeekClassRow item={item} colors={colors} club={club} status={status} />);
 const rowStyle = () =>
   StyleSheet.flatten(screen.getByTestId("week-class-7").props.style);
 
 describe("WeekClassRow", () => {
-  it("la hora, el título con su club, «60 min · club · pista» y las plazas", () => {
+  it("la hora, el título, «60 min · pista» y las plazas; sin el club, como en Día", () => {
     setup();
 
     expect(screen.getByText("08:30")).toBeTruthy();
     expect(screen.getByText("Mini Padel · Grupo A")).toBeTruthy();
-    expect(screen.getByTestId("club-badge")).toBeTruthy();
-    expect(screen.getByText("60 min · Wave Padel Club · Pista 2")).toBeTruthy();
-    expect(screen.getByText("3/4")).toBeTruthy();
+    expect(screen.getByText("Mini Padel · Grupo A").props.numberOfLines).toBe(2);
+    expect(screen.queryByTestId("club-badge")).toBeNull();
+    expect(screen.getByText("60 min · Pista 2")).toBeTruthy();
+    expect(screen.getByText("3/4 alumnos")).toBeTruthy();
+  });
+
+  it("el cuadrado de la hora y la barra, con su color en el día y no el de su club", () => {
+    setup();
+
+    const gradients = screen.UNSAFE_root.findAll((n) => Array.isArray(n.props.colors)).map((n) => n.props.colors);
+    expect(gradients).toContainEqual(colors.gradient);
+    expect(gradients).not.toContainEqual(club.colors.gradient);
   });
 
   it("la barra, llena según sus plazas", () => {
@@ -54,11 +65,26 @@ describe("WeekClassRow", () => {
     expect(rowStyle().borderColor).not.toBe(darkTheme.colors.hairline);
   });
 
-  it("si ya terminó, apagada como en Día; sin «En vivo»", () => {
+  it("la próxima: «Próxima» y resaltada, como la que está en curso", () => {
+    setup("next");
+
+    expect(screen.getByTestId("week-class-7-next")).toBeTruthy();
+    expect(rowStyle().borderColor).not.toBe(darkTheme.colors.hairline);
+  });
+
+  it("si ya terminó, apagada como en Día y «Completada»", () => {
     setup("past");
 
     expect(rowStyle().opacity).toBe(PAST_OPACITY);
+    expect(screen.getByTestId("week-class-7-done")).toBeTruthy();
     expect(screen.queryByTestId("week-class-7-live")).toBeNull();
+  });
+
+  it("por venir: sin marca y sin resaltar", () => {
+    setup();
+
+    expect(screen.queryByTestId(/^week-class-7-(live|next|done)$/)).toBeNull();
+    expect(rowStyle().borderColor).toBe(darkTheme.colors.hairline);
   });
 
   it("el lector de pantalla la lee entera, como las de Día", () => {
