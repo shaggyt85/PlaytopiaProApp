@@ -1,9 +1,4 @@
-import {
-  IconLoCalendarDays,
-  IconLoNetwork,
-  IconLoUser,
-  IconLoUsers,
-} from "@playtopia/icons/react-native";
+import { IconLoCalendarDays, IconLoUser, IconLoUsers } from "@playtopia/icons/react-native";
 import type { Href } from "expo-router";
 
 import type { IconComponent } from "@/shared/config/icons";
@@ -26,11 +21,15 @@ export interface TabItem {
  * Hoy y Agenda se unifican en el prototipo: la pantalla de inicio (`index`)
  * lleva el nombre y el icono de Agenda, y la pestaña `calendar` queda oculta
  * (su ruta y el texto `tabs.today` se conservan para cuando vuelva).
+ *
+ * Red tampoco sale en el menú del lanzamiento (prototipo final). Sin su
+ * pestaña, `/network` no se abre (lleva a la Agenda), pero la pantalla «Red de
+ * clubes», su ruta y el texto `tabs.network` se conservan: para que vuelva,
+ * basta con devolverla aquí.
  */
 export const TABS = [
   { name: "index", href: "/", label: "tabs.calendar", Icon: IconLoCalendarDays },
   { name: "groups", href: "/groups", label: "tabs.groups", Icon: IconLoUsers },
-  { name: "network", href: "/network", label: "tabs.network", Icon: IconLoNetwork },
   { name: "profile", href: "/profile", label: "tabs.profile", Icon: IconLoUser },
 ] as const satisfies readonly TabItem[];
 

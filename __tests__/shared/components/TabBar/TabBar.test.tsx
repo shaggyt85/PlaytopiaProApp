@@ -9,8 +9,8 @@ let mockPathname = "/";
 jest.mock("expo-router", () => ({ usePathname: () => mockPathname }));
 jest.mock("@/shared/hooks/useReduceMotion", () => ({ useReduceMotion: jest.fn(() => false) }));
 
-/** Simula que la barra se ha pintado con ese ancho útil (4 pestañas de 70). */
-const layout = (width = 280) =>
+/** Simula que la barra se ha pintado con ese ancho útil (3 pestañas de 70). */
+const layout = (width = 210) =>
   fireEvent(screen.getByTestId("tab-bar-track"), "layout", {
     nativeEvent: { layout: { width, height: 52, x: 0, y: 0 } },
   });
@@ -64,7 +64,7 @@ describe("TabBar", () => {
     layout();
     runAnimations();
 
-    mockPathname = "/network";
+    mockPathname = "/profile";
     rerender(<TabBar />);
     runAnimations();
 
@@ -79,12 +79,12 @@ describe("TabBar", () => {
     const { rerender } = render(<TabBar />);
     layout();
 
-    mockPathname = "/profile";
+    mockPathname = "/groups";
     rerender(<TabBar />);
     runAnimations(16); // un solo fotograma: sin animación ya está en su sitio
 
     expect(screen.getByTestId("tab-indicator")).toHaveAnimatedStyle({
-      transform: [{ translateX: 210 }, { scale: 1 }],
+      transform: [{ translateX: 70 }, { scale: 1 }],
     });
   });
 

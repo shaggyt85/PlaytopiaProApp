@@ -48,7 +48,7 @@ describe("menú inferior", () => {
     jest.mocked(myClubsService.getMyClubs).mockResolvedValue({ clubs: [schoolCard(4, 7)] });
   });
 
-  it("empieza en Agenda (la pantalla de inicio), con las 4 pestañas en orden y Agenda seleccionada", () => {
+  it("empieza en Agenda (la pantalla de inicio), con las 3 pestañas en orden y Agenda seleccionada", () => {
     renderRouter(routes, { initialUrl: "/", wrapper });
 
     expect(screen.getByTestId("schedule-screen")).toBeTruthy();
@@ -57,7 +57,6 @@ describe("menú inferior", () => {
     expect(menu.getAllByRole("tab").map((tab) => tab.props.accessibilityLabel)).toEqual([
       "Agenda",
       "Grupos",
-      "Red",
       "Perfil",
     ]);
     expect(screen.getByRole("tab", { name: "Agenda", selected: true })).toBeTruthy();
@@ -76,15 +75,12 @@ describe("menú inferior", () => {
     expect(screen.getByText("Próximamente")).toBeTruthy();
   });
 
-  it("la pestaña Red lleva a /network y abre Red de clubes", async () => {
-    renderRouter(routes, { initialUrl: "/", wrapper });
+  it("Red está oculta: no sale en el menú y /network lleva a la Agenda", () => {
+    renderRouter(routes, { initialUrl: "/network", wrapper });
 
-    fireEvent.press(screen.getByRole("tab", { name: "Red" }));
-
-    expect(screen).toHavePathname("/network");
-    expect(screen.getByRole("tab", { name: "Red", selected: true })).toBeTruthy();
-    expect(await screen.findByTestId("my-clubs-list-4-7")).toBeTruthy();
-    expect(screen.queryByText("Próximamente")).toBeNull();
+    expect(screen.queryByRole("tab", { name: "Red" })).toBeNull();
+    expect(screen).toHavePathname("/");
+    expect(screen.getByTestId("schedule-screen")).toBeTruthy();
   });
 
   it("la barra sigue en pantalla al cambiar de pestaña", () => {
@@ -93,6 +89,6 @@ describe("menú inferior", () => {
     fireEvent.press(screen.getByRole("tab", { name: "Agenda" }));
 
     expect(screen.getByTestId("schedule-screen")).toBeTruthy();
-    expect(within(screen.getByTestId("tab-bar")).getAllByRole("tab")).toHaveLength(4);
+    expect(within(screen.getByTestId("tab-bar")).getAllByRole("tab")).toHaveLength(3);
   });
 });

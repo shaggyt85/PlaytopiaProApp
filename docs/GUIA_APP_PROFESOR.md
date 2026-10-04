@@ -74,7 +74,7 @@ src/
     _layout.tsx
     (auth)/              sign-in, password, sign-up, password-recovery
     (app)/               pantallas con sesión: un Stack con el menú y, encima, los detalles
-      (tabs)/            menú inferior: index (Agenda), groups, network, profile; calendar, oculta
+      (tabs)/            menú inferior: index (Agenda), groups, profile; calendar y network, ocultas
   features/
     auth/                = flujo de acceso (varias pantallas)
       components/        AuthLayout, PasswordInput, FormError
@@ -534,8 +534,9 @@ useQuery({
 
 ### Menú inferior (pestañas)
 
-- **Cuatro pestañas:** Agenda (`index`), Grupos (`groups`), Red (`network`) y Perfil (`profile`). Las rutas van en inglés, como el resto del código; lo que ve el usuario sale de `tabs.*` en los 6 idiomas (nunca spanglish: «Red», no «Network»).
+- **Tres pestañas:** Agenda (`index`), Grupos (`groups`) y Perfil (`profile`), como el prototipo final. Las rutas van en inglés, como el resto del código; lo que ve el usuario sale de `tabs.*` en los 6 idiomas (nunca spanglish: «Red», no «Network»).
 - **Hoy y Agenda, unificadas:** en el prototipo son una sola pantalla. La de inicio (`index`, la de Hoy) lleva el nombre y el icono de Agenda, y la pestaña `calendar` queda **oculta**: fuera de `TABS`, pero su ruta y el texto `tabs.today` se conservan.
+- **Red, oculta en el lanzamiento:** el prototipo final la saca del menú. Una ruta de `(tabs)` sin su pestaña no se abre (`/network` lleva a la Agenda, igual que `/calendar`), pero la pantalla «Red de clubes» (`features/network`), el fichero de la ruta y el texto `tabs.network` se conservan; para que vuelva, basta con devolverla a `TABS`.
 - **Una sola lista:** `shared/config/tabs.ts` (`TABS`: nombre, `href`, texto e icono `IconLo…`). La usan la navegación, la barra, el «Próximamente» y los tests. `tabIndexForPath()` da la pestaña de una ruta (el inicio solo con `/`; las demás, también con sus subrutas).
 - **Piezas, en `shared/components/`:** `AppTabs` monta la navegación con `expo-router/ui` (`Tabs`, `TabSlot`, `TabList` y un `TabTrigger` por pestaña: tienen que ir dentro de `TabList`, que es donde `Tabs` los busca); `TabBar`, la píldora de cristal flotante con la gota; `TabButton`, cada pestaña (icono y nombre; vibra al cambiar a otra, no al tocar la activa). La ruta `(tabs)/_layout.tsx` solo reexporta `AppTabs`.
 - **La barra se monta una vez** y queda fija mientras cambia la pantalla de encima. `(app)` sigue siendo un `Stack` con `(tabs)` dentro: las pantallas de detalle se abrirán encima, a pantalla completa y sin barra.
@@ -601,7 +602,7 @@ useQuery({
 
 ### Red de clubes
 
-- **Qué es:** la pestaña Red (`features/network`, título «Red de clubes»). Dos pestañas dentro de la pantalla, de `utils/networkTabs.ts` (`NETWORK_TABS`): **«Mis clubes»**, las sedes donde trabaja (`GET /api/MobileTeacher/clubs`), y **«Cerca de mí»**, las escuelas a las que puede pedir unirse (`GET /api/MobileTeacher/schools`), sin las sedes donde ya trabaja.
+- **Qué es:** la pantalla Red (`features/network`, título «Red de clubes»), en `/network`. Hoy está oculta, fuera del menú (ver «Menú inferior»). Dos pestañas dentro de la pantalla, de `utils/networkTabs.ts` (`NETWORK_TABS`): **«Mis clubes»**, las sedes donde trabaja (`GET /api/MobileTeacher/clubs`), y **«Cerca de mí»**, las escuelas a las que puede pedir unirse (`GET /api/MobileTeacher/schools`), sin las sedes donde ya trabaja.
 - **Siempre abre en «Mis clubes».** La pestaña elegida es estado de la pantalla (`useState`), no de la ruta ni de Zustand.
 - **Selector:** `SegmentedTabs` (`shared/components/`, tamaño `full`), el del prototipo (píldora con la activa en `BrandGradient` y su brillo), sin contadores hasta la bolsa de trabajo. No guarda nada y pulsar la activa no avisa. La agenda usa el mismo en tamaño `compact`.
 - **Las dos listas quedan montadas** y la que no se ve, con `display: "none"` (fuera del dibujo y del lector de pantalla): cada pestaña conserva su scroll y «Mis clubes» no se vuelve a pedir. Las dos llevan la misma cabecera (título y pestañas), que se desplaza con la lista.
