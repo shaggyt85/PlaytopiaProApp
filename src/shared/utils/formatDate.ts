@@ -63,6 +63,10 @@ export function formatWallTime(wallMs: number): string {
 export const formatWeekdayDay = (date: string): string =>
   `${formatWallDate(date, { weekday: "long" })} ${formatDayOfMonth(date)}`;
 
+/** `class_date` con el día de la semana en corto y el número: "jue 18" (la tarjeta de la próxima clase). */
+export const formatWeekdayShortDay = (date: string): string =>
+  `${formatWallDate(date, { weekday: "short" })} ${formatDayOfMonth(date)}`;
+
 /** `class_date` como número del día: "18" (la tira de la semana y la cuadrícula del mes). */
 export const formatDayOfMonth = (date: string): string => formatWallDate(date, { day: "numeric" });
 

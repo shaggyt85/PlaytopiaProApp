@@ -23,7 +23,8 @@ import { useScheduleClubs } from "./hooks/useScheduleClubs";
 import { useScheduleMonth } from "./hooks/useScheduleMonth";
 import { useTeacherProfile } from "./hooks/useTeacherProfile";
 import { useTodayHeader } from "./hooks/useTodayHeader";
-import { localToday } from "./utils/scheduleDates";
+import { heroClass } from "./utils/heroClass";
+import { localToday, wallNow } from "./utils/scheduleDates";
 import { courtTimeLabel, todayStats, type TodayStats } from "./utils/todayStats";
 
 // La cabecera solo usa el nombre y la foto: no se vuelve a pintar si cambia otro campo del perfil.
@@ -52,7 +53,7 @@ const TODAY_STATS: readonly TodayStat[] = [
 /**
  * Agenda (Hoy): la foto del profesor (lleva a Perfil), el saludo según la hora,
  * su nombre y la fecha, con la hora del móvil; debajo, las cifras del día, la
- * próxima clase (si hay) y la agenda, con sus vistas Día, Semana y Mes. Si el
+ * clase en curso o la próxima (si hay) y la agenda, con sus vistas Día, Semana y Mes. Si el
  * perfil no llega, la cabecera sale igual sin el nombre.
  *
  * Provisional: la campana se ve pero aún no hace nada (las notificaciones
@@ -72,6 +73,8 @@ export function ScheduleScreen() {
   // Las clases de hoy, de la misma respuesta del mes que la agenda: no pide nada más.
   const { dayClasses, hasData } = useScheduleMonth(today);
   const stats = useMemo(() => todayStats(dayClasses), [dayClasses]);
+  // La tarjeta de arriba: la clase en curso o, si no hay, la próxima de Core.
+  const hero = useMemo(() => heroClass(dayClasses, nextClass, wallNow(now)), [dayClasses, nextClass, now]);
 
   return (
     <TabScreen testID="schedule-screen">
@@ -92,9 +95,9 @@ export function ScheduleScreen() {
             ))}
           </View>
         ) : null}
-        {nextClass ? (
+        {hero ? (
           <View style={styles.nextClass}>
-            <NextClassCard item={nextClass} club={clubOf(nextClass)} today={today} />
+            <NextClassCard hero={hero} club={clubOf(hero.item)} today={today} now={now} />
           </View>
         ) : null}
         <ScheduleAgenda now={now} today={today} nextClassId={nextClass?.id} clubs={clubs} clubOf={clubOf} />

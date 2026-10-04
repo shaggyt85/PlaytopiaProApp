@@ -173,10 +173,24 @@ const de: Translations = {
     },
     /** La tarjeta de la próxima clase, encima de la agenda. */
     next: {
-      title: "Nächster Kurs",
-      tomorrow: "Morgen",
+      /** La clase que se está dando. */
+      live: "Läuft",
+      /** La próxima, con cuándo empieza: «Próxima clase · en 45 min». */
+      titleWhen: "Nächster Kurs · %{when}",
+      inMinutes: "in %{count} Min.",
+      todayAt: "heute %{time}",
+      tomorrowAt: "morgen %{time}",
+      /** «jue 18 · 18:00». */
+      dayAt: "%{day} · %{time}",
       level: "Niveau %{range}",
       students: "%{taken}/%{max} Schüler",
+      /** Cuántos vienen a recuperar. */
+      recoveries: {
+        one: "+%{count} Nachholstunde",
+        other: "+%{count} Nachholstunden",
+      },
+      /** La marca sobre el círculo de quien recupera. */
+      recoveryBadge: "N",
     },
     /** El detalle de una clase (se abre al tocarla en la agenda). */
     detail: {

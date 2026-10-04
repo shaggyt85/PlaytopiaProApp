@@ -221,6 +221,12 @@ export const darkTheme = {
     brand: brandGradient,
     /** Tarjetas oscuras. */
     ink: [BRAND.inkFrom, BRAND.inkTo] as const,
+    /**
+     * La tarjeta de la próxima clase, sobre `surface`: un toque magenta arriba a la
+     * izquierda y violeta abajo a la derecha (el `color-mix` al 16 % y al 14 % del
+     * prototipo), con `surface` limpia en medio (paradas en `NEXT_CLASS_STOPS`).
+     */
+    nextClass: [withAlpha(BRAND.magenta, 0.16), withAlpha(BRAND.surface, 0), withAlpha(BRAND.violet, 0.14)] as const,
     /** Tarjeta de cristal de los modales. */
     modal: [withAlpha(BRAND.night, 0.85), withAlpha(BRAND.inkTo, 0.9)] as const,
     /**

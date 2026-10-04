@@ -12,6 +12,16 @@ export const StudentNameSchema = z.object({
 });
 export type StudentName = z.infer<typeof StudentNameSchema>;
 
+/**
+ * Un alumno de la clase (`ClassStudentDto`): su nombre y si viene a recuperar
+ * (está en la clase por una plaza de recuperación). Core manda además su id, su
+ * clase y su asistencia; se añaden cuando una pantalla los necesite.
+ */
+export const ClassStudentSchema = StudentNameSchema.extend({
+  is_recovery: z.boolean(),
+});
+export type ClassStudent = z.infer<typeof ClassStudentSchema>;
+
 /** Por nombre y, si coincide, por apellido, como los ordena el idioma activo. */
 const byName = (a: StudentName, b: StudentName) => compareText(a.name, b.name) || compareText(a.last_name, b.last_name);
 
@@ -20,7 +30,7 @@ const byName = (a: StudentName, b: StudentName) => compareText(a.name, b.name) |
  * así la tarjeta de la próxima clase y el detalle los ponen igual (con el mismo
  * color para cada uno, que sale de su posición).
  */
-const StudentsSchema = z.array(StudentNameSchema).transform((students) => [...students].sort(byName));
+const StudentsSchema = z.array(ClassStudentSchema).transform((students) => [...students].sort(byName));
 
 /** Una clase de la agenda (`TeacherClassDto`). */
 export const ScheduleClassSchema = z.object({

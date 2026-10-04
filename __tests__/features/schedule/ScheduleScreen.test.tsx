@@ -76,7 +76,7 @@ describe("ScheduleScreen", () => {
     renderWithProviders(<ScheduleScreen />);
 
     expect(await screen.findByTestId("next-class")).toBeTruthy();
-    expect(screen.getByText("Próxima clase")).toBeTruthy();
+    expect(screen.getByText("Próxima clase · hoy 16:00")).toBeTruthy();
     expect(screen.getByTestId("class-31-next")).toBeTruthy();
   });
 

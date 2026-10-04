@@ -175,10 +175,24 @@ const es = {
     },
     /** La tarjeta de la próxima clase, encima de la agenda. */
     next: {
-      title: "Próxima clase",
-      tomorrow: "Mañana",
+      /** La clase que se está dando. */
+      live: "En curso",
+      /** La próxima, con cuándo empieza: «Próxima clase · en 45 min». */
+      titleWhen: "Próxima clase · %{when}",
+      inMinutes: "en %{count} min",
+      todayAt: "hoy %{time}",
+      tomorrowAt: "mañana %{time}",
+      /** «jue 18 · 18:00». */
+      dayAt: "%{day} · %{time}",
       level: "Nivel %{range}",
       students: "%{taken}/%{max} alumnos",
+      /** Cuántos vienen a recuperar. */
+      recoveries: {
+        one: "+%{count} recuperación",
+        other: "+%{count} recuperaciones",
+      },
+      /** La marca sobre el círculo de quien recupera. */
+      recoveryBadge: "R",
     },
     /** El detalle de una clase (se abre al tocarla en la agenda). */
     detail: {

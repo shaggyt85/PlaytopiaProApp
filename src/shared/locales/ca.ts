@@ -173,10 +173,24 @@ const ca: Translations = {
     },
     /** La tarjeta de la próxima clase, encima de la agenda. */
     next: {
-      title: "Propera classe",
-      tomorrow: "Demà",
+      /** La clase que se está dando. */
+      live: "En curs",
+      /** La próxima, con cuándo empieza: «Próxima clase · en 45 min». */
+      titleWhen: "Propera classe · %{when}",
+      inMinutes: "d'aquí a %{count} min",
+      todayAt: "avui %{time}",
+      tomorrowAt: "demà %{time}",
+      /** «jue 18 · 18:00». */
+      dayAt: "%{day} · %{time}",
       level: "Nivell %{range}",
       students: "%{taken}/%{max} alumnes",
+      /** Cuántos vienen a recuperar. */
+      recoveries: {
+        one: "+%{count} recuperació",
+        other: "+%{count} recuperacions",
+      },
+      /** La marca sobre el círculo de quien recupera. */
+      recoveryBadge: "R",
     },
     /** El detalle de una clase (se abre al tocarla en la agenda). */
     detail: {

@@ -23,12 +23,25 @@ describe("StudentAvatar", () => {
     expect(mockGradient).toHaveBeenCalledWith(expect.objectContaining({ colors: darkTheme.clubColors[1].gradient }));
   });
 
-  it("los dos tamaños del prototipo: 32 y 44", () => {
+  it("los dos tamaños del prototipo: 36 y 44", () => {
     const { rerender } = render(<StudentAvatar student={lucia} index={0} size="sm" />);
-    expect(styleOf("student-avatar")).toMatchObject({ width: 32, height: 32 });
+    expect(styleOf("student-avatar")).toMatchObject({ width: 36, height: 36 });
 
     rerender(<StudentAvatar student={lucia} index={0} size="md" />);
     expect(styleOf("student-avatar")).toMatchObject({ width: 44, height: 44 });
+  });
+
+  it("sin `recovery`, sin la «R» (la lista del detalle marca la recuperación a su manera)", () => {
+    render(<StudentAvatar student={lucia} index={0} size="md" />);
+
+    expect(screen.queryByTestId("student-avatar-recovery")).toBeNull();
+  });
+
+  it("con `recovery`, la «R» fuera del círculo para que no se recorte", () => {
+    render(<StudentAvatar student={lucia} index={0} size="sm" ring recovery />);
+
+    expect(screen.getByTestId("student-avatar-recovery")).toBeTruthy();
+    expect(styleOf("student-avatar").borderColor).toBe(darkTheme.accents.gold.color);
   });
 
   it("«+N», sin degradado", () => {

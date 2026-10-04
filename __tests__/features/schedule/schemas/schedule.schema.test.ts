@@ -24,6 +24,15 @@ describe("ScheduleResponseSchema", () => {
     );
   });
 
+  it("cada alumno dice si viene a recuperar", () => {
+    const { is_recovery: _recovery, ...withoutRecovery } = scheduleClass().students[0];
+    const parsed = ScheduleResponseSchema.safeParse(
+      scheduleResponse({ classes: [scheduleClass({ students: [withoutRecovery as never] })] }),
+    );
+
+    expect(parsed.success).toBe(false);
+  });
+
   it("la próxima clase necesita su instante de inicio", () => {
     const { starts_at: _startsAt, ...withoutStart } = nextClass();
     expect(ScheduleResponseSchema.safeParse({ classes: [], next_class: withoutStart }).success).toBe(false);
@@ -35,9 +44,9 @@ describe("ScheduleResponseSchema", () => {
         classes: [
           scheduleClass({
             students: [
-              { name: "Lucía", last_name: "Romero" },
-              { name: "Álvaro", last_name: "Zamora" },
-              { name: "lucía", last_name: "Blanco" },
+              { name: "Lucía", last_name: "Romero", is_recovery: false },
+              { name: "Álvaro", last_name: "Zamora", is_recovery: true },
+              { name: "lucía", last_name: "Blanco", is_recovery: false },
             ],
           }),
         ],

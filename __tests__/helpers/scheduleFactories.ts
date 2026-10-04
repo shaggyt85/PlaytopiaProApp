@@ -24,8 +24,8 @@ export const scheduleClass = (overrides: Partial<ScheduleClass> = {}): ScheduleC
   number_of_classes: 40,
   // Ya en el orden en que los deja el contrato (por nombre).
   students: [
-    { name: "Diego", last_name: "Pérez" },
-    { name: "Lucía", last_name: "Romero" },
+    { name: "Diego", last_name: "Pérez", is_recovery: false },
+    { name: "Lucía", last_name: "Romero", is_recovery: false },
   ],
   ...overrides,
 });
