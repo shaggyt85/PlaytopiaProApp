@@ -6,6 +6,7 @@ const teacherResponse = {
   name: "David",
   last_name: "García",
   email: "david@club.com",
+  avatar: "https://img.test/avatars/teacher/42.jpg",
   terms_version: "2026-07-01",
   accepted_terms_at: "2026-09-26T10:00:00",
 };
@@ -15,6 +16,7 @@ describe("TeacherProfileSchema", () => {
     expect(TeacherProfileSchema.parse(teacherResponse)).toEqual({
       id: 42,
       name: "David",
+      avatar: "https://img.test/avatars/teacher/42.jpg",
       terms_version: "2026-07-01",
       accepted_terms_at: "2026-09-26T10:00:00",
     });
@@ -26,7 +28,7 @@ describe("TeacherProfileSchema", () => {
     expect(profile.terms_version).toBeNull();
   });
 
-  it.each(["id", "name", "terms_version"])("rechaza un perfil sin %s", (field) => {
+  it.each(["id", "name", "avatar", "terms_version"])("rechaza un perfil sin %s", (field) => {
     const { [field as keyof typeof teacherResponse]: _removed, ...incomplete } = teacherResponse;
 
     expect(() => TeacherProfileSchema.parse(incomplete)).toThrow();

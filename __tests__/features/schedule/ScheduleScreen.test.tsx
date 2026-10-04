@@ -21,6 +21,13 @@ jest.mock("@/shared/services/teacherProfileService", () => ({
   teacherProfileService: { get: jest.fn(), update: jest.fn() },
 }));
 jest.mock("@/shared/utils/serverClock", () => ({ serverNow: jest.fn() }));
+const mockImage = jest.fn();
+jest.mock("expo-image", () => ({
+  Image: (props: Record<string, unknown>) => {
+    mockImage(props);
+    return null;
+  },
+}));
 jest.mock("@/features/schedule/services/scheduleService", () =>
   require("../../helpers/scheduleMocks").scheduleServiceModule(),
 );
@@ -107,6 +114,17 @@ describe("ScheduleScreen", () => {
     expect(await screen.findByRole("header", { name: "David" })).toBeTruthy();
     expect(screen.getByText("Buenos días, entrenador")).toBeTruthy();
     expect(screen.getByText("Viernes · 20 de noviembre")).toBeTruthy();
+  });
+
+  it("a la izquierda del saludo, la foto del perfil, que lleva a Perfil", async () => {
+    renderWithProviders(<ScheduleScreen />);
+
+    expect(await screen.findByRole("button", { name: "Mi perfil" })).toBeTruthy();
+    await waitFor(() =>
+      expect(mockImage).toHaveBeenLastCalledWith(
+        expect.objectContaining({ source: { uri: "https://img.test/avatars/teacher/42.jpg" } }),
+      ),
+    );
   });
 
   it("por la tarde cambia el saludo", async () => {

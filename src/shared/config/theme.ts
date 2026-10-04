@@ -115,9 +115,11 @@ export const glow = (color: string) =>
 /**
  * Resplandor alrededor de un elemento, sin desplazamiento (el
  * `shadow-[0_0_12px_var(--coral)]` de Lovable): la línea de «ahora» de la
- * agenda. Con `boxShadow`, que React Native pinta igual en iOS y Android.
+ * agenda. Con `spread` negativo se encoge (el `0_0_20px_-6px` del avatar del
+ * profesor). Con `boxShadow`, que React Native pinta igual en iOS y Android.
  */
-export const halo = (color: string, blur = 12) => ({ boxShadow: `0 0 ${blur}px ${color}` }) as const;
+export const halo = (color: string, blur = 12, spread = 0) =>
+  ({ boxShadow: `0 0 ${blur}px ${spread}px ${color}` }) as const;
 
 /** Sombra de algo que flota sobre el contenido (el `shadow-lg` de Tailwind): la hora de la línea de «ahora». */
 const lifted = {

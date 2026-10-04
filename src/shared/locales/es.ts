@@ -137,6 +137,8 @@ const es = {
       evening: "Buenas noches, entrenador",
     },
     notifications: "Notificaciones",
+    /** El avatar de la cabecera, que lleva a Perfil (lo lee el lector de pantalla). */
+    myProfile: "Mi perfil",
     /** El selector de vistas (DÍA · SEMANA · MES). */
     views: {
       day: "Día",

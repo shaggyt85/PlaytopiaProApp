@@ -11,7 +11,7 @@ import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 import { session } from "@/shared/services/session";
 
 import { useStyles } from "./ScheduleScreen.styles";
-import { NextClassCard, ScheduleAgenda } from "./components";
+import { NextClassCard, ScheduleAgenda, TeacherAvatar } from "./components";
 import { useForegroundNow } from "./hooks/useForegroundNow";
 import { useNextClass } from "./hooks/useNextClass";
 import { useScheduleClubs } from "./hooks/useScheduleClubs";
@@ -19,12 +19,12 @@ import { useTeacherProfile } from "./hooks/useTeacherProfile";
 import { useTodayHeader } from "./hooks/useTodayHeader";
 import { localToday } from "./utils/scheduleDates";
 
-// Hoy solo usa el nombre: no se vuelve a pintar si cambia otro campo del perfil.
-const selectName = (profile: TeacherProfile) => profile.name;
+// La cabecera solo usa el nombre y la foto: no se vuelve a pintar si cambia otro campo del perfil.
+const selectHeader = ({ name, avatar }: TeacherProfile) => ({ name, avatar });
 
 /**
- * Agenda (Hoy): saludo según la hora, el nombre del profesor y la fecha, con la
- * hora del móvil; debajo, la próxima clase (si hay) y la agenda, con sus vistas
+ * Agenda (Hoy): la foto del profesor (lleva a Perfil), el saludo según la hora,
+ * su nombre y la fecha, con la hora del móvil; debajo, la próxima clase (si hay) y la agenda, con sus vistas
  * Día, Semana y Mes. Si el perfil no llega, la cabecera sale igual sin el nombre.
  *
  * Provisional: la campana se ve pero aún no hace nada (las notificaciones
@@ -39,15 +39,16 @@ export function ScheduleScreen() {
   const today = localToday(now);
   const nextClass = useNextClass(today, now);
   const { clubs, clubOf } = useScheduleClubs();
-  const name = useTeacherProfile({ select: selectName });
+  const profile = useTeacherProfile({ select: selectHeader });
 
   return (
     <TabScreen testID="schedule-screen">
       <TabScrollView>
         <ScreenHeader
+          left={<TeacherAvatar url={profile.data?.avatar} />}
           greeting={t(header.greeting)}
-          title={name.data}
-          loading={name.isPending}
+          title={profile.data?.name}
+          loading={profile.isPending}
           subtitle={header.date}
           right={<IconButton Icon={IconLoBell} accessibilityLabel={t("schedule.notifications")} />}
         />

@@ -8,6 +8,8 @@ import { z } from "zod";
 export const TeacherProfileSchema = z.object({
   id: z.number().int(),
   name: z.string(),
+  /** URL de su foto, o la de por defecto si no subió ninguna: la pone Core. */
+  avatar: z.string().nullable(),
   /** Versión aceptada; `null` si nunca los aceptó (p. ej. alta desde el CRM). */
   terms_version: z.string().nullable(),
   accepted_terms_at: z.string().nullable(),

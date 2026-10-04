@@ -15,6 +15,20 @@ describe("ScreenHeader", () => {
     expect(screen.getByText("campana")).toBeTruthy();
   });
 
+  it("pinta lo de la izquierda antes de los textos y lo centra en vertical", () => {
+    render(<ScreenHeader title="David" left={<Text>avatar</Text>} right={<Text>campana</Text>} />);
+
+    const texts = screen.UNSAFE_root.findAllByType(Text).map((t) => t.props.children);
+    expect(texts.indexOf("avatar")).toBeLessThan(texts.indexOf("David"));
+    expect(screen.getByTestId("screen-header")).toHaveStyle({ alignItems: "center" });
+  });
+
+  it("sin nada a la izquierda, los textos van arriba como siempre", () => {
+    render(<ScreenHeader title="David" right={<Text>campana</Text>} />);
+
+    expect(screen.getByTestId("screen-header")).toHaveStyle({ alignItems: "flex-start" });
+  });
+
   it("mientras carga el título reserva su hueco para que nada salte al llegar", () => {
     render(<ScreenHeader greeting="Buenos días" loading />);
 

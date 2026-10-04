@@ -15,6 +15,7 @@ const teacher = {
   name: "David",
   last_name: "García",
   email: "david@club.com",
+  avatar: "https://img.test/avatars/teacher/42.jpg",
   terms_version: null,
   accepted_terms_at: null,
 };
@@ -26,7 +27,13 @@ describe("TeacherProfileService", () => {
     const result = await new TeacherProfileService(http).get(42);
 
     expect(http.get).toHaveBeenCalledWith("/UserTeacher/42");
-    expect(result).toEqual({ id: 42, name: "David", terms_version: null, accepted_terms_at: null });
+    expect(result).toEqual({
+      id: 42,
+      name: "David",
+      avatar: "https://img.test/avatars/teacher/42.jpg",
+      terms_version: null,
+      accepted_terms_at: null,
+    });
   });
 
   it("actualiza con un PATCH al mismo perfil y devuelve el perfil nuevo", async () => {

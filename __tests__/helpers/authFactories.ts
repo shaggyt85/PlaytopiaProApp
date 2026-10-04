@@ -19,6 +19,7 @@ export const signInTokens = {
 export const teacherProfile = (version: string | null = TERMS_VERSION): TeacherProfile => ({
   id: 42,
   name: "David",
+  avatar: "https://img.test/avatars/teacher/42.jpg",
   terms_version: version,
   accepted_terms_at: version ? "2026-09-26T10:00:00" : null,
 });

@@ -30,6 +30,7 @@ export { StudentAvatar } from "./StudentAvatar";
 export { MAX_AVATARS, StudentAvatars } from "./StudentAvatars";
 export { StudentList } from "./StudentList";
 export { StudentRow } from "./StudentRow";
+export { TeacherAvatar } from "./TeacherAvatar";
 export { TimeSquare } from "./TimeSquare";
 export { WeekClassRow } from "./WeekClassRow";
 export { WeekDayCard } from "./WeekDayCard";

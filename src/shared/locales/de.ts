@@ -135,6 +135,8 @@ const de: Translations = {
       evening: "Guten Abend, Trainer",
     },
     notifications: "Benachrichtigungen",
+    /** El avatar de la cabecera, que lleva a Perfil (lo lee el lector de pantalla). */
+    myProfile: "Mein Profil",
     /** El selector de vistas (DÍA · SEMANA · MES). */
     views: {
       day: "Tag",

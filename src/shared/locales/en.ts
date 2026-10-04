@@ -135,6 +135,8 @@ const en: Translations = {
       evening: "Good evening, coach",
     },
     notifications: "Notifications",
+    /** El avatar de la cabecera, que lleva a Perfil (lo lee el lector de pantalla). */
+    myProfile: "My profile",
     /** El selector de vistas (DÍA · SEMANA · MES). */
     views: {
       day: "Day",
