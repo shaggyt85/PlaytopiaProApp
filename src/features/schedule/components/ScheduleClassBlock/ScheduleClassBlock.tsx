@@ -18,6 +18,7 @@ import type { BlockGeometry } from "../../utils/timelineGeometry";
 import { BLOCK_DETAIL_MIN_HEIGHT } from "../../utils/timelineMetrics";
 import { ClubDot } from "../ClubDot";
 import { PressableScale } from "../PressableScale";
+import { StatusPill } from "../StatusPill";
 
 import { useStyles } from "./ScheduleClassBlock.styles";
 
@@ -90,16 +91,7 @@ export const ScheduleClassBlock = memo(function ScheduleClassBlock({
           >
             {item.title}
           </Text>
-          {status === "next" ? (
-            <View
-              style={[styles.pill, styles.nextPill]}
-              testID={`class-${item.id}-next`}
-            >
-              <Text variant="badge" color="onPrimary">
-                {t("schedule.day.next")}
-              </Text>
-            </View>
-          ) : null}
+          {status === "next" ? <StatusPill variant="next" testID={`class-${item.id}-next`} /> : null}
         </View>
         <Text
           variant="tab"

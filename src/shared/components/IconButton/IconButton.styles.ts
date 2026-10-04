@@ -20,8 +20,7 @@ export const useStyles = makeStyles((theme) => ({
   circle: { alignItems: "center", justifyContent: "center" },
   surface: {
     backgroundColor: theme.colors.surfaceStrong,
-    borderWidth: 1,
-    borderColor: theme.colors.hairline,
+    ...theme.ringSoft,
   },
   // Sobre un degradado: `bg-black/20`, sin borde.
   onColor: { backgroundColor: withAlpha(theme.colors.background, 0.2) },

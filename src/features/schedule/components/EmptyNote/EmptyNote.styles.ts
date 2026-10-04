@@ -5,8 +5,7 @@ export const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing.md,
     borderRadius: theme.radius.xxl,
-    borderWidth: 1,
-    borderColor: theme.colors.hairline,
+    ...theme.ringSoft,
     backgroundColor: theme.colors.surface,
   },
 }));

@@ -158,6 +158,16 @@ const accents = {
   violet: { color: BRAND.purple, gradient: [BRAND.purpleFrom, BRAND.purpleTo] as const },
 } as const;
 
+/** Líneas y bordes finos sobre cristal. */
+const hairline = withAlpha(BRAND.white, 0.1);
+
+/**
+ * El `ring-soft` del prototipo (una sombra interior que React Native no tiene),
+ * aproximado con un borde fino: el de casi todas las tarjetas, filas y paneles.
+ * Cada uno pone su fondo y su radio.
+ */
+const ringSoft = { borderWidth: 1, borderColor: hairline } as const;
+
 /** Un color con su degradado: el de un acento o el de un club. */
 export type ColorPair = { color: string; gradient: readonly [string, string, ...string[]] };
 
@@ -196,7 +206,7 @@ export const darkTheme = {
     /** Velo bajo un panel inferior (va además desenfocado). */
     sheetOverlay: withAlpha(BRAND.black, 0.6),
     /** Líneas y bordes finos sobre cristal. */
-    hairline: withAlpha(BRAND.white, 0.1),
+    hairline,
     hairlineStrong: withAlpha(BRAND.white, 0.25),
     /** Brillo de los elementos de marca. */
     glowPrimary: BRAND.glowMagenta,
@@ -254,6 +264,7 @@ export const darkTheme = {
   touchTarget: 44,
   /** Alto de campos y botones (píldoras). */
   controlHeight: 48,
+  ringSoft,
 };
 
 export type Theme = typeof darkTheme;

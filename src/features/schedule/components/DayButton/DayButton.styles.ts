@@ -43,7 +43,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   // Los demás: `bg-surface`, y en la tira además `ring-soft` (`otherRing`).
   other: { backgroundColor: theme.colors.surface },
-  otherRing: { borderWidth: 1, borderColor: theme.colors.hairline },
+  otherRing: theme.ringSoft,
   // `absolute -top-1 right-1 h-2 w-2 rounded-full bg-coral shadow-[0_0_8px_var(--coral)]`.
   todayMark: {
     position: "absolute",

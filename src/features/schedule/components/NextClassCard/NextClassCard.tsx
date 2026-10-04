@@ -15,6 +15,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
+import { IconText } from "@/shared/components/IconText";
 import { Text } from "@/shared/components/Text";
 import { useReduceMotion } from "@/shared/hooks/useReduceMotion";
 import { useTheme } from "@/shared/hooks/useTheme";
@@ -31,7 +32,7 @@ import { PressableScale } from "../PressableScale";
 import { StudentAvatars } from "../StudentAvatars";
 
 import { LIVE_PULSE } from "./NextClassCard.animation";
-import { CHEVRON_SIZE, NEXT_CLASS_STOPS, SMALL_ICON, useStyles } from "./NextClassCard.styles";
+import { CHEVRON_SIZE, NEXT_CLASS_STOPS, useStyles } from "./NextClassCard.styles";
 
 interface NextClassCardProps {
   /** La clase en curso o la próxima (`heroClass`). */
@@ -94,12 +95,14 @@ export function NextClassCard({ hero, club, today, now }: NextClassCardProps) {
             <Text variant="subtitle" numberOfLines={2} style={styles.title}>
               {item.title}
             </Text>
-            <View style={styles.placeRow}>
-              <IconLoMapPin size={SMALL_ICON} color={theme.colors.primary} />
-              <Text variant="caption" color="textSecondary" numberOfLines={1} style={styles.place}>
-                {joinParts([club.label, item.track_name])}
-              </Text>
-            </View>
+            <IconText
+              Icon={IconLoMapPin}
+              label={joinParts([club.label, item.track_name])}
+              size="card"
+              iconColor="primary"
+              numberOfLines={1}
+              style={styles.placeRow}
+            />
           </View>
           <View style={styles.chevron}>
             <IconLoChevronRight size={CHEVRON_SIZE} color={withAlpha(theme.colors.textSecondary, 0.7)} />
@@ -119,18 +122,8 @@ export function NextClassCard({ hero, club, today, now }: NextClassCardProps) {
         </View>
 
         <View style={styles.footer}>
-          <View style={styles.footerItem}>
-            <IconLoClock size={SMALL_ICON} color={theme.colors.primary} />
-            <Text variant="caption" color="textSecondary">
-              {classTimeRange(item, t)}
-            </Text>
-          </View>
-          <View style={styles.footerItem}>
-            <IconLoActivity size={SMALL_ICON} color={theme.colors.primary} />
-            <Text variant="caption" color="textSecondary">
-              {item.level_range}
-            </Text>
-          </View>
+          <IconText Icon={IconLoClock} label={classTimeRange(item, t)} size="card" iconColor="primary" />
+          <IconText Icon={IconLoActivity} label={item.level_range} size="card" iconColor="primary" />
         </View>
       </View>
     </PressableScale>

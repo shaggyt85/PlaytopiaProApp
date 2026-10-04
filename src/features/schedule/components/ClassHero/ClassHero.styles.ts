@@ -5,8 +5,6 @@ import { withAlpha } from "@/shared/utils/color";
 
 /** La ← (`h-9 w-9`): el `hitSlop` de `IconButton` completa el área táctil. */
 export const BACK_SIZE = 36;
-/** Los iconos de la línea de la fecha y la pista (`h-3.5 w-3.5`). */
-export const META_ICON_SIZE = 14;
 /**
  * El halo blanco de la esquina (`-right-12 -top-12 h-44 w-44 bg-white/20
  * blur-3xl`), como el de la tarjeta de la próxima clase pero en blanco.
@@ -47,7 +45,6 @@ export const useStyles = makeStyles((theme) => ({
     rowGap: theme.spacing.xs,
     marginTop: theme.spacing.sm,
   },
-  metaItem: { flexDirection: "row", alignItems: "center", gap: theme.spacing.xs, flexShrink: 1 },
   // `mt-4 grid gap-2`: una columna por cifra.
   stats: { flexDirection: "row", gap: theme.spacing.sm, marginTop: theme.spacing.md },
 }));

@@ -3,6 +3,7 @@ import { memo } from "react";
 import { View } from "react-native";
 
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
+import { IconText } from "@/shared/components/IconText";
 import { Text } from "@/shared/components/Text";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
@@ -17,9 +18,10 @@ import { occupancy } from "../../utils/occupancy";
 import { seatsLabel } from "../../utils/seatsLabel";
 import { ClubBadge } from "../ClubBadge";
 import { PressableScale } from "../PressableScale";
+import { StatusPill } from "../StatusPill";
 import { TimeSquare } from "../TimeSquare";
 
-import { CHEVRON_SIZE, CLOCK_SIZE, TIME_SQUARE_SIZE, useStyles } from "./WeekClassRow.styles";
+import { CHEVRON_SIZE, TIME_SQUARE_SIZE, useStyles } from "./WeekClassRow.styles";
 
 interface WeekClassRowProps {
   item: ScheduleClass;
@@ -57,20 +59,14 @@ export const WeekClassRow = memo(function WeekClassRow({ item, club, status }: W
             {item.title}
           </Text>
           <ClubBadge club={club} size="mini" />
-          {live ? (
-            <View style={styles.livePill} testID={`week-class-${item.id}-live`}>
-              <Text variant="statusBadge" color="onPrimary">
-                {t("schedule.week.live")}
-              </Text>
-            </View>
-          ) : null}
+          {live ? <StatusPill variant="live" testID={`week-class-${item.id}-live`} /> : null}
         </View>
-        <View style={styles.metaRow}>
-          <IconLoClock size={CLOCK_SIZE} color={theme.colors.textSecondary} />
-          <Text variant="meta" color="textSecondary" numberOfLines={1} style={styles.meta}>
-            {durationMeta(item, t, [club.label, item.track_name])}
-          </Text>
-        </View>
+        <IconText
+          Icon={IconLoClock}
+          label={durationMeta(item, t, [club.label, item.track_name])}
+          numberOfLines={1}
+          style={styles.metaRow}
+        />
         <View style={styles.seatsRow}>
           <View style={styles.bar}>
             <View style={[styles.barFill, { width: `${occupancy(item) * 100}%` }]} testID={`week-class-${item.id}-bar`}>

@@ -6,8 +6,6 @@ import { withAlpha } from "@/shared/utils/color";
 
 /** El punto de la etiqueta (`h-1.5 w-1.5`). */
 const LABEL_DOT = 6;
-/** Los iconos pequeños: ubicación, reloj y nivel (`h-3.5 w-3.5`). */
-export const SMALL_ICON = 14;
 /** La flecha de la derecha (`h-5 w-5`). */
 export const CHEVRON_SIZE = 20;
 /** Dónde para cada color del degradado (`…, surface 60%, …`). */
@@ -37,8 +35,7 @@ export const useStyles = makeStyles((theme) => {
     labelDot: { width: LABEL_DOT, height: LABEL_DOT, borderRadius: LABEL_DOT / 2, backgroundColor: theme.colors.primary },
     label: { flexShrink: 1 },
     title: { marginTop: gap6 },
-    placeRow: { flexDirection: "row", alignItems: "center", gap: gap6, marginTop: theme.spacing.xs },
-    place: { flexShrink: 1 },
+    placeRow: { marginTop: theme.spacing.xs },
     // `mt-6`: la flecha baja hasta el título.
     chevron: { marginTop: theme.spacing.lg },
     // `mt-3.5 flex items-center gap-3`.
@@ -54,6 +51,5 @@ export const useStyles = makeStyles((theme) => {
       borderTopWidth: 1,
       borderTopColor: withAlpha(theme.colors.border, 0.4),
     },
-    footerItem: { flexDirection: "row", alignItems: "center", gap: gap6 },
   };
 });

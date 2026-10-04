@@ -1,8 +1,8 @@
 import { IconLoMapPin } from "@playtopia/icons/react-native";
 import { View } from "react-native";
 
+import { IconText } from "@/shared/components/IconText";
 import { Text } from "@/shared/components/Text";
-import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 import { joinParts } from "@/shared/utils/joinParts";
@@ -11,7 +11,7 @@ import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import { ClubDot } from "../ClubDot";
 import { GradientSquare } from "../GradientSquare";
 
-import { PIN_SIZE, SQUARE_SIZE, useStyles } from "./ClubCard.styles";
+import { SQUARE_SIZE, useStyles } from "./ClubCard.styles";
 
 interface ClubCardProps {
   /** El nombre y el color del club (`clubOf`). */
@@ -27,7 +27,6 @@ interface ClubCardProps {
  */
 export function ClubCard({ club, card }: ClubCardProps) {
   const styles = useStyles();
-  const theme = useTheme();
   const { t } = useTranslation();
   const address = card.address.trim();
 
@@ -45,14 +44,7 @@ export function ClubCard({ club, card }: ClubCardProps) {
         <Text variant="smallTitle" numberOfLines={1}>
           {club.label}
         </Text>
-        {address ? (
-          <View style={styles.addressRow}>
-            <IconLoMapPin size={PIN_SIZE} color={theme.colors.textSecondary} />
-            <Text variant="meta" color="textSecondary" numberOfLines={1} style={styles.address}>
-              {address}
-            </Text>
-          </View>
-        ) : null}
+        {address ? <IconText Icon={IconLoMapPin} label={address} numberOfLines={1} style={styles.addressRow} /> : null}
       </View>
     </View>
   );

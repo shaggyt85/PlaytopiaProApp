@@ -6,8 +6,7 @@ export const useStyles = makeStyles((theme) => ({
     gap: theme.spacing.xs + theme.spacing.xs / 2,
     padding: theme.spacing.md,
     borderRadius: theme.radius.xxxl,
-    borderWidth: 1,
-    borderColor: theme.colors.hairline,
+    ...theme.ringSoft,
     backgroundColor: theme.colors.card,
   },
   // `grid grid-cols-7 gap-1.5`: una fila por semana.

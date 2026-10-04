@@ -1,0 +1,52 @@
+import { View, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
+
+import { Text } from "@/shared/components/Text";
+import type { IconComponent } from "@/shared/config/icons";
+import type { ThemeColor } from "@/shared/config/theme";
+import { useTheme } from "@/shared/hooks/useTheme";
+
+import { ICON_TEXT_SIZES, useStyles, type IconTextSize } from "./IconText.styles";
+
+interface IconTextProps {
+  Icon: IconComponent;
+  /** Ya traducido o dato de Core. */
+  label: string;
+  /** `meta` (por defecto), `card` o `hero`: ver `ICON_TEXT_SIZES`. */
+  size?: IconTextSize;
+  /** Del icono; por defecto, el del texto. */
+  iconColor?: ThemeColor;
+  color?: ThemeColor;
+  numberOfLines?: number;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
+}
+
+/**
+ * Un icono pequeño y su texto en una fila («⌖ Calle Mayor 1», «◷ 60 min»): la
+ * línea de datos de las tarjetas del prototipo. Único sitio que la dibuja: Red
+ * de clubes, la Semana, la tarjeta de arriba de la agenda y el detalle de una
+ * clase. Si el texto no cabe, se encoge él, no el icono.
+ */
+export function IconText({
+  Icon,
+  label,
+  size = "meta",
+  iconColor,
+  color = "textSecondary",
+  numberOfLines,
+  style,
+  textStyle,
+}: IconTextProps) {
+  const styles = useStyles();
+  const theme = useTheme();
+  const { icon, variant } = ICON_TEXT_SIZES[size];
+
+  return (
+    <View style={[styles.row, styles[size], style]}>
+      <Icon size={icon} color={theme.colors[iconColor ?? color]} />
+      <Text variant={variant} color={color} numberOfLines={numberOfLines} style={[styles.text, textStyle]}>
+        {label}
+      </Text>
+    </View>
+  );
+}

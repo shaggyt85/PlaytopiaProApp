@@ -25,13 +25,11 @@ export const useStyles = makeStyles((theme) => ({
   meta: { marginTop: theme.spacing.xs / 2 },
   clubPill: { flexDirection: "row", alignItems: "center", gap: theme.spacing.xs, flexShrink: 1 },
   details: { flexDirection: "row", alignItems: "center", gap: theme.spacing.xs, marginTop: theme.spacing.xs },
-  // `bg-black/30 rounded-full px-1.5 py-0.5` (el club) y `bg-background/30 ring-1`
-  // (la marca «PRÓXIMA»): la tarjeta de fondo, oscurecida.
+  // `bg-black/30 rounded-full px-1.5 py-0.5` (el club): la tarjeta de fondo, oscurecida.
   pill: {
     paddingHorizontal: theme.spacing.xs + theme.spacing.xs / 2,
     paddingVertical: theme.spacing.xs / 2,
     borderRadius: theme.radius.pill,
     backgroundColor: withAlpha(theme.colors.background, 0.3),
   },
-  nextPill: { borderWidth: 1, borderColor: theme.colors.hairlineStrong },
 }));

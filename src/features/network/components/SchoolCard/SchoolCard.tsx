@@ -5,6 +5,8 @@ import { memo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { Chip } from "@/shared/components/Chip";
+import { IconText } from "@/shared/components/IconText";
+import { StripeCard } from "@/shared/components/StripeCard";
 import { Text } from "@/shared/components/Text";
 import { useReduceMotion } from "@/shared/hooks/useReduceMotion";
 import { useTheme } from "@/shared/hooks/useTheme";
@@ -13,7 +15,7 @@ import { sedeKey } from "@/shared/utils/sedeKey";
 
 import { schoolLocation } from "../../utils/schoolLocation";
 
-import { META_ICON_SIZE, useStyles } from "./SchoolCard.styles";
+import { useStyles } from "./SchoolCard.styles";
 
 /** Fundido de la portada al llegar; sin él con «reducir movimiento». */
 const IMAGE_FADE_MS = 200;
@@ -41,7 +43,7 @@ export const SchoolCard = memo(function SchoolCard({ card, testID }: SchoolCardP
   const showImage = failedUrl !== card.background_url;
 
   return (
-    <View style={styles.card} testID={testID}>
+    <StripeCard stripe={theme.gradients.brand} testID={testID}>
       {showImage ? (
         <Image
           source={{ uri: card.background_url }}
@@ -61,13 +63,6 @@ export const SchoolCard = memo(function SchoolCard({ card, testID }: SchoolCardP
         end={{ x: 1, y: 0 }}
         style={StyleSheet.absoluteFill}
       />
-      <LinearGradient
-        colors={theme.gradients.brand}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-        style={styles.stripe}
-      />
-
       <View
         style={styles.content}
         accessible
@@ -77,15 +72,8 @@ export const SchoolCard = memo(function SchoolCard({ card, testID }: SchoolCardP
         <Text variant="cardTitle" numberOfLines={2}>
           {card.name}
         </Text>
-        {location ? (
-          <View style={styles.meta}>
-            <IconLoMapPin size={META_ICON_SIZE} color={theme.colors.textSecondary} />
-            <Text variant="meta" color="textSecondary" numberOfLines={1} style={styles.metaText}>
-              {location}
-            </Text>
-          </View>
-        ) : null}
+        {location ? <IconText Icon={IconLoMapPin} label={location} numberOfLines={1} /> : null}
       </View>
-    </View>
+    </StripeCard>
   );
 });

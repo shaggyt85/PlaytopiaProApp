@@ -34,8 +34,7 @@ export const useStyles = makeStyles((theme) => {
       gap: theme.spacing.xs,
       padding: theme.spacing.xs,
       borderRadius: theme.radius.xxl,
-      borderWidth: 1,
-      borderColor: theme.colors.hairline,
+      ...theme.ringSoft,
       backgroundColor: theme.colors.surface,
     },
     underline: {

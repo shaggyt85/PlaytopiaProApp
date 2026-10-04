@@ -19,8 +19,7 @@ export const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.card,
   },
   other: {
-    borderWidth: 1,
-    borderColor: theme.colors.hairline,
+    ...theme.ringSoft,
     backgroundColor: withAlpha(theme.colors.card, 0.6),
   },
   // `mb-3 flex items-baseline justify-between`.

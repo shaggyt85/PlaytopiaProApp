@@ -24,6 +24,7 @@ export { ScheduleDataState } from "./ScheduleDataState";
 export { ScheduleToolbar } from "./ScheduleToolbar";
 export { SectionLabel } from "./SectionLabel";
 export { StatTile } from "./StatTile";
+export { StatusPill } from "./StatusPill";
 export { StudentAvatar } from "./StudentAvatar";
 export { MAX_AVATARS, StudentAvatars } from "./StudentAvatars";
 export { StudentList } from "./StudentList";

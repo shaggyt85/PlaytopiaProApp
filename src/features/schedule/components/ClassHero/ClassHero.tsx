@@ -4,6 +4,7 @@ import { View, type LayoutChangeEvent } from "react-native";
 
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
 import { IconButton } from "@/shared/components/IconButton";
+import { IconText } from "@/shared/components/IconText";
 import { RadialGlow } from "@/shared/components/RadialGlow";
 import { Text } from "@/shared/components/Text";
 import type { IconComponent } from "@/shared/config/icons";
@@ -20,7 +21,7 @@ import { seatsLabel } from "../../utils/seatsLabel";
 import { ClubDot } from "../ClubDot";
 import { StatTile } from "../StatTile";
 
-import { BACK_SIZE, CORNER_GLOW, META_ICON_SIZE, useStyles } from "./ClassHero.styles";
+import { BACK_SIZE, CORNER_GLOW, useStyles } from "./ClassHero.styles";
 
 interface HeroStat {
   Icon: IconComponent;
@@ -105,19 +106,15 @@ export function ClassHero({ item, club, onBack }: ClassHeroProps) {
       ) : null}
 
       <View style={styles.metaRow}>
-        <View style={styles.metaItem}>
-          <IconLoClock size={META_ICON_SIZE} color={theme.colors.onPrimary} />
-          <Text variant="small" color="onPrimary" style={styles.soft}>
-            {joinParts([formatClassDate(item.class_date), classTimeRange(item, t)])}
-          </Text>
-        </View>
+        <IconText
+          Icon={IconLoClock}
+          label={joinParts([formatClassDate(item.class_date), classTimeRange(item, t)])}
+          size="hero"
+          color="onPrimary"
+          textStyle={styles.soft}
+        />
         {item.track_name ? (
-          <View style={styles.metaItem}>
-            <IconLoMapPin size={META_ICON_SIZE} color={theme.colors.onPrimary} />
-            <Text variant="small" color="onPrimary" style={styles.soft}>
-              {item.track_name}
-            </Text>
-          </View>
+          <IconText Icon={IconLoMapPin} label={item.track_name} size="hero" color="onPrimary" textStyle={styles.soft} />
         ) : null}
       </View>
 
