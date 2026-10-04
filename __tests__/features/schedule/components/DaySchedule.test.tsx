@@ -38,30 +38,26 @@ describe("DaySchedule", () => {
     jest.mocked(scheduleService.getClasses).mockResolvedValue(scheduleResponse({ classes: [cantera], next_class: null }));
   });
 
-  it("hoy: la pastilla, el contador y la tira con sus clases y la próxima marcada", async () => {
+  it("hoy: directamente la tira con sus clases y la próxima marcada, sin pastilla ni contador", async () => {
     renderWithProviders(view());
 
     expect(await screen.findByTestId("class-31")).toBeTruthy();
-    expect(screen.getByText("Hoy · lunes 5")).toBeTruthy();
-    expect(screen.getByText("1 clase")).toBeTruthy();
     expect(screen.getByTestId("class-31-next")).toBeTruthy();
+    expect(screen.queryByText("Hoy · lunes 5")).toBeNull();
+    expect(screen.queryByText("1 clase")).toBeNull();
   });
 
-  it("otro día sin clases: su nombre y «Día libre»", async () => {
+  it("otro día sin clases: «Día libre»", async () => {
     renderWithProviders(view("2026-10-06"));
 
     expect(await screen.findByText("Día libre · sin compromisos")).toBeTruthy();
-    expect(screen.getByText("martes 6")).toBeTruthy();
-    expect(screen.getByText("0 clases")).toBeTruthy();
   });
 
-  it("mientras carga, «Cargando…» y sin contador", () => {
+  it("mientras carga, «Cargando…»", () => {
     jest.mocked(scheduleService.getClasses).mockReturnValue(new Promise(() => undefined));
     renderWithProviders(view());
 
     expect(screen.getByText("Cargando…")).toBeTruthy();
-    expect(screen.getByText("Hoy · lunes 5")).toBeTruthy();
-    expect(screen.queryByText(/clases?$/)).toBeNull();
   });
 
   it("si falla, el error con «Reintentar», que vuelve a pedir", async () => {

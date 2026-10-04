@@ -59,7 +59,6 @@ describe("ScheduleScreen", () => {
     expect(screen.getByRole("header", { name: "Mi agenda" })).toBeTruthy();
     expect(screen.getByTestId("schedule-views")).toBeTruthy();
     expect(screen.queryByTestId("club-legend")).toBeNull();
-    expect(screen.getByText("Hoy · viernes 20")).toBeTruthy();
   });
 
   it("el selector lleva a Semana y a Mes", async () => {
@@ -93,7 +92,6 @@ describe("ScheduleScreen", () => {
     renderWithProviders(<ScheduleScreen />);
 
     expect(await screen.findByTestId("class-31")).toBeTruthy();
-    expect(screen.getByText("Hoy · viernes 20")).toBeTruthy();
     expect(screen.getByTestId("schedule-today").props.accessibilityLabel).toBe("Hoy");
     // El mes entero de la cuadrícula, en una sola petición.
     expect(scheduleService.getClasses).toHaveBeenCalledWith("2026-10-26", "2026-12-06");
@@ -105,7 +103,7 @@ describe("ScheduleScreen", () => {
 
     fireEvent.press(screen.getByRole("button", { name: "Día siguiente" }));
 
-    expect(screen.getByText("sábado 21")).toBeTruthy();
+    expect(screen.getByTestId("schedule-today").props.accessibilityLabel).toMatch(/^Sáb\.? 21 nov\.?$/);
     expect(screen.getByText("Día libre · sin compromisos")).toBeTruthy();
   });
 

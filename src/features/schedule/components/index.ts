@@ -5,7 +5,6 @@ export { ClubDot } from "./ClubDot";
 export { DayButton, DAY_MARK_COLORS } from "./DayButton";
 export { DayClassList, type DayClassRowProps } from "./DayClassList";
 export { DayDots } from "./DayDots";
-export { DayHeader } from "./DayHeader";
 export { DaySchedule } from "./DaySchedule";
 export { DayTimeline } from "./DayTimeline";
 export { DetailSection } from "./DetailSection";
