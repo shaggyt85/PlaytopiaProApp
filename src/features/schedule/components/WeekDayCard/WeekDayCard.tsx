@@ -1,16 +1,14 @@
 import { memo } from "react";
 import { View } from "react-native";
 
-import { Chip } from "@/shared/components/Chip";
-import { Text } from "@/shared/components/Text";
-import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
-import { capitalize, formatWallTime, formatWeekdayDay } from "@/shared/utils/formatDate";
+import { capitalize, formatWeekdayDay } from "@/shared/utils/formatDate";
 
 import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import type { ScheduleClass } from "../../schemas/schedule.schema";
 import type { DayTense } from "../../utils/scheduleDates";
 import { DayClassList } from "../DayClassList";
+import { DayHeading } from "../DayHeading";
 import { WeekClassRow } from "../WeekClassRow";
 
 import { useStyles } from "./WeekDayCard.styles";
@@ -47,22 +45,16 @@ export const WeekDayCard = memo(function WeekDayCard({
   clubOf,
 }: WeekDayCardProps) {
   const styles = useStyles();
-  const { t } = useTranslation();
   const isToday = tense === "today";
 
   return (
     <View style={[styles.card, isToday ? styles.today : picked ? styles.picked : styles.other]} testID={`week-day-${date}`}>
-      <View style={styles.header}>
-        <View style={styles.title}>
-          <Text variant="subtitle">{capitalize(formatWeekdayDay(date))}</Text>
-          {isToday && nowWall !== undefined ? (
-            <Chip label={t("schedule.week.todayNow", { time: formatWallTime(nowWall) })} dot={false} />
-          ) : null}
-        </View>
-        <Text variant="tab" color="textSecondary">
-          {t("schedule.day.classes", { count: classes.length })}
-        </Text>
-      </View>
+      <DayHeading
+        title={capitalize(formatWeekdayDay(date))}
+        count={classes.length}
+        nowWall={isToday ? nowWall : undefined}
+        size="card"
+      />
       <DayClassList
         classes={classes}
         tense={tense}

@@ -116,3 +116,16 @@ export function visibleWeekDays(days: readonly string[], today: string, picked: 
   if (picked) return [picked];
   return days.includes(today) ? days.filter((day) => day >= today) : [...days];
 }
+
+/**
+ * Los días del mes de `date` que tienen clases, en orden: la lista de la vista
+ * Mes. La respuesta trae la cuadrícula entera (42 días); los de los meses de al
+ * lado no entran.
+ */
+export function monthDaysWithClasses(byDate: ReadonlyMap<string, readonly unknown[]>, date: string): string[] {
+  const month = date.slice(0, 7);
+  return [...byDate.entries()]
+    .filter(([day, classes]) => day.startsWith(month) && classes.length > 0)
+    .map(([day]) => day)
+    .sort();
+}

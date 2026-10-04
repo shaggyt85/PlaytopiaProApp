@@ -22,13 +22,4 @@ export const useStyles = makeStyles((theme) => ({
     ...theme.ringSoft,
     backgroundColor: withAlpha(theme.colors.card, 0.6),
   },
-  // `mb-3 flex items-baseline justify-between`.
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: theme.spacing.sm,
-    marginBottom: theme.spacing.sm + theme.spacing.xs,
-  },
-  title: { flexDirection: "row", alignItems: "center", gap: theme.spacing.sm, flexShrink: 1 },
 }));

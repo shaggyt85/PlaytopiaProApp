@@ -1,1 +1,0 @@
-export { ClubBadge } from "./ClubBadge";

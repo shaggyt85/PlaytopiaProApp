@@ -31,8 +31,8 @@ interface MonthGridProps {
  * `DayButton` con su número y sus puntos: el elegido, hoy o los demás. Tocar
  * uno lo elige en la agenda y la lista de debajo pasa a ese día.
  *
- * Las semanas en filas de 7 (`chunkWeeks`) y cada celda con `flex: 1`: miden lo
- * mismo en un móvil que en una tablet, sin calcular anchos.
+ * Las semanas en filas de 7 (`chunkWeeks`) y cada celda con `flex: 1` y 36 de
+ * alto, como el prototipo: el ancho sale solo, en un móvil y en una tablet.
  */
 export const MonthGrid = memo(function MonthGrid({ date, today, dots, byDate, onPick }: MonthGridProps) {
   const styles = useStyles();
@@ -60,7 +60,7 @@ export const MonthGrid = memo(function MonthGrid({ date, today, dots, byDate, on
                   mark={dayMark(day, date, today)}
                   variant="cell"
                   shape={styles.cell}
-                  radius={theme.radius.xxl}
+                  radius={theme.radius.xl}
                   dots={dots.get(day) ?? NONE}
                   onPick={onPick}
                   accessibilityLabel={t("schedule.day.a11y.summary", {

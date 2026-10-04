@@ -21,6 +21,7 @@ import { useForegroundNow } from "./hooks/useForegroundNow";
 import { useNextClass } from "./hooks/useNextClass";
 import { useScheduleClubs } from "./hooks/useScheduleClubs";
 import { useScheduleMonth } from "./hooks/useScheduleMonth";
+import { ScheduleScrollProvider, useScheduleScrollRefs } from "./hooks/useScheduleScroll";
 import { useTeacherProfile } from "./hooks/useTeacherProfile";
 import { useTodayHeader } from "./hooks/useTodayHeader";
 import { heroClass } from "./utils/heroClass";
@@ -74,11 +75,13 @@ export function ScheduleScreen() {
   const { dayClasses, hasData } = useScheduleMonth(today);
   const stats = useMemo(() => todayStats(dayClasses), [dayClasses]);
   // La tarjeta de arriba: la clase en curso o, si no hay, la próxima de Core.
+  // La lista del Mes lleva a la vista el día tocado: desplaza esta pantalla.
+  const scrollRefs = useScheduleScrollRefs();
   const hero = useMemo(() => heroClass(dayClasses, nextClass, wallNow(now)), [dayClasses, nextClass, now]);
 
   return (
     <TabScreen testID="schedule-screen">
-      <TabScrollView>
+      <TabScrollView scrollRef={scrollRefs.scrollRef} innerViewRef={scrollRefs.innerViewRef}>
         <ScreenHeader
           left={<TeacherAvatar url={profile.data?.avatar} />}
           greeting={t(header.greeting)}
@@ -100,7 +103,9 @@ export function ScheduleScreen() {
             <NextClassCard hero={hero} club={clubOf(hero.item)} today={today} now={now} />
           </View>
         ) : null}
-        <ScheduleAgenda now={now} today={today} nextClassId={nextClass?.id} clubOf={clubOf} />
+        <ScheduleScrollProvider {...scrollRefs}>
+          <ScheduleAgenda now={now} today={today} nextClassId={nextClass?.id} clubOf={clubOf} />
+        </ScheduleScrollProvider>
         <View style={styles.signOut}>
           <Button title={t("common.signOut")} variant="secondary" onPress={() => session.end()} />
         </View>

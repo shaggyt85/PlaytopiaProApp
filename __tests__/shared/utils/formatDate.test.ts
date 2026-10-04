@@ -5,7 +5,6 @@ import {
   formatClassDate,
   formatClubDate,
   formatClubTime,
-  formatDayMonth,
   formatDayOfMonth,
   formatDayMonthShort,
   formatMonthYear,
@@ -108,13 +107,11 @@ describe("formatWeekdayDay", () => {
   });
 });
 
-describe("formatDayMonth y formatDayMonthShort", () => {
-  it("día y mes, en largo y en corto, en el idioma activo", async () => {
-    expect(formatDayMonth("2026-11-18")).toBe("18 de noviembre");
+describe("formatDayMonthShort", () => {
+  it("día y mes en corto, en el idioma activo", async () => {
     expect(formatDayMonthShort("2026-11-18")).toBe("18 nov");
 
     await changeLanguage("en");
-    expect(formatDayMonth("2026-11-18")).toBe("November 18");
     expect(formatDayMonthShort("2026-11-18")).toBe("Nov 18");
   });
 });

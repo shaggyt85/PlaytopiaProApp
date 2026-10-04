@@ -5,9 +5,9 @@ import { useStyles, type ClubDotSize } from "./ClubDot.styles";
 interface ClubDotProps {
   /** El color del club (`ScheduleClub.colors.color`). */
   color: string;
-  /** Con un aro oscuro, para que se vea sobre su propio color (en `ClubBadge`). */
+  /** Con un aro oscuro, para que se vea sobre su propio color (la cabecera del detalle y la tarjeta del club). */
   ring?: boolean;
-  /** `sm` (por defecto) en las pastillas y líneas; `lg` en la tarjeta del club del detalle. */
+  /** `sm` (por defecto) en la cabecera del detalle; `lg` en la tarjeta del club del detalle. */
   size?: ClubDotSize;
 }
 

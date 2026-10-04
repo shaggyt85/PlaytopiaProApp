@@ -85,9 +85,6 @@ export const formatDayOfMonth = (date: string): string => formatWallDate(date, {
 export const formatClassDate = (date: string): string =>
   capitalize(formatWallDate(date, { weekday: "long", day: "numeric", month: "long" }));
 
-/** `class_date` como día y mes: "18 de noviembre" (el título de la lista del mes). */
-export const formatDayMonth = (date: string): string => formatWallDate(date, { day: "numeric", month: "long" });
-
 /** `class_date` como día y mes en corto: "18 nov" (los extremos de una semana). */
 export const formatDayMonthShort = (date: string): string =>
   formatWallDate(date, { day: "numeric", month: "short" });
