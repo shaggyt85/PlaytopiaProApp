@@ -30,9 +30,10 @@ interface DayTimelineProps {
 }
 
 /**
- * La tira de horas de un día con sus clases, lado a lado si coinciden, y la
- * línea de «ahora» si es hoy. La franja es la configurada, ampliada si alguna
- * clase se sale.
+ * La tira de horas de un día, como el prototipo: el eje (la línea con sus
+ * horas y el punto de inicio de cada clase), las clases, lado a lado si
+ * coinciden, y la línea de «ahora» si es hoy. Sin panel: va sobre el fondo de
+ * marca. La franja es la configurada, ampliada si alguna clase se sale.
  *
  * La posición de cada tarjeta solo cambia con las clases; lo que cambia cada
  * minuto es su estado y la línea, y las tarjetas con `memo` solo se vuelven a
@@ -42,7 +43,7 @@ export function DayTimeline({ classes, isToday, now, nextClassId, clubOf }: DayT
   const styles = useStyles();
   const configured = useScheduleHours();
 
-  const { span, blocks } = useMemo(() => {
+  const { span, blocks, starts } = useMemo(() => {
     const timed = classes.map((item) => ({ item, minutes: classMinutes(item) }));
     const hours = visibleHours(
       configured,
@@ -51,6 +52,13 @@ export function DayTimeline({ classes, isToday, now, nextClassId, clubOf }: DayT
     const placements = layoutDay(timed.map(({ item, minutes }) => ({ id: item.id, ...minutes })));
     return {
       span: hours,
+      starts: timed.map(({ item, minutes }) => ({
+        id: item.id,
+        time: item.class_time,
+        minutes: minutes.start,
+        color: clubOf(item).colors.color,
+        next: item.id === nextClassId,
+      })),
       blocks: timed.map(({ item, minutes }) => ({
         item,
         geometry: blockGeometry(minutes, hours, HOUR_HEIGHT, BLOCK_MIN_HEIGHT),
@@ -58,15 +66,15 @@ export function DayTimeline({ classes, isToday, now, nextClassId, clubOf }: DayT
         placement: placements.get(item.id) ?? { column: 0, columns: 1 },
       })),
     };
-  }, [classes, configured]);
+  }, [classes, configured, clubOf, nextClassId]);
 
   const nowWall = wallNow(now);
   const nowTop = isToday ? nowOffset(localMinutes(now), span, HOUR_HEIGHT) : null;
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="day-timeline">
       <View style={[styles.track, { height: (span.end - span.start) * HOUR_HEIGHT }]}>
-        <HourGrid span={span} hourHeight={HOUR_HEIGHT} />
+        <HourGrid span={span} hourHeight={HOUR_HEIGHT} starts={starts} />
         <View style={styles.blocks}>
           {blocks.map(({ item, geometry, placement }) => (
             <ScheduleClassBlock

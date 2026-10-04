@@ -26,12 +26,28 @@ function setup(classes = [morning, live, next, sameTime], isToday = true) {
 }
 
 describe("DayTimeline", () => {
-  it("cada clase a su hora; las que coinciden, lado a lado", () => {
+  it("cada clase a su hora, a 80 por hora; las que coinciden, lado a lado", () => {
     setup();
 
-    expect(styleOf(1)).toMatchObject({ top: 64, height: 64, left: "0%", width: "100%" });
-    expect(styleOf(3)).toMatchObject({ top: 640, left: "0%", width: "50%" });
-    expect(styleOf(4)).toMatchObject({ top: 640, left: "50%", width: "50%" });
+    expect(styleOf(1)).toMatchObject({ top: 80, height: 80, left: "0%", width: "100%" });
+    expect(styleOf(3)).toMatchObject({ top: 800, left: "0%", width: "50%" });
+    expect(styleOf(4)).toMatchObject({ top: 800, left: "50%", width: "50%" });
+  });
+
+  it("en la línea, un punto por clase con el color de su club; el de la próxima brilla", () => {
+    setup();
+
+    for (const id of [1, 2, 3, 4]) expect(screen.getByTestId(`start-dot-${id}`, hidden)).toBeTruthy();
+    const dot = (id: number) => StyleSheet.flatten(screen.getByTestId(`start-dot-${id}`, hidden).props.children.props.style);
+    expect(dot(1).backgroundColor).toBe(darkTheme.clubColors[0].color);
+    expect(dot(3).boxShadow).toBeDefined();
+    expect(dot(4).boxShadow).toBeUndefined();
+  });
+
+  it("sin panel: va directamente sobre el fondo de marca", () => {
+    setup();
+
+    expect(StyleSheet.flatten(screen.getByTestId("day-timeline").props.style).backgroundColor).toBeUndefined();
   });
 
   it("cada una con su estado: la que terminó apagada y la próxima marcada", () => {
@@ -47,7 +63,7 @@ describe("DayTimeline", () => {
   it("hoy, la línea de ahora a su hora", () => {
     setup();
 
-    expect(StyleSheet.flatten(screen.getByTestId("now-line", hidden).props.style).top).toBe(8.5 * 64);
+    expect(StyleSheet.flatten(screen.getByTestId("now-line", hidden).props.style).top).toBe(8.5 * 80);
     expect(screen.getByText("16:30", hidden)).toBeTruthy();
   });
 
@@ -61,6 +77,6 @@ describe("DayTimeline", () => {
     setup([on5(5, "06:30:00")]);
 
     expect(screen.getByTestId("hour-6", hidden)).toBeTruthy();
-    expect(styleOf(5).top).toBe(32);
+    expect(styleOf(5).top).toBe(40);
   });
 });

@@ -56,7 +56,10 @@ export function formatClubTime(time: string): string {
  * La hora siempre con dos cifras, como el prototipo («08:00» en la tira).
  */
 export function formatWallTime(wallMs: number): string {
-  return formatter({ hour: "2-digit", minute: "2-digit", timeZone: "UTC" }).format(wallMs);
+  const parts = formatter({ hour: "2-digit", minute: "2-digit", timeZone: "UTC" }).formatToParts(wallMs);
+  // El `Intl` de iOS ignora `hour: "2-digit"` en español («7:00»): la hora se
+  // rellena aquí, así sale igual en iOS, en Android y en los tests.
+  return parts.map((part) => (part.type === "hour" ? part.value.padStart(2, "0") : part.value)).join("");
 }
 
 /** `class_date` de Core ("2026-10-05") como día de la semana y número: "lunes 5". */

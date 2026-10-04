@@ -83,6 +83,20 @@ describe("formatWallTime", () => {
   it("una hora de pared se muestra tal cual, sin desplazarla", () => {
     expect(formatWallTime(wallAsUtcMs("2026-10-05", "15:21:40"))).toBe("15:21");
   });
+
+  it("aunque el Intl del móvil dé la hora sin el cero (iOS: «7:00»), sale con dos cifras", () => {
+    const parts = jest.spyOn(Intl.DateTimeFormat.prototype, "formatToParts").mockReturnValue([
+      { type: "hour", value: "7" },
+      { type: "literal", value: ":" },
+      { type: "minute", value: "00" },
+    ]);
+    try {
+      expect(formatWallTime(wallAsUtcMs("2026-10-05", "07:00:00"))).toBe("07:00");
+      expect(formatClubTime("07:00:00")).toBe("07:00");
+    } finally {
+      parts.mockRestore();
+    }
+  });
 });
 
 describe("formatWeekdayDay", () => {
