@@ -1,1 +1,0 @@
-export { ClubLegend } from "./ClubLegend";

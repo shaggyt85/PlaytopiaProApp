@@ -53,3 +53,15 @@ describe("IconButton sobre un color", () => {
     expect(style.backgroundColor).not.toBe(darkTheme.colors.surfaceStrong);
   });
 });
+
+describe("IconButton sin fondo (plain)", () => {
+  it("ni fondo ni borde, y el icono en gris: las flechas de la agenda", () => {
+    const Icon = jest.fn((_props: { color?: string }) => null);
+    render(<IconButton Icon={Icon} accessibilityLabel="Día siguiente" variant="plain" onPress={jest.fn()} />);
+
+    const style = StyleSheet.flatten(screen.getByRole("button", { name: "Día siguiente" }).props.style);
+    expect(style.borderWidth).toBeUndefined();
+    expect(style.backgroundColor).toBeUndefined();
+    expect(Icon.mock.calls[0][0].color).toBe(darkTheme.colors.textSecondary);
+  });
+});

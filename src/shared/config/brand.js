@@ -44,8 +44,7 @@ const BRAND = Object.freeze({
   purpleFrom: "#BF71FF",
   purpleTo: "#6D45F9",
 
-  // Degradado "tinta" de las tarjetas oscuras.
-  inkFrom: "#251932",
+  // Fondo oscuro de la tarjeta de los modales.
   inkTo: "#141327",
 
   // Texto y estados.

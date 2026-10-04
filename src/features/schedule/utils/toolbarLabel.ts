@@ -1,13 +1,10 @@
 import type { t as translate } from "@/shared/config/i18n";
-import { formatDayMonthShort, formatMonthYear, formatWallTime, formatWeekdayDay } from "@/shared/utils/formatDate";
+import { capitalize, formatDayMonthShort, formatMonthYear, formatWeekdayShortDayMonth } from "@/shared/utils/formatDate";
 
 import { weekDays } from "./scheduleDates";
 
-// Los textos de la barra en cada vista. Cuál se usa lo dice la ficha de cada
-// vista (`SCHEDULE_VIEW_CONFIG`).
-
-const withTime = (label: string, nowWall: number, t: typeof translate) =>
-  t("schedule.toolbar", { label, time: formatWallTime(nowWall) });
+// Los textos del centro de la barra en cada vista (‹ Hoy ›, como el prototipo).
+// Cuál se usa lo dice la ficha de cada vista (`SCHEDULE_VIEW_CONFIG`).
 
 /**
  * Los extremos de la semana de `date`: «16 nov – 22 nov». Se compone siempre
@@ -22,13 +19,12 @@ export function weekRange(date: string, t: typeof translate): string {
   });
 }
 
-/** Día: «lunes 18 · 21:41». */
-export const dayToolbarLabel = (date: string, nowWall: number, t: typeof translate): string =>
-  withTime(formatWeekdayDay(date), nowWall, t);
+/** Día: «Hoy» o «Lun 18 sept». */
+export const dayToolbarLabel = (date: string, isToday: boolean, t: typeof translate): string =>
+  isToday ? t("schedule.toolbar.today") : capitalize(formatWeekdayShortDayMonth(date));
 
-/** Semana: «16 nov – 22 nov · 21:41». */
-export const weekToolbarLabel = (date: string, nowWall: number, t: typeof translate): string =>
-  withTime(weekRange(date, t), nowWall, t);
+/** Semana: «16 nov – 22 nov». */
+export const weekToolbarLabel = (date: string, _isToday: boolean, t: typeof translate): string => weekRange(date, t);
 
-/** Mes: «noviembre de 2026». */
-export const monthToolbarLabel = (date: string): string => formatMonthYear(date);
+/** Mes: «Noviembre de 2026». */
+export const monthToolbarLabel = (date: string): string => capitalize(formatMonthYear(date));

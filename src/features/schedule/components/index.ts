@@ -2,7 +2,6 @@ export { ClassHero } from "./ClassHero";
 export { ClubBadge } from "./ClubBadge";
 export { ClubCard } from "./ClubCard";
 export { ClubDot } from "./ClubDot";
-export { ClubLegend } from "./ClubLegend";
 export { DayButton, DAY_MARK_COLORS } from "./DayButton";
 export { DayClassList, type DayClassRowProps } from "./DayClassList";
 export { DayDots } from "./DayDots";

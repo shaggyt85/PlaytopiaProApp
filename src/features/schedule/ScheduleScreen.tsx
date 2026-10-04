@@ -68,7 +68,7 @@ export function ScheduleScreen() {
   const header = useTodayHeader(now);
   const today = localToday(now);
   const nextClass = useNextClass(today, now);
-  const { clubs, clubOf } = useScheduleClubs();
+  const { clubOf } = useScheduleClubs();
   const profile = useTeacherProfile({ select: selectHeader });
   // Las clases de hoy, de la misma respuesta del mes que la agenda: no pide nada más.
   const { dayClasses, hasData } = useScheduleMonth(today);
@@ -100,7 +100,7 @@ export function ScheduleScreen() {
             <NextClassCard hero={hero} club={clubOf(hero.item)} today={today} now={now} />
           </View>
         ) : null}
-        <ScheduleAgenda now={now} today={today} nextClassId={nextClass?.id} clubs={clubs} clubOf={clubOf} />
+        <ScheduleAgenda now={now} today={today} nextClassId={nextClass?.id} clubOf={clubOf} />
         <View style={styles.signOut}>
           <Button title={t("common.signOut")} variant="secondary" onPress={() => session.end()} />
         </View>

@@ -6,7 +6,6 @@ import type { IconComponent } from "@/shared/config/icons";
 import { useTheme } from "@/shared/hooks/useTheme";
 
 import {
-  COMPACT_TAB_HEIGHT,
   LABEL_VARIANT,
   TAB_ICON_SIZE,
   useStyles,
@@ -24,18 +23,16 @@ interface SegmentedTabsProps<K extends string> {
   options: readonly SegmentedTabOption<K>[];
   value: K;
   onChange: (key: K) => void;
-  /** `full` (por defecto): a todo el ancho, «Red de clubes». `compact`: pequeño, la agenda. */
+  /** `full` (por defecto): la píldora de «Red de clubes». `underline`: texto subrayado, la agenda. */
   variant?: SegmentedTabsVariant;
   testID?: string;
 }
 
 /**
- * Selector de pestañas dentro de una pantalla (el del prototipo): una píldora
- * con una opción por pestaña y la activa con el degradado de marca. No guarda
- * nada: la pestaña elegida la lleva quien lo usa. Pulsar la activa no avisa.
- *
- * El tamaño `compact` mide menos que el área táctil mínima: cada opción la
- * completa con `hitSlop`, como `IconButton`.
+ * Selector de pestañas dentro de una pantalla (los del prototipo): una opción
+ * por pestaña y la activa marcada con el degradado de marca, de fondo (`full`,
+ * la píldora) o como raya debajo (`underline`). No guarda nada: la pestaña
+ * elegida la lleva quien lo usa. Pulsar la activa no avisa.
  */
 export function SegmentedTabs<K extends string>({
   options,
@@ -46,7 +43,6 @@ export function SegmentedTabs<K extends string>({
 }: SegmentedTabsProps<K>) {
   const styles = useStyles();
   const theme = useTheme();
-  const hitSlop = variant === "compact" ? (theme.touchTarget - COMPACT_TAB_HEIGHT) / 2 : undefined;
 
   return (
     <View style={styles[variant]} accessibilityRole="tablist" testID={testID}>
@@ -57,7 +53,6 @@ export function SegmentedTabs<K extends string>({
           <Pressable
             key={key}
             onPress={() => !selected && onChange(key)}
-            hitSlop={hitSlop}
             accessibilityRole="tab"
             accessibilityState={{ selected }}
             accessibilityLabel={label}

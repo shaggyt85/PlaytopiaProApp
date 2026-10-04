@@ -45,24 +45,6 @@ describe("useScheduleClubs", () => {
   });
 });
 
-describe("useScheduleClubs: la lista de la leyenda", () => {
-  beforeEach(() => useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 }));
-
-  it("los clubes en su orden, con los mismos colores que clubOf", async () => {
-    const { result } = setup([
-      schoolCard(4, 7, { name: "DN Padel Academy", club_name: "Sede Centro" }),
-      schoolCard(5, 1, { name: "Wave Padel Club", club_name: null }),
-    ]);
-
-    await waitFor(() => expect(result.current.clubs).toHaveLength(2));
-    expect(result.current.clubs.map((club) => [club.key, club.label])).toEqual([
-      ["4-7", "Sede Centro"],
-      ["5-1", "Wave Padel Club"],
-    ]);
-    expect(result.current.clubs[1].colors).toBe(result.current.clubOf({ db_id: 5, club_id: 1 }).colors);
-  });
-});
-
 describe("useScheduleClubs: la tarjeta de sede", () => {
   beforeEach(() => useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 }));
 

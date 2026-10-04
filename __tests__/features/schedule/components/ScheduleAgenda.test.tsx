@@ -31,17 +31,17 @@ jest.mock("@/features/schedule/components/DayButton", () => {
 // Miércoles 18 de noviembre de 2026 a las 10:00 del teléfono.
 const NOW = new Date(2026, 10, 18, 10, 0).getTime();
 const TODAY = "2026-11-18";
-const wave = { key: "4-7", label: "Wave Padel Club", colors: darkTheme.clubColors[2] };
+const wave = { label: "Wave Padel Club", colors: darkTheme.clubColors[2] };
 const clubOf = () => wave;
 const wednesday = scheduleClass({ id: 1, class_date: "2026-11-18", class_time: "16:00:00" });
 const friday = scheduleClass({ id: 2, class_date: "2026-11-20", class_time: "18:00:00" });
 
-function setup(now = NOW, clubs = [wave]) {
-  return renderWithProviders(
-    <ScheduleAgenda now={now} today={TODAY} nextClassId={1} clubs={clubs} clubOf={clubOf} />,
-  );
+function setup(now = NOW) {
+  return renderWithProviders(<ScheduleAgenda now={now} today={TODAY} nextClassId={1} clubOf={clubOf} />);
 }
 const pressView = (name: string) => fireEvent.press(screen.getByRole("tab", { name }));
+/** El texto del centro de la barra (‹ Hoy ›). */
+const current = () => screen.getByTestId("schedule-today").props.accessibilityLabel as string;
 
 describe("ScheduleAgenda", () => {
   beforeEach(() => {
@@ -50,13 +50,14 @@ describe("ScheduleAgenda", () => {
     jest.mocked(scheduleService.getClasses).mockResolvedValue(scheduleResponse({ classes: [wednesday, friday] }));
   });
 
-  it("empieza en Día, con la barra, el selector y la leyenda", async () => {
+  it("empieza en Día, hoy, con «MI AGENDA», la barra y las pestañas; sin leyenda de clubes", async () => {
     setup();
 
     expect(await screen.findByTestId("class-1")).toBeTruthy();
-    expect(screen.getByText("miércoles 18 · 10:00")).toBeTruthy();
+    expect(screen.getByRole("header", { name: "Mi agenda" })).toBeTruthy();
+    expect(current()).toBe("Hoy");
     expect(screen.getByRole("tab", { name: "Día" }).props.accessibilityState).toEqual({ selected: true });
-    expect(screen.getByTestId("club-legend")).toBeTruthy();
+    expect(screen.queryByTestId("club-legend")).toBeNull();
   });
 
   it("el selector cambia a Semana y a Mes, sin volver a pedir", async () => {
@@ -65,11 +66,11 @@ describe("ScheduleAgenda", () => {
 
     pressView("Semana");
     expect(screen.getByTestId("week-strip-2026-11-18")).toBeTruthy();
-    expect(screen.getByText("16 nov – 22 nov · 10:00")).toBeTruthy();
+    expect(current()).toBe("16 nov – 22 nov");
 
     pressView("Mes");
     expect(screen.getByTestId("month-grid")).toBeTruthy();
-    expect(screen.getByText("noviembre de 2026")).toBeTruthy();
+    expect(current()).toBe("Noviembre de 2026");
     expect(scheduleService.getClasses).toHaveBeenCalledTimes(1);
   });
 
@@ -78,15 +79,27 @@ describe("ScheduleAgenda", () => {
     await screen.findByTestId("class-1");
 
     fireEvent.press(screen.getByRole("button", { name: "Día siguiente" }));
-    expect(screen.getByText("jueves 19 · 10:00")).toBeTruthy();
+    expect(current()).toMatch(/^Jue\.? 19 nov\.?$/);
 
     pressView("Semana");
     fireEvent.press(screen.getByRole("button", { name: "Semana siguiente" }));
-    expect(screen.getByText("23 nov – 29 nov · 10:00")).toBeTruthy();
+    expect(current()).toBe("23 nov – 29 nov");
 
     pressView("Mes");
     fireEvent.press(screen.getByRole("button", { name: "Mes siguiente" }));
-    expect(screen.getByText("diciembre de 2026")).toBeTruthy();
+    expect(current()).toBe("Diciembre de 2026");
+  });
+
+  it("tocar el texto del centro vuelve a hoy", async () => {
+    setup();
+    await screen.findByTestId("class-1");
+    fireEvent.press(screen.getByRole("button", { name: "Día siguiente" }));
+    fireEvent.press(screen.getByRole("button", { name: "Día siguiente" }));
+
+    fireEvent.press(screen.getByTestId("schedule-today"));
+
+    expect(current()).toBe("Hoy");
+    expect(screen.getByTestId("class-1")).toBeTruthy();
   });
 
   it("tocar un día en Semana y pasar a Día enseña ese día", async () => {
@@ -97,7 +110,7 @@ describe("ScheduleAgenda", () => {
     fireEvent.press(screen.getByTestId("week-strip-2026-11-20"));
     pressView("Día");
 
-    expect(screen.getByText("viernes 20 · 10:00")).toBeTruthy();
+    expect(current()).toMatch(/^Vie\.? 20 nov\.?$/);
     expect(screen.getByTestId("class-2")).toBeTruthy();
   });
 
@@ -112,13 +125,6 @@ describe("ScheduleAgenda", () => {
     announce.mockRestore();
   });
 
-  it("sin clubes, sin leyenda", async () => {
-    setup(NOW, []);
-    await screen.findByTestId("class-1");
-
-    expect(screen.queryByTestId("club-legend")).toBeNull();
-  });
-
   it("cuando avanza el reloj, los días de la tira no se vuelven a pintar", async () => {
     const { rerender, client } = setup();
     await screen.findByTestId("class-1");
@@ -127,11 +133,11 @@ describe("ScheduleAgenda", () => {
 
     rerender(
       <QueryClientProvider client={client}>
-        <ScheduleAgenda now={NOW + 60_000} today={TODAY} nextClassId={1} clubs={[wave]} clubOf={clubOf} />
+        <ScheduleAgenda now={NOW + 60_000} today={TODAY} nextClassId={1} clubOf={clubOf} />
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("16 nov – 22 nov · 10:01")).toBeTruthy();
+    expect(current()).toBe("16 nov – 22 nov");
     expect(mockDayRenders.count).toBe(before);
   });
 });

@@ -50,14 +50,15 @@ describe("ScheduleScreen", () => {
     );
   });
 
-  it("en orden: la cabecera, la próxima clase, la barra con el selector, la leyenda y la vista Día", async () => {
+  it("en orden: la cabecera, la próxima clase, «MI AGENDA», la barra con las pestañas y la vista Día", async () => {
     renderWithProviders(<ScheduleScreen />);
 
     expect(await screen.findByTestId("class-31")).toBeTruthy();
     expect(screen.getByRole("header", { name: "David" })).toBeTruthy();
     expect(screen.getByTestId("next-class")).toBeTruthy();
+    expect(screen.getByRole("header", { name: "Mi agenda" })).toBeTruthy();
     expect(screen.getByTestId("schedule-views")).toBeTruthy();
-    expect(await screen.findByTestId("club-legend")).toBeTruthy();
+    expect(screen.queryByTestId("club-legend")).toBeNull();
     expect(screen.getByText("Hoy · viernes 20")).toBeTruthy();
   });
 
@@ -93,7 +94,7 @@ describe("ScheduleScreen", () => {
 
     expect(await screen.findByTestId("class-31")).toBeTruthy();
     expect(screen.getByText("Hoy · viernes 20")).toBeTruthy();
-    expect(screen.getByText("viernes 20 · 09:30")).toBeTruthy();
+    expect(screen.getByTestId("schedule-today").props.accessibilityLabel).toBe("Hoy");
     // El mes entero de la cuadrícula, en una sola petición.
     expect(scheduleService.getClasses).toHaveBeenCalledWith("2026-10-26", "2026-12-06");
   });

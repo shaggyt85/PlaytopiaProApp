@@ -219,8 +219,6 @@ export const darkTheme = {
   gradients: {
     /** Degradado de marca (135°): botón principal, pestaña activa. */
     brand: brandGradient,
-    /** Tarjetas oscuras. */
-    ink: [BRAND.inkFrom, BRAND.inkTo] as const,
     /**
      * La tarjeta de la próxima clase, sobre `surface`: un toque magenta arriba a la
      * izquierda y violeta abajo a la derecha (el `color-mix` al 16 % y al 14 % del

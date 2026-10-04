@@ -1,14 +1,16 @@
 import { useState, type ComponentType } from "react";
 import { View } from "react-native";
 
-import type { ClubOf, LegendClub } from "../../hooks/useScheduleClubs";
+import { useTranslation } from "@/shared/hooks/useTranslation";
+
+import type { ClubOf } from "../../hooks/useScheduleClubs";
 import { useSelectedDay } from "../../hooks/useSelectedDay";
 import { wallNow } from "../../utils/scheduleDates";
 import { SCHEDULE_VIEWS, type ScheduleView, type ScheduleViewProps } from "../../utils/scheduleViews";
-import { ClubLegend } from "../ClubLegend";
 import { DaySchedule } from "../DaySchedule";
 import { MonthSchedule } from "../MonthSchedule";
 import { ScheduleToolbar } from "../ScheduleToolbar";
+import { SectionLabel } from "../SectionLabel";
 import { WeekSchedule } from "../WeekSchedule";
 
 import { useStyles } from "./ScheduleAgenda.styles";
@@ -30,14 +32,13 @@ interface ScheduleAgendaProps {
   today: string;
   /** La próxima clase (`useNextClass`), la misma de su tarjeta. */
   nextClassId: number | undefined;
-  /** Los clubes de «Mis clubes» para la leyenda, y el de cada clase. */
-  clubs: readonly LegendClub[];
+  /** El club de cada clase (nombre y color, de «Mis clubes»). */
   clubOf: ClubOf;
 }
 
 /**
- * La agenda debajo de la cabecera, como la captura: la barra (‹ ›, lo que se ve
- * y el selector DÍA · SEMANA · MES), la leyenda «CLUBES» y la vista elegida.
+ * La agenda, como el prototipo final: una línea fina, «MI AGENDA», la barra
+ * (‹ Hoy › y las pestañas Día · Semana · Mes) y la vista elegida.
  *
  * Lleva lo que comparten las tres vistas: la vista (empieza en Día cada vez que
  * se abre la app), un solo día elegido para las tres (`useSelectedDay`) y «ahora»
@@ -45,8 +46,9 @@ interface ScheduleAgendaProps {
  * tres leen la misma respuesta del mes, así que cambiar de vista no pide nada, y
  * el reloj no repinta lo que no se ve.
  */
-export function ScheduleAgenda({ now, today, nextClassId, clubs, clubOf }: ScheduleAgendaProps) {
+export function ScheduleAgenda({ now, today, nextClassId, clubOf }: ScheduleAgendaProps) {
   const styles = useStyles();
+  const { t } = useTranslation();
   const [view, setView] = useState<ScheduleView>(SCHEDULE_VIEWS[0].key);
   const { date, isToday, goPrevious, goNext, select } = useSelectedDay(today);
   const nowWall = wallNow(now);
@@ -54,16 +56,17 @@ export function ScheduleAgenda({ now, today, nextClassId, clubs, clubOf }: Sched
 
   return (
     <View style={styles.container}>
+      <View style={styles.divider} />
+      <SectionLabel label={t("schedule.myAgenda")} />
       <ScheduleToolbar
         view={view}
         date={date}
         isToday={isToday}
-        nowWall={nowWall}
         onPrevious={() => goPrevious(view)}
         onNext={() => goNext(view)}
+        onToday={() => select(today)}
         onViewChange={setView}
       />
-      <ClubLegend clubs={clubs} />
       {/* `select` es estable: los días de la tira y del mes no se repintan con el reloj. */}
       <Content
         now={now}

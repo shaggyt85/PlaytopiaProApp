@@ -3,7 +3,7 @@ import { Pressable, type PressableProps } from "react-native";
 import type { IconComponent } from "@/shared/config/icons";
 import { useTheme } from "@/shared/hooks/useTheme";
 
-import { useStyles, type IconButtonVariant } from "./IconButton.styles";
+import { ICON_COLOR, useStyles, type IconButtonVariant } from "./IconButton.styles";
 
 export interface IconButtonProps extends Omit<PressableProps, "children" | "style"> {
   Icon: IconComponent;
@@ -11,7 +11,7 @@ export interface IconButtonProps extends Omit<PressableProps, "children" | "styl
   accessibilityLabel: string;
   /** Diámetro del círculo (por defecto el área táctil mínima, 44). */
   size?: number;
-  /** `surface` (por defecto) o `onColor`, sobre un degradado. */
+  /** `surface` (por defecto), `onColor` (sobre un degradado) o `plain` (sin fondo). */
   variant?: IconButtonVariant;
 }
 
@@ -42,7 +42,7 @@ export function IconButton({ Icon, size, variant = "surface", hitSlop, onPress, 
       ]}
       {...rest}
     >
-      <Icon size={Math.round(diameter * ICON_RATIO)} color={variant === "onColor" ? theme.colors.onPrimary : theme.colors.text} />
+      <Icon size={Math.round(diameter * ICON_RATIO)} color={theme.colors[ICON_COLOR[variant]]} />
     </Pressable>
   );
 }

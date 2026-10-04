@@ -151,10 +151,13 @@ const pt: Translations = {
       week: "Semana",
       month: "Mês",
     },
-    /** La barra de las flechas: el día, la semana o el mes que se ve y la hora de ahora. */
-    toolbar: "%{label} · %{time}",
-    /** La fila de los clubes con su color, encima de la agenda. */
-    legend: "Clubes",
+    /** El título encima de la navegación de la agenda («MI AGENDA»). */
+    myAgenda: "Minha agenda",
+    /** El centro de la barra: «Hoy» en la vista Día y, al tocarlo, volver a hoy. */
+    toolbar: {
+      today: "Hoje",
+      goToday: "Voltar para hoje",
+    },
     week: {
       /** Los extremos de la semana en la barra: «18 nov – 24 nov». */
       range: "%{from} – %{to}",

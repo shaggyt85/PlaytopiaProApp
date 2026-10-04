@@ -6,9 +6,6 @@ import {
   toolbarLabel,
 } from "@/features/schedule/utils/scheduleViews";
 import { t } from "@/shared/config/i18n";
-import { wallAsUtcMs } from "@/shared/utils/clubClock";
-
-const NOW = wallAsUtcMs("2026-11-18", "21:41:00");
 
 describe("SCHEDULE_VIEWS", () => {
   it("Día, Semana y Mes, en el orden del selector: se abre en Día", () => {
@@ -37,10 +34,10 @@ describe("stepDate", () => {
 });
 
 describe("toolbarLabel", () => {
-  it("el texto de la barra de cada vista", () => {
-    expect(toolbarLabel("day", "2026-11-18", NOW, t)).toBe("miércoles 18 · 21:41");
-    expect(toolbarLabel("week", "2026-11-18", NOW, t)).toBe("16 nov – 22 nov · 21:41");
-    expect(toolbarLabel("month", "2026-11-18", NOW, t)).toBe("noviembre de 2026");
+  it("el texto del centro de la barra en cada vista", () => {
+    expect(toolbarLabel("day", "2026-11-18", true, t)).toBe("Hoy");
+    expect(toolbarLabel("week", "2026-11-18", true, t)).toBe("16 nov – 22 nov");
+    expect(toolbarLabel("month", "2026-11-18", true, t)).toBe("Noviembre de 2026");
   });
 });
 

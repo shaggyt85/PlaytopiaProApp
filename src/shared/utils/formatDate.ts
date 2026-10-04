@@ -67,6 +67,10 @@ export const formatWeekdayDay = (date: string): string =>
 export const formatWeekdayShortDay = (date: string): string =>
   `${formatWallDate(date, { weekday: "short" })} ${formatDayOfMonth(date)}`;
 
+/** `class_date` con el día de la semana y el mes en corto: "lun 18 sept" (la barra de la agenda). */
+export const formatWeekdayShortDayMonth = (date: string): string =>
+  `${formatWallDate(date, { weekday: "short" })} ${formatDayMonthShort(date)}`;
+
 /** `class_date` como número del día: "18" (la tira de la semana y la cuadrícula del mes). */
 export const formatDayOfMonth = (date: string): string => formatWallDate(date, { day: "numeric" });
 

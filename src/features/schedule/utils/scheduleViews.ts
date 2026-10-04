@@ -51,8 +51,8 @@ export interface ScheduleViewProps {
 interface ScheduleViewConfig {
   /** A dónde lleva la flecha `direction` (› 1, ‹ -1). */
   step: (date: string, direction: 1 | -1) => string;
-  /** El texto de la barra. */
-  toolbar: (date: string, nowWall: number, t: Translate) => string;
+  /** El texto del centro de la barra (‹ Hoy ›). */
+  toolbar: (date: string, isToday: boolean, t: Translate) => string;
   /** Lo que dice el lector de pantalla al cambiar de día, semana o mes (sin la hora). */
   announce: (date: string, isToday: boolean, t: Translate) => string;
   /** Lo que dicen las flechas al lector de pantalla. */
@@ -64,9 +64,9 @@ interface ScheduleViewConfig {
  * La ficha de cada vista: un solo sitio. Una vista nueva se añade aquí y
  * `satisfies` obliga a darle todos sus campos, o no compila.
  *
- * - Día: un día por flecha; «lunes 18 · 21:41».
- * - Semana: siete; «16 nov – 22 nov · 21:41».
- * - Mes: un mes, con el mismo número de día o el último (31 → 30); «noviembre
+ * - Día: un día por flecha; «Hoy» o «Lun 18 sept».
+ * - Semana: siete; «16 nov – 22 nov».
+ * - Mes: un mes, con el mismo número de día o el último (31 → 30); «Noviembre
  *   de 2026».
  */
 export const SCHEDULE_VIEW_CONFIG = {
@@ -97,9 +97,9 @@ export const SCHEDULE_VIEW_CONFIG = {
 export const stepDate = (date: string, view: ScheduleView, direction: 1 | -1): string =>
   SCHEDULE_VIEW_CONFIG[view].step(date, direction);
 
-/** El texto de la barra para el día `date` en la vista `view`. */
-export const toolbarLabel = (view: ScheduleView, date: string, nowWall: number, t: Translate): string =>
-  SCHEDULE_VIEW_CONFIG[view].toolbar(date, nowWall, t);
+/** El texto del centro de la barra para el día `date` en la vista `view`. */
+export const toolbarLabel = (view: ScheduleView, date: string, isToday: boolean, t: Translate): string =>
+  SCHEDULE_VIEW_CONFIG[view].toolbar(date, isToday, t);
 
 /** Lo que se anuncia al llegar a `date` en la vista `view`. */
 export const announceLabel = (view: ScheduleView, date: string, isToday: boolean, t: Translate): string =>
