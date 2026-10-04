@@ -137,6 +137,14 @@ const de: Translations = {
     notifications: "Benachrichtigungen",
     /** El avatar de la cabecera, que lleva a Perfil (lo lee el lector de pantalla). */
     myProfile: "Mein Profil",
+    /** Las cifras del día encima de la agenda (clases, alumnos y tiempo en pista). */
+    today: {
+      classes: "Kurse heute",
+      students: "Schüler heute",
+      court: "auf dem Platz heute",
+      /** El tiempo en pista exacto: «5:50 h». */
+      courtTime: "%{hours}:%{minutes} h",
+    },
     /** El selector de vistas (DÍA · SEMANA · MES). */
     views: {
       day: "Tag",

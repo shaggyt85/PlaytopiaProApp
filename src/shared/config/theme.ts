@@ -80,6 +80,12 @@ const typography = {
   smallTitle: { fontFamily: FONTS.display, fontSize: 14 },
   /** Lo que es esa cifra («Alumnos»): `text-[10px]`. */
   statLabel: { fontFamily: FONTS.regular, fontSize: 10 },
+  /**
+   * Una cifra del día encima de la agenda («6», «5:50 h»): `font-display text-xl num`. Sin el
+   * `leading-none` del prototipo: con `lineHeight` igual al tamaño, iOS sube los números de Sora
+   * y el icono de al lado queda bajo; con la altura natural quedan centrados con él.
+   */
+  statValue: { fontFamily: FONTS.display, fontSize: 20, fontVariant: TABULAR_NUMS },
   /** Un dato remarcado de 12 (el club en la cabecera del detalle: `text-xs font-semibold`). */
   labelStrong: { fontFamily: FONTS.semibold, fontSize: 12 },
   /** Iniciales en el círculo de un alumno (`font-display font-bold text-[10px]` del `CoachAvatar` pequeño). */

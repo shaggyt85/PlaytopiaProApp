@@ -1,4 +1,5 @@
-import { IconLoBell } from "@playtopia/icons/react-native";
+import { IconLoBell, IconLoCalendar, IconLoClock, IconLoUsers } from "@playtopia/icons/react-native";
+import { useMemo } from "react";
 import { View } from "react-native";
 
 import { Button } from "@/shared/components/Button";
@@ -6,26 +7,53 @@ import { IconButton } from "@/shared/components/IconButton";
 import { ScreenHeader } from "@/shared/components/ScreenHeader";
 import { TabScreen } from "@/shared/components/TabScreen";
 import { TabScrollView } from "@/shared/components/TabScrollView";
+import type { IconComponent } from "@/shared/config/icons";
+import type { Theme } from "@/shared/config/theme";
+import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { TranslationKey } from "@/shared/locales";
 import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 import { session } from "@/shared/services/session";
 
 import { useStyles } from "./ScheduleScreen.styles";
-import { NextClassCard, ScheduleAgenda, TeacherAvatar } from "./components";
+import { NextClassCard, ScheduleAgenda, StatTile, TeacherAvatar } from "./components";
 import { useForegroundNow } from "./hooks/useForegroundNow";
 import { useNextClass } from "./hooks/useNextClass";
 import { useScheduleClubs } from "./hooks/useScheduleClubs";
+import { useScheduleMonth } from "./hooks/useScheduleMonth";
 import { useTeacherProfile } from "./hooks/useTeacherProfile";
 import { useTodayHeader } from "./hooks/useTodayHeader";
 import { localToday } from "./utils/scheduleDates";
+import { courtTimeLabel, todayStats, type TodayStats } from "./utils/todayStats";
 
 // La cabecera solo usa el nombre y la foto: no se vuelve a pintar si cambia otro campo del perfil.
 const selectHeader = ({ name, avatar }: TeacherProfile) => ({ name, avatar });
 
+interface TodayStat {
+  Icon: IconComponent;
+  label: TranslationKey;
+  /** `text-magenta`, `text-sky`, `text-gold`. */
+  color: (theme: Theme) => string;
+  value: (stats: TodayStats, t: ReturnType<typeof useTranslation>["t"]) => string;
+}
+
+/** Las cifras del día, en el orden del prototipo: clases, alumnos y tiempo en pista. */
+const TODAY_STATS: readonly TodayStat[] = [
+  { Icon: IconLoCalendar, label: "schedule.today.classes", color: (theme) => theme.colors.primary, value: (s) => String(s.classes) },
+  { Icon: IconLoUsers, label: "schedule.today.students", color: (theme) => theme.accents.sky.color, value: (s) => String(s.students) },
+  {
+    Icon: IconLoClock,
+    label: "schedule.today.court",
+    color: (theme) => theme.accents.gold.color,
+    value: (s, t) => courtTimeLabel(s.minutesOnCourt, t),
+  },
+];
+
 /**
  * Agenda (Hoy): la foto del profesor (lleva a Perfil), el saludo según la hora,
- * su nombre y la fecha, con la hora del móvil; debajo, la próxima clase (si hay) y la agenda, con sus vistas
- * Día, Semana y Mes. Si el perfil no llega, la cabecera sale igual sin el nombre.
+ * su nombre y la fecha, con la hora del móvil; debajo, las cifras del día, la
+ * próxima clase (si hay) y la agenda, con sus vistas Día, Semana y Mes. Si el
+ * perfil no llega, la cabecera sale igual sin el nombre.
  *
  * Provisional: la campana se ve pero aún no hace nada (las notificaciones
  * vendrán después) y el botón de cerrar sesión sigue hasta que exista Perfil.
@@ -33,6 +61,7 @@ const selectHeader = ({ name, avatar }: TeacherProfile) => ({ name, avatar });
 export function ScheduleScreen() {
   const styles = useStyles();
   const { t } = useTranslation();
+  const theme = useTheme();
   // Un solo reloj para la cabecera y la agenda: nunca dicen días distintos.
   const now = useForegroundNow({ everyMinute: true });
   const header = useTodayHeader(now);
@@ -40,6 +69,9 @@ export function ScheduleScreen() {
   const nextClass = useNextClass(today, now);
   const { clubs, clubOf } = useScheduleClubs();
   const profile = useTeacherProfile({ select: selectHeader });
+  // Las clases de hoy, de la misma respuesta del mes que la agenda: no pide nada más.
+  const { dayClasses, hasData } = useScheduleMonth(today);
+  const stats = useMemo(() => todayStats(dayClasses), [dayClasses]);
 
   return (
     <TabScreen testID="schedule-screen">
@@ -52,6 +84,14 @@ export function ScheduleScreen() {
           subtitle={header.date}
           right={<IconButton Icon={IconLoBell} accessibilityLabel={t("schedule.notifications")} />}
         />
+        {/* Sin la agenda aún, nada: un «0» que luego cambia diría algo falso. */}
+        {hasData ? (
+          <View style={styles.stats} testID="today-stats">
+            {TODAY_STATS.map(({ Icon, label, color, value }) => (
+              <StatTile key={label} variant="today" Icon={Icon} color={color(theme)} value={value(stats, t)} label={t(label)} />
+            ))}
+          </View>
+        ) : null}
         {nextClass ? (
           <View style={styles.nextClass}>
             <NextClassCard item={nextClass} club={clubOf(nextClass)} today={today} />

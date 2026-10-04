@@ -127,6 +127,33 @@ describe("ScheduleScreen", () => {
     );
   });
 
+  it("bajo la cabecera, las cifras de hoy: clases, plazas sumadas y tiempo real en pista", async () => {
+    jest.mocked(scheduleService.getClasses).mockResolvedValue(
+      scheduleResponse({
+        classes: [
+          // 16:00–17:15 y 16:30–17:30 en dos pistas: de 16:00 a 17:30, 1:30 h.
+          scheduleClass({ id: 31, class_date: "2026-11-20", class_time: "16:00:00", duration_minutes: 75, current_participants: 3 }),
+          scheduleClass({ id: 32, class_date: "2026-11-20", class_time: "16:30:00", duration_minutes: 60, current_participants: 4 }),
+          // Otro día: no cuenta.
+          scheduleClass({ id: 33, class_date: "2026-11-21", class_time: "10:00:00", current_participants: 2 }),
+        ],
+        next_class: null,
+      }),
+    );
+    renderWithProviders(<ScheduleScreen />);
+
+    expect(await screen.findByLabelText("clases hoy: 2")).toBeTruthy();
+    expect(screen.getByLabelText("alumnos hoy: 7")).toBeTruthy();
+    expect(screen.getByLabelText("en pista hoy: 1:30 h")).toBeTruthy();
+  });
+
+  it("mientras no llega la agenda, no enseña cifras", () => {
+    jest.mocked(scheduleService.getClasses).mockReturnValue(new Promise(() => undefined));
+    renderWithProviders(<ScheduleScreen />);
+
+    expect(screen.queryByTestId("today-stats")).toBeNull();
+  });
+
   it("por la tarde cambia el saludo", async () => {
     jest.mocked(serverNow).mockReturnValue(new Date(2026, 10, 20, 17, 0).getTime());
     renderWithProviders(<ScheduleScreen />);
