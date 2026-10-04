@@ -26,11 +26,9 @@ const hidden = { includeHiddenElements: true };
 
 interface Options {
   status?: ClassStatus;
-  column?: number;
-  columns?: number;
 }
 
-function setup({ status = "upcoming", column = 0, columns = 1 }: Options = {}) {
+function setup({ status = "upcoming" }: Options = {}) {
   mockGradient.mockClear();
   render(
     <ScheduleClassBlock
@@ -39,7 +37,6 @@ function setup({ status = "upcoming", column = 0, columns = 1 }: Options = {}) {
       club={club}
       status={status}
       geometry={{ top: 512, height: 100 }}
-      placement={{ column, columns }}
     />,
   );
   return StyleSheet.flatten(screen.getByTestId("class-31").props.style);
@@ -68,8 +65,8 @@ describe("ScheduleClassBlock", () => {
     expect(gradientColors()).not.toContainEqual(club.colors.gradient);
   });
 
-  it("en su sitio: desde arriba, su alto y su columna", () => {
-    expect(setup({ column: 1, columns: 2 })).toMatchObject({ top: 512, height: 100, left: "50%", width: "50%" });
+  it("en su sitio: desde arriba, su alto y a todo el ancho", () => {
+    expect(setup()).toMatchObject({ top: 512, height: 100, left: 0, right: 0 });
   });
 
   it("la próxima: «PRÓXIMA», la franja de marca, el aro magenta y su brillo", () => {

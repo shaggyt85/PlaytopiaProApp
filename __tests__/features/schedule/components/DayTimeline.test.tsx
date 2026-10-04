@@ -26,13 +26,20 @@ function setup(classes = [morning, live, next, sameTime], isToday = true) {
 }
 
 describe("DayTimeline", () => {
-  it("cada clase a su hora, a 80 por hora y con 86 de tarjeta como mínimo; las que coinciden, lado a lado", () => {
+  it("cada clase a su hora, a 80 por hora y con 86 de tarjeta como mínimo", () => {
     setup();
 
     // 60 minutos son 80 de alto, pero el hueco mide como mínimo 94: 86 de tarjeta y 8 de separación.
-    expect(styleOf(1)).toMatchObject({ top: 80, height: 94, left: "0%", width: "100%" });
-    expect(styleOf(3)).toMatchObject({ top: 800, left: "0%", width: "50%" });
-    expect(styleOf(4)).toMatchObject({ top: 800, left: "50%", width: "50%" });
+    expect(styleOf(1)).toMatchObject({ top: 80, height: 94 });
+  });
+
+  it("dos a la misma hora: una debajo de otra, a todo el ancho, y su tramo se estira", () => {
+    setup();
+
+    expect(styleOf(3)).toMatchObject({ top: 800, height: 94, left: 0, right: 0 });
+    expect(styleOf(4)).toMatchObject({ top: 800 + 94, height: 94, left: 0, right: 0 });
+    // La tira crece lo que se estira el tramo: las dos tarjetas en vez de una.
+    expect(StyleSheet.flatten(screen.getByTestId("day-timeline").props.children.props.style).height).toBe(13 * 80 + 94);
   });
 
   it("cada clase con su color, por su orden en el día; en la línea, su punto del mismo color; el de la próxima brilla", () => {

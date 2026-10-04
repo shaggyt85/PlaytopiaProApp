@@ -10,8 +10,8 @@ import { PAST_OPACITY } from "../../utils/timelineMetrics";
 export const CHEVRON_SIZE = 16;
 
 export const useStyles = makeStyles((theme) => ({
-  // Hueco entre tarjetas: el `- 8` de su alto y el respiro entre columnas.
-  slot: { position: "absolute", paddingRight: theme.spacing.xs, paddingBottom: theme.spacing.sm },
+  // A todo el ancho; el hueco con la de debajo, el `- 8` de su alto.
+  slot: { position: "absolute", left: 0, right: 0, paddingBottom: theme.spacing.sm },
   past: { opacity: PAST_OPACITY },
   // La sombra y el brillo, fuera de la caja que recorta (`StripeCard`): si no, se cortarían.
   press: { flex: 1, borderRadius: theme.radius.lg },

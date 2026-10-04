@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react-native";
 import { StyleSheet } from "react-native";
 
 import { HourGrid } from "@/features/schedule/components/HourGrid";
+import { timelineScale } from "@/features/schedule/utils/timelineGeometry";
 import { darkTheme } from "@/shared/config/theme";
 
 const hidden = { includeHiddenElements: true };
@@ -10,10 +11,12 @@ const styleOf = (testID: string) => StyleSheet.flatten(screen.getByTestId(testID
 
 const magenta = darkTheme.clubColors[0].color;
 const sky = darkTheme.clubColors[2].color;
+/** La escala de la tira a 80 por hora, sin tramos estirados. */
+const yOf = (start: number, end: number) => timelineScale({ start, end }, 80).yOf;
 
 describe("HourGrid", () => {
   it("una marca por hora de la franja, ambas incluidas, centrada en su hora", () => {
-    render(<HourGrid span={{ start: 8, end: 10 }} hourHeight={80} starts={[]} />);
+    render(<HourGrid span={{ start: 8, end: 10 }} yOf={yOf(8, 10)} starts={[]} />);
 
     expect(screen.getByText("08:00", hidden)).toBeTruthy();
     expect(screen.getByText("10:00", hidden)).toBeTruthy();
@@ -26,7 +29,7 @@ describe("HourGrid", () => {
     render(
       <HourGrid
         span={{ start: 7, end: 10 }}
-        hourHeight={80}
+        yOf={yOf(7, 10)}
         starts={[
           { id: 1, time: "07:30:00", minutes: 450, color: magenta, next: false },
           { id: 2, time: "09:00:00", minutes: 540, color: sky, next: true },
@@ -50,7 +53,7 @@ describe("HourGrid", () => {
     render(
       <HourGrid
         span={{ start: 18, end: 20 }}
-        hourHeight={80}
+        yOf={yOf(18, 20)}
         starts={[
           { id: 1, time: "18:30:00", minutes: 1110, color: magenta, next: false },
           { id: 2, time: "18:30:00", minutes: 1110, color: sky, next: false },
@@ -64,7 +67,7 @@ describe("HourGrid", () => {
   });
 
   it("el lector de pantalla no lo lee: las tarjetas ya dicen su hora", () => {
-    render(<HourGrid span={{ start: 8, end: 10 }} hourHeight={80} starts={[]} />);
+    render(<HourGrid span={{ start: 8, end: 10 }} yOf={yOf(8, 10)} starts={[]} />);
 
     expect(screen.queryByText("08:00")).toBeNull();
   });

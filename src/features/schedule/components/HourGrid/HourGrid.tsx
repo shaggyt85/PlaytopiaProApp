@@ -22,7 +22,8 @@ export interface ClassStart {
 
 interface HourGridProps {
   span: HourSpan;
-  hourHeight: number;
+  /** La escala de la tira (`timelineScale`): la misma de las tarjetas y la línea de ahora. */
+  yOf: (minutes: number) => number;
   /** El inicio de cada clase del día: un punto de su color y su hora en la línea. */
   starts: readonly ClassStart[];
 }
@@ -36,10 +37,9 @@ const hourTime = (hour: number) => `${String(hour).padStart(2, "0")}:00:00`;
  * («07:30»), sin repetir la que ya está. `memo`: el reloj no lo vuelve a pintar.
  * Oculto al lector de pantalla: las tarjetas ya dicen su hora.
  */
-export const HourGrid = memo(function HourGrid({ span, hourHeight, starts }: HourGridProps) {
+export const HourGrid = memo(function HourGrid({ span, yOf, starts }: HourGridProps) {
   const styles = useStyles();
-  const topOf = (minutes: number) =>
-    ((minutes - span.start * MINUTES_PER_HOUR) / MINUTES_PER_HOUR) * hourHeight - MARKER_HEIGHT / 2;
+  const topOf = (minutes: number) => yOf(minutes) - MARKER_HEIGHT / 2;
 
   const hours = Array.from({ length: span.end - span.start + 1 }, (_, i) => span.start + i);
   const hourMinutes = new Set(hours.map((hour) => hour * MINUTES_PER_HOUR));

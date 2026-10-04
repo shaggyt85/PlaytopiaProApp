@@ -7,8 +7,7 @@ export const useStyles = makeStyles((theme) => ({
   container: { paddingTop: theme.spacing.sm + theme.spacing.xs, paddingBottom: theme.spacing.sm },
   track: { position: "relative" },
   // Las tarjetas empiezan a la derecha de la línea (`left: 3.75rem`) y dejan un
-  // respiro a la derecha (`width: calc(100% - 4.25rem)`); dentro, las columnas van
-  // en porcentaje.
+  // respiro a la derecha (`width: calc(100% - 4.25rem)`).
   blocks: {
     position: "absolute",
     top: 0,

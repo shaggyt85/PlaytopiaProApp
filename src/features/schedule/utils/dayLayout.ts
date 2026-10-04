@@ -1,10 +1,5 @@
-/** Dónde va una tarjeta cuando comparte hora con otras. */
-export interface Placement {
-  /** Su columna, de 0 a `columns - 1`. */
-  column: number;
-  /** Cuántas columnas tiene su grupo de clases solapadas: su ancho es 1/columns. */
-  columns: number;
-}
+import { MINUTES_PER_HOUR } from "./classTiming";
+import type { Stretch } from "./timelineGeometry";
 
 interface Slot {
   id: number;
@@ -13,42 +8,70 @@ interface Slot {
   end: number;
 }
 
+/** Dónde va una tarjeta: desde el inicio de su grupo y cuánto mide, en puntos. */
+export interface Stacked {
+  /** Minuto en que empieza su grupo: la tira lo sitúa con su escala (`timelineScale`). */
+  groupStart: number;
+  top: number;
+  height: number;
+}
+
+/** El reparto del día: dónde va cada tarjeta y qué tramos de la tira se estiran. */
+export interface DayLayout {
+  blocks: Map<number, Stacked>;
+  stretches: Stretch[];
+}
+
+/** Por debajo de medio punto no se estira: solo es el redondeo de la cuenta. */
+const STRETCH_EPSILON = 0.5;
+
 /**
- * Reparte en columnas las clases que coinciden, como en el calendario del
- * prototipo («Cantera Tarde» y «Clinic Tactical» lado a lado).
+ * Coloca las clases del día a `hourHeight` puntos por hora. Las que coinciden van
+ * **una debajo de otra**, a todo el ancho, y el tramo de horas que ocupan se
+ * estira lo justo para que quepan sin pisarse (ni el prototipo, que las empuja
+ * hacia abajo, ni las columnas de antes lo hacían).
  *
- * Las clases se agrupan mientras se solapen (una que empieza justo cuando otra
- * termina no se solapa) y, dentro de cada grupo, cada una ocupa la primera
- * columna que ya ha quedado libre. Todas las del grupo comparten el ancho.
+ * - Se agrupan mientras se pisen sus tarjetas, no solo sus horas: una clase
+ *   corta mide como mínimo `minHeight`, y la siguiente no puede empezar debajo.
+ * - Dentro del grupo, en orden de inicio: cada una empieza en su hora o justo
+ *   debajo de la anterior, con su alto (su duración o el mínimo).
+ * - Si el grupo no cabe en su tramo, ese tramo se estira (`Stretch`) y el resto
+ *   del día no cambia. Una clase sola, o las que no coinciden, igual que siempre.
  */
-export function layoutDay(slots: readonly Slot[]): Map<number, Placement> {
-  const placements = new Map<number, Placement>();
+export function layoutDay(slots: readonly Slot[], hourHeight: number, minHeight: number): DayLayout {
+  const perMinute = hourHeight / MINUTES_PER_HOUR;
+  const minMinutes = minHeight / perMinute;
+  /** Hasta dónde llega su tarjeta, en minutos: su fin o, si es corta, su alto mínimo. */
+  const reach = (slot: Slot) => Math.max(slot.end, slot.start + minMinutes);
   const sorted = [...slots].sort((a, b) => a.start - b.start || a.end - b.end || a.id - b.id);
 
-  let group: { id: number; column: number }[] = [];
+  const blocks = new Map<number, Stacked>();
+  const stretches: Stretch[] = [];
+  let group: Slot[] = [];
   let groupEnd = -Infinity;
-  /** Cuándo queda libre cada columna del grupo en curso. */
-  let columnEnds: number[] = [];
 
   const closeGroup = () => {
-    for (const { id, column } of group) placements.set(id, { column, columns: columnEnds.length });
+    if (group.length === 0) return;
+    const start = group[0].start;
+    let bottom = 0;
+    for (const slot of group) {
+      const height = Math.max(minHeight, (slot.end - slot.start) * perMinute);
+      const top = Math.max((slot.start - start) * perMinute, bottom);
+      blocks.set(slot.id, { groupStart: start, top, height });
+      bottom = top + height;
+    }
+    const natural = (groupEnd - start) * perMinute;
+    if (bottom - natural > STRETCH_EPSILON) stretches.push({ start, end: groupEnd, factor: bottom / natural });
     group = [];
-    columnEnds = [];
+    groupEnd = -Infinity;
   };
 
   for (const slot of sorted) {
     if (slot.start >= groupEnd) closeGroup();
-    let column = columnEnds.findIndex((end) => end <= slot.start);
-    if (column === -1) {
-      column = columnEnds.length;
-      columnEnds.push(slot.end);
-    } else {
-      columnEnds[column] = slot.end;
-    }
-    group.push({ id: slot.id, column });
-    groupEnd = group.length === 1 ? slot.end : Math.max(groupEnd, slot.end);
+    group.push(slot);
+    groupEnd = Math.max(groupEnd, reach(slot));
   }
   closeGroup();
 
-  return placements;
+  return { blocks, stretches };
 }

@@ -21,7 +21,6 @@ import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { classA11yLabel } from "../../utils/classA11yLabel";
 import type { ClassStatus } from "../../utils/classTiming";
-import type { Placement } from "../../utils/dayLayout";
 import { seatsLabel } from "../../utils/seatsLabel";
 import type { BlockGeometry } from "../../utils/timelineGeometry";
 import { PressableScale } from "../PressableScale";
@@ -45,7 +44,6 @@ interface ScheduleClassBlockProps {
   club: ScheduleClub;
   status: ClassStatus;
   geometry: BlockGeometry;
-  placement: Placement;
 }
 
 /**
@@ -67,13 +65,11 @@ export const ScheduleClassBlock = memo(function ScheduleClassBlock({
   club,
   status,
   geometry,
-  placement,
 }: ScheduleClassBlockProps) {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
   const openClass = useOpenClass();
-  const width = 100 / placement.columns;
   const next = status === "next";
   const pill = STATUS_PILL_OF[status];
 
@@ -81,7 +77,7 @@ export const ScheduleClassBlock = memo(function ScheduleClassBlock({
     <View
       style={[
         styles.slot,
-        { top: geometry.top, height: geometry.height, left: `${placement.column * width}%`, width: `${width}%` },
+        { top: geometry.top, height: geometry.height },
         status === "past" && styles.past,
       ]}
       testID={`class-${item.id}`}
