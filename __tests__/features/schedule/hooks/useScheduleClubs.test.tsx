@@ -44,15 +44,3 @@ describe("useScheduleClubs", () => {
     });
   });
 });
-
-describe("useScheduleClubs: la tarjeta de sede", () => {
-  beforeEach(() => useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 }));
-
-  it("la de «Mis clubes» por su sede; si ya no está, undefined", async () => {
-    const card = schoolCard(4, 7, { address: "Pº de la Castellana 300" });
-    const { result } = setup([card]);
-
-    await waitFor(() => expect(result.current.cardOf({ db_id: 4, club_id: 7 })).toEqual(card));
-    expect(result.current.cardOf({ db_id: 9, club_id: 9 })).toBeUndefined();
-  });
-});

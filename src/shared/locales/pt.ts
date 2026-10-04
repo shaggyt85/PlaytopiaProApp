@@ -201,10 +201,6 @@ const pt: Translations = {
       timeRange: "%{start}–%{end}",
       /** Una cifra del día encima de la agenda para el lector de pantalla: «clases hoy: 3». */
       stat: "%{label}: %{value}",
-      /** El título de la sección del club. */
-      club: "Clube",
-      /** La tarjeta del club para el lector de pantalla: «Club: Wave Padel Club, Pº de la Castellana 300». */
-      clubA11y: "Clube: %{details}",
       students: "Alunos",
       noStudents: "Ainda não há alunos inscritos",
       notFound: "Aula não encontrada",

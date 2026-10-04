@@ -21,10 +21,9 @@ export type ClubOf = (sede: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleCl
 
 /**
  * Los clubes de la agenda, a partir de «Mis clubes» (misma caché que «Red de
- * clubes»): `clubOf` para el club de cada clase, con su nombre corto y su color,
- * fijo por su posición, y `cardOf` para su tarjeta de sede (la dirección, en el
- * detalle). Todo sale del mismo cálculo, así las tarjetas y el detalle nunca dan
- * colores ni datos distintos.
+ * clubes»): `clubOf` da el club de cada clase, con su nombre corto y su color,
+ * fijo por su posición. Todo sale del mismo cálculo, así las tarjetas y el
+ * detalle nunca dan colores ni nombres distintos.
  *
  * Una sede que no esté en «Mis clubes» —le acaban de dar de baja y la caché aún
  * no lo sabe— sale sin nombre y con el color neutro: la clase se ve igual.
@@ -33,18 +32,16 @@ export function useScheduleClubs(service: IMyClubsService = myClubsService) {
   const theme = useTheme();
   const { data } = useMyClubs(service);
 
-  const { byKey, cards } = useMemo(() => {
-    const list = data?.clubs ?? [];
-    return {
-      byKey: new Map<string, ScheduleClub>(
-        list.map((club, index) => [
+  const byKey = useMemo(
+    () =>
+      new Map<string, ScheduleClub>(
+        (data?.clubs ?? []).map((club, index) => [
           sedeKey(club),
           { label: club.club_name ?? club.name, colors: colorAt(theme.clubColors, index) },
         ]),
       ),
-      cards: new Map<string, SchoolCard>(list.map((card) => [sedeKey(card), card])),
-    };
-  }, [data, theme.clubColors]);
+    [data, theme.clubColors],
+  );
 
   const clubOf = useCallback<ClubOf>(
     (sede): ScheduleClub =>
@@ -52,11 +49,5 @@ export function useScheduleClubs(service: IMyClubsService = myClubsService) {
     [byKey, theme.clubColorUnknown],
   );
 
-  /** La tarjeta de sede de un club de «Mis clubes»; `undefined` si ya no está. */
-  const cardOf = useCallback(
-    (sede: Pick<SchoolCard, "db_id" | "club_id">): SchoolCard | undefined => cards.get(sedeKey(sede)),
-    [cards],
-  );
-
-  return { clubOf, cardOf };
+  return { clubOf };
 }

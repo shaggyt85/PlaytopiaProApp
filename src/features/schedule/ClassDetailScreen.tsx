@@ -8,7 +8,7 @@ import { EmptyState } from "@/shared/components/EmptyState";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import { useStyles } from "./ClassDetailScreen.styles";
-import { ClassHero, ClubCard, DetailSection, ScheduleDataState, StudentList } from "./components";
+import { ClassHero, DetailSection, ScheduleDataState, StudentList } from "./components";
 import { useClassDetail } from "./hooks/useClassDetail";
 import { useScheduleClubs } from "./hooks/useScheduleClubs";
 import { ClassDetailParamsSchema, type ClassDetailParams } from "./utils/classRoute";
@@ -20,8 +20,8 @@ function useGoBack() {
 }
 
 /**
- * El detalle de una clase, encima de las pestañas y sin barra: su cabecera, su
- * club y sus alumnos. Lo que aún no tiene datos en Core (asistencia, objetivos, notas…)
+ * El detalle de una clase, encima de las pestañas y sin barra: su cabecera y
+ * sus alumnos. Lo que aún no tiene datos en Core (asistencia, objetivos, notas…)
  * no se enseña; cada cosa llega con su fase.
  *
  * Los parámetros de la ruta llegan como texto: si no son válidos, «Clase no
@@ -37,9 +37,7 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
   const goBack = useGoBack();
   const { t } = useTranslation();
   const { item, colors, hasData, error, refetch } = useClassDetail(dbId, classId, date);
-  const { clubOf, cardOf } = useScheduleClubs();
-  // Si la sede ya no está en «Mis clubes» (le acaban de dar de baja), su tarjeta no sale.
-  const card = item ? cardOf(item) : undefined;
+  const { clubOf } = useScheduleClubs();
 
   return (
     <DetailFrame>
@@ -47,11 +45,6 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
         {item && colors ? (
           <ScrollView contentContainerStyle={styles.content}>
             <ClassHero item={item} clubLabel={clubOf(item).label} colors={colors} onBack={goBack} />
-            {card ? (
-              <DetailSection title={t("schedule.detail.club")} testID="club-section">
-                <ClubCard club={clubOf(item)} card={card} />
-              </DetailSection>
-            ) : null}
             <DetailSection title={t("schedule.detail.students")} testID="students-section">
               <StudentList students={item.students} />
             </DetailSection>

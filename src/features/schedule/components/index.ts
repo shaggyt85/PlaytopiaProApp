@@ -1,5 +1,4 @@
 export { ClassHero } from "./ClassHero";
-export { ClubCard } from "./ClubCard";
 export { ClubDot } from "./ClubDot";
 export { DayButton, DAY_MARK_COLORS } from "./DayButton";
 export { DayClassList, type DayClassRowProps } from "./DayClassList";

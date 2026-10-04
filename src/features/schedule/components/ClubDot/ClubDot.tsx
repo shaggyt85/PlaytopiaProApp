@@ -1,23 +1,14 @@
 import { View } from "react-native";
 
-import { useStyles, type ClubDotSize } from "./ClubDot.styles";
+import { useStyles } from "./ClubDot.styles";
 
 interface ClubDotProps {
-  /** El color del club (`ScheduleClub.colors.color`). */
+  /** Su color: el blanco sobre el degradado de la cabecera del detalle. */
   color: string;
-  /** Con un aro oscuro, para que se vea sobre su propio color (la cabecera del detalle y la tarjeta del club). */
-  ring?: boolean;
-  /** `sm` (por defecto) en la cabecera del detalle; `lg` en la tarjeta del club del detalle. */
-  size?: ClubDotSize;
 }
 
-/**
- * El punto del color de un club delante de su nombre (el 🟢 de la captura): en
- * la pastilla de cada clase de la tira, en la línea del club de la próxima y en
- * la pastilla con el degradado del club, donde lleva un aro para verse, y en
- * grande en la tarjeta del club del detalle (el emoji del club en la captura).
- */
-export function ClubDot({ color, ring = false, size = "sm" }: ClubDotProps) {
+/** El punto delante del nombre del club en la cabecera del detalle de una clase. */
+export function ClubDot({ color }: ClubDotProps) {
   const styles = useStyles();
-  return <View style={[styles[size], ring && styles.ring, { backgroundColor: color }]} testID="club-dot" />;
+  return <View style={[styles.dot, { backgroundColor: color }]} testID="club-dot" />;
 }
