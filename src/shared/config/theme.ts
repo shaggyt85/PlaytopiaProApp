@@ -235,6 +235,8 @@ export const darkTheme = {
      * prototipo), con `surface` limpia en medio (paradas en `NEXT_CLASS_STOPS`).
      */
     nextClass: [withAlpha(BRAND.magenta, 0.16), withAlpha(BRAND.surface, 0), withAlpha(BRAND.violet, 0.14)] as const,
+    /** Una clase en la vista Día (`bg-gradient-to-br from-card to-surface`). */
+    classCard: [BRAND.card, BRAND.surface] as const,
     /** Tarjeta de cristal de los modales. */
     modal: [withAlpha(BRAND.night, 0.85), withAlpha(BRAND.inkTo, 0.9)] as const,
     /**

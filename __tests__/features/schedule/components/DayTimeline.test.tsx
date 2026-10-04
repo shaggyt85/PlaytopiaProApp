@@ -26,20 +26,25 @@ function setup(classes = [morning, live, next, sameTime], isToday = true) {
 }
 
 describe("DayTimeline", () => {
-  it("cada clase a su hora, a 80 por hora; las que coinciden, lado a lado", () => {
+  it("cada clase a su hora, a 80 por hora y con 86 de tarjeta como mínimo; las que coinciden, lado a lado", () => {
     setup();
 
-    expect(styleOf(1)).toMatchObject({ top: 80, height: 80, left: "0%", width: "100%" });
+    // 60 minutos son 80 de alto, pero el hueco mide como mínimo 94: 86 de tarjeta y 8 de separación.
+    expect(styleOf(1)).toMatchObject({ top: 80, height: 94, left: "0%", width: "100%" });
     expect(styleOf(3)).toMatchObject({ top: 800, left: "0%", width: "50%" });
     expect(styleOf(4)).toMatchObject({ top: 800, left: "50%", width: "50%" });
   });
 
-  it("en la línea, un punto por clase con el color de su club; el de la próxima brilla", () => {
+  it("cada clase con su color, por su orden en el día; en la línea, su punto del mismo color; el de la próxima brilla", () => {
     setup();
 
     for (const id of [1, 2, 3, 4]) expect(screen.getByTestId(`start-dot-${id}`, hidden)).toBeTruthy();
     const dot = (id: number) => StyleSheet.flatten(screen.getByTestId(`start-dot-${id}`, hidden).props.children.props.style);
     expect(dot(1).backgroundColor).toBe(darkTheme.clubColors[0].color);
+    expect(dot(2).backgroundColor).toBe(darkTheme.clubColors[1].color);
+    // 18:00 las dos: por su id, la 3 antes que la 4.
+    expect(dot(3).backgroundColor).toBe(darkTheme.clubColors[2].color);
+    expect(dot(4).backgroundColor).toBe(darkTheme.clubColors[3].color);
     expect(dot(3).boxShadow).toBeDefined();
     expect(dot(4).boxShadow).toBeUndefined();
   });

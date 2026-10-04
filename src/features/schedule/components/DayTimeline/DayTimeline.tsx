@@ -1,12 +1,14 @@
 import { useMemo } from "react";
 import { View } from "react-native";
 
+import { useTheme } from "@/shared/hooks/useTheme";
 import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 
 import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import { useScheduleHours } from "../../hooks/useScheduleHours";
 import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { classMinutes, classStatus } from "../../utils/classTiming";
+import { colorAt } from "../../utils/colorAt";
 import { layoutDay } from "../../utils/dayLayout";
 import { visibleHours } from "../../utils/hourSpan";
 import { localMinutes, wallNow } from "../../utils/scheduleDates";
@@ -42,6 +44,7 @@ interface DayTimelineProps {
 export function DayTimeline({ classes, isToday, now, nextClassId, clubOf }: DayTimelineProps) {
   const styles = useStyles();
   const configured = useScheduleHours();
+  const theme = useTheme();
 
   const { span, blocks, starts } = useMemo(() => {
     const timed = classes.map((item) => ({ item, minutes: classMinutes(item) }));
@@ -50,23 +53,29 @@ export function DayTimeline({ classes, isToday, now, nextClassId, clubOf }: DayT
       timed.map((c) => c.minutes),
     );
     const placements = layoutDay(timed.map(({ item, minutes }) => ({ id: item.id, ...minutes })));
+    // Cada clase con su color, por su orden en el día y en ciclo, como el prototipo
+    // (que da vida a la agenda): fijo, no al azar, para que no cambie al repintar.
+    const ordered = [...timed].sort((a, b) => a.minutes.start - b.minutes.start || a.item.id - b.item.id);
+    const colorOf = new Map(ordered.map(({ item }, index) => [item.id, colorAt(theme.clubColors, index)]));
+    const colorsOf = (id: number) => colorOf.get(id) ?? colorAt(theme.clubColors, 0);
     return {
       span: hours,
       starts: timed.map(({ item, minutes }) => ({
         id: item.id,
         time: item.class_time,
         minutes: minutes.start,
-        color: clubOf(item).colors.color,
+        color: colorsOf(item.id).color,
         next: item.id === nextClassId,
       })),
       blocks: timed.map(({ item, minutes }) => ({
         item,
+        colors: colorsOf(item.id),
         geometry: blockGeometry(minutes, hours, HOUR_HEIGHT, BLOCK_MIN_HEIGHT),
         // Toda clase de la lista está en el reparto.
         placement: placements.get(item.id) ?? { column: 0, columns: 1 },
       })),
     };
-  }, [classes, configured, clubOf, nextClassId]);
+  }, [classes, configured, nextClassId, theme.clubColors]);
 
   const nowWall = wallNow(now);
   const nowTop = isToday ? nowOffset(localMinutes(now), span, HOUR_HEIGHT) : null;
@@ -76,10 +85,11 @@ export function DayTimeline({ classes, isToday, now, nextClassId, clubOf }: DayT
       <View style={[styles.track, { height: (span.end - span.start) * HOUR_HEIGHT }]}>
         <HourGrid span={span} hourHeight={HOUR_HEIGHT} starts={starts} />
         <View style={styles.blocks}>
-          {blocks.map(({ item, geometry, placement }) => (
+          {blocks.map(({ item, colors, geometry, placement }) => (
             <ScheduleClassBlock
               key={item.id}
               item={item}
+              colors={colors}
               club={clubOf(item)}
               status={classStatus(item, nowWall, nextClassId)}
               geometry={geometry}

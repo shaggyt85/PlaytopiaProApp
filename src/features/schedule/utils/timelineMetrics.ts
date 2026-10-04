@@ -12,7 +12,9 @@ export const HOUR_LABEL_WIDTH = 44;
 export const TIMELINE_LINE_X = 52;
 /** Dónde empiezan las tarjetas, a la derecha de la línea (`left: 3.75rem`). */
 export const BLOCKS_LEFT = 60;
-/** Alto mínimo de una tarjeta, para que una clase corta se lea (`Math.max(40, …)`). */
-export const BLOCK_MIN_HEIGHT = 40;
-/** Desde este alto la tarjeta enseña también el club y las plazas (`height > 60`). */
-export const BLOCK_DETAIL_MIN_HEIGHT = 60;
+/**
+ * Alto mínimo del hueco de una tarjeta: 86 de tarjeta (`Math.max(86, …)`, todo su
+ * contenido cabe siempre, también en una clase corta) y 8 de separación con la
+ * de debajo, que el prototipo deja aparte.
+ */
+export const BLOCK_MIN_HEIGHT = 94;

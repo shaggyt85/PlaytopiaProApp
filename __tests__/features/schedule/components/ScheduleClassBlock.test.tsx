@@ -1,14 +1,9 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  within,
-} from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 import { StyleSheet } from "react-native";
 
 import { ScheduleClassBlock } from "@/features/schedule/components/ScheduleClassBlock";
-import { PAST_OPACITY } from "@/features/schedule/utils/timelineMetrics";
 import type { ClassStatus } from "@/features/schedule/utils/classTiming";
+import { PAST_OPACITY } from "@/features/schedule/utils/timelineMetrics";
 import { darkTheme } from "@/shared/config/theme";
 
 import { scheduleClass } from "../../../helpers/scheduleFactories";
@@ -25,107 +20,92 @@ jest.mock("expo-linear-gradient", () => ({
 }));
 
 const club = { label: "Sede Centro", colors: darkTheme.clubColors[1] };
+// Su color en el día (por su orden), distinto del de su club.
+const colors = darkTheme.clubColors[3];
+const hidden = { includeHiddenElements: true };
 
 interface Options {
   status?: ClassStatus;
-  height?: number;
   column?: number;
   columns?: number;
 }
 
-function setup({
-  status = "upcoming",
-  height = 80,
-  column = 0,
-  columns = 1,
-}: Options = {}) {
+function setup({ status = "upcoming", column = 0, columns = 1 }: Options = {}) {
+  mockGradient.mockClear();
   render(
     <ScheduleClassBlock
       item={scheduleClass()}
+      colors={colors}
       club={club}
       status={status}
-      geometry={{ top: 512, height }}
+      geometry={{ top: 512, height: 100 }}
       placement={{ column, columns }}
     />,
   );
   return StyleSheet.flatten(screen.getByTestId("class-31").props.style);
 }
+const gradientColors = () => mockGradient.mock.calls.map(([props]) => props.colors);
+const cardStyle = () => StyleSheet.flatten(screen.getByTestId("class-31-card").props.style);
 
 describe("ScheduleClassBlock", () => {
-  it("con el color de su club: título, «hora · duración · pista», sede y plazas", () => {
+  it("como el prototipo: título, pista y «duración · nivel · plazas», sin el nombre del club", () => {
     setup();
 
-    expect(mockGradient).toHaveBeenCalledWith(
-      expect.objectContaining({ colors: club.colors.gradient }),
-    );
-    expect(screen.getByText("Cantera Tarde")).toBeTruthy();
-    expect(screen.getByText("16:00 · 75 min · Pista 1")).toBeTruthy();
-    expect(screen.getByText("Sede Centro")).toBeTruthy();
-    expect(screen.getByText("3/4")).toBeTruthy();
-    expect(
-      screen.getByLabelText(/^Cantera Tarde, 16:00, 75 minutos/),
-    ).toBeTruthy();
+    expect(screen.getByText("Cantera Tarde", hidden)).toBeTruthy();
+    expect(screen.getByText("Pista 1", hidden)).toBeTruthy();
+    expect(screen.getByText("75 min", hidden)).toBeTruthy();
+    expect(screen.getByText("2.5 - 3", hidden)).toBeTruthy();
+    expect(screen.getByText("3/4", hidden)).toBeTruthy();
+    expect(screen.queryByText("Sede Centro", hidden)).toBeNull();
+    // El lector de pantalla la sigue leyendo entera, con su club.
+    expect(screen.getByLabelText(/^Cantera Tarde, 16:00, 75 minutos/)).toBeTruthy();
+  });
+
+  it("la tarjeta oscura con la franja de su color en el día, no el de su club", () => {
+    setup();
+
+    expect(gradientColors()).toEqual(expect.arrayContaining([darkTheme.gradients.classCard, colors.gradient]));
+    expect(gradientColors()).not.toContainEqual(club.colors.gradient);
   });
 
   it("en su sitio: desde arriba, su alto y su columna", () => {
-    expect(setup({ column: 1, columns: 2 })).toMatchObject({
-      top: 512,
-      height: 80,
-      left: "50%",
-      width: "50%",
-    });
+    expect(setup({ column: 1, columns: 2 })).toMatchObject({ top: 512, height: 100, left: "50%", width: "50%" });
   });
 
-  it("baja, sin sitio para la sede y las plazas", () => {
-    setup({ height: 60 });
-
-    expect(screen.queryByTestId("class-31-details")).toBeNull();
-    expect(screen.getByText("Cantera Tarde")).toBeTruthy();
-  });
-
-  it("la pastilla del club lleva delante un punto de su color", () => {
-    setup();
-
-    const dot = within(screen.getByTestId("class-31-club")).getByTestId(
-      "club-dot",
-    );
-    expect(StyleSheet.flatten(dot.props.style)).toMatchObject({
-      backgroundColor: club.colors.color,
-    });
-  });
-
-  it("la próxima lleva su marca, un aro claro y el brillo de su club", () => {
+  it("la próxima: «PRÓXIMA», la franja de marca, el aro magenta y su brillo", () => {
     setup({ status: "next" });
 
-    expect(screen.getByTestId("class-31-next")).toBeTruthy();
-    const card = StyleSheet.flatten(
-      screen.getByTestId("class-31-card").props.style,
-    );
-    expect(card).toMatchObject({
-      borderWidth: 2,
-      shadowColor: club.colors.color,
-      backgroundColor: club.colors.color,
-    });
+    expect(screen.getByTestId("class-31-next", hidden)).toBeTruthy();
+    expect(gradientColors()).toContainEqual(darkTheme.gradients.brand);
+    expect(gradientColors()).not.toContainEqual(colors.gradient);
+    expect(cardStyle().boxShadow).toContain(darkTheme.colors.primary);
   });
 
-  it("las demás, sin aro ni brillo", () => {
+  it("las demás, con la sombra de algo que flota y sin brillo magenta", () => {
     setup();
 
-    const card = StyleSheet.flatten(
-      screen.getByTestId("class-31-card").props.style,
-    );
-    expect(card.borderWidth).toBeUndefined();
-    expect(card.shadowColor).toBeUndefined();
+    expect(cardStyle().boxShadow).toBe(darkTheme.shadows.lifted.boxShadow);
   });
 
-  it("en curso, sin la marca de próxima", () => {
+  it("en curso: «EN VIVO», sin la marca de próxima", () => {
     setup({ status: "live" });
-    expect(screen.queryByTestId("class-31-next")).toBeNull();
+
+    expect(screen.getByTestId("class-31-live", hidden)).toBeTruthy();
+    expect(screen.queryByTestId("class-31-next", hidden)).toBeNull();
   });
 
-  it("si ya terminó, apagada pero visible (para dar el feedback)", () => {
+  it("si ya terminó: apagada y «COMPLETADA»", () => {
     expect(setup({ status: "past" }).opacity).toBe(PAST_OPACITY);
+    expect(screen.getByTestId("class-31-done", hidden)).toBeTruthy();
+    expect(screen.getByText("Completada", hidden)).toBeTruthy();
   });
+
+  it("por venir: sin marca", () => {
+    setup();
+
+    expect(screen.queryByTestId(/^class-31-(live|next|done)$/, hidden)).toBeNull();
+  });
+
   it("al tocarla abre su detalle", () => {
     setup();
 

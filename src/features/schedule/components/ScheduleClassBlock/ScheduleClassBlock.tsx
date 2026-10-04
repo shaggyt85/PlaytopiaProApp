@@ -1,36 +1,47 @@
+import {
+  IconLoActivity,
+  IconLoChevronRight,
+  IconLoClock,
+  IconLoMapPin,
+  IconLoUsers,
+} from "@playtopia/icons/react-native";
 import { memo } from "react";
 import { View } from "react-native";
 
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
-import { glow } from "@/shared/config/theme";
+import type { ColorPair } from "@/shared/config/theme";
+import { IconText } from "@/shared/components/IconText";
+import { StripeCard } from "@/shared/components/StripeCard";
 import { Text } from "@/shared/components/Text";
+import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import { useOpenClass } from "../../hooks/useOpenClass";
 import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { classA11yLabel } from "../../utils/classA11yLabel";
-import { classMeta } from "../../utils/classMeta";
-import { seatsLabel } from "../../utils/seatsLabel";
 import type { ClassStatus } from "../../utils/classTiming";
 import type { Placement } from "../../utils/dayLayout";
+import { seatsLabel } from "../../utils/seatsLabel";
 import type { BlockGeometry } from "../../utils/timelineGeometry";
-import { BLOCK_DETAIL_MIN_HEIGHT } from "../../utils/timelineMetrics";
-import { ClubDot } from "../ClubDot";
 import { PressableScale } from "../PressableScale";
 import { StatusPill } from "../StatusPill";
 
-import { useStyles } from "./ScheduleClassBlock.styles";
+import { CHEVRON_SIZE, useStyles } from "./ScheduleClassBlock.styles";
 
-// En Android la sombra (`elevation`) solo se pinta con fondo: el del color del
-// club, que el degradado tapa.
-const nextGlow = (color: string) => ({
-  ...glow(color),
-  backgroundColor: color,
-});
+/** La marca de cada estado: «EN VIVO», «PRÓXIMA», «COMPLETADA» o ninguna. */
+const STATUS_PILL_OF = {
+  live: "live",
+  next: "next",
+  past: "done",
+  upcoming: null,
+} as const satisfies Record<ClassStatus, "live" | "next" | "done" | null>;
 
 interface ScheduleClassBlockProps {
   item: ScheduleClass;
+  /** Su color en el día (por su orden, en ciclo): la franja. */
+  colors: ColorPair;
+  /** Su club: lo dice el lector de pantalla. */
   club: ScheduleClub;
   status: ClassStatus;
   geometry: BlockGeometry;
@@ -38,35 +49,39 @@ interface ScheduleClassBlockProps {
 }
 
 /**
- * Una clase en la tira del día, con el degradado de su club: título, «hora ·
- * duración · pista» y, si cabe, el club y las plazas. Apagada si ya terminó y
- * con «PRÓXIMA» si es la que dice Core. Al tocarla se abre su detalle.
+ * Una clase en la tira del día, como el prototipo final: la tarjeta oscura con
+ * la franja de su color a la izquierda (cada clase el suyo, por su orden en el
+ * día, para dar vida a la agenda; la de la próxima, con el degradado de marca),
+ * su marca de estado, el título, la pista y «duración · nivel · plazas». Sin el
+ * nombre del club, como el prototipo (el lector de pantalla sí lo dice).
+ * La que ya terminó, apagada y «COMPLETADA». Al tocarla se abre su detalle.
+ *
+ * Provisional: el nivel lleva `IconLoActivity` hasta que `@playtopia/icons`
+ * publique `IconLoBarChart2` (1.10.0).
  *
  * `memo`: cuando la hora avanza, solo se vuelve a pintar la que cambia de estado.
  */
 export const ScheduleClassBlock = memo(function ScheduleClassBlock({
   item,
+  colors,
   club,
   status,
   geometry,
   placement,
 }: ScheduleClassBlockProps) {
   const styles = useStyles();
+  const theme = useTheme();
   const { t } = useTranslation();
   const openClass = useOpenClass();
   const width = 100 / placement.columns;
-  const meta = classMeta(item, t, [item.track_name]);
+  const next = status === "next";
+  const pill = STATUS_PILL_OF[status];
 
   return (
     <View
       style={[
         styles.slot,
-        {
-          top: geometry.top,
-          height: geometry.height,
-          left: `${placement.column * width}%`,
-          width: `${width}%`,
-        },
+        { top: geometry.top, height: geometry.height, left: `${placement.column * width}%`, width: `${width}%` },
         status === "past" && styles.past,
       ]}
       testID={`class-${item.id}`}
@@ -75,50 +90,35 @@ export const ScheduleClassBlock = memo(function ScheduleClassBlock({
         onPress={() => openClass(item)}
         accessibilityLabel={classA11yLabel(item, club.label, status, t)}
         accessibilityHint={t("schedule.detail.openHint")}
-        style={[
-          styles.card,
-          status === "next" && [styles.next, nextGlow(club.colors.color)],
-        ]}
+        style={[styles.press, next ? styles.nextGlow : styles.lifted]}
         testID={`class-${item.id}-card`}
       >
-        <DiagonalGradient colors={club.colors.gradient} style={styles.fill} />
-        <View style={styles.header}>
-          <Text
-            variant="mark"
-            color="onPrimary"
-            numberOfLines={1}
-            style={styles.title}
-          >
-            {item.title}
-          </Text>
-          {status === "next" ? <StatusPill variant="next" testID={`class-${item.id}-next`} /> : null}
-        </View>
-        <Text
-          variant="tab"
-          color="onPrimary"
-          numberOfLines={1}
-          style={styles.meta}
+        <StripeCard
+          stripe={next ? theme.gradients.brand : colors.gradient}
+          radius="lg"
+          style={[styles.card, next && styles.nextRing]}
         >
-          {meta}
-        </Text>
-        {geometry.height > BLOCK_DETAIL_MIN_HEIGHT ? (
-          <View style={styles.details} testID={`class-${item.id}-details`}>
-            {club.label ? (
-              <View
-                style={[styles.pill, styles.clubPill]}
-                testID={`class-${item.id}-club`}
-              >
-                <ClubDot color={club.colors.color} />
-                <Text variant="badge" color="onPrimary" numberOfLines={1}>
-                  {club.label}
-                </Text>
+          <DiagonalGradient colors={theme.gradients.classCard} style={styles.fill} />
+          <View style={styles.content}>
+            {pill ? (
+              <View style={styles.pills}>
+                <StatusPill variant={pill} testID={`class-${item.id}-${pill}`} />
               </View>
             ) : null}
-            <Text variant="tab" color="onPrimary">
-              {seatsLabel(item)}
+            <Text variant="rowTitle" numberOfLines={1}>
+              {item.title}
             </Text>
+            {item.track_name ? <IconText Icon={IconLoMapPin} label={item.track_name} numberOfLines={1} /> : null}
+            <View style={styles.metaRow}>
+              <IconText Icon={IconLoClock} label={t("schedule.day.minutes", { count: item.duration_minutes })} />
+              <IconText Icon={IconLoActivity} label={item.level_range} />
+              <IconText Icon={IconLoUsers} label={seatsLabel(item)} />
+            </View>
           </View>
-        ) : null}
+          <View style={styles.chevron}>
+            <IconLoChevronRight size={CHEVRON_SIZE} color={theme.colors.textSecondary} />
+          </View>
+        </StripeCard>
       </PressableScale>
     </View>
   );

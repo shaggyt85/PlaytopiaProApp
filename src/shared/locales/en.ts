@@ -221,6 +221,8 @@ const en: Translations = {
       },
       minutes: "%{count} min",
       next: "Next",
+      /** La marca de una clase que ya terminó, en la vista Día. */
+      done: "Completed",
       a11y: {
         /** Un día en la tira de la semana y en el mes: «martes 19, 3 clases». */
         summary: "%{day}, %{classes}",
