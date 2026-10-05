@@ -6,6 +6,7 @@ import {
   formatClubDate,
   formatClubTime,
   formatDayOfMonth,
+  formatDayMonthNumeric,
   formatDayMonthShort,
   formatMonthYear,
   formatInstant,
@@ -114,6 +115,15 @@ describe("formatDayMonthShort", () => {
 
     await changeLanguage("en");
     expect(formatDayMonthShort("2026-11-18")).toBe("Nov 18");
+  });
+});
+
+describe("formatDayMonthNumeric", () => {
+  it("día y mes en cifras, en el orden de cada idioma", async () => {
+    expect(formatDayMonthNumeric("2026-09-28")).toBe("28/9");
+
+    await changeLanguage("en");
+    expect(formatDayMonthNumeric("2026-09-28")).toBe("9/28");
   });
 });
 

@@ -23,4 +23,11 @@ describe("DiagonalGradient", () => {
       }),
     );
   });
+
+  it("a 160°, el del gradient-ink: más vertical que el de 135°", () => {
+    render(<DiagonalGradient colors={["#000", "#fff"]} angle={160} />);
+
+    const { start, end } = mockGradient.mock.calls.at(-1)[0];
+    expect(end.y - start.y).toBeGreaterThan(end.x - start.x);
+  });
 });

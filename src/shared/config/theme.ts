@@ -92,6 +92,8 @@ const typography = {
   avatarInitials: { fontFamily: FONTS.display, fontSize: 10 },
   /** Iniciales en el círculo mediano (el `CoachAvatar md` de la lista de alumnos: `text-xs`). */
   avatarInitialsMd: { fontFamily: FONTS.display, fontSize: 12 },
+  /** Iniciales en el círculo grande (la cabecera de la ficha de un alumno: `text-xl`). */
+  avatarInitialsLg: { fontFamily: FONTS.display, fontSize: 20 },
   /** El nombre en una fila de lista (un alumno: `text-sm font-semibold`). */
   rowLabel: { fontFamily: FONTS.semibold, fontSize: 14 },
   /** Lema bajo la marca (splash). */
@@ -242,6 +244,16 @@ export const darkTheme = {
     nextClass: [withAlpha(BRAND.magenta, 0.16), withAlpha(BRAND.surface, 0), withAlpha(BRAND.violet, 0.14)] as const,
     /** Una clase en la vista Día (`bg-gradient-to-br from-card to-surface`). */
     classCard: [BRAND.card, BRAND.surface] as const,
+    /**
+     * El `gradient-ink` del prototipo (160°): una tarjeta destacada sobre el fondo,
+     * como «Su grupo» en la ficha de un alumno.
+     */
+    ink: [BRAND.inkFrom, BRAND.inkTo] as const,
+    /**
+     * La pastilla del nivel en la ficha de un alumno: magenta al 28 % y violeta
+     * al 24 % (el `color-mix` del prototipo), sobre su borde magenta.
+     */
+    levelBadge: [withAlpha(BRAND.magenta, 0.28), withAlpha(BRAND.purple, 0.24)] as const,
     /** Tarjeta de cristal de los modales. */
     modal: [withAlpha(BRAND.night, 0.85), withAlpha(BRAND.inkTo, 0.9)] as const,
     /**

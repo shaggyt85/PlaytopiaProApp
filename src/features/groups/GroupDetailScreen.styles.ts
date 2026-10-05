@@ -1,7 +1,5 @@
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
-/** La ‹ (`h-10 w-10`): el `hitSlop` de `IconButton` completa el área táctil. */
-export const BACK_SIZE = 40;
 /** El punto del color del grupo (`h-3 w-3`). */
 const DOT = 12;
 

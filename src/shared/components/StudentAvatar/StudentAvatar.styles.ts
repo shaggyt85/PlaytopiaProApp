@@ -3,16 +3,18 @@ import { StyleSheet } from "react-native";
 import type { TextVariant } from "@/shared/config/theme";
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
-export type StudentAvatarSize = "sm" | "md";
+export type StudentAvatarSize = "sm" | "md" | "lg";
 
 /**
  * Cada tamaño del prototipo: los círculos solapados de la próxima clase
- * (`h-9 w-9`) y la lista del detalle (`CoachAvatar md`, `h-11 w-11`). Las
- * iniciales, con las variantes de siempre (`avatarInitials`, `avatarInitialsMd`).
+ * (`h-9 w-9`), la lista del detalle (`CoachAvatar md`, `h-11 w-11`) y la
+ * cabecera de la ficha de un alumno (`h-16 w-16`). Las iniciales, con su variante
+ * de cada tamaño.
  */
 export const AVATAR_SIZES = {
   sm: { side: 36, variant: "avatarInitials" },
   md: { side: 44, variant: "avatarInitialsMd" },
+  lg: { side: 64, variant: "avatarInitialsLg" },
 } as const satisfies Record<StudentAvatarSize, { side: number; variant: TextVariant }>;
 
 /** El icono de una plaza libre (`h-3.5 w-3.5`). */
@@ -37,6 +39,7 @@ const circle = (side: number) =>
 export const useStyles = makeStyles((theme) => ({
   sm: circle(AVATAR_SIZES.sm.side),
   md: circle(AVATAR_SIZES.md.side),
+  lg: circle(AVATAR_SIZES.lg.side),
   // `ring-2 ring-surface`; el de quien recupera, `ring-gold`.
   ring: { borderWidth: RING, borderColor: theme.colors.surface },
   recoveryRing: { borderColor: theme.accents.gold.color },

@@ -16,6 +16,7 @@ import { joinParts } from "@/shared/utils/joinParts";
 import { studentsLabel } from "@/shared/utils/seatsLabel";
 
 import type { TeacherGroup } from "../../utils/groupsFromAgenda";
+import { groupPlace } from "../../utils/groupPlace";
 import { groupWhen } from "../../utils/groupWhen";
 
 import { CHEVRON_SIZE, useStyles } from "./GroupCard.styles";
@@ -41,7 +42,7 @@ export const GroupCard = memo(function GroupCard({ group, colors, clubLabel, onP
   const { t } = useTranslation();
   const { next } = group;
   const when = groupWhen(group, t);
-  const place = joinParts([clubLabel, next.track_name]);
+  const place = groupPlace(next, clubLabel);
   const seats = studentsLabel(next, t);
 
   return (

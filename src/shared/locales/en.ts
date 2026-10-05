@@ -281,6 +281,36 @@ const en: Translations = {
       },
       notFound: "Group not found",
     },
+    student: {
+      notFound: "Student not found",
+      level: "Level",
+      group: "Their group",
+      openGroup: "Goes back to the group",
+      groupRange: "Group range",
+      attendance: "Attendance",
+      lastClasses: {
+        one: "Last class",
+        other: "Last %{count} classes",
+      },
+      classes: {
+        one: "class",
+        other: "classes",
+      },
+      attendanceA11y: {
+        one: "Attended %{present} of %{count} class",
+        other: "Attended %{present} of %{count} classes",
+      },
+      alert: {
+        consecutiveAbsences: {
+          one: "%{count} absence in a row",
+          other: "%{count} absences in a row",
+        },
+        absencesInLast: {
+          one: "%{count} absence in the last %{of} classes",
+          other: "%{count} absences in the last %{of} classes",
+        },
+      },
+    },
   },
   network: {
     title: "Club Network",

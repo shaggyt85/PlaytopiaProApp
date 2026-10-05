@@ -91,6 +91,10 @@ export const formatClassDate = (date: string): string =>
 export const formatDayMonthShort = (date: string): string =>
   formatWallDate(date, { day: "numeric", month: "short" });
 
+/** `class_date` como día y mes en cifras: "28/9" en español, "9/28" en inglés (el historial de un alumno). */
+export const formatDayMonthNumeric = (date: string): string =>
+  formatWallDate(date, { day: "numeric", month: "numeric" });
+
 /** `class_date` como mes y año, en la forma de cada idioma: "noviembre de 2026". */
 export const formatMonthYear = (date: string): string => formatWallDate(date, { month: "long", year: "numeric" });
 

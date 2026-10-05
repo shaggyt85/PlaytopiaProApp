@@ -1,0 +1,1 @@
+export { DetailBack } from "./DetailBack";

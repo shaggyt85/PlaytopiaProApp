@@ -281,6 +281,36 @@ const ca: Translations = {
       },
       notFound: "Grup no trobat",
     },
+    student: {
+      notFound: "Alumne no trobat",
+      level: "Nivell",
+      group: "El seu grup",
+      openGroup: "Torna al grup",
+      groupRange: "Rang del grup",
+      attendance: "Assistència",
+      lastClasses: {
+        one: "Última classe",
+        other: "Últimes %{count} classes",
+      },
+      classes: {
+        one: "classe",
+        other: "classes",
+      },
+      attendanceA11y: {
+        one: "Va venir a %{present} de %{count} classe",
+        other: "Va venir a %{present} de %{count} classes",
+      },
+      alert: {
+        consecutiveAbsences: {
+          one: "%{count} absència seguida",
+          other: "%{count} absències seguides",
+        },
+        absencesInLast: {
+          one: "%{count} absència en les últimes %{of} classes",
+          other: "%{count} absències en les últimes %{of} classes",
+        },
+      },
+    },
   },
   network: {
     title: "Xarxa de clubs",

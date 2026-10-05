@@ -281,6 +281,36 @@ const fr: Translations = {
       },
       notFound: "Groupe introuvable",
     },
+    student: {
+      notFound: "Élève introuvable",
+      level: "Niveau",
+      group: "Son groupe",
+      openGroup: "Revient au groupe",
+      groupRange: "Niveau du groupe",
+      attendance: "Présence",
+      lastClasses: {
+        one: "Dernier cours",
+        other: "%{count} derniers cours",
+      },
+      classes: {
+        one: "cours",
+        other: "cours",
+      },
+      attendanceA11y: {
+        one: "Présent à %{present} cours sur %{count}",
+        other: "Présent à %{present} cours sur %{count}",
+      },
+      alert: {
+        consecutiveAbsences: {
+          one: "%{count} absence de suite",
+          other: "%{count} absences de suite",
+        },
+        absencesInLast: {
+          one: "%{count} absence sur les %{of} derniers cours",
+          other: "%{count} absences sur les %{of} derniers cours",
+        },
+      },
+    },
   },
   network: {
     title: "Réseau de clubs",

@@ -12,7 +12,7 @@ import { initials } from "@/shared/utils/initials";
 import { AVATAR_SIZES, EMPTY_ICON_SIZE, useStyles, type StudentAvatarSize } from "./StudentAvatar.styles";
 
 type StudentAvatarProps = {
-  /** `sm` (36) en los círculos solapados; `md` (44) en la lista del detalle. */
+  /** `sm` (36) en los círculos solapados; `md` (44) en la lista del detalle; `lg` (64) en la ficha. */
   size: StudentAvatarSize;
   /** El aro que lo separa del de al lado (`ring-2`). */
   ring?: boolean;
@@ -40,7 +40,8 @@ type StudentAvatarProps = {
  * (`colorAt`), el «+N» de los que no caben o una plaza libre. Con `recovery`,
  * el aro dorado y una «R» (el detalle marca la recuperación con su etiqueta).
  * Único sitio que lo dibuja: los círculos de la próxima clase, de la última
- * clase del grupo y de «Mis grupos», y la lista de alumnos del detalle.
+ * clase del grupo y de «Mis grupos», la lista de alumnos del detalle y la
+ * cabecera de la ficha de un alumno.
  */
 export function StudentAvatar(props: StudentAvatarProps) {
   const styles = useStyles();

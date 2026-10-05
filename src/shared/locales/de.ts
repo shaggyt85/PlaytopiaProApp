@@ -281,6 +281,36 @@ const de: Translations = {
       },
       notFound: "Gruppe nicht gefunden",
     },
+    student: {
+      notFound: "Schüler nicht gefunden",
+      level: "Niveau",
+      group: "Seine Gruppe",
+      openGroup: "Zurück zur Gruppe",
+      groupRange: "Niveau der Gruppe",
+      attendance: "Anwesenheit",
+      lastClasses: {
+        one: "Letzte Stunde",
+        other: "Letzte %{count} Stunden",
+      },
+      classes: {
+        one: "Stunde",
+        other: "Stunden",
+      },
+      attendanceA11y: {
+        one: "Bei %{present} von %{count} Stunde da",
+        other: "Bei %{present} von %{count} Stunden da",
+      },
+      alert: {
+        consecutiveAbsences: {
+          one: "%{count} Fehlstunde in Folge",
+          other: "%{count} Fehlstunden in Folge",
+        },
+        absencesInLast: {
+          one: "%{count} Fehlstunde in den letzten %{of} Stunden",
+          other: "%{count} Fehlstunden in den letzten %{of} Stunden",
+        },
+      },
+    },
   },
   network: {
     title: "Club-Netzwerk",

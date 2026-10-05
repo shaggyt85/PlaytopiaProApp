@@ -283,6 +283,39 @@ const es = {
       },
       notFound: "Grupo no encontrado",
     },
+    /** La ficha de un alumno, desde el detalle de su grupo. */
+    student: {
+      notFound: "Alumno no encontrado",
+      level: "Nivel",
+      group: "Su grupo",
+      openGroup: "Vuelve al grupo",
+      groupRange: "Rango del grupo",
+      attendance: "Asistencia",
+      lastClasses: {
+        one: "Última clase",
+        other: "Últimas %{count} clases",
+      },
+      /** Tras «7/10»: cuántas clases cuentan. */
+      classes: {
+        one: "clase",
+        other: "clases",
+      },
+      attendanceA11y: {
+        one: "Vino a %{present} de %{count} clase",
+        other: "Vino a %{present} de %{count} clases",
+      },
+      /** El aviso de faltas que manda Core, por su `kind`. */
+      alert: {
+        consecutiveAbsences: {
+          one: "%{count} ausencia seguida",
+          other: "%{count} ausencias seguidas",
+        },
+        absencesInLast: {
+          one: "%{count} ausencia en las últimas %{of} clases",
+          other: "%{count} ausencias en las últimas %{of} clases",
+        },
+      },
+    },
   },
   network: {
     title: "Red de clubes",

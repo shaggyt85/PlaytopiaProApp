@@ -46,8 +46,10 @@ const BRAND = Object.freeze({
   purpleFrom: "#BF71FF",
   purpleTo: "#6D45F9",
 
-  // Fondo oscuro de la tarjeta de los modales.
+  // Fondo oscuro de la tarjeta de los modales, y el final del `gradient-ink`.
   inkTo: "#141327",
+  // El principio del `gradient-ink` del prototipo (oklch(0.24 0.05 305)): la tarjeta «Su grupo».
+  inkFrom: "#251932",
 
   // Texto y estados.
   white: "#FFFFFF",

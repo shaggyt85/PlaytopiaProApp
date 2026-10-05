@@ -1,10 +1,8 @@
-import { IconLoChevronLeft } from "@playtopia/icons/react-native";
 import { useLocalSearchParams } from "expo-router";
 import { ScrollView, View } from "react-native";
 
 import { DataState } from "@/shared/components/DataState";
 import { DetailFrame } from "@/shared/components/DetailFrame";
-import { IconButton } from "@/shared/components/IconButton";
 import { IconText } from "@/shared/components/IconText";
 import { NotFoundState } from "@/shared/components/NotFoundState";
 import { Text } from "@/shared/components/Text";
@@ -14,17 +12,17 @@ import { useOpenClass } from "@/shared/hooks/useOpenClass";
 import { useScheduleClubs } from "@/shared/hooks/useScheduleClubs";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
-import { joinParts } from "@/shared/utils/joinParts";
 import { splitRecoveries } from "@/shared/utils/splitRecoveries";
 
-import { GroupStudentsCard, NextSessionCard } from "./components";
+import { DetailBack, GroupStudentsCard, NextSessionCard } from "./components";
 import { useGroupDetail } from "./hooks/useGroupDetail";
 import { groupColors } from "./utils/groupColors";
 import { GroupDetailParamsSchema, type GroupDetailParams } from "./utils/groupRoute";
 import type { TeacherGroup } from "./utils/groupsFromAgenda";
+import { groupPlace } from "./utils/groupPlace";
 import { groupWhen } from "./utils/groupWhen";
 
-import { BACK_SIZE, useStyles } from "./GroupDetailScreen.styles";
+import { useStyles } from "./GroupDetailScreen.styles";
 
 /**
  * El detalle de un grupo, como el prototipo, encima de las pestañas como el de
@@ -73,7 +71,7 @@ function GroupHeader({ group, onBack }: { group: TeacherGroup; onBack: () => voi
 
   return (
     <View>
-      <IconButton Icon={IconLoChevronLeft} size={BACK_SIZE} accessibilityLabel={t("common.back")} onPress={onBack} />
+      <DetailBack onPress={onBack} />
       <View style={styles.titleRow}>
         <View style={[styles.dot, { backgroundColor: groupColors(next, theme.clubColors).color }]} />
         <Text variant="title" accessibilityRole="header" style={styles.title}>
@@ -84,7 +82,7 @@ function GroupHeader({ group, onBack }: { group: TeacherGroup; onBack: () => voi
         </View>
       </View>
       <Text variant="label" color="textSecondary" style={styles.place}>
-        {joinParts([clubOf(next).label, next.track_name])}
+        {groupPlace(next, clubOf(next).label)}
       </Text>
       <Text variant="label" color="textSecondary">
         {groupWhen(group, t)}

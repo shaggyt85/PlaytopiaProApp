@@ -2,19 +2,27 @@ import { LinearGradient, type LinearGradientProps } from "expo-linear-gradient";
 
 import { gradientPoints } from "@/shared/utils/gradientPoints";
 
-// Los 135° de los degradados de Lovable que usa la app (`linear-gradient(135deg, …)`):
-// de arriba a la izquierda a abajo a la derecha. Calculado una vez. Cuando una
-// pantalla necesite otro ángulo (el `gradient-ink` va a 160°), se le añade aquí.
-const POINTS = gradientPoints(135);
+// Los ángulos de los degradados de Lovable que usa la app (`linear-gradient(135deg, …)`),
+// calculados una vez: 135° (de arriba a la izquierda a abajo a la derecha), el
+// de casi todos, y 160°, el del `gradient-ink`. Cuando una pantalla necesite otro
+// ángulo, se le añade aquí.
+const POINTS = {
+  135: gradientPoints(135),
+  160: gradientPoints(160),
+} as const;
 
-type DiagonalGradientProps = Omit<LinearGradientProps, "start" | "end">;
+type DiagonalGradientProps = Omit<LinearGradientProps, "start" | "end"> & {
+  /** 135° por defecto. */
+  angle?: keyof typeof POINTS;
+};
 
 /**
- * Un degradado del prototipo a 135°. Único sitio que decide la dirección:
+ * Un degradado del prototipo en diagonal. Único sitio que decide la dirección:
  * lo usan el de marca (`BrandGradient`), la tarjeta de los modales, el color de
- * cada club en la agenda y la tarjeta de la próxima clase. Los colores los pone
- * quien lo usa, del tema.
+ * cada club en la agenda, la tarjeta de la próxima clase y, a 160°, «Su grupo»
+ * en la ficha de un alumno. Los colores los pone quien lo usa, del tema.
  */
-export function DiagonalGradient(props: DiagonalGradientProps) {
-  return <LinearGradient start={POINTS.start} end={POINTS.end} {...props} />;
+export function DiagonalGradient({ angle = 135, ...props }: DiagonalGradientProps) {
+  const { start, end } = POINTS[angle];
+  return <LinearGradient start={start} end={end} {...props} />;
 }
