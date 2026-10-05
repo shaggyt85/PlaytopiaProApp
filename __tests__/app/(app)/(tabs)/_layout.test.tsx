@@ -62,10 +62,17 @@ describe("menú inferior", () => {
     expect(screen.getByRole("tab", { name: "Agenda", selected: true })).toBeTruthy();
   });
 
-  it.each([
-    ["Grupos", "/groups"],
-    ["Perfil", "/profile"],
-  ])("la pestaña %s lleva a %s y muestra su «Próximamente»", (label, path) => {
+  it("la pestaña Grupos lleva a /groups y muestra «Mis grupos»", () => {
+    renderRouter(routes, { initialUrl: "/", wrapper });
+
+    fireEvent.press(screen.getByRole("tab", { name: "Grupos" }));
+
+    expect(screen).toHavePathname("/groups");
+    expect(screen.getByRole("tab", { name: "Grupos", selected: true })).toBeTruthy();
+    expect(screen.getByTestId("groups-screen")).toBeTruthy();
+  });
+
+  it.each([["Perfil", "/profile"]])("la pestaña %s lleva a %s y muestra su «Próximamente»", (label, path) => {
     renderRouter(routes, { initialUrl: "/", wrapper });
 
     fireEvent.press(screen.getByRole("tab", { name: label }));

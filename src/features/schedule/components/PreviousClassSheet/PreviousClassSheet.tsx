@@ -3,10 +3,10 @@ import { View } from "react-native";
 import { BottomSheet } from "@/shared/components/BottomSheet";
 import { Text } from "@/shared/components/Text";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { AttendanceStatus, ClassStudent, ScheduleClass } from "@/shared/schemas/schedule.schema";
 import { capitalize, formatWeekdayShortDayMonth } from "@/shared/utils/formatDate";
 import { joinParts } from "@/shared/utils/joinParts";
 
-import type { AttendanceStatus, ClassStudent, ScheduleClass } from "../../schemas/schedule.schema";
 import { attendanceSummary } from "../../utils/attendanceSummary";
 import type { AttendanceState } from "../../utils/attendanceWindow";
 import { StudentList } from "../StudentList";

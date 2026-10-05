@@ -3,8 +3,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Alert } from "react-native";
 
 import { ClassDetailScreen } from "@/features/schedule/ClassDetailScreen";
-import { scheduleService } from "@/features/schedule/services/scheduleService";
 import { myClubsService } from "@/shared/services/myClubsService";
+import { scheduleService } from "@/shared/services/scheduleService";
 import { serverNow } from "@/shared/utils/serverClock";
 
 import { schoolCard } from "../../helpers/networkFactories";
@@ -13,7 +13,7 @@ import { scheduleClass, scheduleResponse } from "../../helpers/scheduleFactories
 import { signInTeacher } from "../../helpers/scheduleMocks";
 
 jest.mock("expo-router", () => ({ useLocalSearchParams: jest.fn(), useRouter: jest.fn() }));
-jest.mock("@/features/schedule/services/scheduleService", () =>
+jest.mock("@/shared/services/scheduleService", () =>
   require("../../helpers/scheduleMocks").scheduleServiceModule(),
 );
 jest.mock("@/shared/services/myClubsService", () => require("../../helpers/scheduleMocks").myClubsServiceModule());

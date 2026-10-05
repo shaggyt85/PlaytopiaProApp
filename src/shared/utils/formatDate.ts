@@ -62,9 +62,11 @@ export function formatWallTime(wallMs: number): string {
   return parts.map((part) => (part.type === "hour" ? part.value.padStart(2, "0") : part.value)).join("");
 }
 
+/** `class_date` de Core ("2026-10-05") como día de la semana: "lunes" («Mis grupos»: los días de un grupo). */
+export const formatWeekdayName = (date: string): string => formatWallDate(date, { weekday: "long" });
+
 /** `class_date` de Core ("2026-10-05") como día de la semana y número: "lunes 5". */
-export const formatWeekdayDay = (date: string): string =>
-  `${formatWallDate(date, { weekday: "long" })} ${formatDayOfMonth(date)}`;
+export const formatWeekdayDay = (date: string): string => `${formatWeekdayName(date)} ${formatDayOfMonth(date)}`;
 
 /** `class_date` con el día de la semana en corto y el número: "jue 18" (la tarjeta de la próxima clase). */
 export const formatWeekdayShortDay = (date: string): string =>

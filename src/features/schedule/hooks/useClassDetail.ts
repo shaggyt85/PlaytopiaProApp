@@ -3,10 +3,11 @@ import { useCallback, useMemo } from "react";
 
 import type { ColorPair } from "@/shared/config/theme";
 import { useTheme } from "@/shared/hooks/useTheme";
+import type { ScheduleClass, ScheduleResponse } from "@/shared/schemas/schedule.schema";
+import { scheduleService, type ScheduleReader } from "@/shared/services/scheduleService";
 import { useSessionUserId } from "@/shared/store/sessionStore";
 
-import type { ScheduleClass, ScheduleResponse } from "../schemas/schedule.schema";
-import { monthScheduleQuery, scheduleService, type ScheduleReader } from "../services/scheduleService";
+import { monthScheduleQuery } from "../services/monthScheduleQuery";
 import { classColors } from "../utils/classColors";
 
 /** La clase y su color en su día: el mismo que lleva en Día, Semana y Mes. */

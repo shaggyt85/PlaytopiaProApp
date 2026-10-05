@@ -16,21 +16,21 @@ import Animated, {
 
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
 import { IconText } from "@/shared/components/IconText";
+import { PressableScale } from "@/shared/components/PressableScale";
+import { StudentAvatars } from "@/shared/components/StudentAvatars";
 import { Text } from "@/shared/components/Text";
+import { useOpenClass } from "@/shared/hooks/useOpenClass";
 import { useReduceMotion } from "@/shared/hooks/useReduceMotion";
+import type { ScheduleClub } from "@/shared/hooks/useScheduleClubs";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import { classTimeRange } from "@/shared/utils/classTimeRange";
 import { withAlpha } from "@/shared/utils/color";
 import { joinParts } from "@/shared/utils/joinParts";
+import { studentsLabel } from "@/shared/utils/seatsLabel";
 
-import { useOpenClass } from "../../hooks/useOpenClass";
-import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import { classA11yLabel } from "../../utils/classA11yLabel";
-import { classTimeRange } from "../../utils/classTimeRange";
 import { heroLabel, type HeroClass } from "../../utils/heroClass";
-import { studentsLabel } from "../../utils/seatsLabel";
-import { PressableScale } from "../PressableScale";
-import { StudentAvatars } from "../StudentAvatars";
 
 import { LIVE_PULSE } from "./NextClassCard.animation";
 import { CHEVRON_SIZE, NEXT_CLASS_STOPS, useStyles } from "./NextClassCard.styles";

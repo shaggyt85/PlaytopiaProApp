@@ -4,10 +4,10 @@ import type { ReactNode } from "react";
 import { Alert } from "react-native";
 
 import { useMarkAttendance } from "@/features/schedule/hooks/useMarkAttendance";
-import type { ScheduleClass, ScheduleResponse } from "@/features/schedule/schemas/schedule.schema";
-import { scheduleKeys } from "@/features/schedule/services/scheduleService";
 import { createQueryClient } from "@/shared/config/queryClient";
+import type { ScheduleClass, ScheduleResponse } from "@/shared/schemas/schedule.schema";
 import { HttpError } from "@/shared/services/HttpError";
+import { scheduleKeys } from "@/shared/services/scheduleService";
 
 import { attendanceMark, classStudent, scheduleClass, scheduleResponse } from "../../../helpers/scheduleFactories";
 

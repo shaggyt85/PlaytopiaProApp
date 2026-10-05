@@ -3,14 +3,14 @@ import { renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 
 import { useScheduleDays } from "@/features/schedule/hooks/useScheduleDays";
-import { scheduleService } from "@/features/schedule/services/scheduleService";
 import { createQueryClient } from "@/shared/config/queryClient";
 import { darkTheme } from "@/shared/config/theme";
+import { scheduleService } from "@/shared/services/scheduleService";
 
 import { scheduleClass, scheduleResponse } from "../../../helpers/scheduleFactories";
 import { signInTeacher } from "../../../helpers/scheduleMocks";
 
-jest.mock("@/features/schedule/services/scheduleService", () =>
+jest.mock("@/shared/services/scheduleService", () =>
   require("../../../helpers/scheduleMocks").scheduleServiceModule(),
 );
 

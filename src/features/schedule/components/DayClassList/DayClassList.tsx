@@ -2,14 +2,14 @@ import { memo, useMemo, type ComponentType } from "react";
 import { View } from "react-native";
 
 import type { ColorPair } from "@/shared/config/theme";
+import type { ScheduleClub } from "@/shared/hooks/useScheduleClubs";
 import { useTheme } from "@/shared/hooks/useTheme";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
+import { colorAt } from "@/shared/utils/colorAt";
 
-import type { ScheduleClub } from "../../hooks/useScheduleClubs";
-import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { classColors } from "../../utils/classColors";
 import { statusOnDay, type ClassStatus } from "../../utils/classTiming";
-import { colorAt } from "../../utils/colorAt";
 import type { DayTense } from "../../utils/scheduleDates";
 import { FreeDayCard } from "../FreeDayCard";
 

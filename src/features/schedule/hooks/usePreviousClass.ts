@@ -1,9 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
+import { previousClassQuery, scheduleService, type IScheduleService } from "@/shared/services/scheduleService";
 import { useSessionUserId } from "@/shared/store/sessionStore";
-
-import type { ScheduleClass } from "../schemas/schedule.schema";
-import { previousClassQuery, scheduleService, type IScheduleService } from "../services/scheduleService";
 
 /**
  * La clase anterior del grupo de una clase, para su detalle. `null` mientras

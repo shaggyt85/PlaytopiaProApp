@@ -2,11 +2,10 @@ import { useCallback } from "react";
 import { Alert } from "react-native";
 
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { AttendanceStatus, ClassStudent } from "@/shared/schemas/schedule.schema";
 import { selectionFeedback } from "@/shared/utils/haptics";
 
-import type { AttendanceStatus, ClassStudent } from "../schemas/schedule.schema";
 import type { AttendanceState } from "../utils/attendanceWindow";
-
 import { useMarkAttendance } from "./useMarkAttendance";
 
 /**

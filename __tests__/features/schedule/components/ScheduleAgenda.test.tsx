@@ -3,14 +3,14 @@ import { fireEvent, screen } from "@testing-library/react-native";
 import { AccessibilityInfo } from "react-native";
 
 import { ScheduleAgenda } from "@/features/schedule/components/ScheduleAgenda";
-import { scheduleService } from "@/features/schedule/services/scheduleService";
 import { darkTheme } from "@/shared/config/theme";
+import { scheduleService } from "@/shared/services/scheduleService";
 
 import { renderWithProviders } from "../../../helpers/renderWithProviders";
 import { signInTeacher } from "../../../helpers/scheduleMocks";
 import { scheduleClass, scheduleResponse } from "../../../helpers/scheduleFactories";
 
-jest.mock("@/features/schedule/services/scheduleService", () =>
+jest.mock("@/shared/services/scheduleService", () =>
   require("../../../helpers/scheduleMocks").scheduleServiceModule(),
 );
 

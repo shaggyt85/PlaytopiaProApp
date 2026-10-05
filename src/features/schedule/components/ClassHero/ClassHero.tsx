@@ -10,12 +10,12 @@ import { Text } from "@/shared/components/Text";
 import type { ColorPair } from "@/shared/config/theme";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
+import { classTimeRange } from "@/shared/utils/classTimeRange";
 import { formatClassDate } from "@/shared/utils/formatDate";
 import { joinParts } from "@/shared/utils/joinParts";
+import { studentsLabel } from "@/shared/utils/seatsLabel";
 
-import type { ScheduleClass } from "../../schemas/schedule.schema";
-import { classTimeRange } from "../../utils/classTimeRange";
-import { studentsLabel } from "../../utils/seatsLabel";
 import { ClubDot } from "../ClubDot";
 
 import { BACK_SIZE, CORNER_GLOW, useStyles } from "./ClassHero.styles";

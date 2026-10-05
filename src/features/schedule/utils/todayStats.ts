@@ -1,6 +1,5 @@
 import type { t as translate } from "@/shared/config/i18n";
-
-import type { ScheduleClass } from "../schemas/schedule.schema";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 
 import { classMinutes, MINUTES_PER_HOUR } from "./classTiming";
 

@@ -1,5 +1,5 @@
-import type { AttendanceStatus, ClassStudent, ScheduleClass, ScheduleResponse } from "../schemas/schedule.schema";
-import type { AttendanceTarget } from "../services/scheduleService";
+import type { AttendanceStatus, ClassStudent, ScheduleClass, ScheduleResponse } from "@/shared/schemas/schedule.schema";
+import type { AttendanceTarget } from "@/shared/services/scheduleService";
 
 /**
  * Una clase con la marca de un alumno ya puesta, para verla al instante

@@ -1,10 +1,10 @@
 import { View } from "react-native";
 
+import { EmptyNote } from "@/shared/components/EmptyNote";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { AttendanceStatus, ClassStudent } from "@/shared/schemas/schedule.schema";
 
-import type { AttendanceStatus, ClassStudent } from "../../schemas/schedule.schema";
 import type { AttendanceState } from "../../utils/attendanceWindow";
-import { EmptyNote } from "../EmptyNote";
 import { StudentRow } from "../StudentRow";
 
 import { useStyles } from "./StudentList.styles";

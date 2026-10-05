@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
 import { View } from "react-native";
 
+import { DataState } from "@/shared/components/DataState";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
+
 import { useScheduleDays } from "../../hooks/useScheduleDays";
-import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { dayTense, visibleWeekDays, weekDays } from "../../utils/scheduleDates";
 import type { ScheduleViewProps } from "../../utils/scheduleViews";
-import { ScheduleDataState } from "../ScheduleDataState";
 import { WeekDayCard } from "../WeekDayCard";
 import { WeekFilter } from "../WeekFilter";
 import { WeekStrip } from "../WeekStrip";
@@ -49,7 +50,7 @@ export function WeekSchedule({ nowWall, date, today, nextClassId, clubOf, onSele
       <WeekStrip days={days} today={today} active={active} dots={dots} byDate={byDate} onPick={onPick} />
       {filter ? <WeekFilter date={filter} onShowAll={onShowAll} /> : null}
       <View style={styles.cards}>
-        <ScheduleDataState hasData={hasData} error={error} onRetry={refetch}>
+        <DataState hasData={hasData} error={error} onRetry={refetch}>
           {visible.map((day) => {
             const tense = dayTense(day, today);
             return (
@@ -65,7 +66,7 @@ export function WeekSchedule({ nowWall, date, today, nextClassId, clubOf, onSele
               />
             );
           })}
-        </ScheduleDataState>
+        </DataState>
       </View>
     </View>
   );

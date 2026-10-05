@@ -3,15 +3,15 @@ import { useState } from "react";
 import { StyleSheet } from "react-native";
 
 import { MonthSchedule } from "@/features/schedule/components/MonthSchedule";
-import { scheduleService } from "@/features/schedule/services/scheduleService";
 import { wallNow } from "@/features/schedule/utils/scheduleDates";
 import { darkTheme } from "@/shared/config/theme";
+import { scheduleService } from "@/shared/services/scheduleService";
 
 import { renderWithProviders } from "../../../helpers/renderWithProviders";
 import { signInTeacher } from "../../../helpers/scheduleMocks";
 import { scheduleClass, scheduleResponse } from "../../../helpers/scheduleFactories";
 
-jest.mock("@/features/schedule/services/scheduleService", () =>
+jest.mock("@/shared/services/scheduleService", () =>
   require("../../../helpers/scheduleMocks").scheduleServiceModule(),
 );
 

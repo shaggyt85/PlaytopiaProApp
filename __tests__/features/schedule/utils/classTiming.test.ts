@@ -1,4 +1,4 @@
-import { classMinutes, classSpan, classStatus, statusOnDay } from "@/features/schedule/utils/classTiming";
+import { classMinutes, classStatus, statusOnDay } from "@/features/schedule/utils/classTiming";
 import { wallAsUtcMs } from "@/shared/utils/clubClock";
 
 import { scheduleClass } from "../../../helpers/scheduleFactories";
@@ -6,12 +6,6 @@ import { scheduleClass } from "../../../helpers/scheduleFactories";
 // Cantera Tarde: el 5 de octubre de 16:00 a 17:15.
 const cantera = scheduleClass({ id: 31, class_date: "2026-10-05", class_time: "16:00:00", duration_minutes: 75 });
 const at = (time: string) => wallAsUtcMs("2026-10-05", time);
-
-describe("classSpan", () => {
-  it("empieza a su hora y termina tras su duración", () => {
-    expect(classSpan(cantera)).toEqual({ start: at("16:00:00"), end: at("17:15:00") });
-  });
-});
 
 describe("classMinutes", () => {
   it("son los minutos desde las 00:00 de su día", () => {

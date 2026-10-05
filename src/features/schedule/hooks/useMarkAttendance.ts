@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Alert } from "react-native";
 
-import { getErrorMessage } from "@/shared/utils/getErrorMessage";
-
-import type { AttendanceStatus, ScheduleClass, ScheduleResponse } from "../schemas/schedule.schema";
+import type { AttendanceStatus, ScheduleClass, ScheduleResponse } from "@/shared/schemas/schedule.schema";
 import {
   scheduleKeys,
   scheduleService,
   type AttendanceTarget,
   type IScheduleService,
-} from "../services/scheduleService";
+} from "@/shared/services/scheduleService";
+import { getErrorMessage } from "@/shared/utils/getErrorMessage";
+
 import { withAttendance, withStudentMark } from "../utils/withAttendance";
 
 interface MarkAttendance {

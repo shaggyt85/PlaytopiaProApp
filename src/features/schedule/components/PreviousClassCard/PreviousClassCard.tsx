@@ -1,17 +1,17 @@
 import { IconLoChevronRight } from "@playtopia/icons/react-native";
 import { View } from "react-native";
 
+import { PressableScale } from "@/shared/components/PressableScale";
+import { StudentAvatars } from "@/shared/components/StudentAvatars";
 import { Text } from "@/shared/components/Text";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 import { withAlpha } from "@/shared/utils/color";
 import { capitalize, formatWeekdayShortDayMonth } from "@/shared/utils/formatDate";
 import { joinParts } from "@/shared/utils/joinParts";
 
-import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { attendanceSummary } from "../../utils/attendanceSummary";
-import { PressableScale } from "../PressableScale";
-import { StudentAvatars } from "../StudentAvatars";
 
 import { CHEVRON_SIZE, useStyles } from "./PreviousClassCard.styles";
 

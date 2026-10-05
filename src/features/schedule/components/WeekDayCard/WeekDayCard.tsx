@@ -1,11 +1,11 @@
 import { memo } from "react";
 import { View } from "react-native";
 
+import type { ScheduleClub } from "@/shared/hooks/useScheduleClubs";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 import { capitalize, formatWeekdayDay } from "@/shared/utils/formatDate";
 
-import type { ScheduleClub } from "../../hooks/useScheduleClubs";
-import type { ScheduleClass } from "../../schemas/schedule.schema";
 import type { DayTense } from "../../utils/scheduleDates";
 import { DayClassList } from "../DayClassList";
 import { DayHeading } from "../DayHeading";

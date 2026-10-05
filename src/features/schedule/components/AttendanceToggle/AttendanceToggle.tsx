@@ -3,8 +3,7 @@ import { Pressable } from "react-native";
 import { BrandGradient } from "@/shared/components/BrandGradient";
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
 import { useTheme } from "@/shared/hooks/useTheme";
-
-import type { AttendanceStatus } from "../../schemas/schedule.schema";
+import type { AttendanceStatus } from "@/shared/schemas/schedule.schema";
 
 import { TOGGLE_ICON, TOGGLE_ICON_SIZE, TOGGLE_SIZE, useStyles } from "./AttendanceToggle.styles";
 

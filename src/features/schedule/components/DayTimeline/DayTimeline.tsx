@@ -1,15 +1,15 @@
 import { useMemo } from "react";
 import { View } from "react-native";
 
+import type { ScheduleClub } from "@/shared/hooks/useScheduleClubs";
 import { useTheme } from "@/shared/hooks/useTheme";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
+import { colorAt } from "@/shared/utils/colorAt";
 
-import type { ScheduleClub } from "../../hooks/useScheduleClubs";
 import { useScheduleHours } from "../../hooks/useScheduleHours";
-import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { classMinutes, classStatus } from "../../utils/classTiming";
 import { classColors } from "../../utils/classColors";
-import { colorAt } from "../../utils/colorAt";
 import { layoutDay, type Stacked } from "../../utils/dayLayout";
 import { visibleHours } from "../../utils/hourSpan";
 import { localMinutes, wallNow } from "../../utils/scheduleDates";

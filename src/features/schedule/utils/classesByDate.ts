@@ -1,4 +1,4 @@
-import type { ScheduleClass } from "../schemas/schedule.schema";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 
 /**
  * Las clases agrupadas por `class_date`, en el orden en que llegan (Core las

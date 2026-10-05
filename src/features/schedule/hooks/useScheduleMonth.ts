@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
+import type { ScheduleClass, ScheduleResponse } from "@/shared/schemas/schedule.schema";
+import { scheduleService, type ScheduleReader } from "@/shared/services/scheduleService";
 import { useSessionUserId } from "@/shared/store/sessionStore";
 
-import type { ScheduleClass, ScheduleResponse } from "../schemas/schedule.schema";
-import { monthScheduleQuery, scheduleService, type ScheduleReader } from "../services/scheduleService";
+import { monthScheduleQuery } from "../services/monthScheduleQuery";
 import { classesByDate } from "../utils/classesByDate";
 
 /** Un día sin clases: siempre la misma lista, para que `memo` no vea un cambio. */

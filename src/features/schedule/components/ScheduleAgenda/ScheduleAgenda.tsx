@@ -1,9 +1,9 @@
 import { useState, type ComponentType } from "react";
 import { View } from "react-native";
 
+import type { ClubOf } from "@/shared/hooks/useScheduleClubs";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
-import type { ClubOf } from "../../hooks/useScheduleClubs";
 import { useSelectedDay } from "../../hooks/useSelectedDay";
 import { wallNow } from "../../utils/scheduleDates";
 import { SCHEDULE_VIEWS, type ScheduleView, type ScheduleViewProps } from "../../utils/scheduleViews";

@@ -1,4 +1,4 @@
-import type { ClassStudent } from "../schemas/schedule.schema";
+import type { ClassStudent } from "@/shared/schemas/schedule.schema";
 
 /** Cómo va la asistencia de una clase. */
 export interface AttendanceSummary {

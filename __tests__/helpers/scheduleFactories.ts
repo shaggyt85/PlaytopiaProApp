@@ -4,7 +4,7 @@ import type {
   NextClass,
   ScheduleClass,
   ScheduleResponse,
-} from "@/features/schedule/schemas/schedule.schema";
+} from "@/shared/schemas/schedule.schema";
 
 /** Un alumno de la clase 31 de ejemplo, sin marca, tal como lo manda Core. */
 export const classStudent = (overrides: Partial<ClassStudent> = {}): ClassStudent => ({

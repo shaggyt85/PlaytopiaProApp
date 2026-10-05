@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useRef } from "react";
 import { View } from "react-native";
 
+import { DataState } from "@/shared/components/DataState";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 import { formatClassDate } from "@/shared/utils/formatDate";
 
 import { useScheduleDays } from "../../hooks/useScheduleDays";
 import { useScrollIntoView } from "../../hooks/useScheduleScroll";
-import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { dayTense, monthDaysWithClasses } from "../../utils/scheduleDates";
 import type { ScheduleViewProps } from "../../utils/scheduleViews";
 import { DayClassList } from "../DayClassList";
@@ -13,7 +14,6 @@ import { DayHeading } from "../DayHeading";
 import { FreeDayCard } from "../FreeDayCard";
 import { MonthClassRow } from "../MonthClassRow";
 import { MonthGrid } from "../MonthGrid";
-import { ScheduleDataState } from "../ScheduleDataState";
 
 import { useStyles } from "./MonthSchedule.styles";
 
@@ -49,7 +49,7 @@ export function MonthSchedule({ nowWall, date, today, nextClassId, clubOf, onSel
   return (
     <View style={styles.container}>
       <MonthGrid date={date} today={today} dots={dots} byDate={byDate} onPick={onPick} />
-      <ScheduleDataState hasData={hasData} error={error} onRetry={refetch}>
+      <DataState hasData={hasData} error={error} onRetry={refetch}>
         {days.length === 0 ? (
           <FreeDayCard />
         ) : (
@@ -89,7 +89,7 @@ export function MonthSchedule({ nowWall, date, today, nextClassId, clubOf, onSel
             })}
           </View>
         )}
-      </ScheduleDataState>
+      </DataState>
     </View>
   );
 }

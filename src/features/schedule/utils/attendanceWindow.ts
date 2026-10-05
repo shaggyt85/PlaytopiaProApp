@@ -1,4 +1,4 @@
-import type { ScheduleClass } from "../schemas/schedule.schema";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 
 /**
  * Cómo está la asistencia de una clase: aún no se puede pasar lista (`notYet`),

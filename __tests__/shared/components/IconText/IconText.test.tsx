@@ -27,6 +27,12 @@ describe("IconText", () => {
     expect(StyleSheet.flatten(screen.getByText("Pista 1").props.style).fontSize).toBe(darkTheme.typography.caption.fontSize);
   });
 
+  it("el icono puede ir en un color que no es del tema (el de un grupo)", () => {
+    render(<IconText Icon={Icon} label="Pista 1" size="card" iconColor="primary" iconTint="#00B0FF" />);
+
+    expect(iconProps()?.color).toBe("#00B0FF");
+  });
+
   it("sobre un color, todo en blanco y en seminegrita, como la cabecera del detalle", () => {
     render(<IconText Icon={Icon} label="Pista 1" size="hero" color="onPrimary" />);
 

@@ -9,21 +9,21 @@ import { memo } from "react";
 import { View } from "react-native";
 
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
-import type { ColorPair } from "@/shared/config/theme";
 import { IconText } from "@/shared/components/IconText";
+import { PressableScale } from "@/shared/components/PressableScale";
 import { StripeCard } from "@/shared/components/StripeCard";
 import { Text } from "@/shared/components/Text";
+import type { ColorPair } from "@/shared/config/theme";
+import { useOpenClass } from "@/shared/hooks/useOpenClass";
+import type { ScheduleClub } from "@/shared/hooks/useScheduleClubs";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
+import { studentsLabel } from "@/shared/utils/seatsLabel";
 
-import { useOpenClass } from "../../hooks/useOpenClass";
-import type { ScheduleClub } from "../../hooks/useScheduleClubs";
-import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { classA11yLabel } from "../../utils/classA11yLabel";
 import type { ClassStatus } from "../../utils/classTiming";
-import { studentsLabel } from "../../utils/seatsLabel";
 import type { BlockGeometry } from "../../utils/timelineGeometry";
-import { PressableScale } from "../PressableScale";
 import { STATUS_PILL_OF, StatusPill } from "../StatusPill";
 
 import { CHEVRON_SIZE, useStyles } from "./ScheduleClassBlock.styles";

@@ -1,10 +1,8 @@
-import { wallAsUtcMs } from "@/shared/utils/clubClock";
-
-import type { ScheduleClass } from "../schemas/schedule.schema";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
+import { classSpan } from "@/shared/utils/classTimeRange";
 
 import type { DayTense } from "./scheduleDates";
 
-const MINUTE_MS = 60_000;
 export const MINUTES_PER_HOUR = 60;
 export const MINUTES_PER_DAY = 24 * MINUTES_PER_HOUR;
 
@@ -12,12 +10,6 @@ export const MINUTES_PER_DAY = 24 * MINUTES_PER_HOUR;
 export type ClassStatus = "past" | "live" | "next" | "upcoming";
 
 type Timed = Pick<ScheduleClass, "class_date" | "class_time" | "duration_minutes">;
-
-/** Inicio y fin como hora de pared comparable (`wallAsUtcMs`). */
-export function classSpan(c: Timed): { start: number; end: number } {
-  const start = wallAsUtcMs(c.class_date, c.class_time);
-  return { start, end: start + c.duration_minutes * MINUTE_MS };
-}
 
 /**
  * Minutos desde las 00:00 de su día en que empieza y termina, para colocarla en

@@ -257,7 +257,7 @@ Tabla viva: se actualiza cada vez que una pantalla empieza a usar un endpoint o 
 | POST | `/api/MobileTeacher/UploadMobileTeacherAvatar` (multipart, campo `avatarFile`) | profile | real |
 | GET | `/api/MobileTeacher/clubs` | network («Mis clubes») | real |
 | GET | `/api/MobileTeacher/schools?page=&size=` | network («Cerca de mí») | real |
-| GET | `/api/MobileTeacher/classes?from=&to=` | schedule (la agenda: clases del rango y la próxima) | real |
+| GET | `/api/MobileTeacher/classes?from=&to=` | schedule (la agenda: clases del rango y la próxima), groups («Mis grupos»: desde hoy, 42 días) | real |
 | PUT | `/api/MobileTeacher/classes/{db_id}/{class_id}/attendance/{student_id}` (`{ status }`) | schedule (la asistencia en el detalle de una clase) | real |
 | GET | `/api/MobileTeacher/classes/{db_id}/{class_id}/previous` | schedule (la última clase del grupo en el detalle de una clase) | real |
 
@@ -595,7 +595,7 @@ useQuery({
 - **Qué días salen (`visibleWeekDays`):** de hoy al domingo en la semana actual (lo que ya pasó se ve en Día) y los 7 días en las demás. Tocar un día también lo elige en la agenda (`select`) y deja solo ese, con «Filtrado por **martes 19**» (`splitAround`, sin concatenar) y «Ver toda la semana»; tocar hoy o el ya tocado lo quita. El día tocado solo vale en su semana: al cambiar de semana deja de valer solo, sin un efecto.
 - **Tarjeta de cada día (`WeekDayCard`):** «Lunes 18», «HOY · 23:10» (el `Chip` sin punto) y «N clases»; hoy con el aro de marca, el tocado con uno más suave. Sus clases las pinta `DayClassList` con la fila de la Semana (sin clases, `FreeDayCard`). Con `memo`: la hora solo le llega a la de hoy, así el reloj no repinta la semana.
 - **Fila de clase (`WeekClassRow`, como el prototipo final):** la hora en su `TimeSquare` y la barra de ocupación (`occupancy`) con **su color en el día** (`classColors`, el mismo que su tarjeta en Día); el título en hasta dos líneas; debajo, su marca (`StatusPill` con `STATUS_PILL_OF`, la misma equivalencia que en Día: «EN VIVO», «PRÓXIMA» o «COMPLETADA»); «◷ 60 min · pista» (`IconText` y `durationMeta`) y «2/4 alumnos». Sin el club, como en Día (el lector de pantalla sí lo dice). Resaltada si está en curso o es la próxima; apagada al 50 % si ya terminó. El estado sale de `statusOnDay`: un día pasado, pasada; uno por venir, por venir; hoy, según la hora y, si es la que dice Core, «PRÓXIMA» (solo le llega a la tarjeta de hoy, como la hora). `DayClassList` calcula el color y el estado y se los da a la fila de Semana o de Mes.
-- **Estados:** los de `ScheduleDataState`, el mismo componente de Día y de Mes.
+- **Estados:** los de `DataState` (`shared/components/`), el mismo de Día, Mes, el detalle de una clase y «Mis grupos».
 
 **Vista Mes** (`components/MonthSchedule`):
 - **Cuadrícula (`MonthGrid`):** L … D arriba y una fila por semana (`monthCells` en grupos de 7 con `chunkWeeks`), con los huecos de antes del día 1 y de después del último vacíos. Cada celda es un `DayButton` de 36 de alto (`h-9`, como el prototipo: la cuadrícula ocupa menos) y `flex: 1` de ancho, separadas 4 con su número y sus puntos. Tocar un día lo elige en la agenda y lleva la lista de debajo hasta él.
@@ -612,6 +612,17 @@ useQuery({
 - **Estados:** «Cargando…» y el error con «Reintentar» solo si no hay nada que pintar (si falla una recarga, se siguen viendo las clases); un día sin clases, «Día libre · sin compromisos» (`FreeDayCard`).
 - **Provisional:** la campana se ve pero no hace nada hasta las notificaciones (sin punto rojo), y el botón de cerrar sesión sigue hasta que exista Perfil.
 - **Pestaña sin contenido:** su ruta reexporta `ComingSoonScreen`, que muestra el nombre de la pestaña (de `TABS`, según la ruta) y «Próximamente».
+
+### Mis grupos (pestaña Grupos)
+
+- **Qué es:** la pantalla de la pestaña Grupos (`features/groups`, `GroupsScreen`), como el prototipo final: «Mis grupos», cuántos tiene activos («3 grupos activos», en plural según el idioma) y una tarjeta por grupo.
+- **Sin endpoint propio:** los grupos salen de la misma agenda (`GET /MobileTeacher/classes`), desde hoy y los 42 días siguientes (el máximo de Core): el mismo service, contrato y caché (`LIVE`), y marcar una asistencia la invalida igual (`useTeacherGroups`, «hoy» y «ahora» del servidor con `useForegroundNow`).
+- **Qué es un grupo** (`groupsFromAgenda`): en Core toda clase es de un grupo (`groups_classes`), también las de una sola sesión, así que salen todos los que tienen alguna clase suya por delante. Las plazas de recuperación no, que son el contenedor de un alumno que ya sale en su clase de origen (`CLASS_TYPE.RECOVERY`). Los ids de grupo son de cada escuela; una clase antigua sin grupo cuenta como el suyo propio. Un grupo sin ninguna clase en esas 6 semanas (parado) no sale.
+- **Cada grupo, por su próxima clase:** sus alumnos, plazas, hora, sede y pista son los de esa clase (en Core se apunta uno por clase, no por grupo). Ordenados por ella, la más cercana antes.
+- **Tarjeta** (`GroupCard`, sobre `StripeCard`): la franja, los iconos, el nivel y las plazas en el color de su posición en la lista (`colorAt` sobre `clubColors`, como los clubes); el título; el nivel; cuándo (`groupWhen`: sus días de la semana y la hora, «Lunes, miércoles · 18:00–19:30», o su fecha si solo le queda una clase, «Jue 23 oct · …»); la sede y la pista; sus alumnos con las plazas libres como huecos (`StudentAvatars` con `capacity`) y «2/4 alumnos» (`studentsLabel`). Se lee de una vez y se encoge al tocarla (`PressableScale`).
+- **Al tocarla** abre su próxima clase (`useOpenClass`), hasta que exista el detalle del grupo.
+- **Estados** dentro de la lista, como «Mis clubes», para que la cabecera no desaparezca: `DataState` (cargando, error con «Reintentar») y, sin grupos, la tarjeta vacía de siempre (`EmptyNote`) con «Aún no tienes grupos ni clases».
+- **Lo compartido con la agenda**, en `shared/<tipo>/` (se movió al usarse por segunda vez): el contrato de la clase (`schemas/schedule.schema`), su petición (`services/scheduleService` y sus claves; `monthScheduleQuery` sigue en la agenda), `StudentAvatar(s)`, `EmptyNote`, `DataState`, `PressableScale`, `useOpenClass` y `classRoute`, `useScheduleClubs`, `useForegroundNow`, `colorAt`, `initials`, `studentsLabel` y `classTimeRange` (con `classSpan`).
 
 ### Red de clubes
 

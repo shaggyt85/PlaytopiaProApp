@@ -1,8 +1,6 @@
 import type { ColorPair } from "@/shared/config/theme";
-
-import type { ScheduleClass } from "../schemas/schedule.schema";
-
-import { colorAt } from "./colorAt";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
+import { colorAt } from "@/shared/utils/colorAt";
 
 /**
  * El color de cada clase de un día: por su orden (hora y, si coinciden, id) y en

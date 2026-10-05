@@ -1,7 +1,6 @@
 import type { t as translate } from "@/shared/config/i18n";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 import { joinParts } from "@/shared/utils/joinParts";
-
-import type { ScheduleClass } from "../schemas/schedule.schema";
 
 /**
  * «75 min» y lo que cada fila añade detrás: «75 min · Wave Padel Club · Pista 2»

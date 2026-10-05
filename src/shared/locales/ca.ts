@@ -252,6 +252,16 @@ const ca: Translations = {
       },
     },
   },
+  /** «Mis grupos»: los grupos del profesor (la pestaña «Grupos»). */
+  groups: {
+    title: "Els meus grups",
+    active: {
+      one: "%{count} grup actiu",
+      other: "%{count} grups actius",
+    },
+    /** Sin ningún grupo con clases por delante. */
+    empty: "Encara no tens grups ni classes",
+  },
   network: {
     title: "Xarxa de clubs",
     tabs: {

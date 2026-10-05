@@ -4,17 +4,17 @@ import { View } from "react-native";
 
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
 import { IconText } from "@/shared/components/IconText";
+import { PressableScale } from "@/shared/components/PressableScale";
 import { Text } from "@/shared/components/Text";
+import { useOpenClass } from "@/shared/hooks/useOpenClass";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import { studentsLabel } from "@/shared/utils/seatsLabel";
 
-import { useOpenClass } from "../../hooks/useOpenClass";
 import { classA11yLabel } from "../../utils/classA11yLabel";
 import { durationMeta } from "../../utils/classMeta";
 import { occupancy } from "../../utils/occupancy";
-import { studentsLabel } from "../../utils/seatsLabel";
 import type { DayClassRowProps } from "../DayClassList";
-import { PressableScale } from "../PressableScale";
 import { STATUS_PILL_OF, StatusPill } from "../StatusPill";
 import { TimeSquare } from "../TimeSquare";
 

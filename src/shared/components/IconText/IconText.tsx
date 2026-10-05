@@ -15,6 +15,8 @@ interface IconTextProps {
   size?: IconTextSize;
   /** Del icono; por defecto, el del texto. */
   iconColor?: ThemeColor;
+  /** Del icono, un color que no es del tema (el de un grupo): manda sobre `iconColor`. */
+  iconTint?: string;
   color?: ThemeColor;
   numberOfLines?: number;
   style?: StyleProp<ViewStyle>;
@@ -32,6 +34,7 @@ export function IconText({
   label,
   size = "meta",
   iconColor,
+  iconTint,
   color = "textSecondary",
   numberOfLines,
   style,
@@ -43,7 +46,7 @@ export function IconText({
 
   return (
     <View style={[styles.row, styles[size], style]}>
-      <Icon size={icon} color={theme.colors[iconColor ?? color]} />
+      <Icon size={icon} color={iconTint ?? theme.colors[iconColor ?? color]} />
       <Text variant={variant} color={color} numberOfLines={numberOfLines} style={[styles.text, textStyle]}>
         {label}
       </Text>

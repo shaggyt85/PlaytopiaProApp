@@ -9,17 +9,16 @@ import { TabScreen } from "@/shared/components/TabScreen";
 import { TabScrollView } from "@/shared/components/TabScrollView";
 import type { IconComponent } from "@/shared/config/icons";
 import type { Theme } from "@/shared/config/theme";
+import { useForegroundNow } from "@/shared/hooks/useForegroundNow";
+import { useScheduleClubs } from "@/shared/hooks/useScheduleClubs";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TranslationKey } from "@/shared/locales";
 import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 import { session } from "@/shared/services/session";
 
-import { useStyles } from "./ScheduleScreen.styles";
 import { NextClassCard, ScheduleAgenda, StatTile, TeacherAvatar } from "./components";
-import { useForegroundNow } from "./hooks/useForegroundNow";
 import { useNextClass } from "./hooks/useNextClass";
-import { useScheduleClubs } from "./hooks/useScheduleClubs";
 import { useScheduleMonth } from "./hooks/useScheduleMonth";
 import { ScheduleScrollProvider, useScheduleScrollRefs } from "./hooks/useScheduleScroll";
 import { useTeacherProfile } from "./hooks/useTeacherProfile";
@@ -27,6 +26,8 @@ import { useTodayHeader } from "./hooks/useTodayHeader";
 import { heroClass } from "./utils/heroClass";
 import { localToday, wallNow } from "./utils/scheduleDates";
 import { courtTimeLabel, todayStats, type TodayStats } from "./utils/todayStats";
+
+import { useStyles } from "./ScheduleScreen.styles";
 
 // La cabecera solo usa el nombre y la foto: no se vuelve a pintar si cambia otro campo del perfil.
 const selectHeader = ({ name, avatar }: TeacherProfile) => ({ name, avatar });

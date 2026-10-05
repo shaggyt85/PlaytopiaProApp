@@ -4,9 +4,9 @@ import { View } from "react-native";
 import { Text } from "@/shared/components/Text";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 import { formatWeekdayDay, formatWeekdayInitials } from "@/shared/utils/formatDate";
 
-import type { ScheduleClass } from "../../schemas/schedule.schema";
 import { dayMark } from "../../utils/dayMark";
 import { chunkWeeks, monthCells } from "../../utils/scheduleDates";
 import { DayButton } from "../DayButton";

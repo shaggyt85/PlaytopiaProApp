@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 
+import type { ScheduleResponse } from "@/shared/schemas/schedule.schema";
+import { scheduleService, type ScheduleReader } from "@/shared/services/scheduleService";
 import { useSessionUserId } from "@/shared/store/sessionStore";
 
-import type { ScheduleResponse } from "../schemas/schedule.schema";
-import { monthScheduleQuery, scheduleService, type ScheduleReader } from "../services/scheduleService";
+import { monthScheduleQuery } from "../services/monthScheduleQuery";
 
 // Fuera del hook: TanStack solo lo vuelve a leer si cambia la respuesta.
 const selectNextClass = (data: ScheduleResponse) => data.next_class;

@@ -254,6 +254,16 @@ const es = {
       },
     },
   },
+  /** «Mis grupos»: los grupos del profesor (la pestaña «Grupos»). */
+  groups: {
+    title: "Mis grupos",
+    active: {
+      one: "%{count} grupo activo",
+      other: "%{count} grupos activos",
+    },
+    /** Sin ningún grupo con clases por delante. */
+    empty: "Aún no tienes grupos ni clases",
+  },
   network: {
     title: "Red de clubes",
     tabs: {

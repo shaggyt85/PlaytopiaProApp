@@ -5,27 +5,28 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { BlurTarget, BlurTargetProvider } from "@/shared/components/BlurTarget";
 import { BrandBackground } from "@/shared/components/BrandBackground";
+import { DataState } from "@/shared/components/DataState";
 import { EmptyState } from "@/shared/components/EmptyState";
+import { useForegroundNow } from "@/shared/hooks/useForegroundNow";
+import { useScheduleClubs } from "@/shared/hooks/useScheduleClubs";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import { ClassDetailParamsSchema, type ClassDetailParams } from "@/shared/utils/classRoute";
 
-import { useStyles } from "./ClassDetailScreen.styles";
 import {
   AttendanceCount,
   ClassHero,
   DetailSection,
   PreviousClassCard,
   PreviousClassSheet,
-  ScheduleDataState,
   StudentList,
 } from "./components";
 import { useClassDetail } from "./hooks/useClassDetail";
-import { useForegroundNow } from "./hooks/useForegroundNow";
 import { useMarkStudent } from "./hooks/useMarkStudent";
 import { usePreviousClass } from "./hooks/usePreviousClass";
-import { useScheduleClubs } from "./hooks/useScheduleClubs";
 import { attendanceSummary } from "./utils/attendanceSummary";
 import { attendanceState } from "./utils/attendanceWindow";
-import { ClassDetailParamsSchema, type ClassDetailParams } from "./utils/classRoute";
+
+import { useStyles } from "./ClassDetailScreen.styles";
 
 /** Volver: a donde se vino o, si no hay (se abrió desde un aviso), a la Agenda. */
 function useGoBack() {
@@ -76,7 +77,7 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
         />
       }
     >
-      <ScheduleDataState hasData={hasData} error={error} onRetry={refetch}>
+      <DataState hasData={hasData} error={error} onRetry={refetch}>
         {item && colors ? (
           <ScrollView contentContainerStyle={styles.content}>
             <ClassHero item={item} clubLabel={clubOf(item).label} colors={colors} onBack={goBack} />
@@ -96,7 +97,7 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
         ) : (
           <ClassNotFoundState onBack={goBack} />
         )}
-      </ScheduleDataState>
+      </DataState>
     </DetailFrame>
   );
 }

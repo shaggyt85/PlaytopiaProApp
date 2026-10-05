@@ -4,17 +4,17 @@ import { View } from "react-native";
 
 import { Chip } from "@/shared/components/Chip";
 import { IconText } from "@/shared/components/IconText";
+import { StudentAvatar } from "@/shared/components/StudentAvatar";
 import { Text } from "@/shared/components/Text";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TranslationKey } from "@/shared/locales";
+import type { AttendanceStatus, ClassStudent } from "@/shared/schemas/schedule.schema";
 import { joinParts } from "@/shared/utils/joinParts";
 
-import type { AttendanceStatus, ClassStudent } from "../../schemas/schedule.schema";
 import type { AttendanceState } from "../../utils/attendanceWindow";
 import { formatLevel } from "../../utils/formatLevel";
 import { studentName } from "../../utils/studentName";
 import { AttendanceToggle } from "../AttendanceToggle";
-import { StudentAvatar } from "../StudentAvatar";
 
 import { useStyles } from "./StudentRow.styles";
 

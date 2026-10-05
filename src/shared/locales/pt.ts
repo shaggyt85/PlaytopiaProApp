@@ -252,6 +252,16 @@ const pt: Translations = {
       },
     },
   },
+  /** «Mis grupos»: los grupos del profesor (la pestaña «Grupos»). */
+  groups: {
+    title: "Meus grupos",
+    active: {
+      one: "%{count} grupo ativo",
+      other: "%{count} grupos ativos",
+    },
+    /** Sin ningún grupo con clases por delante. */
+    empty: "Você ainda não tem grupos nem aulas",
+  },
   network: {
     title: "Rede de clubes",
     tabs: {

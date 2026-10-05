@@ -1,8 +1,7 @@
 import type { t as translate } from "@/shared/config/i18n";
+import type { ClubOf } from "@/shared/hooks/useScheduleClubs";
 import type { TranslationKey } from "@/shared/locales";
 import { formatMonthYear, formatWeekdayDay } from "@/shared/utils/formatDate";
-
-import type { ClubOf } from "../hooks/useScheduleClubs";
 
 import { dayLabel } from "./dayLabel";
 import { addDays, addMonths, DAYS_PER_WEEK } from "./scheduleDates";

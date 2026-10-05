@@ -1,8 +1,7 @@
 import type { t as translate } from "@/shared/config/i18n";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 import { formatClubTime } from "@/shared/utils/formatDate";
 import { joinParts } from "@/shared/utils/joinParts";
-
-import type { ScheduleClass } from "../schemas/schedule.schema";
 
 import type { ClassStatus } from "./classTiming";
 

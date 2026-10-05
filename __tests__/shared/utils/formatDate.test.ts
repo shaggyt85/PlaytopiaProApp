@@ -14,6 +14,7 @@ import {
   formatWeekdayDate,
   formatWeekdayDay,
   formatWeekdayInitials,
+  formatWeekdayName,
 } from "@/shared/utils/formatDate";
 
 describe("formatDate", () => {
@@ -158,5 +159,14 @@ describe("formatClassDate", () => {
 
     await changeLanguage("en");
     expect(formatClassDate("2026-11-16")).toBe("Monday, November 16");
+  });
+});
+
+describe("formatWeekdayName", () => {
+  it("el día de la semana, en el idioma activo y sin moverse de día", async () => {
+    expect(formatWeekdayName("2026-10-05")).toBe("lunes");
+
+    await changeLanguage("en");
+    expect(formatWeekdayName("2026-10-05")).toBe("Monday");
   });
 });

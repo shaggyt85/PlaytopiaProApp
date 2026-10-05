@@ -1,6 +1,5 @@
 import type { ColorPair } from "@/shared/config/theme";
-
-import type { ScheduleClass } from "../schemas/schedule.schema";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 
 import { classColors } from "./classColors";
 

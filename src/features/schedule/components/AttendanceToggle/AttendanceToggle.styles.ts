@@ -3,8 +3,7 @@ import { StyleSheet } from "react-native";
 
 import type { IconComponent } from "@/shared/config/icons";
 import { makeStyles } from "@/shared/hooks/makeStyles";
-
-import type { AttendanceStatus } from "../../schemas/schedule.schema";
+import type { AttendanceStatus } from "@/shared/schemas/schedule.schema";
 
 /** El cuadrado (`h-9 w-9`) y su icono (`h-4 w-4`). */
 export const TOGGLE_SIZE = 36;

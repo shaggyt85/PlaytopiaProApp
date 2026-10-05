@@ -1,9 +1,9 @@
 import type { t as translate } from "@/shared/config/i18n";
+import type { NextClass, ScheduleClass } from "@/shared/schemas/schedule.schema";
+import { classSpan } from "@/shared/utils/classTimeRange";
 import { formatClubTime, formatWeekdayShortDay } from "@/shared/utils/formatDate";
 
-import type { NextClass, ScheduleClass } from "../schemas/schedule.schema";
-
-import { classSpan, classStatus } from "./classTiming";
+import { classStatus } from "./classTiming";
 import { addDays } from "./scheduleDates";
 
 const MINUTE_MS = 60_000;

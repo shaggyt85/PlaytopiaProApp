@@ -1,8 +1,8 @@
 import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
 
 import { ScheduleScreen } from "@/features/schedule/ScheduleScreen";
-import { scheduleService } from "@/features/schedule/services/scheduleService";
 import { myClubsService } from "@/shared/services/myClubsService";
+import { scheduleService } from "@/shared/services/scheduleService";
 import { session } from "@/shared/services/session";
 import { teacherProfileService } from "@/shared/services/teacherProfileService";
 import { serverNow } from "@/shared/utils/serverClock";
@@ -28,7 +28,7 @@ jest.mock("expo-image", () => ({
     return null;
   },
 }));
-jest.mock("@/features/schedule/services/scheduleService", () =>
+jest.mock("@/shared/services/scheduleService", () =>
   require("../../helpers/scheduleMocks").scheduleServiceModule(),
 );
 jest.mock("@/shared/services/myClubsService", () => require("../../helpers/scheduleMocks").myClubsServiceModule());

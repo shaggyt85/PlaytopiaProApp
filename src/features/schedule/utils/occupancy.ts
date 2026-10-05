@@ -1,4 +1,4 @@
-import type { ScheduleClass } from "../schemas/schedule.schema";
+import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 
 /**
  * Lo llena que está una clase, de 0 a 1, para su barra (`3/4` → 0,75). Una
