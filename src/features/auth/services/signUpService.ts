@@ -1,3 +1,4 @@
+import { ENDPOINTS } from "@/shared/config/endpoints";
 import type { IHttpClient } from "@/shared/services/BaseHttpClient";
 import { httpClient } from "@/shared/services/httpClient";
 
@@ -6,8 +7,6 @@ import {
   type SignUpRequest,
   type SignUpResponse,
 } from "../schemas/signUp.schema";
-
-import { AUTH_ENDPOINTS } from "./authEndpoints";
 import { createRegistrationToken } from "./registrationToken";
 
 export interface ISignUpService {
@@ -22,7 +21,7 @@ export class SignUpService implements ISignUpService {
 
   /** Firma el token justo antes de enviar: caduca a los `TOKEN_SKEW_SECONDS`. */
   async signUp(request: SignUpRequest): Promise<SignUpResponse> {
-    const data = await this.http.post<unknown>(AUTH_ENDPOINTS.SIGN_UP, {
+    const data = await this.http.post<unknown>(ENDPOINTS.TEACHERS.SIGN_UP, {
       ...request,
       registration_token: this.signToken(),
     });

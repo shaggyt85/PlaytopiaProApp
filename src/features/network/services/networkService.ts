@@ -1,12 +1,11 @@
 import { infiniteQueryOptions, skipToken } from "@tanstack/react-query";
 
 import { CachePolicy } from "@/shared/config/cachePolicies";
+import { ENDPOINTS } from "@/shared/config/endpoints";
 import type { IHttpClient } from "@/shared/services/BaseHttpClient";
 import { httpClient } from "@/shared/services/httpClient";
 
 import { JoinableSchoolsResponseSchema, type JoinableSchoolsResponse } from "../schemas/network.schema";
-
-import { NETWORK_ENDPOINTS } from "./networkEndpoints";
 
 /**
  * Sedes por página de «Cerca de mí». Se manda siempre, para no depender del
@@ -36,7 +35,7 @@ export class NetworkService implements INetworkService {
   constructor(private readonly http: IHttpClient) {}
 
   async getJoinableSchools(page: number): Promise<JoinableSchoolsResponse> {
-    const data = await this.http.get<unknown>(NETWORK_ENDPOINTS.JOINABLE_SCHOOLS, {
+    const data = await this.http.get<unknown>(ENDPOINTS.MOBILE_TEACHER.JOINABLE_SCHOOLS, {
       params: { page, size: JOINABLE_SCHOOLS_PAGE_SIZE },
     });
     return JoinableSchoolsResponseSchema.parse(data);

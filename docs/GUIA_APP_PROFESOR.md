@@ -131,10 +131,10 @@ scripts/
 
 ### Reglas
 
-1. **Una feature por pantalla o por flujo.** Dentro van sus `components/`, `hooks/`, `services/` (con sus endpoints y query keys), `schemas/`, `store/` si hace falta, sus `<X>Screen.tsx` e `index.ts`. Un flujo agrupa las pantallas que comparten datos y piezas (como `auth`) para no repartir su lógica entre features.
+1. **Una feature por pantalla o por flujo.** Dentro van sus `components/`, `hooks/`, `services/` (con sus query keys; las rutas de Core van en `shared/config/endpoints.ts`), `schemas/`, `store/` si hace falta, sus `<X>Screen.tsx` e `index.ts`. Un flujo agrupa las pantallas que comparten datos y piezas (como `auth`) para no repartir su lógica entre features.
 2. **No hay carpetas por tipo en la raíz de `src/`** (`src/services/`, `src/hooks/`…). O algo es de una feature, o está en `shared/<tipo>/`.
 3. **`shared/` solo recibe lo que usan dos o más features**, y siempre en la carpeta de su tipo: un componente compartido va a `shared/components/`, un hook a `shared/hooks/`, un service a `shared/services/`, un schema a `shared/schemas/`. No hay archivos sueltos en `shared/`. Mientras algo lo use una sola feature, se queda en ella.
-4. **`shared/` nunca importa de `features/`**, y una feature no importa de otra feature.
+4. **`shared/` nunca importa de `features/`**, y una feature no importa de otra feature. Lo comprueba ESLint (`no-restricted-imports` en `eslint.config.js`, una regla por carpeta de `src/features`): `pnpm lint` falla si alguien lo rompe.
 5. **`app/` solo contiene rutas**: importa `<X>Screen` desde el `index.ts` de la feature. Sin lógica.
 6. **Nombres**: carpetas de feature en kebab-case, componentes y pantallas en PascalCase, hooks `useX`, siempre `index.ts`.
 7. **Un solo alias**: `@/` apunta a `src/`.
@@ -193,7 +193,7 @@ class ProfileService implements IProfileService {
   constructor(private readonly http: IHttpClient) {}
 
   async getProfile(id: number): Promise<TeacherProfile> {
-    const data = await this.http.get<unknown>(PROFILE_ENDPOINTS.byId(id));
+    const data = await this.http.get<unknown>(ENDPOINTS.TEACHERS.PROFILE(id));
     return validateTeacherProfile(data);
   }
 }
@@ -204,7 +204,7 @@ export const profileService: IProfileService = new ProfileService(httpClient);
 ### DRY
 
 - Cada dato tiene una sola definición:
-  - **endpoint**: en el `services/` de su feature;
+  - **ruta de Core**: en `shared/config/endpoints.ts`, agrupada como en Scalar. Es configuración del backend, como la URL base: no se mueve cuando un servicio pasa de una feature a `shared/` o al revés;
   - **tipo**: sale de `z.infer` del schema, sin interfaces duplicadas a mano;
   - **query keys**: en una factory por feature;
   - **textos**: en `shared/locales/`;
@@ -232,7 +232,7 @@ Scalar se activa con `ENABLE_API_DOCS=true` en el entorno de Core. **Nunca se ac
 
 1. Buscar el endpoint en Scalar.
 2. Copiar el contrato (request, response y códigos de error) al `schemas/` de la feature con Zod, en snake_case como lo devuelve Core.
-3. Anotar el endpoint en el `services/` de la feature.
+3. Anotar la ruta en `shared/config/endpoints.ts`, en su grupo de Scalar, y usarla desde el `services/` de la feature.
 4. Añadirlo a la tabla de **Endpoints en uso**.
 
 Grupos de Scalar útiles para el profesor: *Auth*, *Users → Teachers*, *School & Classes*, *Catalog → Calendar*, *Push*.

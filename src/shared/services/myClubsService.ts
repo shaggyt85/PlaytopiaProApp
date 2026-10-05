@@ -1,16 +1,11 @@
 import { queryOptions, skipToken } from "@tanstack/react-query";
 
 import { CachePolicy } from "@/shared/config/cachePolicies";
+import { ENDPOINTS } from "@/shared/config/endpoints";
 import { MyClubsResponseSchema, type MyClubsResponse } from "@/shared/schemas/schoolCard.schema";
 
 import type { IHttpClient } from "./BaseHttpClient";
 import { httpClient } from "./httpClient";
-
-/** Ruta de Core de «Mis clubes» (Scalar, grupo Mobile Teacher). */
-export const MY_CLUBS_ENDPOINTS = {
-  /** Las sedes donde trabaja el profesor del token. */
-  CLUBS: "/MobileTeacher/clubs",
-} as const;
 
 /**
  * Claves de caché de «Mis clubes»: siempre con el id del profesor, para que
@@ -23,7 +18,7 @@ export const myClubsKeys = {
 
 /**
  * Las sedes donde trabaja el profesor. Las usan «Red de clubes» (la lista) y la
- * agenda (nombre y color de cada club): un solo sitio para el endpoint.
+ * agenda (nombre y color de cada club): un solo servicio para el endpoint.
  */
 export interface IMyClubsService {
   getMyClubs(): Promise<MyClubsResponse>;
@@ -33,7 +28,7 @@ export class MyClubsService implements IMyClubsService {
   constructor(private readonly http: IHttpClient) {}
 
   async getMyClubs(): Promise<MyClubsResponse> {
-    return MyClubsResponseSchema.parse(await this.http.get<unknown>(MY_CLUBS_ENDPOINTS.CLUBS));
+    return MyClubsResponseSchema.parse(await this.http.get<unknown>(ENDPOINTS.MOBILE_TEACHER.CLUBS));
   }
 }
 

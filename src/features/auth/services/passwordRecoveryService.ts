@@ -1,3 +1,4 @@
+import { ENDPOINTS } from "@/shared/config/endpoints";
 import type { IHttpClient } from "@/shared/services/BaseHttpClient";
 import { httpClient } from "@/shared/services/httpClient";
 
@@ -5,8 +6,6 @@ import {
   PasswordRecoveryResponseSchema,
   type PasswordRecoveryResponse,
 } from "../schemas/auth.schema";
-
-import { AUTH_ENDPOINTS } from "./authEndpoints";
 
 export interface IPasswordRecoveryService {
   requestRecovery(email: string): Promise<PasswordRecoveryResponse>;
@@ -21,7 +20,7 @@ export class PasswordRecoveryService implements IPasswordRecoveryService {
    * de alumno o admin, Core recupera esa otra cuenta (admin > alumno > profesor).
    */
   async requestRecovery(email: string): Promise<PasswordRecoveryResponse> {
-    const data = await this.http.post<unknown>(AUTH_ENDPOINTS.PASSWORD_RECOVERY, {
+    const data = await this.http.post<unknown>(ENDPOINTS.AUTH.PASSWORD_RECOVERY, {
       email,
       scope: "teacher",
     });

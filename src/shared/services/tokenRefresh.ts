@@ -1,10 +1,8 @@
 import axios from "axios";
 import { z } from "zod";
 
+import { ENDPOINTS } from "@/shared/config/endpoints";
 import { env } from "@/shared/config/env";
-
-/** Ruta del refresh en Core (Scalar: POST /api/auth/refresh). */
-const AUTH_REFRESH_PATH = "/auth/refresh";
 
 // 15 s: margen para los arranques en frío del backend.
 export const HTTP_TIMEOUT_MS = 15_000;
@@ -25,7 +23,7 @@ export type SessionTokens = z.infer<typeof SessionTokensSchema>;
  */
 export async function requestTokenRefresh(refreshToken: string): Promise<SessionTokens> {
   const { data } = await axios.post(
-    `${env.EXPO_PUBLIC_API_BASE_URL}${AUTH_REFRESH_PATH}`,
+    `${env.EXPO_PUBLIC_API_BASE_URL}${ENDPOINTS.AUTH.REFRESH}`,
     { refresh_token: refreshToken },
     { timeout: HTTP_TIMEOUT_MS },
   );

@@ -42,9 +42,10 @@ docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 1. Una feature = una pantalla o un flujo completo (p. ej. `auth`), con todo lo suyo dentro.
 2. Nada de carpetas por tipo en la raíz de `src/`.
 3. `shared/` solo para lo que usan 2+ features, siempre en la carpeta de su tipo; nunca archivos sueltos. Mientras lo use una sola feature, se queda en ella.
-4. `shared/` no importa de `features/`; una feature no importa de otra.
+4. `shared/` no importa de `features/`; una feature no importa de otra (lo comprueba ESLint).
 5. Alias único `@/` → `src/`. Carpetas kebab-case, componentes PascalCase, hooks `useX`, siempre `index.ts`.
 6. Tests en la ruta espejo: `src/features/x/hooks/useY.ts` → `__tests__/features/x/hooks/useY.test.ts`. Si mueves un archivo, mueve su test.
+7. Las rutas de Core, todas en `shared/config/endpoints.ts`, agrupadas como en Scalar; los servicios las importan de ahí.
 
 ## Principios
 
@@ -83,7 +84,7 @@ docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 ## Receta: pantalla nueva
 
 1. Rama `feature/<pantalla>` desde `dev`.
-2. Scalar → `schemas/` → `services/` (endpoints + query keys) → `hooks/` (con `CachePolicy`) → `components/` → `<X>Screen.tsx` → `index.ts`.
+2. Scalar → ruta en `shared/config/endpoints.ts` → `schemas/` → `services/` (query keys) → `hooks/` (con `CachePolicy`) → `components/` → `<X>Screen.tsx` → `index.ts`.
 3. Ruta en `src/app/`.
 4. Textos en los 6 idiomas.
 5. Tests en la ruta espejo.

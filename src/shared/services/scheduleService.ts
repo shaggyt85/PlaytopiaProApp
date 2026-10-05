@@ -1,6 +1,7 @@
 import { queryOptions, skipToken } from "@tanstack/react-query";
 
 import { CachePolicy } from "@/shared/config/cachePolicies";
+import { ENDPOINTS } from "@/shared/config/endpoints";
 import {
   AttendanceMarkSchema,
   PreviousClassResponseSchema,
@@ -12,8 +13,6 @@ import {
 } from "@/shared/schemas/schedule.schema";
 import type { IHttpClient } from "@/shared/services/BaseHttpClient";
 import { httpClient } from "@/shared/services/httpClient";
-
-import { SCHEDULE_ENDPOINTS } from "./scheduleEndpoints";
 
 /**
  * Claves de caché de la agenda: con el id del profesor, para que otro en el
@@ -57,7 +56,7 @@ export class ScheduleService implements IScheduleService {
   constructor(private readonly http: IHttpClient) {}
 
   async getClasses(from: string, to: string): Promise<ScheduleResponse> {
-    const data = await this.http.get<unknown>(SCHEDULE_ENDPOINTS.CLASSES, {
+    const data = await this.http.get<unknown>(ENDPOINTS.MOBILE_TEACHER.CLASSES, {
       params: { from, to },
     });
     return ScheduleResponseSchema.parse(data);
@@ -67,12 +66,12 @@ export class ScheduleService implements IScheduleService {
     { dbId, classId, studentId }: AttendanceTarget,
     status: AttendanceStatus,
   ): Promise<AttendanceMark> {
-    const data = await this.http.put<unknown>(SCHEDULE_ENDPOINTS.ATTENDANCE(dbId, classId, studentId), { status });
+    const data = await this.http.put<unknown>(ENDPOINTS.MOBILE_TEACHER.ATTENDANCE(dbId, classId, studentId), { status });
     return AttendanceMarkSchema.parse(data);
   }
 
   async getPreviousClass(dbId: number, classId: number): Promise<ScheduleClass | null> {
-    const data = await this.http.get<unknown>(SCHEDULE_ENDPOINTS.PREVIOUS(dbId, classId));
+    const data = await this.http.get<unknown>(ENDPOINTS.MOBILE_TEACHER.PREVIOUS(dbId, classId));
     return PreviousClassResponseSchema.parse(data).previous_class;
   }
 }
