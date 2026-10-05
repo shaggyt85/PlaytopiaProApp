@@ -4,7 +4,7 @@ import { ScrollView } from "react-native";
 
 import { DataState } from "@/shared/components/DataState";
 import { DetailFrame } from "@/shared/components/DetailFrame";
-import { EmptyState } from "@/shared/components/EmptyState";
+import { NotFoundState } from "@/shared/components/NotFoundState";
 import { useForegroundNow } from "@/shared/hooks/useForegroundNow";
 import { useGoBack } from "@/shared/hooks/useGoBack";
 import { useScheduleClubs } from "@/shared/hooks/useScheduleClubs";
@@ -89,7 +89,7 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
             ) : null}
           </ScrollView>
         ) : (
-          <ClassNotFoundState onBack={goBack} />
+          <NotFoundState title={t("schedule.detail.notFound")} />
         )}
       </DataState>
     </DetailFrame>
@@ -97,15 +97,11 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
 }
 
 function ClassNotFound() {
+  const { t } = useTranslation();
   return (
     <DetailFrame testID="class-detail-screen">
-      <ClassNotFoundState onBack={useGoBack()} />
+      <NotFoundState title={t("schedule.detail.notFound")} />
     </DetailFrame>
   );
-}
-
-function ClassNotFoundState({ onBack }: { onBack: () => void }) {
-  const { t } = useTranslation();
-  return <EmptyState title={t("schedule.detail.notFound")} actionLabel={t("common.back")} onAction={onBack} />;
 }
 

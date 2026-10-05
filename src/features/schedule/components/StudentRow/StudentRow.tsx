@@ -1,4 +1,3 @@
-import { IconLoActivity } from "@playtopia/icons/react-native";
 import { memo } from "react";
 import { View } from "react-native";
 
@@ -6,6 +5,7 @@ import { Chip } from "@/shared/components/Chip";
 import { IconText } from "@/shared/components/IconText";
 import { StudentAvatar } from "@/shared/components/StudentAvatar";
 import { Text } from "@/shared/components/Text";
+import { LEVEL_ICON } from "@/shared/config/icons";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TranslationKey } from "@/shared/locales";
 import type { AttendanceStatus, ClassStudent } from "@/shared/schemas/schedule.schema";
@@ -46,15 +46,12 @@ interface StudentRowProps {
  * iniciales, su nombre y, debajo, «RECUPERACIÓN» si recupera y su nivel; a la
  * derecha, ✓ y ✗ para marcar si vino. El lector de pantalla dice el alumno de
  * una vez y cada botón aparte.
- *
- * Provisional: el nivel lleva `IconLoActivity` hasta que `@playtopia/icons`
- * publique `IconLoBarChart2` (1.10.0).
  */
 export const StudentRow = memo(function StudentRow({ student, index, attendance, onMark }: StudentRowProps) {
   const styles = useStyles();
   const { t } = useTranslation();
   const name = studentName(student);
-  const level = student.level === null ? null : formatLevel(student.level);
+  const level = formatLevel(student.level);
   const recovery = student.is_recovery ? t("schedule.detail.recovery") : null;
 
   return (
@@ -72,7 +69,7 @@ export const StudentRow = memo(function StudentRow({ student, index, attendance,
           {recovery || level ? (
             <View style={styles.meta}>
               {recovery ? <Chip label={recovery} dot={false} tone="gold" /> : null}
-              {level ? <IconText Icon={IconLoActivity} label={level} iconColor="primary" /> : null}
+              {level ? <IconText Icon={LEVEL_ICON} label={level} iconColor="primary" /> : null}
             </View>
           ) : null}
         </View>

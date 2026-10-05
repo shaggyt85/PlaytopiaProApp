@@ -1,4 +1,4 @@
-import { IconLoActivity, IconLoChevronRight, IconLoClock, IconLoMapPin } from "@playtopia/icons/react-native";
+import { IconLoChevronRight, IconLoClock, IconLoMapPin } from "@playtopia/icons/react-native";
 import { memo } from "react";
 import { View } from "react-native";
 
@@ -7,6 +7,7 @@ import { PressableScale } from "@/shared/components/PressableScale";
 import { StripeCard } from "@/shared/components/StripeCard";
 import { StudentAvatars } from "@/shared/components/StudentAvatars";
 import { Text } from "@/shared/components/Text";
+import { LEVEL_ICON } from "@/shared/config/icons";
 import type { ColorPair } from "@/shared/config/theme";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
@@ -17,7 +18,7 @@ import { studentsLabel } from "@/shared/utils/seatsLabel";
 import type { TeacherGroup } from "../../utils/groupsFromAgenda";
 import { groupWhen } from "../../utils/groupWhen";
 
-import { CHEVRON_SIZE, LEVEL_ICON_SIZE, useStyles } from "./GroupCard.styles";
+import { CHEVRON_SIZE, useStyles } from "./GroupCard.styles";
 
 interface GroupCardProps {
   group: TeacherGroup;
@@ -33,9 +34,6 @@ interface GroupCardProps {
  * y el nivel, cuándo es («Lunes, miércoles · 18:00–19:30»), la sede y la pista
  * y, abajo, los círculos de sus alumnos con las plazas libres y «2/4 alumnos».
  * Todo de su próxima clase. Se lee de una vez.
- *
- * Provisional: el nivel lleva `IconLoActivity` hasta que `@playtopia/icons`
- * publique `IconLoBarChart2` (1.10.0).
  */
 export const GroupCard = memo(function GroupCard({ group, colors, clubLabel, onPress }: GroupCardProps) {
   const styles = useStyles();
@@ -59,12 +57,7 @@ export const GroupCard = memo(function GroupCard({ group, colors, clubLabel, onP
               <Text variant="subtitle" numberOfLines={1}>
                 {next.title}
               </Text>
-              <View style={styles.level}>
-                <IconLoActivity size={LEVEL_ICON_SIZE} color={colors.color} />
-                <Text variant="rowTitle" style={{ color: colors.color }}>
-                  {next.level_range}
-                </Text>
-              </View>
+              <IconText Icon={LEVEL_ICON} label={next.level_range} size="rowTitle" tint={colors.color} style={styles.level} />
             </View>
             <View style={styles.chevron}>
               <IconLoChevronRight size={CHEVRON_SIZE} color={theme.colors.textSecondary} />

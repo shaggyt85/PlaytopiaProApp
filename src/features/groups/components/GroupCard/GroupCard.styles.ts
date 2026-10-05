@@ -1,8 +1,7 @@
 import { STRIPE_WIDTH } from "@/shared/components/StripeCard";
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
-/** El nivel (`h-4 w-4`) y la flecha (`h-5 w-5`). */
-export const LEVEL_ICON_SIZE = 16;
+/** La flecha (`h-5 w-5`). */
 export const CHEVRON_SIZE = 20;
 /** El cuadrado de la flecha (`h-9 w-9`). */
 const CHEVRON_BOX = 36;
@@ -16,13 +15,8 @@ export const useStyles = makeStyles((theme) => ({
   // `flex items-start justify-between gap-3`.
   top: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", gap: theme.spacing.sm + theme.spacing.xs },
   titles: { flex: 1 },
-  // `mt-1.5 flex items-center gap-1.5`.
-  level: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.spacing.xs + theme.spacing.xs / 2,
-    marginTop: theme.spacing.xs + theme.spacing.xs / 2,
-  },
+  // `mt-1.5`; la fila y su hueco, de `IconText`.
+  level: { marginTop: theme.spacing.xs + theme.spacing.xs / 2 },
   // `grid h-9 w-9 place-items-center rounded-xl border bg-surface-2`.
   chevron: {
     width: CHEVRON_BOX,

@@ -1,18 +1,18 @@
-import { IconLoActivity } from "@playtopia/icons/react-native";
 import { View } from "react-native";
 
 import { EmptyNote } from "@/shared/components/EmptyNote";
+import { IconText } from "@/shared/components/IconText";
 import { SectionLabel } from "@/shared/components/SectionLabel";
 import { StudentAvatar } from "@/shared/components/StudentAvatar";
 import { Text } from "@/shared/components/Text";
-import { useTheme } from "@/shared/hooks/useTheme";
+import { LEVEL_ICON } from "@/shared/config/icons";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { ClassStudent } from "@/shared/schemas/schedule.schema";
 import { formatLevel } from "@/shared/utils/formatLevel";
 import { joinParts } from "@/shared/utils/joinParts";
 import { studentName } from "@/shared/utils/studentName";
 
-import { LEVEL_ICON_SIZE, useStyles } from "./GroupStudentsCard.styles";
+import { useStyles } from "./GroupStudentsCard.styles";
 
 interface GroupStudentsCardProps {
   /** Los del grupo, ya sin los que vienen a recuperar (ordenados por el contrato). */
@@ -24,13 +24,9 @@ interface GroupStudentsCardProps {
  * el nivel de cada uno («2,0»), en filas separadas por una línea fina, como
  * lista para el lector de pantalla. Las filas no se tocan hasta que exista la
  * ficha del alumno. Sin alumnos, «Aún no hay alumnos apuntados».
- *
- * Provisional: el nivel lleva `IconLoActivity` hasta que `@playtopia/icons`
- * publique `IconLoBarChart2` (1.10.0).
  */
 export function GroupStudentsCard({ students }: GroupStudentsCardProps) {
   const styles = useStyles();
-  const theme = useTheme();
   const { t } = useTranslation();
 
   return (
@@ -46,7 +42,7 @@ export function GroupStudentsCard({ students }: GroupStudentsCardProps) {
         <View accessibilityRole="list">
           {students.map((student, index) => {
             const name = studentName(student);
-            const level = student.level === null ? null : formatLevel(student.level);
+            const level = formatLevel(student.level);
             return (
               <View
                 key={student.student_id}
@@ -59,12 +55,7 @@ export function GroupStudentsCard({ students }: GroupStudentsCardProps) {
                 <Text variant="rowLabel" numberOfLines={1} style={styles.name}>
                   {name}
                 </Text>
-                {level ? (
-                  <View style={styles.level}>
-                    <IconLoActivity size={LEVEL_ICON_SIZE} color={theme.colors.primary} />
-                    <Text variant="strong">{level}</Text>
-                  </View>
-                ) : null}
+                {level ? <IconText Icon={LEVEL_ICON} label={level} size="row" color="text" iconColor="primary" /> : null}
               </View>
             );
           })}

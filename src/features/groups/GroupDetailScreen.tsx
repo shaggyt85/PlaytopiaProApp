@@ -1,18 +1,21 @@
-import { IconLoActivity, IconLoChevronLeft } from "@playtopia/icons/react-native";
+import { IconLoChevronLeft } from "@playtopia/icons/react-native";
 import { useLocalSearchParams } from "expo-router";
 import { ScrollView, View } from "react-native";
 
 import { DataState } from "@/shared/components/DataState";
 import { DetailFrame } from "@/shared/components/DetailFrame";
-import { EmptyState } from "@/shared/components/EmptyState";
 import { IconButton } from "@/shared/components/IconButton";
+import { IconText } from "@/shared/components/IconText";
+import { NotFoundState } from "@/shared/components/NotFoundState";
 import { Text } from "@/shared/components/Text";
+import { LEVEL_ICON } from "@/shared/config/icons";
 import { useGoBack } from "@/shared/hooks/useGoBack";
 import { useOpenClass } from "@/shared/hooks/useOpenClass";
 import { useScheduleClubs } from "@/shared/hooks/useScheduleClubs";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { joinParts } from "@/shared/utils/joinParts";
+import { splitRecoveries } from "@/shared/utils/splitRecoveries";
 
 import { GroupStudentsCard, NextSessionCard } from "./components";
 import { useGroupDetail } from "./hooks/useGroupDetail";
@@ -21,7 +24,7 @@ import { GroupDetailParamsSchema, type GroupDetailParams } from "./utils/groupRo
 import type { TeacherGroup } from "./utils/groupsFromAgenda";
 import { groupWhen } from "./utils/groupWhen";
 
-import { BACK_SIZE, LEVEL_ICON_SIZE, useStyles } from "./GroupDetailScreen.styles";
+import { BACK_SIZE, useStyles } from "./GroupDetailScreen.styles";
 
 /**
  * El detalle de un grupo, como el prototipo, encima de las pestañas como el de
@@ -31,9 +34,6 @@ import { BACK_SIZE, LEVEL_ICON_SIZE, useStyles } from "./GroupDetailScreen.style
  *
  * Los parámetros de la ruta llegan como texto: si no son válidos, «Grupo no
  * encontrado», igual que si el grupo ya no tiene clases por delante.
- *
- * Provisional: el nivel lleva `IconLoActivity` hasta que `@playtopia/icons`
- * publique `IconLoBarChart2` (1.10.0).
  */
 export function GroupDetailScreen() {
   const params = GroupDetailParamsSchema.safeParse(useLocalSearchParams());
@@ -43,6 +43,7 @@ export function GroupDetailScreen() {
 function GroupDetail({ dbId, groupId }: GroupDetailParams) {
   const styles = useStyles();
   const goBack = useGoBack();
+  const { t } = useTranslation();
   const { group, hasData, error, refetch } = useGroupDetail(dbId, groupId);
 
   return (
@@ -54,7 +55,7 @@ function GroupDetail({ dbId, groupId }: GroupDetailParams) {
             <GroupBody group={group} />
           </ScrollView>
         ) : (
-          <GroupNotFoundState onBack={goBack} />
+          <NotFoundState title={t("groups.detail.notFound")} />
         )}
       </DataState>
     </DetailFrame>
@@ -68,7 +69,7 @@ function GroupHeader({ group, onBack }: { group: TeacherGroup; onBack: () => voi
   const { t } = useTranslation();
   const { clubOf } = useScheduleClubs();
   const { next } = group;
-  const members = next.students.filter((s) => !s.is_recovery).length;
+  const members = splitRecoveries(next.students).members.length;
 
   return (
     <View>
@@ -78,9 +79,8 @@ function GroupHeader({ group, onBack }: { group: TeacherGroup; onBack: () => voi
         <Text variant="title" accessibilityRole="header" style={styles.title}>
           {next.title}
         </Text>
-        <View style={styles.level} accessible accessibilityLabel={t("schedule.next.level", { range: next.level_range })}>
-          <IconLoActivity size={LEVEL_ICON_SIZE} color={theme.colors.primary} />
-          <Text variant="subtitle">{next.level_range}</Text>
+        <View accessible accessibilityLabel={t("schedule.next.level", { range: next.level_range })}>
+          <IconText Icon={LEVEL_ICON} label={next.level_range} size="heading" color="text" iconColor="primary" />
         </View>
       </View>
       <Text variant="label" color="textSecondary" style={styles.place}>
@@ -104,21 +104,17 @@ function GroupBody({ group }: { group: TeacherGroup }) {
 
   return (
     <View style={styles.sections}>
-      <GroupStudentsCard students={next.students.filter((s) => !s.is_recovery)} />
+      <GroupStudentsCard students={splitRecoveries(next.students).members} />
       <NextSessionCard next={next} onPress={() => openClass(next)} />
     </View>
   );
 }
 
 function GroupNotFound() {
+  const { t } = useTranslation();
   return (
     <DetailFrame testID="group-detail-screen">
-      <GroupNotFoundState onBack={useGoBack()} />
+      <NotFoundState title={t("groups.detail.notFound")} />
     </DetailFrame>
   );
-}
-
-function GroupNotFoundState({ onBack }: { onBack: () => void }) {
-  const { t } = useTranslation();
-  return <EmptyState title={t("groups.detail.notFound")} actionLabel={t("common.back")} onAction={onBack} />;
 }

@@ -1,19 +1,10 @@
-import { IconLoCheck, IconLoX } from "@playtopia/icons/react-native";
 import { StyleSheet } from "react-native";
 
-import type { IconComponent } from "@/shared/config/icons";
 import { makeStyles } from "@/shared/hooks/makeStyles";
-import type { AttendanceStatus } from "@/shared/schemas/schedule.schema";
 
 /** El cuadrado (`h-9 w-9`) y su icono (`h-4 w-4`). */
 export const TOGGLE_SIZE = 36;
 export const TOGGLE_ICON_SIZE = 16;
-
-/** El icono de cada marca: ✓ presente, ✗ ausente. */
-export const TOGGLE_ICON = {
-  present: IconLoCheck,
-  absent: IconLoX,
-} as const satisfies Record<AttendanceStatus, IconComponent>;
 
 export const useStyles = makeStyles((theme) => ({
   // `grid h-9 w-9 place-items-center rounded-xl`; sin elegir, `bg-surface-2`.

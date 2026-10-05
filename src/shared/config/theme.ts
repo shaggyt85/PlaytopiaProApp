@@ -277,6 +277,18 @@ export const darkTheme = {
 export type Theme = typeof darkTheme;
 
 /**
+ * El panel de las secciones de un detalle (`rounded-lg border bg-surface-2/60
+ * ring-soft`): «Alumnos del grupo», «Próxima clase» y las de la ficha de un
+ * alumno. Cada uno pone su relleno.
+ */
+export const panel = (theme: Theme) =>
+  ({
+    borderRadius: theme.radius.lg,
+    ...theme.ringSoft,
+    backgroundColor: theme.colors.surface,
+  }) as const;
+
+/**
  * Píldora sólida de los campos del registro (Input `solid`, teléfono): fondo
  * `field` y borde del color primario.
  */

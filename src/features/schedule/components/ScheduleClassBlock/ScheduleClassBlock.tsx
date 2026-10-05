@@ -1,10 +1,4 @@
-import {
-  IconLoActivity,
-  IconLoChevronRight,
-  IconLoClock,
-  IconLoMapPin,
-  IconLoUsers,
-} from "@playtopia/icons/react-native";
+import { IconLoChevronRight, IconLoClock, IconLoMapPin, IconLoUsers } from "@playtopia/icons/react-native";
 import { memo } from "react";
 import { View } from "react-native";
 
@@ -13,6 +7,7 @@ import { IconText } from "@/shared/components/IconText";
 import { PressableScale } from "@/shared/components/PressableScale";
 import { StripeCard } from "@/shared/components/StripeCard";
 import { Text } from "@/shared/components/Text";
+import { LEVEL_ICON } from "@/shared/config/icons";
 import type { ColorPair } from "@/shared/config/theme";
 import { useOpenClass } from "@/shared/hooks/useOpenClass";
 import type { ScheduleClub } from "@/shared/hooks/useScheduleClubs";
@@ -45,9 +40,6 @@ interface ScheduleClassBlockProps {
  * su marca de estado, el título, la pista y «duración · nivel · plazas». Sin el
  * nombre del club, como el prototipo (el lector de pantalla sí lo dice).
  * La que ya terminó, apagada y «COMPLETADA». Al tocarla se abre su detalle.
- *
- * Provisional: el nivel lleva `IconLoActivity` hasta que `@playtopia/icons`
- * publique `IconLoBarChart2` (1.10.0).
  *
  * `memo`: cuando la hora avanza, solo se vuelve a pintar la que cambia de estado.
  */
@@ -99,7 +91,7 @@ export const ScheduleClassBlock = memo(function ScheduleClassBlock({
             {item.track_name ? <IconText Icon={IconLoMapPin} label={item.track_name} numberOfLines={1} /> : null}
             <View style={styles.metaRow}>
               <IconText Icon={IconLoClock} label={t("schedule.day.minutes", { count: item.duration_minutes })} />
-              <IconText Icon={IconLoActivity} label={item.level_range} />
+              <IconText Icon={LEVEL_ICON} label={item.level_range} />
               <IconText Icon={IconLoUsers} label={studentsLabel(item, t)} />
             </View>
           </View>

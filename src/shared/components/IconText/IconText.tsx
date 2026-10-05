@@ -11,12 +11,17 @@ interface IconTextProps {
   Icon: IconComponent;
   /** Ya traducido o dato de Core. */
   label: string;
-  /** `meta` (por defecto), `card` o `hero`: ver `ICON_TEXT_SIZES`. */
+  /** `meta` por defecto: ver `ICON_TEXT_SIZES`. */
   size?: IconTextSize;
   /** Del icono; por defecto, el del texto. */
   iconColor?: ThemeColor;
   /** Del icono, un color que no es del tema (el de un grupo): manda sobre `iconColor`. */
   iconTint?: string;
+  /**
+   * Del icono y del texto, un color que no es del tema (el de un grupo): manda
+   * sobre los demás.
+   */
+  tint?: string;
   color?: ThemeColor;
   numberOfLines?: number;
   style?: StyleProp<ViewStyle>;
@@ -24,10 +29,10 @@ interface IconTextProps {
 }
 
 /**
- * Un icono pequeño y su texto en una fila («⌖ Calle Mayor 1», «◷ 60 min»): la
+ * Un icono y su texto en una fila («⌖ Calle Mayor 1», «◷ 60 min», el nivel): la
  * línea de datos de las tarjetas del prototipo. Único sitio que la dibuja: Red
- * de clubes, la Semana, la tarjeta de arriba de la agenda y el detalle de una
- * clase. Si el texto no cabe, se encoge él, no el icono.
+ * de clubes, la agenda, el detalle de una clase, «Mis grupos» y el detalle de
+ * un grupo. Si el texto no cabe, se encoge él, no el icono.
  */
 export function IconText({
   Icon,
@@ -35,6 +40,7 @@ export function IconText({
   size = "meta",
   iconColor,
   iconTint,
+  tint,
   color = "textSecondary",
   numberOfLines,
   style,
@@ -45,9 +51,14 @@ export function IconText({
   const { icon, variant } = ICON_TEXT_SIZES[size];
 
   return (
-    <View style={[styles.row, styles[size], style]}>
-      <Icon size={icon} color={iconTint ?? theme.colors[iconColor ?? color]} />
-      <Text variant={variant} color={color} numberOfLines={numberOfLines} style={[styles.text, textStyle]}>
+    <View style={[styles.line, styles[size], style]}>
+      <Icon size={icon} color={tint ?? iconTint ?? theme.colors[iconColor ?? color]} />
+      <Text
+        variant={variant}
+        color={color}
+        numberOfLines={numberOfLines}
+        style={[styles.text, tint ? { color: tint } : null, textStyle]}
+      >
         {label}
       </Text>
     </View>

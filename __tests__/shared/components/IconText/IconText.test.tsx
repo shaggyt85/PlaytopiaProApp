@@ -50,3 +50,30 @@ describe("IconText", () => {
     expect(StyleSheet.flatten(text.props.style).flexShrink).toBe(1);
   });
 });
+
+describe("IconText: el nivel en groups", () => {
+  beforeEach(() => Icon.mockClear());
+
+  it("cada sitio con su tamaño: fila de lista, debajo de un título y junto al de una pantalla", () => {
+    const cases = [
+      ["row", 16, "strong"],
+      ["rowTitle", 16, "rowTitle"],
+      ["heading", 20, "subtitle"],
+    ] as const;
+    for (const [size, icon, variant] of cases) {
+      render(<IconText Icon={Icon} label={size} size={size} />);
+
+      expect(iconProps()?.size).toBe(icon);
+      expect(StyleSheet.flatten(screen.getByText(size).props.style).fontFamily).toBe(
+        darkTheme.typography[variant].fontFamily,
+      );
+    }
+  });
+
+  it("con `tint`, icono y texto del color de un grupo", () => {
+    render(<IconText Icon={Icon} label="2,0–3,0" size="rowTitle" tint="#00B0FF" />);
+
+    expect(iconProps()?.color).toBe("#00B0FF");
+    expect(StyleSheet.flatten(screen.getByText("2,0–3,0").props.style).color).toBe("#00B0FF");
+  });
+});

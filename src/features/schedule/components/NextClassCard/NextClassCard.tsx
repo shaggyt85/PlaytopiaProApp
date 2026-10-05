@@ -1,9 +1,4 @@
-import {
-  IconLoActivity,
-  IconLoChevronRight,
-  IconLoClock,
-  IconLoMapPin,
-} from "@playtopia/icons/react-native";
+import { IconLoChevronRight, IconLoClock, IconLoMapPin } from "@playtopia/icons/react-native";
 import { useEffect } from "react";
 import { View } from "react-native";
 import Animated, {
@@ -19,6 +14,7 @@ import { IconText } from "@/shared/components/IconText";
 import { PressableScale } from "@/shared/components/PressableScale";
 import { StudentAvatars } from "@/shared/components/StudentAvatars";
 import { Text } from "@/shared/components/Text";
+import { LEVEL_ICON } from "@/shared/config/icons";
 import { useOpenClass } from "@/shared/hooks/useOpenClass";
 import { useReduceMotion } from "@/shared/hooks/useReduceMotion";
 import type { ScheduleClub } from "@/shared/hooks/useScheduleClubs";
@@ -28,6 +24,7 @@ import { classTimeRange } from "@/shared/utils/classTimeRange";
 import { withAlpha } from "@/shared/utils/color";
 import { joinParts } from "@/shared/utils/joinParts";
 import { studentsLabel } from "@/shared/utils/seatsLabel";
+import { splitRecoveries } from "@/shared/utils/splitRecoveries";
 
 import { classA11yLabel } from "../../utils/classA11yLabel";
 import { heroLabel, type HeroClass } from "../../utils/heroClass";
@@ -50,9 +47,6 @@ interface NextClassCardProps {
  * MIN»); el título, el club y la pista; los alumnos (con la «R» de quien
  * recupera), «4/4 ALUMNOS» y cuántos recuperan; y debajo de una línea, la franja
  * horaria y el nivel tal como lo manda Core. Al tocarla se abre su detalle.
- *
- * Provisional: el nivel lleva `IconLoActivity` hasta que `@playtopia/icons`
- * publique `IconLoBarChart2` (1.10.0).
  */
 export function NextClassCard({ hero, club, today, now }: NextClassCardProps) {
   const styles = useStyles();
@@ -63,7 +57,7 @@ export function NextClassCard({ hero, club, today, now }: NextClassCardProps) {
 
   const label = heroLabel(hero, today, now, t);
   const seats = studentsLabel(item, t);
-  const recoveries = item.students.filter((s) => s.is_recovery).length;
+  const recoveries = splitRecoveries(item.students).recoveries.length;
   const recoveriesLabel = recoveries > 0 ? t("schedule.next.recoveries", { count: recoveries }) : null;
   const a11y = joinParts(
     [
@@ -124,7 +118,7 @@ export function NextClassCard({ hero, club, today, now }: NextClassCardProps) {
 
         <View style={styles.footer}>
           <IconText Icon={IconLoClock} label={classTimeRange(item, t)} size="card" iconColor="primary" />
-          <IconText Icon={IconLoActivity} label={item.level_range} size="card" iconColor="primary" />
+          <IconText Icon={LEVEL_ICON} label={item.level_range} size="card" iconColor="primary" />
         </View>
       </View>
     </PressableScale>

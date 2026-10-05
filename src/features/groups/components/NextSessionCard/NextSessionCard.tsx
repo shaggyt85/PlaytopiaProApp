@@ -9,6 +9,7 @@ import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 import { formatClassDate, formatClubTime } from "@/shared/utils/formatDate";
 import { joinParts } from "@/shared/utils/joinParts";
+import { splitRecoveries } from "@/shared/utils/splitRecoveries";
 
 import { CHEVRON_SIZE, useStyles } from "./NextSessionCard.styles";
 
@@ -28,10 +29,10 @@ export function NextSessionCard({ next, onPress }: NextSessionCardProps) {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
-  const recoveries = next.students.filter((s) => s.is_recovery).length;
+  const { members, recoveries } = splitRecoveries(next.students);
   const when = joinParts([formatClassDate(next.class_date), formatClubTime(next.class_time)]);
-  const enrolled = t("groups.detail.enrolled", { count: next.students.length - recoveries });
-  const recovering = recoveries > 0 ? t("schedule.next.recoveries", { count: recoveries }) : null;
+  const enrolled = t("groups.detail.enrolled", { count: members.length });
+  const recovering = recoveries.length > 0 ? t("schedule.next.recoveries", { count: recoveries.length }) : null;
   const expected = t("groups.detail.expected", { count: next.students.length });
 
   return (

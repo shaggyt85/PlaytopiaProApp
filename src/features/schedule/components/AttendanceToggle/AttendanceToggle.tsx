@@ -2,10 +2,11 @@ import { Pressable } from "react-native";
 
 import { BrandGradient } from "@/shared/components/BrandGradient";
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
+import { ATTENDANCE_ICON } from "@/shared/config/icons";
 import { useTheme } from "@/shared/hooks/useTheme";
 import type { AttendanceStatus } from "@/shared/schemas/schedule.schema";
 
-import { TOGGLE_ICON, TOGGLE_ICON_SIZE, TOGGLE_SIZE, useStyles } from "./AttendanceToggle.styles";
+import { TOGGLE_ICON_SIZE, TOGGLE_SIZE, useStyles } from "./AttendanceToggle.styles";
 
 interface AttendanceToggleProps {
   /** La marca que pone: ✓ presente o ✗ ausente. */
@@ -29,7 +30,7 @@ interface AttendanceToggleProps {
 export function AttendanceToggle({ status, selected, locked = false, onPress, accessibilityLabel }: AttendanceToggleProps) {
   const styles = useStyles();
   const theme = useTheme();
-  const Icon = TOGGLE_ICON[status];
+  const Icon = ATTENDANCE_ICON[status];
 
   return (
     <Pressable

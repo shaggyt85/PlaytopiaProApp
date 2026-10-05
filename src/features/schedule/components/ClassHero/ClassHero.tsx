@@ -1,4 +1,4 @@
-import { IconLoActivity, IconLoArrowLeft, IconLoClock, IconLoMapPin, IconLoUsers } from "@playtopia/icons/react-native";
+import { IconLoArrowLeft, IconLoClock, IconLoMapPin, IconLoUsers } from "@playtopia/icons/react-native";
 import { useState } from "react";
 import { View, type LayoutChangeEvent } from "react-native";
 
@@ -7,6 +7,7 @@ import { IconButton } from "@/shared/components/IconButton";
 import { IconText } from "@/shared/components/IconText";
 import { RadialGlow } from "@/shared/components/RadialGlow";
 import { Text } from "@/shared/components/Text";
+import { LEVEL_ICON } from "@/shared/config/icons";
 import type { ColorPair } from "@/shared/config/theme";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
@@ -34,9 +35,6 @@ interface ClassHeroProps {
  * de la clase con el halo en la esquina, ←, el título, el club con su punto y
  * dos líneas de datos: «Lunes, 18 de noviembre · 08:30–09:30» y la pista, el
  * nivel y «3/4 alumnos».
- *
- * Provisional: el nivel lleva `IconLoActivity` hasta que `@playtopia/icons`
- * publique `IconLoBarChart2` (1.10.0).
  */
 export function ClassHero({ item, clubLabel, colors, onBack }: ClassHeroProps) {
   const styles = useStyles();
@@ -98,7 +96,7 @@ export function ClassHero({ item, clubLabel, colors, onBack }: ClassHeroProps) {
           {item.track_name ? (
             <IconText Icon={IconLoMapPin} label={item.track_name} size="hero" color="onPrimary" />
           ) : null}
-          <IconText Icon={IconLoActivity} label={item.level_range} size="hero" color="onPrimary" />
+          <IconText Icon={LEVEL_ICON} label={item.level_range} size="hero" color="onPrimary" />
           <IconText Icon={IconLoUsers} label={studentsLabel(item, t)} size="hero" color="onPrimary" />
         </View>
       </View>

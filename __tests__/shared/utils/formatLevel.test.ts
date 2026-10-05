@@ -14,3 +14,9 @@ describe("formatLevel", () => {
     expect(formatLevel(2.75)).toBe("2,75");
   });
 });
+
+describe("formatLevel sin nivel", () => {
+  it("un alumno sin matrícula en la sede no tiene nivel que enseñar", () => {
+    expect(formatLevel(null)).toBeNull();
+  });
+});
