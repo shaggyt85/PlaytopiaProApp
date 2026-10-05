@@ -46,5 +46,10 @@ export const ENDPOINTS = {
       `${teacherClass(dbId, classId)}/attendance/${studentId}`,
     /** La clase anterior del grupo de una clase. */
     PREVIOUS: (dbId: number, classId: number) => `${teacherClass(dbId, classId)}/previous`,
+    /**
+     * El historial de asistencia de los alumnos del grupo de una clase, todos de
+     * una vez: cualquier clase del grupo da el mismo.
+     */
+    GROUP_ATTENDANCE: (dbId: number, classId: number) => `${teacherClass(dbId, classId)}/group-attendance`,
   },
 } as const;

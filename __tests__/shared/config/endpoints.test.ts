@@ -4,6 +4,7 @@ describe("ENDPOINTS", () => {
   it("lo que se hace con una clase cuelga de la misma ruta de la clase", () => {
     expect(ENDPOINTS.MOBILE_TEACHER.ATTENDANCE(4, 31, 55)).toBe("/MobileTeacher/classes/4/31/attendance/55");
     expect(ENDPOINTS.MOBILE_TEACHER.PREVIOUS(4, 31)).toBe("/MobileTeacher/classes/4/31/previous");
+    expect(ENDPOINTS.MOBILE_TEACHER.GROUP_ATTENDANCE(4, 31)).toBe("/MobileTeacher/classes/4/31/group-attendance");
   });
 
   it("el perfil es el del profesor que se pide", () => {
