@@ -1,6 +1,7 @@
 import { skipToken } from "@tanstack/react-query";
 
 import {
+  previousClassQuery,
   ScheduleService,
   scheduleKeys,
   scheduleQuery,
@@ -9,7 +10,7 @@ import {
 import { CachePolicy } from "@/shared/config/cachePolicies";
 
 import { createFakeHttpClient as fakeHttp } from "../../../helpers/fakeHttpClient";
-import { attendanceMark, scheduleResponse } from "../../../helpers/scheduleFactories";
+import { attendanceMark, scheduleClass, scheduleResponse } from "../../../helpers/scheduleFactories";
 
 describe("ScheduleService", () => {
   it("pide las clases del rango a /MobileTeacher/classes y valida la respuesta", async () => {
@@ -59,6 +60,45 @@ describe("scheduleKeys", () => {
 
   it("todas cuelgan de la misma raíz, para poder invalidarlas juntas", () => {
     expect(scheduleKeys.classes(1, "2026-10-05", "2026-10-11").slice(0, 1)).toEqual(scheduleKeys.all);
+    expect(scheduleKeys.previous(1, 4, 31).slice(0, 1)).toEqual(scheduleKeys.all);
+  });
+
+  it("las agendas cuelgan además de la suya; la clase anterior no, que tiene otra forma", () => {
+    expect(scheduleKeys.classes(1, "2026-10-05", "2026-10-11").slice(0, 2)).toEqual(scheduleKeys.agendas);
+    expect(scheduleKeys.previous(1, 4, 31).slice(0, 2)).not.toEqual(scheduleKeys.agendas);
+  });
+});
+
+describe("ScheduleService: la clase anterior del grupo", () => {
+  it("la pide a /MobileTeacher/classes/{db_id}/{class_id}/previous y devuelve la clase", async () => {
+    const previous = scheduleClass({ id: 30 });
+    const http = fakeHttp({ previous_class: previous });
+
+    const result = await new ScheduleService(http).getPreviousClass(4, 31);
+
+    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/classes/4/31/previous");
+    expect(result).toEqual(previous);
+  });
+
+  it("si es la primera del grupo, null", async () => {
+    expect(await new ScheduleService(fakeHttp({ previous_class: null })).getPreviousClass(4, 31)).toBeNull();
+  });
+
+  it("una respuesta que no cumple el contrato falla", async () => {
+    await expect(new ScheduleService(fakeHttp({ previous: [] })).getPreviousClass(4, 31)).rejects.toThrow();
+  });
+});
+
+describe("previousClassQuery", () => {
+  it("la pide al servicio con la caché STANDARD; sin profesor, nada", async () => {
+    const getPreviousClass = jest.fn().mockResolvedValue(null);
+    const recipe = previousClassQuery(1, 4, 31, { getPreviousClass });
+
+    expect(recipe.queryKey).toEqual(scheduleKeys.previous(1, 4, 31));
+    expect(recipe.staleTime).toBe(CachePolicy.STANDARD.staleTime);
+    await (recipe.queryFn as () => Promise<unknown>)();
+    expect(getPreviousClass).toHaveBeenCalledWith(4, 31);
+    expect(previousClassQuery(undefined, 4, 31, { getPreviousClass }).queryFn).toBe(skipToken);
   });
 });
 

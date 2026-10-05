@@ -216,6 +216,16 @@ const en: Translations = {
       recovery: "Make-up",
       markPresent: "Mark %{name} as present",
       markAbsent: "Mark %{name} as absent",
+      /** La sección de la última clase del grupo, su asistencia y cuántos alumnos tenía. */
+      lastClass: "Last class of this group",
+      lastClassAttendance: "Attendance %{present}/%{total}",
+      studentCount: {
+        one: "%{count} student",
+        other: "%{count} students",
+      },
+      /** El panel con la lista de esa clase. */
+      lastClassSheet: "Last class",
+      lastClassHint: "Opens the list of that class",
       notFound: "Class not found",
     },
     day: {

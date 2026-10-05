@@ -41,6 +41,18 @@ describe("AttendanceToggle", () => {
     expect(mockGradient).toHaveBeenCalledWith(expect.objectContaining({ colors: darkTheme.accents.coral.gradient }));
   });
 
+  it("pasado el plazo, la marca a la vista, atenuada; tocarlo sigue avisando (para decir por qué)", () => {
+    const onPress = jest.fn();
+    renderToggle({ selected: true, locked: true, onPress });
+
+    const button = screen.getByRole("button");
+    expect(button.props.accessibilityState).toMatchObject({ selected: true });
+    expect(button).toHaveStyle({ opacity: 0.5 });
+    expect(mockGradient).toHaveBeenCalledWith(expect.objectContaining({ colors: darkTheme.gradients.brand }));
+    fireEvent.press(button);
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
   it("al tocarlo, avisa", () => {
     const onPress = jest.fn();
     renderToggle({ onPress });

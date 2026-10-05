@@ -6,9 +6,11 @@ import { Chip } from "@/shared/components/Chip";
 import { IconText } from "@/shared/components/IconText";
 import { Text } from "@/shared/components/Text";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { TranslationKey } from "@/shared/locales";
 import { joinParts } from "@/shared/utils/joinParts";
 
 import type { AttendanceStatus, ClassStudent } from "../../schemas/schedule.schema";
+import type { AttendanceState } from "../../utils/attendanceWindow";
 import { formatLevel } from "../../utils/formatLevel";
 import { studentName } from "../../utils/studentName";
 import { AttendanceToggle } from "../AttendanceToggle";
@@ -16,12 +18,27 @@ import { StudentAvatar } from "../StudentAvatar";
 
 import { useStyles } from "./StudentRow.styles";
 
+/** Los botones de la asistencia, en orden, con lo que dice cada uno. */
+const TOGGLES = [
+  { status: "present", label: "schedule.detail.markPresent" },
+  { status: "absent", label: "schedule.detail.markAbsent" },
+] as const satisfies readonly { status: AttendanceStatus; label: TranslationKey }[];
+
 interface StudentRowProps {
   student: ClassStudent;
   /** Su posición en la lista ordenada: su color. */
   index: number;
-  /** Marca su asistencia; sin ella (la clase aún no ha empezado), sin botones. */
-  onMark?: (student: ClassStudent, status: AttendanceStatus) => void;
+  /**
+   * Cómo está la asistencia de la clase: sin botones antes de que se pueda
+   * pasar lista, con ellos mientras se puede y, pasado el plazo, la marca a la
+   * vista, atenuada.
+   */
+  attendance: AttendanceState;
+  /**
+   * Al tocar ✓ o ✗ (`useMarkStudent`): marca con la asistencia abierta y, pasado
+   * el plazo, dice por qué ya no cambia. Estable.
+   */
+  onMark: (student: ClassStudent, status: AttendanceStatus) => void;
 }
 
 /**
@@ -33,7 +50,7 @@ interface StudentRowProps {
  * Provisional: el nivel lleva `IconLoActivity` hasta que `@playtopia/icons`
  * publique `IconLoBarChart2` (1.10.0).
  */
-export const StudentRow = memo(function StudentRow({ student, index, onMark }: StudentRowProps) {
+export const StudentRow = memo(function StudentRow({ student, index, attendance, onMark }: StudentRowProps) {
   const styles = useStyles();
   const { t } = useTranslation();
   const name = studentName(student);
@@ -60,22 +77,20 @@ export const StudentRow = memo(function StudentRow({ student, index, onMark }: S
           ) : null}
         </View>
       </View>
-      {onMark ? (
+      {attendance === "notYet" ? null : (
         <View style={styles.toggles}>
-          <AttendanceToggle
-            status="present"
-            selected={student.attendance === "present"}
-            onPress={() => onMark(student, "present")}
-            accessibilityLabel={t("schedule.detail.markPresent", { name })}
-          />
-          <AttendanceToggle
-            status="absent"
-            selected={student.attendance === "absent"}
-            onPress={() => onMark(student, "absent")}
-            accessibilityLabel={t("schedule.detail.markAbsent", { name })}
-          />
+          {TOGGLES.map(({ status, label }) => (
+            <AttendanceToggle
+              key={status}
+              status={status}
+              selected={student.attendance === status}
+              locked={attendance === "closed"}
+              onPress={() => onMark(student, status)}
+              accessibilityLabel={t(label, { name })}
+            />
+          ))}
         </View>
-      ) : null}
+      )}
     </View>
   );
 });

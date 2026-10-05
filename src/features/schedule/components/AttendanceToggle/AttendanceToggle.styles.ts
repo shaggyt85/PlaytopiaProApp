@@ -32,4 +32,6 @@ export const useStyles = makeStyles((theme) => ({
   absent: theme.shadows.raisedCoral,
   fill: { ...StyleSheet.absoluteFill, borderRadius: theme.radius.sm },
   pressed: { transform: [{ scale: 0.95 }] },
+  // Pasado el plazo: la marca a la vista, atenuada (sin su brillo en relieve).
+  locked: { opacity: 0.5, boxShadow: "none" },
 }));

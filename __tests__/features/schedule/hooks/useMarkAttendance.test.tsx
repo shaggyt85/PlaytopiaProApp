@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { Alert } from "react-native";
 
 import { useMarkAttendance } from "@/features/schedule/hooks/useMarkAttendance";
-import type { ScheduleResponse } from "@/features/schedule/schemas/schedule.schema";
+import type { ScheduleClass, ScheduleResponse } from "@/features/schedule/schemas/schedule.schema";
 import { scheduleKeys } from "@/features/schedule/services/scheduleService";
 import { createQueryClient } from "@/shared/config/queryClient";
 import { HttpError } from "@/shared/services/HttpError";
@@ -59,6 +59,19 @@ describe("useMarkAttendance", () => {
       expect(Alert.alert).toHaveBeenCalledWith("Ya pasó el plazo para marcar la asistencia de esta clase."),
     );
     expect(attendance()).toBeNull();
+  });
+
+  it("también en la clase anterior de un grupo, con su forma (una sola clase)", async () => {
+    const markAttendance = jest.fn().mockReturnValue(new Promise(() => undefined));
+    const { result, client } = setup(markAttendance);
+    const previousKey = scheduleKeys.previous(42, 4, 31);
+    client.setQueryData(previousKey, scheduleClass({ id: 30, students: [classStudent({ class_id: 30 })] }));
+
+    act(() => result.current.mutate({ target: { dbId: 4, classId: 30, studentId: 55 }, status: "absent" }));
+
+    await waitFor(() =>
+      expect(client.getQueryData<ScheduleClass>(previousKey)?.students[0].attendance).toBe("absent"),
+    );
   });
 
   it("al terminar, la agenda se vuelve a pedir", async () => {

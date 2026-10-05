@@ -1,41 +1,31 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { BlurTarget, BlurTargetProvider } from "@/shared/components/BlurTarget";
 import { BrandBackground } from "@/shared/components/BrandBackground";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { useTranslation } from "@/shared/hooks/useTranslation";
-import { selectionFeedback } from "@/shared/utils/haptics";
 
 import { useStyles } from "./ClassDetailScreen.styles";
-import { AttendanceCount, ClassHero, DetailSection, ScheduleDataState, StudentList } from "./components";
+import {
+  AttendanceCount,
+  ClassHero,
+  DetailSection,
+  PreviousClassCard,
+  PreviousClassSheet,
+  ScheduleDataState,
+  StudentList,
+} from "./components";
 import { useClassDetail } from "./hooks/useClassDetail";
 import { useForegroundNow } from "./hooks/useForegroundNow";
-import { useMarkAttendance } from "./hooks/useMarkAttendance";
+import { useMarkStudent } from "./hooks/useMarkStudent";
+import { usePreviousClass } from "./hooks/usePreviousClass";
 import { useScheduleClubs } from "./hooks/useScheduleClubs";
-import type { AttendanceStatus, ClassStudent } from "./schemas/schedule.schema";
 import { attendanceSummary } from "./utils/attendanceSummary";
-import { classStatus } from "./utils/classTiming";
+import { attendanceState } from "./utils/attendanceWindow";
 import { ClassDetailParamsSchema, type ClassDetailParams } from "./utils/classRoute";
-import { wallNow } from "./utils/scheduleDates";
-
-/**
- * Marcar a un alumno de la clase, con la vibración de elegir. La marca va a la
- * clase en la que está inscrito (su plaza, si recupera). Volver a tocar la que
- * ya tiene no pide nada. Estable: las filas no se repintan por ella.
- */
-function useMarkStudent(dbId: number) {
-  const { mutate } = useMarkAttendance();
-  return useCallback(
-    (student: ClassStudent, status: AttendanceStatus) => {
-      if (student.attendance === status) return;
-      selectionFeedback();
-      mutate({ target: { dbId, classId: student.class_id, studentId: student.student_id }, status });
-    },
-    [dbId, mutate],
-  );
-}
 
 /** Volver: a donde se vino o, si no hay (se abrió desde un aviso), a la Agenda. */
 function useGoBack() {
@@ -44,9 +34,10 @@ function useGoBack() {
 }
 
 /**
- * El detalle de una clase, encima de las pestañas y sin barra: su cabecera y
- * sus alumnos con su asistencia. Lo que aún no tiene datos en Core (objetivos,
- * notas, el feedback…) no se enseña; cada cosa llega con su fase.
+ * El detalle de una clase, encima de las pestañas y sin barra: su cabecera, sus
+ * alumnos con su asistencia y la última clase de su grupo, que abre su lista en
+ * un panel. Lo que aún no tiene datos en Core (objetivos, notas, el feedback…)
+ * no se enseña; cada cosa llega con su fase.
  *
  * Los parámetros de la ruta llegan como texto: si no son válidos, «Clase no
  * encontrada», igual que si la respuesta del mes ya no trae la clase.
@@ -62,14 +53,29 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
   const { t } = useTranslation();
   const { item, colors, hasData, error, refetch } = useClassDetail(dbId, classId, date);
   const { clubOf } = useScheduleClubs();
-  const onMark = useMarkStudent(dbId);
-  // Cada minuto: los botones aparecen solos cuando empieza la clase.
+  // «Ahora» del servidor, cada minuto: los botones salen y se quitan solos
+  // cuando Core abre y cierra la asistencia (su ventana viene en cada clase).
   const now = useForegroundNow({ everyMinute: true });
-  // Se pasa lista desde que empieza; hasta cuándo lo decide Core (`attendance-closed`).
-  const started = item ? classStatus(item, wallNow(now), undefined) !== "upcoming" : false;
+  const attendance = item ? attendanceState(item, now) : "notYet";
+  const onMark = useMarkStudent(dbId, attendance);
+  const previous = usePreviousClass(dbId, classId);
+  const previousAttendance = previous ? attendanceState(previous, now) : "notYet";
+  const onMarkPrevious = useMarkStudent(previous?.db_id ?? dbId, previousAttendance);
+  const [previousOpen, setPreviousOpen] = useState(false);
+  const closePrevious = useCallback(() => setPreviousOpen(false), []);
 
   return (
-    <DetailFrame>
+    <DetailFrame
+      sheet={
+        <PreviousClassSheet
+          item={previous}
+          attendance={previousAttendance}
+          onMark={onMarkPrevious}
+          visible={previousOpen}
+          onClose={closePrevious}
+        />
+      }
+    >
       <ScheduleDataState hasData={hasData} error={error} onRetry={refetch}>
         {item && colors ? (
           <ScrollView contentContainerStyle={styles.content}>
@@ -79,8 +85,13 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
               aside={item.students.length > 0 ? <AttendanceCount summary={attendanceSummary(item.students)} /> : null}
               testID="students-section"
             >
-              <StudentList students={item.students} onMark={started ? onMark : undefined} />
+              <StudentList students={item.students} attendance={attendance} onMark={onMark} />
             </DetailSection>
+            {previous ? (
+              <DetailSection title={t("schedule.detail.lastClass")} testID="previous-section">
+                <PreviousClassCard item={previous} onPress={() => setPreviousOpen(true)} />
+              </DetailSection>
+            ) : null}
           </ScrollView>
         ) : (
           <ClassNotFoundState onBack={goBack} />
@@ -103,14 +114,23 @@ function ClassNotFoundState({ onBack }: { onBack: () => void }) {
   return <EmptyState title={t("schedule.detail.notFound")} actionLabel={t("common.back")} onAction={onBack} />;
 }
 
-/** El fondo de marca y las zonas seguras: el detalle va fuera de las pestañas, que ponen el suyo. */
-function DetailFrame({ children }: { children: React.ReactNode }) {
+/**
+ * El fondo de marca y las zonas seguras: el detalle va fuera de las pestañas,
+ * que ponen el suyo. Su panel (`sheet`) va fuera del `BlurTarget` de la
+ * pantalla, que es lo que desenfoca al abrirse.
+ */
+function DetailFrame({ children, sheet }: { children: React.ReactNode; sheet?: React.ReactNode }) {
   const styles = useStyles();
   return (
     <BrandBackground testID="class-detail-screen">
-      <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
-        {children}
-      </SafeAreaView>
+      <BlurTargetProvider>
+        <BlurTarget>
+          <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
+            {children}
+          </SafeAreaView>
+        </BlurTarget>
+        {sheet}
+      </BlurTargetProvider>
     </BrandBackground>
   );
 }

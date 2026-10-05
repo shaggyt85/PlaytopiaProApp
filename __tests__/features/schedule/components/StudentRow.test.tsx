@@ -1,12 +1,19 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import { StudentRow } from "@/features/schedule/components/StudentRow";
+import type { AttendanceState } from "@/features/schedule/utils/attendanceWindow";
 
 import { classStudent } from "../../../helpers/scheduleFactories";
 
+const renderRow = (
+  student = classStudent(),
+  attendance: AttendanceState = "notYet",
+  onMark = jest.fn(),
+) => render(<StudentRow student={student} index={0} attendance={attendance} onMark={onMark} />);
+
 describe("StudentRow", () => {
   it("el círculo con sus iniciales, su nombre y su nivel; se lee de una vez", () => {
-    render(<StudentRow student={classStudent()} index={0} />);
+    renderRow();
 
     expect(screen.getByLabelText("Lucía Romero, Nivel 2,5")).toBeTruthy();
     expect(screen.getByText("LR", { includeHiddenElements: true })).toBeTruthy();
@@ -14,28 +21,28 @@ describe("StudentRow", () => {
   });
 
   it("quien recupera lleva su etiqueta", () => {
-    render(<StudentRow student={classStudent({ is_recovery: true })} index={0} />);
+    renderRow(classStudent({ is_recovery: true }));
 
     expect(screen.getByLabelText("Lucía Romero, Recuperación, Nivel 2,5")).toBeTruthy();
     expect(screen.getByText("Recuperación", { includeHiddenElements: true })).toBeTruthy();
   });
 
   it("sin matrícula en la sede, sin nivel", () => {
-    render(<StudentRow student={classStudent({ level: null })} index={0} />);
+    renderRow(classStudent({ level: null }));
 
     expect(screen.getByLabelText("Lucía Romero")).toBeTruthy();
   });
 
-  it("sin `onMark` (la clase no ha empezado), sin botones", () => {
-    render(<StudentRow student={classStudent()} index={0} />);
+  it("antes de que se pueda pasar lista, sin botones", () => {
+    renderRow();
 
     expect(screen.queryByRole("button")).toBeNull();
   });
 
-  it("con `onMark`, ✓ y ✗ con su marca elegida; tocar uno marca al alumno", () => {
+  it("con la asistencia abierta, ✓ y ✗ con su marca elegida; tocar uno marca al alumno", () => {
     const onMark = jest.fn();
     const student = classStudent({ attendance: "absent" });
-    render(<StudentRow student={student} index={0} onMark={onMark} />);
+    renderRow(student, "open", onMark);
 
     expect(screen.getByRole("button", { name: "Marcar ausente a Lucía Romero" }).props.accessibilityState).toMatchObject({
       selected: true,
@@ -43,5 +50,18 @@ describe("StudentRow", () => {
     fireEvent.press(screen.getByRole("button", { name: "Marcar presente a Lucía Romero" }));
 
     expect(onMark).toHaveBeenCalledWith(student, "present");
+  });
+
+  it("pasado el plazo, la marca a la vista y atenuada; tocarla avisa a quien dice por qué", () => {
+    const onMark = jest.fn();
+    const student = classStudent({ attendance: "present" });
+    renderRow(student, "closed", onMark);
+
+    const present = screen.getByRole("button", { name: "Marcar presente a Lucía Romero" });
+    expect(present.props.accessibilityState).toMatchObject({ selected: true });
+    expect(present).toHaveStyle({ opacity: 0.5 });
+    fireEvent.press(screen.getByRole("button", { name: "Marcar ausente a Lucía Romero" }));
+
+    expect(onMark).toHaveBeenCalledWith(student, "absent");
   });
 });

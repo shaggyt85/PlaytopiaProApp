@@ -19,6 +19,8 @@ export { MonthSchedule } from "./MonthSchedule";
 export { NextClassCard } from "./NextClassCard";
 export { NowLine } from "./NowLine";
 export { PressableScale } from "./PressableScale";
+export { PreviousClassCard } from "./PreviousClassCard";
+export { PreviousClassSheet } from "./PreviousClassSheet";
 export { ScheduleAgenda } from "./ScheduleAgenda";
 export { ScheduleClassBlock } from "./ScheduleClassBlock";
 export { ScheduleDataState } from "./ScheduleDataState";

@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { Alert } from "react-native";
 
 import { ClassDetailScreen } from "@/features/schedule/ClassDetailScreen";
 import { scheduleService } from "@/features/schedule/services/scheduleService";
@@ -18,9 +19,11 @@ jest.mock("@/features/schedule/services/scheduleService", () =>
 jest.mock("@/shared/services/myClubsService", () => require("../../helpers/scheduleMocks").myClubsServiceModule());
 jest.mock("@/shared/utils/serverClock", () => ({ serverNow: jest.fn() }));
 
-// La clase de ejemplo es el 18 de noviembre a las 16:00.
-const BEFORE_CLASS = new Date(2026, 10, 18, 15, 0).getTime();
-const DURING_CLASS = new Date(2026, 10, 18, 16, 30).getTime();
+// La clase de ejemplo es el 18 de noviembre a las 16:00 de Madrid (UTC+1): Core
+// abre la asistencia a las 15:00 UTC y la cierra al acabar el 20 allí.
+const BEFORE_CLASS = Date.parse("2026-11-18T14:30:00Z");
+const DURING_CLASS = Date.parse("2026-11-18T15:30:00Z");
+const AFTER_DEADLINE = Date.parse("2026-11-21T09:00:00Z");
 
 const cantera = scheduleClass({
   db_id: 4,
@@ -29,6 +32,8 @@ const cantera = scheduleClass({
   class_date: "2026-11-18",
   class_time: "16:00:00",
   title: "Cantera Tarde",
+  attendance_opens_at: "2026-11-18T15:00:00Z",
+  attendance_closes_at: "2026-11-20T23:00:00Z",
 });
 const router = { back: jest.fn(), replace: jest.fn(), canGoBack: jest.fn(() => true) };
 
@@ -46,6 +51,28 @@ describe("ClassDetailScreen", () => {
       clubs: [schoolCard(4, 7, { club_name: "Sede Centro" })],
     });
     jest.mocked(scheduleService.getClasses).mockResolvedValue(scheduleResponse({ classes: [cantera] }));
+    jest.mocked(scheduleService.getPreviousClass).mockResolvedValue(null);
+  });
+
+  it("la última clase de su grupo, que al tocarla abre su lista en un panel", async () => {
+    jest
+      .mocked(scheduleService.getPreviousClass)
+      .mockResolvedValue(scheduleClass({ id: 30, title: "Cantera Tarde", class_date: "2026-11-11" }));
+    openWith({ dbId: "4", classId: "31", date: "2026-11-18" });
+
+    expect(await screen.findByRole("header", { name: "Última clase de este grupo" })).toBeTruthy();
+    expect(scheduleService.getPreviousClass).toHaveBeenCalledWith(4, 31);
+    fireEvent.press(screen.getByTestId("previous-class"));
+
+    expect(await screen.findByTestId("previous-class-sheet")).toBeTruthy();
+  });
+
+  it("sin clase anterior (la primera del grupo), sin su sección", async () => {
+    openWith({ dbId: "4", classId: "31", date: "2026-11-18" });
+
+    expect(await screen.findByRole("header", { name: "Cantera Tarde" })).toBeTruthy();
+    await waitFor(() => expect(scheduleService.getPreviousClass).toHaveBeenCalled());
+    expect(screen.queryByTestId("previous-section")).toBeNull();
   });
 
   it("la cabecera de la clase con su club, sin la sección del club debajo", async () => {
@@ -65,7 +92,18 @@ describe("ClassDetailScreen", () => {
     expect(screen.getByText("0/2 presentes")).toBeTruthy();
   });
 
-  it("antes de que empiece la clase, sin botones de asistencia", async () => {
+  it("pasado el plazo que da Core, las marcas a la vista; tocar una dice por qué ya no cambia", async () => {
+    jest.spyOn(Alert, "alert").mockImplementation(() => undefined);
+    jest.mocked(serverNow).mockReturnValue(AFTER_DEADLINE);
+    openWith({ dbId: "4", classId: "31", date: "2026-11-18" });
+
+    fireEvent.press(await screen.findByRole("button", { name: "Marcar presente a Lucía Romero" }));
+
+    expect(Alert.alert).toHaveBeenCalledWith("Ya pasó el plazo para marcar la asistencia de esta clase.");
+    expect(scheduleService.markAttendance).not.toHaveBeenCalled();
+  });
+
+  it("antes de que Core abra la asistencia, sin botones", async () => {
     openWith({ dbId: "4", classId: "31", date: "2026-11-18" });
 
     expect(await screen.findByLabelText("Lucía Romero, Nivel 2,5")).toBeTruthy();

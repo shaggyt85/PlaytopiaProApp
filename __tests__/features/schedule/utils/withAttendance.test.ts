@@ -1,4 +1,4 @@
-import { withAttendance } from "@/features/schedule/utils/withAttendance";
+import { withAttendance, withStudentMark } from "@/features/schedule/utils/withAttendance";
 
 import { classStudent, nextClass, scheduleClass, scheduleResponse } from "../../../helpers/scheduleFactories";
 
@@ -42,5 +42,14 @@ describe("withAttendance", () => {
     const data = scheduleResponse({ classes: [cantera], next_class: null });
 
     expect(withAttendance(data, { dbId: 4, classId: 31, studentId: 999 }, "present").classes[0]).toBe(cantera);
+  });
+});
+
+describe("withStudentMark", () => {
+  it("una sola clase: la marca puesta en su alumno; si no está o es de otra escuela, la misma clase", () => {
+    const marked = withStudentMark(cantera, { dbId: 4, classId: 31, studentId: 55 }, "absent");
+
+    expect(marked.students[1].attendance).toBe("absent");
+    expect(withStudentMark(cantera, { dbId: 5, classId: 31, studentId: 55 }, "absent")).toBe(cantera);
   });
 });

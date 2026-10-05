@@ -1,0 +1,1 @@
+export { PreviousClassCard } from "./PreviousClassCard";

@@ -88,6 +88,14 @@ export const ScheduleClassSchema = z.object({
   /** Cuántas clases tiene su grupo («una de 40»). */
   number_of_classes: z.number().int().nullable(),
   students: StudentsSchema,
+  /**
+   * Desde cuándo se puede pasar lista (instante UTC, RFC 3339): cuando empieza
+   * la clase, en la hora de su escuela. Lo calcula Core: la app no escribe la
+   * regla ni usa la hora del móvil.
+   */
+  attendance_opens_at: z.string(),
+  /** Hasta cuándo (exclusivo): el final del segundo día después de la clase. */
+  attendance_closes_at: z.string(),
 });
 export type ScheduleClass = z.infer<typeof ScheduleClassSchema>;
 
@@ -105,3 +113,13 @@ export const ScheduleResponseSchema = z.object({
   next_class: NextClassSchema.nullable(),
 });
 export type ScheduleResponse = z.infer<typeof ScheduleResponseSchema>;
+
+/**
+ * La clase anterior del grupo de una clase (`PreviousClassResponse`), de
+ * `GET /MobileTeacher/classes/{db_id}/{class_id}/previous`: la misma forma que
+ * una clase de la agenda. `null` si es la primera del grupo o la clase es suelta.
+ */
+export const PreviousClassResponseSchema = z.object({
+  previous_class: ScheduleClassSchema.nullable(),
+});
+export type PreviousClassResponse = z.infer<typeof PreviousClassResponseSchema>;

@@ -218,6 +218,16 @@ const es = {
       recovery: "Recuperación",
       markPresent: "Marcar presente a %{name}",
       markAbsent: "Marcar ausente a %{name}",
+      /** La sección de la última clase del grupo, su asistencia y cuántos alumnos tenía. */
+      lastClass: "Última clase de este grupo",
+      lastClassAttendance: "Asistencia %{present}/%{total}",
+      studentCount: {
+        one: "%{count} alumno",
+        other: "%{count} alumnos",
+      },
+      /** El panel con la lista de esa clase. */
+      lastClassSheet: "Última clase",
+      lastClassHint: "Abre la lista de esa clase",
       notFound: "Clase no encontrada",
     },
     day: {

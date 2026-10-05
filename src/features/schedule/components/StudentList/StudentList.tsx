@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import type { AttendanceStatus, ClassStudent } from "../../schemas/schedule.schema";
+import type { AttendanceState } from "../../utils/attendanceWindow";
 import { EmptyNote } from "../EmptyNote";
 import { StudentRow } from "../StudentRow";
 
@@ -11,8 +12,10 @@ import { useStyles } from "./StudentList.styles";
 interface StudentListProps {
   /** Ya ordenados por el contrato de la clase. */
   students: readonly ClassStudent[];
-  /** Marca la asistencia de uno; sin ella, la lista solo se lee. Estable, para no repintar cada fila. */
-  onMark?: (student: ClassStudent, status: AttendanceStatus) => void;
+  /** Cómo está la asistencia de la clase (`attendanceState`). */
+  attendance: AttendanceState;
+  /** Al tocar ✓ o ✗ de uno (`useMarkStudent`). Estable, para no repintar cada fila. */
+  onMark: (student: ClassStudent, status: AttendanceStatus) => void;
 }
 
 /**
@@ -21,7 +24,7 @@ interface StudentListProps {
  * apuntados». Cada fila, por la clase en la que está inscrito el alumno y su
  * id: quien recupera está en su plaza.
  */
-export function StudentList({ students, onMark }: StudentListProps) {
+export function StudentList({ students, attendance, onMark }: StudentListProps) {
   const styles = useStyles();
   const { t } = useTranslation();
   if (students.length === 0) return <EmptyNote message={t("schedule.detail.noStudents")} testID="no-students" />;
@@ -29,7 +32,13 @@ export function StudentList({ students, onMark }: StudentListProps) {
   return (
     <View style={styles.rows} accessibilityRole="list" testID="student-list">
       {students.map((student, index) => (
-        <StudentRow key={`${student.class_id}-${student.student_id}`} student={student} index={index} onMark={onMark} />
+        <StudentRow
+          key={`${student.class_id}-${student.student_id}`}
+          student={student}
+          index={index}
+          attendance={attendance}
+          onMark={onMark}
+        />
       ))}
     </View>
   );

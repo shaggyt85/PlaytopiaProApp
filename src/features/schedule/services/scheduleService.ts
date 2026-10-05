@@ -6,9 +6,11 @@ import { httpClient } from "@/shared/services/httpClient";
 
 import {
   AttendanceMarkSchema,
+  PreviousClassResponseSchema,
   ScheduleResponseSchema,
   type AttendanceMark,
   type AttendanceStatus,
+  type ScheduleClass,
   type ScheduleResponse,
 } from "../schemas/schedule.schema";
 
@@ -19,12 +21,19 @@ import { SCHEDULE_ENDPOINTS } from "./scheduleEndpoints";
 /**
  * Claves de caché de la agenda: con el id del profesor, para que otro en el
  * mismo móvil no vea la del anterior, y con el rango, porque cada vista (día,
- * semana, mes) pide el suyo.
+ * semana, mes) pide el suyo. Todo cuelga de `all` (marcar la asistencia lo
+ * invalida todo); las agendas (`ScheduleResponse`) cuelgan además de `agendas`
+ * y las clases anteriores (una clase o `null`) de `previousClasses`: cada forma
+ * por su lado, para poner en cada una la marca al instante.
  */
 export const scheduleKeys = {
   all: ["schedule"] as const,
+  agendas: ["schedule", "classes"] as const,
+  previousClasses: ["schedule", "previous"] as const,
   classes: (teacherId: number | undefined, from: string, to: string) =>
-    [...scheduleKeys.all, "classes", teacherId, from, to] as const,
+    [...scheduleKeys.agendas, teacherId, from, to] as const,
+  previous: (teacherId: number | undefined, dbId: number, classId: number) =>
+    [...scheduleKeys.previousClasses, teacherId, dbId, classId] as const,
 };
 
 /** A quién se marca: la escuela, la clase del alumno (su plaza, si recupera) y el alumno. */
@@ -40,6 +49,8 @@ export interface IScheduleService {
   getClasses(from: string, to: string): Promise<ScheduleResponse>;
   /** Marca si un alumno vino. Marcar lo mismo otra vez devuelve la marca que había. */
   markAttendance(target: AttendanceTarget, status: AttendanceStatus): Promise<AttendanceMark>;
+  /** La clase anterior del grupo de una clase suya, o `null` si no tiene. */
+  getPreviousClass(dbId: number, classId: number): Promise<ScheduleClass | null>;
 }
 
 /** Lo único que necesitan las consultas de la agenda: leer las clases. */
@@ -61,6 +72,11 @@ export class ScheduleService implements IScheduleService {
   ): Promise<AttendanceMark> {
     const data = await this.http.put<unknown>(SCHEDULE_ENDPOINTS.ATTENDANCE(dbId, classId, studentId), { status });
     return AttendanceMarkSchema.parse(data);
+  }
+
+  async getPreviousClass(dbId: number, classId: number): Promise<ScheduleClass | null> {
+    const data = await this.http.get<unknown>(SCHEDULE_ENDPOINTS.PREVIOUS(dbId, classId));
+    return PreviousClassResponseSchema.parse(data).previous_class;
   }
 }
 
@@ -97,3 +113,20 @@ export const monthScheduleQuery = (
   const { from, to } = monthGrid(date);
   return scheduleQuery(teacherId, from, to, service);
 };
+
+/**
+ * La clase anterior del grupo de una clase. `STANDARD`: una clase que ya pasó
+ * cambia poco; marcar la asistencia la invalida (cuelga de `scheduleKeys.all`).
+ * Sin profesor en sesión no se pide nada (`skipToken`).
+ */
+export const previousClassQuery = (
+  teacherId: number | undefined,
+  dbId: number,
+  classId: number,
+  service: Pick<IScheduleService, "getPreviousClass"> = scheduleService,
+) =>
+  queryOptions({
+    queryKey: scheduleKeys.previous(teacherId, dbId, classId),
+    queryFn: teacherId === undefined ? skipToken : () => service.getPreviousClass(dbId, classId),
+    ...CachePolicy.STANDARD,
+  });

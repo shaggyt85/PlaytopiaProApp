@@ -216,6 +216,16 @@ const de: Translations = {
       recovery: "Nachholstunde",
       markPresent: "%{name} als anwesend markieren",
       markAbsent: "%{name} als abwesend markieren",
+      /** La sección de la última clase del grupo, su asistencia y cuántos alumnos tenía. */
+      lastClass: "Letzte Stunde dieser Gruppe",
+      lastClassAttendance: "Anwesenheit %{present}/%{total}",
+      studentCount: {
+        one: "%{count} Schüler",
+        other: "%{count} Schüler",
+      },
+      /** El panel con la lista de esa clase. */
+      lastClassSheet: "Letzte Stunde",
+      lastClassHint: "Öffnet die Liste dieser Stunde",
       notFound: "Kurs nicht gefunden",
     },
     day: {

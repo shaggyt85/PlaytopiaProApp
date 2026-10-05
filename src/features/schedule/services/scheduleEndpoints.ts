@@ -8,4 +8,6 @@ export const SCHEDULE_ENDPOINTS = {
    */
   ATTENDANCE: (dbId: number, classId: number, studentId: number) =>
     `/MobileTeacher/classes/${dbId}/${classId}/attendance/${studentId}`,
+  /** La clase anterior del grupo de una clase del profesor del token. */
+  PREVIOUS: (dbId: number, classId: number) => `/MobileTeacher/classes/${dbId}/${classId}/previous`,
 } as const;

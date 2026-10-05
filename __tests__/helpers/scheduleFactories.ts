@@ -50,6 +50,10 @@ export const scheduleClass = (overrides: Partial<ScheduleClass> = {}): ScheduleC
     classStudent({ student_id: 54, name: "Diego", last_name: "Pérez", level: 3 }),
     classStudent({ student_id: 55, name: "Lucía", last_name: "Romero" }),
   ],
+  // Su ventana de asistencia, como la calcula Core: las 16:00 del 5 en Madrid
+  // (UTC+2) y el final del 7 allí.
+  attendance_opens_at: "2026-10-05T14:00:00Z",
+  attendance_closes_at: "2026-10-07T22:00:00Z",
   ...overrides,
 });
 

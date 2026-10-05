@@ -216,6 +216,16 @@ const fr: Translations = {
       recovery: "Rattrapage",
       markPresent: "Marquer %{name} présent",
       markAbsent: "Marquer %{name} absent",
+      /** La sección de la última clase del grupo, su asistencia y cuántos alumnos tenía. */
+      lastClass: "Dernier cours de ce groupe",
+      lastClassAttendance: "Présences %{present}/%{total}",
+      studentCount: {
+        one: "%{count} élève",
+        other: "%{count} élèves",
+      },
+      /** El panel con la lista de esa clase. */
+      lastClassSheet: "Dernier cours",
+      lastClassHint: "Ouvre la liste de ce cours",
       notFound: "Cours introuvable",
     },
     day: {

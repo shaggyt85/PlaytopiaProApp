@@ -13,6 +13,8 @@ interface AttendanceToggleProps {
   status: AttendanceStatus;
   /** Si es la marca que tiene el alumno. */
   selected: boolean;
+  /** Ya pasó el plazo: se ve atenuado y al tocarlo se dice por qué no cambia. */
+  locked?: boolean;
   onPress: () => void;
   /** Ya traducido: «Marcar presente a Lucía Romero». */
   accessibilityLabel: string;
@@ -21,9 +23,11 @@ interface AttendanceToggleProps {
 /**
  * Un botón de la asistencia de un alumno, como el prototipo: el cuadrado gris
  * con ✓ o ✗ y, si es su marca, en relieve con el degradado de marca (presente)
- * o el coral (ausente). El lector de pantalla dice si está elegido.
+ * o el coral (ausente). Pasado el plazo (`locked`) se sigue viendo la marca,
+ * atenuada, y se puede tocar para que se diga por qué ya no cambia. El lector
+ * de pantalla dice si está elegido.
  */
-export function AttendanceToggle({ status, selected, onPress, accessibilityLabel }: AttendanceToggleProps) {
+export function AttendanceToggle({ status, selected, locked = false, onPress, accessibilityLabel }: AttendanceToggleProps) {
   const styles = useStyles();
   const theme = useTheme();
   const Icon = TOGGLE_ICON[status];
@@ -35,7 +39,12 @@ export function AttendanceToggle({ status, selected, onPress, accessibilityLabel
       accessibilityState={{ selected }}
       accessibilityLabel={accessibilityLabel}
       hitSlop={(theme.touchTarget - TOGGLE_SIZE) / 2}
-      style={({ pressed }) => [styles.box, selected && styles[status], pressed && styles.pressed]}
+      style={({ pressed }) => [
+        styles.box,
+        selected && styles[status],
+        locked && styles.locked,
+        pressed && !locked && styles.pressed,
+      ]}
       testID={`attendance-${status}`}
     >
       {selected && status === "present" ? <BrandGradient style={styles.fill} /> : null}
