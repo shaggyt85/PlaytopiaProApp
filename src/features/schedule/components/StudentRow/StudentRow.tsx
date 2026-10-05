@@ -9,11 +9,11 @@ import { Text } from "@/shared/components/Text";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TranslationKey } from "@/shared/locales";
 import type { AttendanceStatus, ClassStudent } from "@/shared/schemas/schedule.schema";
+import { formatLevel } from "@/shared/utils/formatLevel";
 import { joinParts } from "@/shared/utils/joinParts";
+import { studentName } from "@/shared/utils/studentName";
 
 import type { AttendanceState } from "../../utils/attendanceWindow";
-import { formatLevel } from "../../utils/formatLevel";
-import { studentName } from "../../utils/studentName";
 import { AttendanceToggle } from "../AttendanceToggle";
 
 import { useStyles } from "./StudentRow.styles";

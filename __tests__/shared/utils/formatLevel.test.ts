@@ -1,5 +1,5 @@
-import { formatLevel } from "@/features/schedule/utils/formatLevel";
 import { changeLanguage } from "@/shared/config/i18n";
+import { formatLevel } from "@/shared/utils/formatLevel";
 
 describe("formatLevel", () => {
   it("con la coma del idioma y al menos un decimal", async () => {

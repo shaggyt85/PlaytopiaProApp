@@ -1,4 +1,4 @@
-import { studentName } from "@/features/schedule/utils/studentName";
+import { studentName } from "@/shared/utils/studentName";
 
 describe("studentName", () => {
   it("el nombre y el apellido", () => {

@@ -1,13 +1,12 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
 import { ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-import { BlurTarget, BlurTargetProvider } from "@/shared/components/BlurTarget";
-import { BrandBackground } from "@/shared/components/BrandBackground";
 import { DataState } from "@/shared/components/DataState";
+import { DetailFrame } from "@/shared/components/DetailFrame";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { useForegroundNow } from "@/shared/hooks/useForegroundNow";
+import { useGoBack } from "@/shared/hooks/useGoBack";
 import { useScheduleClubs } from "@/shared/hooks/useScheduleClubs";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { ClassDetailParamsSchema, type ClassDetailParams } from "@/shared/utils/classRoute";
@@ -27,12 +26,6 @@ import { attendanceSummary } from "./utils/attendanceSummary";
 import { attendanceState } from "./utils/attendanceWindow";
 
 import { useStyles } from "./ClassDetailScreen.styles";
-
-/** Volver: a donde se vino o, si no hay (se abrió desde un aviso), a la Agenda. */
-function useGoBack() {
-  const router = useRouter();
-  return useCallback(() => (router.canGoBack() ? router.back() : router.replace("/")), [router]);
-}
 
 /**
  * El detalle de una clase, encima de las pestañas y sin barra: su cabecera, sus
@@ -67,6 +60,7 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
 
   return (
     <DetailFrame
+      testID="class-detail-screen"
       sheet={
         <PreviousClassSheet
           item={previous}
@@ -104,7 +98,7 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
 
 function ClassNotFound() {
   return (
-    <DetailFrame>
+    <DetailFrame testID="class-detail-screen">
       <ClassNotFoundState onBack={useGoBack()} />
     </DetailFrame>
   );
@@ -115,23 +109,3 @@ function ClassNotFoundState({ onBack }: { onBack: () => void }) {
   return <EmptyState title={t("schedule.detail.notFound")} actionLabel={t("common.back")} onAction={onBack} />;
 }
 
-/**
- * El fondo de marca y las zonas seguras: el detalle va fuera de las pestañas,
- * que ponen el suyo. Su panel (`sheet`) va fuera del `BlurTarget` de la
- * pantalla, que es lo que desenfoca al abrirse.
- */
-function DetailFrame({ children, sheet }: { children: React.ReactNode; sheet?: React.ReactNode }) {
-  const styles = useStyles();
-  return (
-    <BrandBackground testID="class-detail-screen">
-      <BlurTargetProvider>
-        <BlurTarget>
-          <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
-            {children}
-          </SafeAreaView>
-        </BlurTarget>
-        {sheet}
-      </BlurTargetProvider>
-    </BrandBackground>
-  );
-}

@@ -22,7 +22,6 @@ export { PreviousClassSheet } from "./PreviousClassSheet";
 export { ScheduleAgenda } from "./ScheduleAgenda";
 export { ScheduleClassBlock } from "./ScheduleClassBlock";
 export { ScheduleToolbar } from "./ScheduleToolbar";
-export { SectionLabel } from "./SectionLabel";
 export { StatTile } from "./StatTile";
 export { StatusPill } from "./StatusPill";
 export { StudentList } from "./StudentList";

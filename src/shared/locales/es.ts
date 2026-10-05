@@ -263,6 +263,26 @@ const es = {
     },
     /** Sin ningún grupo con clases por delante. */
     empty: "Aún no tienes grupos ni clases",
+    /** El detalle de un grupo. */
+    detail: {
+      /** Bajo la cabecera: los del grupo, sin los que vienen a recuperar. */
+      members: {
+        one: "%{count} alumno inscrito",
+        other: "%{count} alumnos inscritos",
+      },
+      students: "Alumnos del grupo",
+      nextClass: "Próxima clase",
+      /** En la próxima clase: los del grupo apuntados y todos los que se esperan. */
+      enrolled: {
+        one: "%{count} inscrito",
+        other: "%{count} inscritos",
+      },
+      expected: {
+        one: "%{count} alumno previsto",
+        other: "%{count} alumnos previstos",
+      },
+      notFound: "Grupo no encontrado",
+    },
   },
   network: {
     title: "Red de clubes",

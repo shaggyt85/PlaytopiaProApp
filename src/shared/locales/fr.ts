@@ -261,6 +261,26 @@ const fr: Translations = {
     },
     /** Sin ningún grupo con clases por delante. */
     empty: "Tu n'as pas encore de groupes ni de cours",
+    /** El detalle de un grupo. */
+    detail: {
+      /** Bajo la cabecera: los del grupo, sin los que vienen a recuperar. */
+      members: {
+        one: "%{count} élève inscrit",
+        other: "%{count} élèves inscrits",
+      },
+      students: "Élèves du groupe",
+      nextClass: "Prochain cours",
+      /** En la próxima clase: los del grupo apuntados y todos los que se esperan. */
+      enrolled: {
+        one: "%{count} inscrit",
+        other: "%{count} inscrits",
+      },
+      expected: {
+        one: "%{count} élève attendu",
+        other: "%{count} élèves attendus",
+      },
+      notFound: "Groupe introuvable",
+    },
   },
   network: {
     title: "Réseau de clubs",

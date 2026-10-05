@@ -261,6 +261,26 @@ const en: Translations = {
     },
     /** Sin ningún grupo con clases por delante. */
     empty: "You don't have any groups or classes yet",
+    /** El detalle de un grupo. */
+    detail: {
+      /** Bajo la cabecera: los del grupo, sin los que vienen a recuperar. */
+      members: {
+        one: "%{count} student enrolled",
+        other: "%{count} students enrolled",
+      },
+      students: "Group students",
+      nextClass: "Next class",
+      /** En la próxima clase: los del grupo apuntados y todos los que se esperan. */
+      enrolled: {
+        one: "%{count} enrolled",
+        other: "%{count} enrolled",
+      },
+      expected: {
+        one: "%{count} student expected",
+        other: "%{count} students expected",
+      },
+      notFound: "Group not found",
+    },
   },
   network: {
     title: "Club Network",

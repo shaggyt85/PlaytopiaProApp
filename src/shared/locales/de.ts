@@ -261,6 +261,26 @@ const de: Translations = {
     },
     /** Sin ningún grupo con clases por delante. */
     empty: "Du hast noch keine Gruppen oder Stunden",
+    /** El detalle de un grupo. */
+    detail: {
+      /** Bajo la cabecera: los del grupo, sin los que vienen a recuperar. */
+      members: {
+        one: "%{count} Schüler angemeldet",
+        other: "%{count} Schüler angemeldet",
+      },
+      students: "Schüler der Gruppe",
+      nextClass: "Nächste Stunde",
+      /** En la próxima clase: los del grupo apuntados y todos los que se esperan. */
+      enrolled: {
+        one: "%{count} angemeldet",
+        other: "%{count} angemeldet",
+      },
+      expected: {
+        one: "%{count} Schüler erwartet",
+        other: "%{count} Schüler erwartet",
+      },
+      notFound: "Gruppe nicht gefunden",
+    },
   },
   network: {
     title: "Club-Netzwerk",

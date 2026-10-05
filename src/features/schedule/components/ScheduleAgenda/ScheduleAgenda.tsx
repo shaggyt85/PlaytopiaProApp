@@ -1,6 +1,7 @@
 import { useState, type ComponentType } from "react";
 import { View } from "react-native";
 
+import { SectionLabel } from "@/shared/components/SectionLabel";
 import type { ClubOf } from "@/shared/hooks/useScheduleClubs";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
@@ -10,7 +11,6 @@ import { SCHEDULE_VIEWS, type ScheduleView, type ScheduleViewProps } from "../..
 import { DaySchedule } from "../DaySchedule";
 import { MonthSchedule } from "../MonthSchedule";
 import { ScheduleToolbar } from "../ScheduleToolbar";
-import { SectionLabel } from "../SectionLabel";
 import { WeekSchedule } from "../WeekSchedule";
 
 import { useStyles } from "./ScheduleAgenda.styles";

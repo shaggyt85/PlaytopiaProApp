@@ -44,15 +44,12 @@ describe("GroupsScreen", () => {
     expect(screen.getAllByTestId("group-card")).toHaveLength(1);
   });
 
-  it("tocar un grupo abre su próxima clase", async () => {
+  it("tocar un grupo abre su detalle", async () => {
     renderWithProviders(<GroupsScreen />);
 
     fireEvent.press(await screen.findByTestId("group-card"));
 
-    expect(router.push).toHaveBeenCalledWith({
-      pathname: "/class/[dbId]/[classId]",
-      params: { dbId: "4", classId: "31", date: "2026-10-06" },
-    });
+    expect(router.push).toHaveBeenCalledWith({ pathname: "/group/[dbId]/[groupId]", params: { dbId: "4", groupId: "11" } });
   });
 
   it("sin grupos, la tarjeta vacía de siempre con su mensaje", async () => {

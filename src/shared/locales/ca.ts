@@ -261,6 +261,26 @@ const ca: Translations = {
     },
     /** Sin ningún grupo con clases por delante. */
     empty: "Encara no tens grups ni classes",
+    /** El detalle de un grupo. */
+    detail: {
+      /** Bajo la cabecera: los del grupo, sin los que vienen a recuperar. */
+      members: {
+        one: "%{count} alumne inscrit",
+        other: "%{count} alumnes inscrits",
+      },
+      students: "Alumnes del grup",
+      nextClass: "Propera classe",
+      /** En la próxima clase: los del grupo apuntados y todos los que se esperan. */
+      enrolled: {
+        one: "%{count} inscrit",
+        other: "%{count} inscrits",
+      },
+      expected: {
+        one: "%{count} alumne previst",
+        other: "%{count} alumnes previstos",
+      },
+      notFound: "Grup no trobat",
+    },
   },
   network: {
     title: "Xarxa de clubs",

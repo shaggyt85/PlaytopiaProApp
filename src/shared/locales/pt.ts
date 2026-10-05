@@ -261,6 +261,26 @@ const pt: Translations = {
     },
     /** Sin ningún grupo con clases por delante. */
     empty: "Você ainda não tem grupos nem aulas",
+    /** El detalle de un grupo. */
+    detail: {
+      /** Bajo la cabecera: los del grupo, sin los que vienen a recuperar. */
+      members: {
+        one: "%{count} aluno inscrito",
+        other: "%{count} alunos inscritos",
+      },
+      students: "Alunos do grupo",
+      nextClass: "Próxima aula",
+      /** En la próxima clase: los del grupo apuntados y todos los que se esperan. */
+      enrolled: {
+        one: "%{count} inscrito",
+        other: "%{count} inscritos",
+      },
+      expected: {
+        one: "%{count} aluno previsto",
+        other: "%{count} alunos previstos",
+      },
+      notFound: "Grupo não encontrado",
+    },
   },
   network: {
     title: "Rede de clubes",

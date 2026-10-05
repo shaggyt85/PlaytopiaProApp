@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { View } from "react-native";
 
-import { SectionLabel } from "../SectionLabel";
+import { SectionLabel } from "@/shared/components/SectionLabel";
 
 import { useStyles } from "./DetailSection.styles";
 
