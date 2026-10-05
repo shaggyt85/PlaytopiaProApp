@@ -1,4 +1,4 @@
-import { IconLoChevronRight, IconLoClock, IconLoMapPin } from "@playtopia/icons/react-native";
+import { IconLoClock, IconLoMapPin } from "@playtopia/icons/react-native";
 import { useEffect } from "react";
 import { View } from "react-native";
 import Animated, {
@@ -9,6 +9,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
+import { Chevron } from "@/shared/components/Chevron";
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
 import { IconText } from "@/shared/components/IconText";
 import { PressableScale } from "@/shared/components/PressableScale";
@@ -21,7 +22,6 @@ import type { ScheduleClub } from "@/shared/hooks/useScheduleClubs";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { classTimeRange } from "@/shared/utils/classTimeRange";
-import { withAlpha } from "@/shared/utils/color";
 import { joinParts } from "@/shared/utils/joinParts";
 import { studentsLabel } from "@/shared/utils/seatsLabel";
 import { splitRecoveries } from "@/shared/utils/splitRecoveries";
@@ -30,7 +30,7 @@ import { classA11yLabel } from "../../utils/classA11yLabel";
 import { heroLabel, type HeroClass } from "../../utils/heroClass";
 
 import { LIVE_PULSE } from "./NextClassCard.animation";
-import { CHEVRON_SIZE, NEXT_CLASS_STOPS, useStyles } from "./NextClassCard.styles";
+import { NEXT_CLASS_STOPS, useStyles } from "./NextClassCard.styles";
 
 interface NextClassCardProps {
   /** La clase en curso o la próxima (`heroClass`). */
@@ -100,7 +100,7 @@ export function NextClassCard({ hero, club, today, now }: NextClassCardProps) {
             />
           </View>
           <View style={styles.chevron}>
-            <IconLoChevronRight size={CHEVRON_SIZE} color={withAlpha(theme.colors.textSecondary, 0.7)} />
+            <Chevron size="md" alpha={0.7} />
           </View>
         </View>
 

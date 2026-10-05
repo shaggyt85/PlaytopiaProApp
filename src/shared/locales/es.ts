@@ -271,6 +271,7 @@ const es = {
         other: "%{count} alumnos inscritos",
       },
       students: "Alumnos del grupo",
+      openStudentHint: "Abre su ficha",
       nextClass: "Próxima clase",
       /** En la próxima clase: los del grupo apuntados y todos los que se esperan. */
       enrolled: {

@@ -1,19 +1,17 @@
-import { IconLoChevronRight } from "@playtopia/icons/react-native";
 import { View } from "react-native";
 
+import { Chevron } from "@/shared/components/Chevron";
 import { PressableScale } from "@/shared/components/PressableScale";
 import { StudentAvatars } from "@/shared/components/StudentAvatars";
 import { Text } from "@/shared/components/Text";
-import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
-import { withAlpha } from "@/shared/utils/color";
 import { capitalize, formatWeekdayShortDayMonth } from "@/shared/utils/formatDate";
 import { joinParts } from "@/shared/utils/joinParts";
 
 import { attendanceSummary } from "../../utils/attendanceSummary";
 
-import { CHEVRON_SIZE, useStyles } from "./PreviousClassCard.styles";
+import { useStyles } from "./PreviousClassCard.styles";
 
 interface PreviousClassCardProps {
   item: ScheduleClass;
@@ -28,7 +26,6 @@ interface PreviousClassCardProps {
  */
 export function PreviousClassCard({ item, onPress }: PreviousClassCardProps) {
   const styles = useStyles();
-  const theme = useTheme();
   const { t } = useTranslation();
   const { present, total } = attendanceSummary(item.students);
   const day = capitalize(formatWeekdayShortDayMonth(item.class_date));
@@ -61,7 +58,7 @@ export function PreviousClassCard({ item, onPress }: PreviousClassCardProps) {
         <Text variant="metaStrong" color="textSecondary" style={styles.count}>
           {count}
         </Text>
-        <IconLoChevronRight size={CHEVRON_SIZE} color={withAlpha(theme.colors.textSecondary, 0.6)} />
+        <Chevron alpha={0.6} />
       </View>
     </PressableScale>
   );

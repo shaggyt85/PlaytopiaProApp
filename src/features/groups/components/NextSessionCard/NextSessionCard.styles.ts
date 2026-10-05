@@ -1,8 +1,6 @@
 import { panel } from "@/shared/config/theme";
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
-/** La flecha (`h-4 w-4`). */
-export const CHEVRON_SIZE = 16;
 
 export const useStyles = makeStyles((theme) => ({
   // `rounded-lg border bg-surface-2/60 p-4 ring-soft`, como «Alumnos del grupo».

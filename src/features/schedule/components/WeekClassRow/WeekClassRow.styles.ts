@@ -7,8 +7,6 @@ import { PAST_OPACITY } from "../../utils/timelineMetrics";
 
 /** El cuadrado de la hora (`h-14 w-14`). */
 export const TIME_SQUARE_SIZE = 56;
-/** La flecha (`h-4 w-4`). */
-export const CHEVRON_SIZE = 16;
 /** La barra de ocupación (`h-1`). */
 const BAR_HEIGHT = 4;
 

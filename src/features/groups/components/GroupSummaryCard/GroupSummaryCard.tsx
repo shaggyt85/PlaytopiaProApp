@@ -1,6 +1,7 @@
-import { IconLoCalendarDays, IconLoChevronRight, IconLoMapPin } from "@playtopia/icons/react-native";
+import { IconLoCalendarDays, IconLoMapPin } from "@playtopia/icons/react-native";
 import { View } from "react-native";
 
+import { Chevron } from "@/shared/components/Chevron";
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
 import { IconText } from "@/shared/components/IconText";
 import { PressableScale } from "@/shared/components/PressableScale";
@@ -16,7 +17,7 @@ import { groupPlace } from "../../utils/groupPlace";
 import type { TeacherGroup } from "../../utils/groupsFromAgenda";
 import { groupWhen } from "../../utils/groupWhen";
 
-import { CHEVRON_SIZE, useStyles } from "./GroupSummaryCard.styles";
+import { useStyles } from "./GroupSummaryCard.styles";
 
 interface GroupSummaryCardProps {
   group: TeacherGroup;
@@ -57,7 +58,7 @@ export function GroupSummaryCard({ group, clubLabel, onPress }: GroupSummaryCard
         <Text variant="cardTitle" numberOfLines={1} style={styles.name}>
           {next.title}
         </Text>
-        <IconLoChevronRight size={CHEVRON_SIZE} color={theme.colors.textSecondary} />
+        <Chevron />
       </View>
       <View style={styles.lines}>
         <IconText Icon={IconLoCalendarDays} label={when} size="card" />

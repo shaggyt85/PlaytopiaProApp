@@ -269,6 +269,7 @@ const ca: Translations = {
         other: "%{count} alumnes inscrits",
       },
       students: "Alumnes del grup",
+      openStudentHint: "Obre la seva fitxa",
       nextClass: "Propera classe",
       /** En la próxima clase: los del grupo apuntados y todos los que se esperan. */
       enrolled: {

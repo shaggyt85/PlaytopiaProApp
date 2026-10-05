@@ -1,8 +1,6 @@
 import { STRIPE_WIDTH } from "@/shared/components/StripeCard";
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
-/** La flecha (`h-5 w-5`). */
-export const CHEVRON_SIZE = 20;
 /** El cuadrado de la flecha (`h-9 w-9`). */
 const CHEVRON_BOX = 36;
 

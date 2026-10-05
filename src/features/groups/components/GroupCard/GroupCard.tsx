@@ -1,7 +1,8 @@
-import { IconLoChevronRight, IconLoClock, IconLoMapPin } from "@playtopia/icons/react-native";
+import { IconLoClock, IconLoMapPin } from "@playtopia/icons/react-native";
 import { memo } from "react";
 import { View } from "react-native";
 
+import { Chevron } from "@/shared/components/Chevron";
 import { IconText } from "@/shared/components/IconText";
 import { PressableScale } from "@/shared/components/PressableScale";
 import { StripeCard } from "@/shared/components/StripeCard";
@@ -9,7 +10,6 @@ import { StudentAvatars } from "@/shared/components/StudentAvatars";
 import { Text } from "@/shared/components/Text";
 import { LEVEL_ICON } from "@/shared/config/icons";
 import type { ColorPair } from "@/shared/config/theme";
-import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { withAlpha } from "@/shared/utils/color";
 import { joinParts } from "@/shared/utils/joinParts";
@@ -19,7 +19,7 @@ import type { TeacherGroup } from "../../utils/groupsFromAgenda";
 import { groupPlace } from "../../utils/groupPlace";
 import { groupWhen } from "../../utils/groupWhen";
 
-import { CHEVRON_SIZE, useStyles } from "./GroupCard.styles";
+import { useStyles } from "./GroupCard.styles";
 
 interface GroupCardProps {
   group: TeacherGroup;
@@ -38,7 +38,6 @@ interface GroupCardProps {
  */
 export const GroupCard = memo(function GroupCard({ group, colors, clubLabel, onPress }: GroupCardProps) {
   const styles = useStyles();
-  const theme = useTheme();
   const { t } = useTranslation();
   const { next } = group;
   const when = groupWhen(group, t);
@@ -61,7 +60,7 @@ export const GroupCard = memo(function GroupCard({ group, colors, clubLabel, onP
               <IconText Icon={LEVEL_ICON} label={next.level_range} size="rowTitle" tint={colors.color} style={styles.level} />
             </View>
             <View style={styles.chevron}>
-              <IconLoChevronRight size={CHEVRON_SIZE} color={theme.colors.textSecondary} />
+              <Chevron size="md" />
             </View>
           </View>
 

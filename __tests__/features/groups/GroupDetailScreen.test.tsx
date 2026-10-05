@@ -2,6 +2,7 @@ import { fireEvent, screen } from "@testing-library/react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { GroupDetailScreen } from "@/features/groups";
+import { groupAttendanceService } from "@/features/groups/services/groupAttendanceService";
 import { myClubsService } from "@/shared/services/myClubsService";
 import { scheduleService } from "@/shared/services/scheduleService";
 import { serverNow } from "@/shared/utils/serverClock";
@@ -34,6 +35,8 @@ const cantera = scheduleClass({
   ],
 });
 
+const getGroupAttendance = jest.spyOn(groupAttendanceService, "getGroupAttendance");
+
 const openWith = (params: Record<string, string>) => {
   jest.mocked(useLocalSearchParams).mockReturnValue(params);
   renderWithProviders(<GroupDetailScreen />);
@@ -46,6 +49,7 @@ describe("GroupDetailScreen", () => {
     jest.mocked(useRouter).mockReturnValue(router as never);
     jest.mocked(myClubsService.getMyClubs).mockResolvedValue({ clubs: [schoolCard(4, 7, { club_name: "Sede Centro" })] });
     jest.mocked(scheduleService.getClasses).mockResolvedValue(scheduleResponse({ classes: [cantera] }));
+    getGroupAttendance.mockResolvedValue([]);
   });
 
   it("como el prototipo: el nombre, la sede y la pista, y cuántos alumnos tiene el grupo", async () => {
@@ -73,6 +77,24 @@ describe("GroupDetailScreen", () => {
       pathname: "/class/[dbId]/[classId]",
       params: { dbId: "4", classId: "31", date: "2026-10-06" },
     });
+  });
+
+  it("tocar un alumno abre su ficha en el grupo", async () => {
+    openWith({ dbId: "4", groupId: "11" });
+
+    fireEvent.press(await screen.findByRole("button", { name: /^Diego Pérez/ }));
+
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: "/student/[dbId]/[groupId]/[studentId]",
+      params: { dbId: "4", groupId: "11", studentId: "54" },
+    });
+  });
+
+  it("pide ya el historial de asistencia del grupo, con su próxima clase, para sus fichas", async () => {
+    openWith({ dbId: "4", groupId: "11" });
+
+    await screen.findByTestId("group-students");
+    expect(getGroupAttendance).toHaveBeenCalledWith(4, 31);
   });
 
   it("‹ vuelve a donde se vino", async () => {

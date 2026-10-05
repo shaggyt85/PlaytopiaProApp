@@ -4,8 +4,6 @@ import { PAST_OPACITY } from "../../utils/timelineMetrics";
 
 /** El cuadrado de la hora (`h-12 w-12`). */
 export const TIME_SQUARE_SIZE = 48;
-/** La flecha (`h-4 w-4`). */
-export const CHEVRON_SIZE = 16;
 
 export const useStyles = makeStyles((theme) => ({
   // `flex items-start gap-3 rounded-2xl bg-card p-3 ring-soft`.

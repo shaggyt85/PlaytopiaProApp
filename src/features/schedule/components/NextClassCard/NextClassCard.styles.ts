@@ -6,8 +6,6 @@ import { withAlpha } from "@/shared/utils/color";
 
 /** El punto de la etiqueta (`h-1.5 w-1.5`). */
 const LABEL_DOT = 6;
-/** La flecha de la derecha (`h-5 w-5`). */
-export const CHEVRON_SIZE = 20;
 /** Dónde para cada color del degradado (`…, surface 60%, …`). */
 export const NEXT_CLASS_STOPS = [0, 0.6, 1] as const;
 

@@ -1,8 +1,8 @@
-import { useLocalSearchParams } from "expo-router";
 import { ScrollView, View } from "react-native";
 
 import { DataState } from "@/shared/components/DataState";
 import { DetailFrame } from "@/shared/components/DetailFrame";
+import { DetailRoute } from "@/shared/components/DetailRoute";
 import { IconText } from "@/shared/components/IconText";
 import { NotFoundState } from "@/shared/components/NotFoundState";
 import { Text } from "@/shared/components/Text";
@@ -16,6 +16,8 @@ import { splitRecoveries } from "@/shared/utils/splitRecoveries";
 
 import { DetailBack, GroupStudentsCard, NextSessionCard } from "./components";
 import { useGroupDetail } from "./hooks/useGroupDetail";
+import { useOpenStudent } from "./hooks/useOpenStudent";
+import { usePrefetchGroupAttendance } from "./hooks/usePrefetchGroupAttendance";
 import { groupColors } from "./utils/groupColors";
 import { GroupDetailParamsSchema, type GroupDetailParams } from "./utils/groupRoute";
 import type { TeacherGroup } from "./utils/groupsFromAgenda";
@@ -27,15 +29,20 @@ import { useStyles } from "./GroupDetailScreen.styles";
 /**
  * El detalle de un grupo, como el prototipo, encima de las pestañas como el de
  * una clase: ‹, su nombre con el punto de su color y su nivel, la sede y la
- * pista, cuándo es y cuántos alumnos tiene; «Alumnos del grupo» y su próxima
- * clase, que abre su detalle. Todo de su próxima clase (`useGroupDetail`).
+ * pista, cuándo es y cuántos alumnos tiene; «Alumnos del grupo», que abre la
+ * ficha de cada uno, y su próxima clase, que abre su detalle. Todo de su próxima
+ * clase (`useGroupDetail`).
  *
  * Los parámetros de la ruta llegan como texto: si no son válidos, «Grupo no
  * encontrado», igual que si el grupo ya no tiene clases por delante.
  */
 export function GroupDetailScreen() {
-  const params = GroupDetailParamsSchema.safeParse(useLocalSearchParams());
-  return params.success ? <GroupDetail {...params.data} /> : <GroupNotFound />;
+  const { t } = useTranslation();
+  return (
+    <DetailRoute schema={GroupDetailParamsSchema} testID="group-detail-screen" notFound={t("groups.detail.notFound")}>
+      {(params) => <GroupDetail {...params} />}
+    </DetailRoute>
+  );
 }
 
 function GroupDetail({ dbId, groupId }: GroupDetailParams) {
@@ -50,7 +57,7 @@ function GroupDetail({ dbId, groupId }: GroupDetailParams) {
         {group ? (
           <ScrollView contentContainerStyle={styles.content}>
             <GroupHeader group={group} onBack={goBack} />
-            <GroupBody group={group} />
+            <GroupBody group={group} groupId={groupId} />
           </ScrollView>
         ) : (
           <NotFoundState title={t("groups.detail.notFound")} />
@@ -94,25 +101,23 @@ function GroupHeader({ group, onBack }: { group: TeacherGroup; onBack: () => voi
   );
 }
 
-/** «Alumnos del grupo» (sin los que vienen a recuperar) y su próxima clase. */
-function GroupBody({ group }: { group: TeacherGroup }) {
+/**
+ * «Alumnos del grupo» (sin los que vienen a recuperar), que abre la ficha de
+ * cada uno, y su próxima clase. El historial de asistencia del grupo se pide ya
+ * aquí: las fichas se abren con él.
+ */
+function GroupBody({ group, groupId }: { group: TeacherGroup; groupId: number }) {
   const styles = useStyles();
   const openClass = useOpenClass();
   const { next } = group;
+  const openStudent = useOpenStudent(next.db_id, groupId);
+  usePrefetchGroupAttendance({ dbId: next.db_id, groupId, classId: next.id });
 
   return (
     <View style={styles.sections}>
-      <GroupStudentsCard students={splitRecoveries(next.students).members} />
+      <GroupStudentsCard students={splitRecoveries(next.students).members} onOpen={openStudent} />
       <NextSessionCard next={next} onPress={() => openClass(next)} />
     </View>
   );
 }
 
-function GroupNotFound() {
-  const { t } = useTranslation();
-  return (
-    <DetailFrame testID="group-detail-screen">
-      <NotFoundState title={t("groups.detail.notFound")} />
-    </DetailFrame>
-  );
-}

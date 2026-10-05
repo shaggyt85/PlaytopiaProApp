@@ -3,8 +3,6 @@ import { StyleSheet } from "react-native";
 import { makeStyles } from "@/shared/hooks/makeStyles";
 import { withAlpha } from "@/shared/utils/color";
 
-/** La flecha (`h-4 w-4`). */
-export const CHEVRON_SIZE = 16;
 /** El punto del color del grupo (`h-2.5 w-2.5`). */
 const DOT = 10;
 

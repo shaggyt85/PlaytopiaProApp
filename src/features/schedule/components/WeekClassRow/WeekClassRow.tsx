@@ -1,13 +1,13 @@
-import { IconLoChevronRight, IconLoClock } from "@playtopia/icons/react-native";
+import { IconLoClock } from "@playtopia/icons/react-native";
 import { memo } from "react";
 import { View } from "react-native";
 
+import { Chevron } from "@/shared/components/Chevron";
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
 import { IconText } from "@/shared/components/IconText";
 import { PressableScale } from "@/shared/components/PressableScale";
 import { Text } from "@/shared/components/Text";
 import { useOpenClass } from "@/shared/hooks/useOpenClass";
-import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { studentsLabel } from "@/shared/utils/seatsLabel";
 
@@ -18,7 +18,7 @@ import type { DayClassRowProps } from "../DayClassList";
 import { STATUS_PILL_OF, StatusPill } from "../StatusPill";
 import { TimeSquare } from "../TimeSquare";
 
-import { CHEVRON_SIZE, TIME_SQUARE_SIZE, useStyles } from "./WeekClassRow.styles";
+import { TIME_SQUARE_SIZE, useStyles } from "./WeekClassRow.styles";
 
 /**
  * Una clase en la vista Semana, como el prototipo final: la hora en su cuadrado
@@ -32,7 +32,6 @@ import { CHEVRON_SIZE, TIME_SQUARE_SIZE, useStyles } from "./WeekClassRow.styles
  */
 export const WeekClassRow = memo(function WeekClassRow({ item, colors, club, status }: DayClassRowProps) {
   const styles = useStyles();
-  const theme = useTheme();
   const { t } = useTranslation();
   const openClass = useOpenClass();
   const pill = STATUS_PILL_OF[status];
@@ -73,7 +72,7 @@ export const WeekClassRow = memo(function WeekClassRow({ item, colors, club, sta
           </Text>
         </View>
       </View>
-      <IconLoChevronRight size={CHEVRON_SIZE} color={theme.colors.textSecondary} />
+      <Chevron />
     </PressableScale>
   );
 });

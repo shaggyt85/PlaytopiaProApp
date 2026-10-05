@@ -1,6 +1,6 @@
-import { IconLoChevronRight } from "@playtopia/icons/react-native";
 import { View } from "react-native";
 
+import { Chevron } from "@/shared/components/Chevron";
 import { PressableScale } from "@/shared/components/PressableScale";
 import { SectionLabel } from "@/shared/components/SectionLabel";
 import { Text } from "@/shared/components/Text";
@@ -11,7 +11,7 @@ import { formatClassDate, formatClubTime } from "@/shared/utils/formatDate";
 import { joinParts } from "@/shared/utils/joinParts";
 import { splitRecoveries } from "@/shared/utils/splitRecoveries";
 
-import { CHEVRON_SIZE, useStyles } from "./NextSessionCard.styles";
+import { useStyles } from "./NextSessionCard.styles";
 
 interface NextSessionCardProps {
   next: ScheduleClass;
@@ -55,7 +55,7 @@ export function NextSessionCard({ next, onPress }: NextSessionCardProps) {
           </Text>
           <Text variant="labelStrong">{expected}</Text>
         </View>
-        <IconLoChevronRight size={CHEVRON_SIZE} color={theme.colors.textSecondary} />
+        <Chevron />
       </View>
     </PressableScale>
   );

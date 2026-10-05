@@ -1,9 +1,9 @@
-import { useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
 import { ScrollView } from "react-native";
 
 import { DataState } from "@/shared/components/DataState";
 import { DetailFrame } from "@/shared/components/DetailFrame";
+import { DetailRoute } from "@/shared/components/DetailRoute";
 import { NotFoundState } from "@/shared/components/NotFoundState";
 import { useForegroundNow } from "@/shared/hooks/useForegroundNow";
 import { useGoBack } from "@/shared/hooks/useGoBack";
@@ -37,8 +37,12 @@ import { useStyles } from "./ClassDetailScreen.styles";
  * encontrada», igual que si la respuesta del mes ya no trae la clase.
  */
 export function ClassDetailScreen() {
-  const params = ClassDetailParamsSchema.safeParse(useLocalSearchParams());
-  return params.success ? <ClassDetail {...params.data} /> : <ClassNotFound />;
+  const { t } = useTranslation();
+  return (
+    <DetailRoute schema={ClassDetailParamsSchema} testID="class-detail-screen" notFound={t("schedule.detail.notFound")}>
+      {(params) => <ClassDetail {...params} />}
+    </DetailRoute>
+  );
 }
 
 function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
@@ -96,12 +100,4 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
   );
 }
 
-function ClassNotFound() {
-  const { t } = useTranslation();
-  return (
-    <DetailFrame testID="class-detail-screen">
-      <NotFoundState title={t("schedule.detail.notFound")} />
-    </DetailFrame>
-  );
-}
 

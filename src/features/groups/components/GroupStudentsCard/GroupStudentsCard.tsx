@@ -1,7 +1,9 @@
 import { View } from "react-native";
 
+import { Chevron } from "@/shared/components/Chevron";
 import { EmptyNote } from "@/shared/components/EmptyNote";
 import { IconText } from "@/shared/components/IconText";
+import { PressableScale } from "@/shared/components/PressableScale";
 import { SectionLabel } from "@/shared/components/SectionLabel";
 import { StudentAvatar } from "@/shared/components/StudentAvatar";
 import { Text } from "@/shared/components/Text";
@@ -17,15 +19,17 @@ import { useStyles } from "./GroupStudentsCard.styles";
 interface GroupStudentsCardProps {
   /** Los del grupo, ya sin los que vienen a recuperar (ordenados por el contrato). */
   students: readonly ClassStudent[];
+  /** Abre la ficha de un alumno. */
+  onOpen: (student: ClassStudent) => void;
 }
 
 /**
  * «Alumnos del grupo», como el prototipo: un panel con el círculo, el nombre y
- * el nivel de cada uno («2,0»), en filas separadas por una línea fina, como
- * lista para el lector de pantalla. Las filas no se tocan hasta que exista la
- * ficha del alumno. Sin alumnos, «Aún no hay alumnos apuntados».
+ * el nivel de cada uno («2,0») y su ›, en filas separadas por una línea fina,
+ * como lista para el lector de pantalla. Cada fila abre la ficha del alumno y
+ * se encoge al tocarla. Sin alumnos, «Aún no hay alumnos apuntados».
  */
-export function GroupStudentsCard({ students }: GroupStudentsCardProps) {
+export function GroupStudentsCard({ students, onOpen }: GroupStudentsCardProps) {
   const styles = useStyles();
   const { t } = useTranslation();
 
@@ -44,11 +48,12 @@ export function GroupStudentsCard({ students }: GroupStudentsCardProps) {
             const name = studentName(student);
             const level = formatLevel(student.level);
             return (
-              <View
+              <PressableScale
                 key={student.student_id}
-                style={styles.row}
-                accessible
+                onPress={() => onOpen(student)}
                 accessibilityLabel={joinParts([name, level && t("schedule.next.level", { range: level })], ", ")}
+                accessibilityHint={t("groups.detail.openStudentHint")}
+                style={styles.row}
                 testID="group-student"
               >
                 <StudentAvatar student={student} index={index} size="sm" />
@@ -56,7 +61,8 @@ export function GroupStudentsCard({ students }: GroupStudentsCardProps) {
                   {name}
                 </Text>
                 {level ? <IconText Icon={LEVEL_ICON} label={level} size="row" color="text" iconColor="primary" /> : null}
-              </View>
+                <Chevron />
+              </PressableScale>
             );
           })}
         </View>

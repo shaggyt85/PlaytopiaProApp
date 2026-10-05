@@ -269,6 +269,7 @@ const pt: Translations = {
         other: "%{count} alunos inscritos",
       },
       students: "Alunos do grupo",
+      openStudentHint: "Abre a ficha do aluno",
       nextClass: "Próxima aula",
       /** En la próxima clase: los del grupo apuntados y todos los que se esperan. */
       enrolled: {

@@ -1,7 +1,5 @@
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
-/** La flecha (`h-4 w-4`), la de las filas del Mes. */
-export const CHEVRON_SIZE = 16;
 
 export const useStyles = makeStyles((theme) => ({
   // `rounded-2xl bg-surface p-3.5 ring-soft`, como las filas de los alumnos.

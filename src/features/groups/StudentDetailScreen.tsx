@@ -1,8 +1,9 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { ScrollView, View } from "react-native";
 
 import { DataState } from "@/shared/components/DataState";
 import { DetailFrame } from "@/shared/components/DetailFrame";
+import { DetailRoute } from "@/shared/components/DetailRoute";
 import { EmptyNote } from "@/shared/components/EmptyNote";
 import { NotFoundState } from "@/shared/components/NotFoundState";
 import { useGoBack } from "@/shared/hooks/useGoBack";
@@ -34,8 +35,12 @@ import { useStyles } from "./StudentDetailScreen.styles";
  * clases por delante o si el alumno ya no está en él.
  */
 export function StudentDetailScreen() {
-  const params = StudentDetailParamsSchema.safeParse(useLocalSearchParams());
-  return params.success ? <StudentDetail {...params.data} /> : <StudentNotFound />;
+  const { t } = useTranslation();
+  return (
+    <DetailRoute schema={StudentDetailParamsSchema} testID="student-detail-screen" notFound={t("groups.student.notFound")}>
+      {(params) => <StudentDetail {...params} />}
+    </DetailRoute>
+  );
 }
 
 function StudentDetail({ dbId, groupId, studentId }: StudentDetailParams) {
@@ -99,11 +104,3 @@ function StudentFile({ group, groupId, student, index }: StudentFileProps) {
   );
 }
 
-function StudentNotFound() {
-  const { t } = useTranslation();
-  return (
-    <DetailFrame testID="student-detail-screen">
-      <NotFoundState title={t("groups.student.notFound")} />
-    </DetailFrame>
-  );
-}

@@ -1,7 +1,8 @@
-import { IconLoChevronRight, IconLoClock, IconLoMapPin, IconLoUsers } from "@playtopia/icons/react-native";
+import { IconLoClock, IconLoMapPin, IconLoUsers } from "@playtopia/icons/react-native";
 import { memo } from "react";
 import { View } from "react-native";
 
+import { Chevron } from "@/shared/components/Chevron";
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
 import { IconText } from "@/shared/components/IconText";
 import { PressableScale } from "@/shared/components/PressableScale";
@@ -21,7 +22,7 @@ import type { ClassStatus } from "../../utils/classTiming";
 import type { BlockGeometry } from "../../utils/timelineGeometry";
 import { STATUS_PILL_OF, StatusPill } from "../StatusPill";
 
-import { CHEVRON_SIZE, useStyles } from "./ScheduleClassBlock.styles";
+import { useStyles } from "./ScheduleClassBlock.styles";
 
 interface ScheduleClassBlockProps {
   item: ScheduleClass;
@@ -96,7 +97,7 @@ export const ScheduleClassBlock = memo(function ScheduleClassBlock({
             </View>
           </View>
           <View style={styles.chevron}>
-            <IconLoChevronRight size={CHEVRON_SIZE} color={theme.colors.textSecondary} />
+            <Chevron />
           </View>
         </StripeCard>
       </PressableScale>

@@ -6,8 +6,6 @@ import { withAlpha } from "@/shared/utils/color";
 
 import { PAST_OPACITY } from "../../utils/timelineMetrics";
 
-/** La flecha de la derecha (`h-4 w-4`). */
-export const CHEVRON_SIZE = 16;
 
 export const useStyles = makeStyles((theme) => ({
   // A todo el ancho; el hueco con la de debajo, el `- 8` de su alto.
