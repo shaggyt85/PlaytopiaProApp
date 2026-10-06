@@ -7,6 +7,12 @@ import { z } from "zod";
 export const WEEK_DAYS = ["0", "1", "2", "3", "4", "5", "6"] as const;
 export type WeekDay = (typeof WEEK_DAYS)[number];
 
+/**
+ * El orden en que la app enseña la semana: de lunes a domingo, con las claves de
+ * Core. Escrito una vez: lo usan el resumen de la disponibilidad y su editor.
+ */
+export const WEEK_DISPLAY_ORDER: readonly WeekDay[] = ["1", "2", "3", "4", "5", "6", "0"];
+
 /** La última hora en la que se puede empezar: la de 23:00 a 24:00 (`LAST_HOUR` en Core). */
 export const LAST_HOUR = 23;
 

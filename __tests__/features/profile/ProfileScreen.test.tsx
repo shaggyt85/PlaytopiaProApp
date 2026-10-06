@@ -44,7 +44,17 @@ describe("ProfileScreen", () => {
     expect(screen.getByTestId("professional-card")).toBeTruthy();
     // También sale en las horas: se busca en su tarjeta.
     expect(await within(screen.getByTestId("my-clubs-card")).findByText("Club Padel Indoor Madrid")).toBeTruthy();
+    expect(await screen.findByTestId("availability-card")).toBeTruthy();
+    expect(await screen.findByText("2 días · 5 h semanales")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Cerrar sesión" })).toBeTruthy();
+  });
+
+  it("las horas y la disponibilidad, en una sola petición", async () => {
+    jest.mocked(teacherProfileService.get).mockResolvedValue(teacherProfile());
+    renderWithProviders(<ProfileScreen />);
+
+    await screen.findByText("2 días · 5 h semanales");
+    expect(profileDetailsService.get).toHaveBeenCalledTimes(1);
   });
 
   it("pide el perfil una sola vez: el mismo que usa la Agenda", async () => {
@@ -56,14 +66,15 @@ describe("ProfileScreen", () => {
     expect(teacherProfileService.get).toHaveBeenCalledWith(42);
   });
 
-  it("si fallan las horas, el resto del perfil se ve igual", async () => {
+  it("si fallan las horas y la disponibilidad, el resto del perfil se ve igual", async () => {
     jest.mocked(teacherProfileService.get).mockResolvedValue(teacherProfile());
     jest
       .mocked(profileDetailsService.get)
       .mockRejectedValue(HttpError.fromResponse(403, { type: "about:blank", title: "Forbidden", status: 403 }));
     renderWithProviders(<ProfileScreen />);
 
-    expect(await screen.findByRole("button", { name: "Reintentar" })).toBeTruthy();
+    // Una petición para las dos tarjetas: cada una con su «Reintentar».
+    expect(await screen.findAllByRole("button", { name: "Reintentar" })).toHaveLength(2);
     expect(screen.getByTestId("personal-data-card")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Cerrar sesión" })).toBeTruthy();
   });

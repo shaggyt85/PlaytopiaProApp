@@ -15,7 +15,7 @@ export function classSpan(c: Timed): { start: number; end: number } {
 
 /** De qué hora a qué hora es una clase: «08:30–09:30». El fin sale de su duración (`classSpan`). */
 export function classTimeRange(c: Timed, t: typeof translate): string {
-  return t("schedule.detail.timeRange", {
+  return t("common.timeRange", {
     start: formatClubTime(c.class_time),
     end: formatWallTime(classSpan(c).end),
   });

@@ -3,6 +3,8 @@ import type { Translations } from "./es";
 const en: Translations = {
   common: {
     /** Un tiempo exacto: «5:50 h» (`courtTimeLabel`). */
+    /** De qué hora a qué hora: «08:30–09:30», «16:00–19:00». */
+    timeRange: "%{start}–%{end}",
     courtTime: "%{hours}:%{minutes} h",
     /** Lo hecho de lo planificado: «9:00 / 12:00 h» (`courtTimeProgressLabel`). */
     courtTimeProgress: "%{doneHours}:%{doneMinutes} / %{plannedHours}:%{plannedMinutes} h",
@@ -206,7 +208,6 @@ const en: Translations = {
     /** El detalle de una clase (se abre al tocarla en la agenda). */
     detail: {
       openHint: "Opens the class details",
-      timeRange: "%{start}–%{end}",
       /** Una cifra del día encima de la agenda para el lector de pantalla: «clases hoy: 3». */
       stat: "%{label}: %{value}",
       students: "Students & attendance",
@@ -402,6 +403,21 @@ const en: Translations = {
     clubs: {
       title: "Clubs where you work",
       empty: "You don't work at any club yet",
+    },
+    availability: {
+      title: "Availability",
+      /** Una sede sin ninguna hora indicada. */
+      empty: "You haven't set your availability yet",
+      /** «3 días · 14 h semanales». */
+      summary: "%{days} · %{hours} h a week",
+      days: {
+        one: "1 day",
+        other: "%{count} days",
+      },
+      /** Un día con sus tramos: «Lun 16:00–19:00». */
+      day: "%{day} %{ranges}",
+      /** Entre dos tramos del mismo día: «09:00–11:00 y 17:00–19:00». */
+      rangeSeparator: " and ",
     },
     signOutConfirm: "Do you want to sign out?",
   },

@@ -106,24 +106,48 @@ export function capitalize(text: string): string {
   return `${text.charAt(0).toLocaleUpperCase(getLocale())}${text.slice(1)}`;
 }
 
-// Un lunes cualquiera: sus 7 días dan las letras de la semana en orden.
+// Un lunes cualquiera: sus 7 días dan los nombres de la semana en orden.
 const A_MONDAY = "2024-01-01";
-const weekdayInitialsByLocale = new Map<string, readonly string[]>();
+const DAY_MS = 86_400_000;
+const weekdaysByLocale = new Map<string, readonly string[]>();
+
+/**
+ * Los días de lunes a domingo en el idioma activo, con ese estilo de `Intl`.
+ * Única vuelta a la semana: las letras y los nombres cortos salen de aquí. Se
+ * calculan una vez por idioma y estilo.
+ */
+function weekdays(weekday: "narrow" | "short"): readonly string[] {
+  const key = `${getLocale()}|${weekday}`;
+  let names = weekdaysByLocale.get(key);
+  if (!names) {
+    const format = formatter({ weekday, timeZone: "UTC" });
+    const monday = wallAsUtcMs(A_MONDAY);
+    names = Array.from({ length: 7 }, (_, i) => format.format(monday + i * DAY_MS));
+    weekdaysByLocale.set(key, names);
+  }
+  return names;
+}
 
 /**
  * Las letras de los días, de lunes a domingo, en el idioma activo: "L M X J V S
- * D" en español, "M T W T F S S" en inglés. Se calculan una vez por idioma.
+ * D" en español, "M T W T F S S" en inglés.
  */
-export function formatWeekdayInitials(): readonly string[] {
-  const locale = getLocale();
-  let letters = weekdayInitialsByLocale.get(locale);
-  if (!letters) {
-    const narrow = formatter({ weekday: "narrow", timeZone: "UTC" });
-    const monday = wallAsUtcMs(A_MONDAY);
-    letters = Array.from({ length: 7 }, (_, i) => narrow.format(monday + i * 86_400_000));
-    weekdayInitialsByLocale.set(locale, letters);
-  }
-  return letters;
+export const formatWeekdayInitials = (): readonly string[] => weekdays("narrow");
+
+/**
+ * El nombre corto de un día por su número como lo cuenta Core (0 = domingo …
+ * 6 = sábado), con mayúscula: «Lun», «Mié» (los tramos de la disponibilidad).
+ */
+export const formatWeekdayShort = (day: number): string => capitalize(weekdays("short")[(day + 6) % 7]);
+
+/**
+ * Una hora en punto del día (0–24) → «16:00», con el mismo formato que las
+ * clases. La 24 es el final del día: en los idiomas de 24 horas, «24:00» y no
+ * «00:00», que parecería el día siguiente.
+ */
+export function formatHourOfDay(hour: number): string {
+  const time = formatWallTime(wallAsUtcMs("1970-01-01", `${String(hour % 24).padStart(2, "0")}:00:00`));
+  return hour === 24 && time.startsWith("00") ? `24${time.slice(2)}` : time;
 }
 
 /** Un instante real (timestamp o ISO) mostrado en la hora del club. */

@@ -15,7 +15,9 @@ import {
   formatWallTime,
   formatWeekdayDate,
   formatWeekdayDay,
+  formatHourOfDay,
   formatWeekdayInitials,
+  formatWeekdayShort,
   formatWeekdayName,
 } from "@/shared/utils/formatDate";
 
@@ -153,6 +155,26 @@ describe("capitalize", () => {
   it("la primera letra en mayúscula, el resto igual", () => {
     expect(capitalize("lunes 18")).toBe("Lunes 18");
     expect(capitalize("")).toBe("");
+  });
+});
+
+describe("formatWeekdayShort", () => {
+  it("el nombre corto de un día por su número de Core, con mayúscula", () => {
+    expect(formatWeekdayShort(1)).toBe("Lun");
+    expect(formatWeekdayShort(3)).toBe("Mié");
+    expect(formatWeekdayShort(0)).toBe("Dom");
+  });
+});
+
+describe("formatHourOfDay", () => {
+  it("una hora en punto, con dos cifras", () => {
+    expect(formatHourOfDay(9)).toBe("09:00");
+    expect(formatHourOfDay(16)).toBe("16:00");
+  });
+
+  it("la 24 es el final del día, no las 00:00", () => {
+    expect(formatHourOfDay(24)).toBe("24:00");
+    expect(formatHourOfDay(0)).toBe("00:00");
   });
 });
 

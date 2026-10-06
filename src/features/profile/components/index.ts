@@ -1,4 +1,6 @@
+export { AvailabilityCard } from "./AvailabilityCard";
 export { ClubHoursRow } from "./ClubHoursRow";
+export { ClubName } from "./ClubName";
 export { ExpandChevron } from "./ExpandChevron";
 export { HoursCard } from "./HoursCard";
 export { HoursHistory } from "./HoursHistory";
