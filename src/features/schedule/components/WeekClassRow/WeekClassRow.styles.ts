@@ -1,5 +1,3 @@
-import { StyleSheet } from "react-native";
-
 import { makeStyles } from "@/shared/hooks/makeStyles";
 import { withAlpha } from "@/shared/utils/color";
 
@@ -7,8 +5,6 @@ import { PAST_OPACITY } from "../../utils/timelineMetrics";
 
 /** El cuadrado de la hora (`h-14 w-14`). */
 export const TIME_SQUARE_SIZE = 56;
-/** La barra de ocupación (`h-1`). */
-const BAR_HEIGHT = 4;
 
 export const useStyles = makeStyles((theme) => ({
   // `flex items-start gap-3 rounded-2xl p-2.5 ring-soft bg-surface`.
@@ -37,14 +33,4 @@ export const useStyles = makeStyles((theme) => ({
     gap: theme.spacing.sm,
     marginTop: theme.spacing.xs + theme.spacing.xs / 2,
   },
-  // `h-1 flex-1 overflow-hidden rounded-full bg-surface-2`.
-  bar: {
-    flex: 1,
-    height: BAR_HEIGHT,
-    overflow: "hidden",
-    borderRadius: theme.radius.pill,
-    backgroundColor: theme.colors.surfaceStrong,
-  },
-  barFill: { height: "100%", overflow: "hidden", borderRadius: theme.radius.pill },
-  fill: StyleSheet.absoluteFill,
 }));

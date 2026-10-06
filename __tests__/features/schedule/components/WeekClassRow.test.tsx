@@ -52,7 +52,7 @@ describe("WeekClassRow", () => {
     setup();
 
     expect(
-      StyleSheet.flatten(screen.getByTestId("week-class-7-bar").props.style)
+      StyleSheet.flatten(screen.getByTestId("week-class-7-bar", { includeHiddenElements: true }).props.style)
         .width,
     ).toBe("75%");
   });

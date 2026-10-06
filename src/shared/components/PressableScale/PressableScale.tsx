@@ -13,6 +13,8 @@ interface PressableScaleProps {
   accessibilityLabel: string;
   /** Ya traducido: qué pasa al tocarlo («Abre el detalle de la clase»). */
   accessibilityHint?: string;
+  /** Si lo que abre está abierto (un desplegable): el lector de pantalla lo dice. */
+  expanded?: boolean;
   /** El estilo de lo que se toca (su caja): va en la parte que se encoge. */
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -21,7 +23,7 @@ interface PressableScaleProps {
 
 /**
  * Una tarjeta que se toca (una clase de la agenda, la próxima clase, la última
- * del grupo, un grupo de «Mis grupos»): se encoge un poco al pulsarla, como en
+ * del grupo, un grupo de «Mis grupos», los desplegables de Perfil): se encoge un poco al pulsarla, como en
  * el prototipo. Solo con `transform` y en el hilo de la interfaz; con «reducir
  * movimiento», no se mueve.
  */
@@ -29,6 +31,7 @@ export function PressableScale({
   onPress,
   accessibilityLabel,
   accessibilityHint,
+  expanded,
   style,
   testID,
   children,
@@ -50,6 +53,7 @@ export function PressableScale({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
+      accessibilityState={expanded === undefined ? undefined : { expanded }}
       style={styles.fill}
     >
       {/* El testID va en la caja (la que lleva el estilo); un toque en ella llega al Pressable. */}

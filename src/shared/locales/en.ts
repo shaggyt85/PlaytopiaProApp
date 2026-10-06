@@ -2,6 +2,10 @@ import type { Translations } from "./es";
 
 const en: Translations = {
   common: {
+    /** Un tiempo exacto: «5:50 h» (`courtTimeLabel`). */
+    courtTime: "%{hours}:%{minutes} h",
+    /** Lo hecho de lo planificado: «9:00 / 12:00 h» (`courtTimeProgressLabel`). */
+    courtTimeProgress: "%{doneHours}:%{doneMinutes} / %{plannedHours}:%{plannedMinutes} h",
     accept: "OK",
     cancel: "Cancel",
     retry: "Retry",
@@ -148,7 +152,6 @@ const en: Translations = {
       students: "students today",
       court: "on court today",
       /** El tiempo en pista exacto: «5:50 h». */
-      courtTime: "%{hours}:%{minutes} h",
     },
     /** El selector de vistas (DÍA · SEMANA · MES). */
     views: {
@@ -375,6 +378,19 @@ const en: Translations = {
       zero: "Coach · less than a year of experience",
       one: "Coach · 1 year of experience",
       other: "Coach · %{count} years of experience",
+    },
+    hours: {
+      title: "Hours this month",
+      classes: {
+        one: "%{done} of 1 class on court",
+        other: "%{done} of %{count} classes on court",
+      },
+      history: "Hours history",
+      monthClasses: {
+        one: "%{done} of 1 class",
+        other: "%{done} of %{count} classes",
+      },
+      monthA11y: "%{month}, %{hours}",
     },
     personal: {
       title: "Personal details",

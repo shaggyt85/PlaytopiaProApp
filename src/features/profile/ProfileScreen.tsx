@@ -7,15 +7,15 @@ import { TabScrollView } from "@/shared/components/TabScrollView";
 import { useTeacherProfile } from "@/shared/hooks/useTeacherProfile";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
-import { MyClubsCard, PersonalDataCard, ProfessionalCard, ProfileHeader, SignOutButton } from "./components";
+import { HoursCard, MyClubsCard, PersonalDataCard, ProfessionalCard, ProfileHeader, SignOutButton } from "./components";
 import { useStyles } from "./ProfileScreen.styles";
 
 /**
- * Perfil, como el prototipo: su cabecera (foto, nombre y rol), sus datos
- * personales, su perfil profesional, los clubes donde trabaja y cerrar sesión.
- * Solo compone: cada dato sale de su caché (el perfil que dejó el login y «Mis
- * clubes»), así que al llegar desde la agenda ya está. Las horas, la
- * disponibilidad y los editores llegan en sus fases.
+ * Perfil, como el prototipo: su cabecera (foto, nombre y rol), sus horas del
+ * mes con el historial, sus datos personales, su perfil profesional, los clubes
+ * donde trabaja y cerrar sesión. Solo compone: cada dato sale de su caché (el
+ * perfil que dejó el login, «Mis clubes» y, para las horas, `useProfileDetails`).
+ * La disponibilidad y los editores llegan en sus fases.
  */
 export function ProfileScreen() {
   const styles = useStyles();
@@ -30,6 +30,7 @@ export function ProfileScreen() {
             <>
               <ProfileHeader profile={profile} />
               <View style={styles.content}>
+                <HoursCard />
                 <PersonalDataCard profile={profile} />
                 <ProfessionalCard profile={profile} />
                 <MyClubsCard />

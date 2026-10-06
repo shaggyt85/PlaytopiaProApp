@@ -1,9 +1,11 @@
 import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 import { classSpan } from "@/shared/utils/classTimeRange";
+import { MINUTES_PER_HOUR } from "@/shared/utils/courtTime";
 
 import type { DayTense } from "./scheduleDates";
 
-export const MINUTES_PER_HOUR = 60;
+// La hora tiene sus minutos en un solo sitio (`shared/utils/courtTime`); la Agenda la usa desde aquí.
+export { MINUTES_PER_HOUR };
 export const MINUTES_PER_DAY = 24 * MINUTES_PER_HOUR;
 
 /** Cómo está una clase respecto a «ahora». */

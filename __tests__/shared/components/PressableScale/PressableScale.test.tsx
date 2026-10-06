@@ -18,6 +18,29 @@ describe("PressableScale", () => {
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
+  it("un desplegable dice si está abierto; lo demás no dice nada de eso", () => {
+    const { rerender } = render(
+      <PressableScale onPress={jest.fn()} accessibilityLabel="Historial de horas" expanded={false}>
+        <Text>Historial de horas</Text>
+      </PressableScale>,
+    );
+    expect(screen.getByRole("button", { name: "Historial de horas", expanded: false })).toBeTruthy();
+
+    rerender(
+      <PressableScale onPress={jest.fn()} accessibilityLabel="Historial de horas" expanded>
+        <Text>Historial de horas</Text>
+      </PressableScale>,
+    );
+    expect(screen.getByRole("button", { name: "Historial de horas", expanded: true })).toBeTruthy();
+
+    rerender(
+      <PressableScale onPress={jest.fn()} accessibilityLabel="Cantera Tarde">
+        <Text>Cantera Tarde</Text>
+      </PressableScale>,
+    );
+    expect(screen.getByRole("button").props.accessibilityState?.expanded).toBeUndefined();
+  });
+
   it("el estilo y el testID van en la caja que se encoge; tocarla también avisa", () => {
     const onPress = jest.fn();
     render(

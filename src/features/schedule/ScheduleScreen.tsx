@@ -17,6 +17,7 @@ import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TranslationKey } from "@/shared/locales";
 import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
+import { courtTimeLabel } from "@/shared/utils/courtTime";
 
 import { NextClassCard, ScheduleAgenda, StatTile } from "./components";
 import { useNextClass } from "./hooks/useNextClass";
@@ -25,7 +26,7 @@ import { ScheduleScrollProvider, useScheduleScrollRefs } from "./hooks/useSchedu
 import { useTodayHeader } from "./hooks/useTodayHeader";
 import { heroClass } from "./utils/heroClass";
 import { localToday, wallNow } from "./utils/scheduleDates";
-import { courtTimeLabel, todayStats, type TodayStats } from "./utils/todayStats";
+import { todayStats, type TodayStats } from "./utils/todayStats";
 
 import { useStyles } from "./ScheduleScreen.styles";
 

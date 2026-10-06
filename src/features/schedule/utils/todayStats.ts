@@ -1,7 +1,6 @@
-import type { t as translate } from "@/shared/config/i18n";
 import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
 
-import { classMinutes, MINUTES_PER_HOUR } from "./classTiming";
+import { classMinutes } from "./classTiming";
 
 type DayClass = Pick<ScheduleClass, "class_time" | "duration_minutes" | "current_participants">;
 
@@ -38,12 +37,4 @@ export function todayStats(classes: readonly DayClass[]): TodayStats {
     students: classes.reduce((sum, c) => sum + c.current_participants, 0),
     minutesOnCourt,
   };
-}
-
-/** El tiempo en pista exacto, con los minutos a dos cifras: «5:50 h», «0:45 h». */
-export function courtTimeLabel(minutes: number, t: typeof translate): string {
-  return t("schedule.today.courtTime", {
-    hours: Math.floor(minutes / MINUTES_PER_HOUR),
-    minutes: String(minutes % MINUTES_PER_HOUR).padStart(2, "0"),
-  });
 }

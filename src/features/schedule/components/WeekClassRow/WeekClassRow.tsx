@@ -3,8 +3,8 @@ import { memo } from "react";
 import { View } from "react-native";
 
 import { Chevron } from "@/shared/components/Chevron";
-import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
 import { IconText } from "@/shared/components/IconText";
+import { MeterBar } from "@/shared/components/MeterBar";
 import { PressableScale } from "@/shared/components/PressableScale";
 import { Text } from "@/shared/components/Text";
 import { useOpenClass } from "@/shared/hooks/useOpenClass";
@@ -62,11 +62,7 @@ export const WeekClassRow = memo(function WeekClassRow({ item, colors, club, sta
           style={styles.metaRow}
         />
         <View style={styles.seatsRow}>
-          <View style={styles.bar}>
-            <View style={[styles.barFill, { width: `${occupancy(item) * 100}%` }]} testID={`week-class-${item.id}-bar`}>
-              <DiagonalGradient colors={colors.gradient} style={styles.fill} />
-            </View>
-          </View>
+          <MeterBar value={occupancy(item)} colors={colors.gradient} testID={`week-class-${item.id}-bar`} />
           <Text variant="chip" color="textSecondary">
             {studentsLabel(item, t)}
           </Text>

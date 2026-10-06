@@ -1,3 +1,9 @@
+export { ClubHoursRow } from "./ClubHoursRow";
+export { ExpandChevron } from "./ExpandChevron";
+export { HoursCard } from "./HoursCard";
+export { HoursHistory } from "./HoursHistory";
+export { HoursMonthRow } from "./HoursMonthRow";
+export { HoursProgressRow } from "./HoursProgressRow";
 export { MyClubsCard } from "./MyClubsCard";
 export { PersonalDataCard } from "./PersonalDataCard";
 export { ProfessionalCard } from "./ProfessionalCard";

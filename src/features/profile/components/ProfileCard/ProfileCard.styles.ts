@@ -13,6 +13,8 @@ export const useStyles = makeStyles((theme) => ({
   },
   // `mb-2 flex items-center gap-2`.
   head: { flexDirection: "row", alignItems: "center", gap: theme.spacing.sm, marginBottom: theme.spacing.sm },
+  // El título ocupa lo que queda: lo de su derecha va al borde (`justify-between`).
+  title: { flex: 1 },
   // `space-y-1.5`.
   body: { gap: theme.spacing.xs + theme.spacing.xs / 2 },
 }));

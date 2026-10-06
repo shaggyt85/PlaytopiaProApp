@@ -8,6 +8,7 @@ import {
   formatDayOfMonth,
   formatDayMonthNumeric,
   formatDayMonthShort,
+  formatMonthName,
   formatMonthYear,
   formatInstant,
   formatNumericDate,
@@ -124,6 +125,18 @@ describe("formatDayMonthNumeric", () => {
 
     await changeLanguage("en");
     expect(formatDayMonthNumeric("2026-09-28")).toBe("9/28");
+  });
+});
+
+describe("formatMonthName", () => {
+  it("un mes de Core por su nombre, con mayúscula", () => {
+    expect(formatMonthName("2026-10")).toBe("Octubre");
+  });
+
+  it("en inglés", async () => {
+    await changeLanguage("en");
+    expect(formatMonthName("2026-01")).toBe("January");
+    await changeLanguage("es");
   });
 });
 

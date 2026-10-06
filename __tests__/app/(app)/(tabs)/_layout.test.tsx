@@ -8,12 +8,14 @@ import HomeRoute from "@/app/(app)/(tabs)/index";
 import NetworkRoute from "@/app/(app)/(tabs)/network";
 import ProfileRoute from "@/app/(app)/(tabs)/profile";
 import TabsLayout from "@/app/(app)/(tabs)/_layout";
+import { profileDetailsService } from "@/features/profile/services/profileDetailsService";
 import { myClubsService } from "@/shared/services/myClubsService";
 import { createQueryClient } from "@/shared/config/queryClient";
 import { teacherProfileService } from "@/shared/services/teacherProfileService";
 import { useSessionStore } from "@/shared/store/sessionStore";
 
 import { teacherProfile } from "../../../helpers/authFactories";
+import { profileDetails } from "../../../helpers/profileFactories";
 import { schoolCard } from "../../../helpers/networkFactories";
 
 jest.mock("@/shared/services/teacherProfileService", () => ({
@@ -22,6 +24,10 @@ jest.mock("@/shared/services/teacherProfileService", () => ({
 }));
 
 jest.mock("expo-image", () => ({ Image: () => null }));
+jest.mock("@/features/profile/services/profileDetailsService", () => ({
+  ...jest.requireActual("@/features/profile/services/profileDetailsService"),
+  profileDetailsService: { get: jest.fn() },
+}));
 jest.mock("@/shared/services/myClubsService", () => ({
   ...jest.requireActual("@/shared/services/myClubsService"),
   myClubsService: { getMyClubs: jest.fn() },
@@ -44,6 +50,7 @@ const routes = {
 describe("menú inferior", () => {
   beforeEach(() => {
     jest.mocked(teacherProfileService.get).mockResolvedValue(teacherProfile());
+    jest.mocked(profileDetailsService.get).mockResolvedValue(profileDetails());
     useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 });
     jest.mocked(myClubsService.getMyClubs).mockResolvedValue({ clubs: [schoolCard(4, 7)] });
   });

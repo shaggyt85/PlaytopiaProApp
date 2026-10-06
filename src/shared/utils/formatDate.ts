@@ -98,6 +98,9 @@ export const formatDayMonthNumeric = (date: string): string =>
 /** `class_date` como mes y año, en la forma de cada idioma: "noviembre de 2026". */
 export const formatMonthYear = (date: string): string => formatWallDate(date, { month: "long", year: "numeric" });
 
+/** Un mes de Core (`"2026-10"`) por su nombre: «Octubre» (las horas de Perfil). */
+export const formatMonthName = (month: string): string => capitalize(formatWallDate(`${month}-01`, { month: "long" }));
+
 /** La primera letra en mayúscula, según el idioma activo: "lunes 18" → "Lunes 18". */
 export function capitalize(text: string): string {
   return `${text.charAt(0).toLocaleUpperCase(getLocale())}${text.slice(1)}`;

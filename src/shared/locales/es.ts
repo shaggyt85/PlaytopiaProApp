@@ -2,6 +2,10 @@
 // una clave que falte en cualquiera de ellos es un error de compilación.
 const es = {
   common: {
+    /** Un tiempo exacto: «5:50 h» (`courtTimeLabel`). */
+    courtTime: "%{hours}:%{minutes} h",
+    /** Lo hecho de lo planificado: «9:00 / 12:00 h» (`courtTimeProgressLabel`). */
+    courtTimeProgress: "%{doneHours}:%{doneMinutes} / %{plannedHours}:%{plannedMinutes} h",
     accept: "Aceptar",
     cancel: "Cancelar",
     retry: "Reintentar",
@@ -150,7 +154,6 @@ const es = {
       students: "alumnos hoy",
       court: "en pista hoy",
       /** El tiempo en pista exacto: «5:50 h». */
-      courtTime: "%{hours}:%{minutes} h",
     },
     /** El selector de vistas (DÍA · SEMANA · MES). */
     views: {
@@ -383,6 +386,22 @@ const es = {
       zero: "Entrenador · menos de un año de experiencia",
       one: "Entrenador · 1 año de experiencia",
       other: "Entrenador · %{count} años de experiencia",
+    },
+    hours: {
+      title: "Horas este mes",
+      /** Las clases dadas de las planificadas este mes: «8 de 11 clases en pista». */
+      classes: {
+        one: "%{done} de 1 clase en pista",
+        other: "%{done} de %{count} clases en pista",
+      },
+      history: "Historial de horas",
+      /** Al abrir un mes del historial. */
+      monthClasses: {
+        one: "%{done} de 1 clase",
+        other: "%{done} de %{count} clases",
+      },
+      /** Un mes del historial, para el lector de pantalla: «Octubre, 9:00 h». */
+      monthA11y: "%{month}, %{hours}",
     },
     personal: {
       title: "Datos personales",

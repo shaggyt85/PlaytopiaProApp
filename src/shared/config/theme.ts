@@ -78,6 +78,8 @@ const typography = {
   statusBadge: { fontFamily: FONTS.bold, fontSize: 9, textTransform: "uppercase" },
   /** Título pequeño (`font-display text-sm font-bold`): una cifra del detalle («2/4»), el nombre de su club. */
   smallTitle: { fontFamily: FONTS.display, fontSize: 14 },
+  /** Unas horas que se comparan fila a fila («9:00 / 12:00 h» en Perfil): el `smallTitle` con cifras de ancho fijo. */
+  smallFigure: { fontFamily: FONTS.display, fontSize: 14, fontVariant: TABULAR_NUMS },
   /** Lo que es esa cifra («Alumnos»): `text-[10px]`. */
   statLabel: { fontFamily: FONTS.regular, fontSize: 10 },
   /**

@@ -1,5 +1,4 @@
-import { courtTimeLabel, todayStats } from "@/features/schedule/utils/todayStats";
-import { t } from "@/shared/config/i18n";
+import { todayStats } from "@/features/schedule/utils/todayStats";
 
 const lesson = (class_time: string, duration_minutes: number, current_participants = 0) => ({
   class_time,
@@ -42,18 +41,5 @@ describe("todayStats", () => {
 
   it("una clase que pasa de medianoche cuenta hasta las 24:00 (lo de después es de mañana)", () => {
     expect(todayStats([lesson("23:30:00", 60)]).minutesOnCourt).toBe(30);
-  });
-});
-
-describe("courtTimeLabel", () => {
-  it.each([
-    [350, "5:50 h"],
-    [357, "5:57 h"],
-    [305, "5:05 h"],
-    [45, "0:45 h"],
-    [360, "6:00 h"],
-    [0, "0:00 h"],
-  ])("%i minutos son «%s», exactos", (minutes, label) => {
-    expect(courtTimeLabel(minutes, t)).toBe(label);
   });
 });
