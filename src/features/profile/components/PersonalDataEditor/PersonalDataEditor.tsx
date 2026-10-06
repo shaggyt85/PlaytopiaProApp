@@ -1,45 +1,32 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
-import { View } from "react-native";
+import { useForm } from "react-hook-form";
 
-import { Button } from "@/shared/components/Button";
-import { FormError } from "@/shared/components/FormError";
 import { PersonalDataFields } from "@/shared/components/PersonalDataFields";
-import { useTranslation } from "@/shared/hooks/useTranslation";
 import {
   PersonalDataFormSchema,
   toPersonalDataRequest,
   type PersonalDataForm,
   type PersonalDataFormInput,
 } from "@/shared/schemas/personalData.schema";
-import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 import { isProblem } from "@/shared/utils/isProblem";
 
 import { useUpdateProfile } from "../../hooks/useUpdateProfile";
 import { personalDataDefaults } from "../../utils/personalDataDefaults";
-
-import { useStyles } from "./PersonalDataEditor.styles";
+import { ProfileEditorForm } from "../ProfileEditorForm";
+import type { ProfileEditorProps } from "../ProfileEditorSheet/profileEditors";
 
 /** El email ya es de otra cuenta: se marca en su campo, no abajo. */
 const EMAIL_TAKEN = "email-already-registered";
 
-interface PersonalDataEditorProps {
-  profile: TeacherProfile;
-  /** Al guardar: el panel se cierra. */
-  onDone: () => void;
-}
-
 /**
  * Editor de los datos personales: los mismos campos y reglas que el alta
  * (`PersonalDataFields`, `PersonalDataFormSchema`), rellenos con lo guardado
- * (`personalDataDefaults`). «Guardar» envía el `PATCH` y cierra; mientras
- * guarda no se puede volver a pulsar. Si el email es de otra cuenta, lo dice
- * en el campo; cualquier otro error, abajo, traducido por su `type`.
+ * (`personalDataDefaults`), en el esqueleto de los editores
+ * (`ProfileEditorForm`). Si el email es de otra cuenta, lo dice en el campo;
+ * cualquier otro error, abajo, traducido por su `type`.
  */
-export function PersonalDataEditor({ profile, onDone }: PersonalDataEditorProps) {
-  const styles = useStyles();
-  const { t } = useTranslation();
+export function PersonalDataEditor({ profile, onDone }: ProfileEditorProps) {
   const update = useUpdateProfile();
   const form = useForm<PersonalDataFormInput, unknown, PersonalDataForm>({
     resolver: zodResolver(PersonalDataFormSchema),
@@ -59,14 +46,8 @@ export function PersonalDataEditor({ profile, onDone }: PersonalDataEditorProps)
   const otherError = update.error && !isProblem(update.error, EMAIL_TAKEN) ? getErrorMessage(update.error) : null;
 
   return (
-    <FormProvider {...form}>
-      <View style={styles.form} testID="personal-data-editor">
-        <PersonalDataFields />
-        <View style={styles.save}>
-          <Button title={t("common.save")} onPress={save} loading={update.isPending} />
-        </View>
-        <FormError message={otherError} />
-      </View>
-    </FormProvider>
+    <ProfileEditorForm form={form} onSave={save} saving={update.isPending} error={otherError} testID="personal-data-editor">
+      <PersonalDataFields />
+    </ProfileEditorForm>
   );
 }

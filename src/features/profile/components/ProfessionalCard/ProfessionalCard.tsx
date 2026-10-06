@@ -7,6 +7,7 @@ import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 
 import { professionalTags } from "../../utils/professionalTags";
+import { EditButton } from "../EditButton";
 import { ProfileCard } from "../ProfileCard";
 
 import { useStyles } from "./ProfessionalCard.styles";
@@ -18,7 +19,7 @@ interface ProfessionalCardProps {
 /**
  * «Perfil profesional»: su presentación y lo que da (`professionalTags`), con
  * los nombres que traduce Core. Los niveles del prototipo aún no existen en
- * Core: no salen. Sin nada, lo dice.
+ * Core: no salen. Sin nada, lo dice. «Editar» abre su editor en el panel de Perfil.
  */
 export function ProfessionalCard({ profile }: ProfessionalCardProps) {
   const styles = useStyles();
@@ -26,7 +27,12 @@ export function ProfessionalCard({ profile }: ProfessionalCardProps) {
   const tags = professionalTags(profile.sports);
   const description = profile.description?.trim();
   return (
-    <ProfileCard Icon={IconLoBriefcase} title={t("profile.professional.title")} testID="professional-card">
+    <ProfileCard
+      Icon={IconLoBriefcase}
+      title={t("profile.professional.title")}
+      aside={<EditButton section="professional" />}
+      testID="professional-card"
+    >
       {description ? (
         <Text variant="caption" color="textSecondary">
           {description}

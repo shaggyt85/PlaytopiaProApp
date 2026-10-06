@@ -347,6 +347,7 @@ const de: Translations = {
     preferNotToSay: "Möchte es nicht sagen",
   },
   validation: {
+    descriptionMax: "Die Vorstellung darf höchstens 500 Zeichen lang sein",
     emailRequired: "Geben Sie Ihre E-Mail ein.",
     emailInvalid: "Die E-Mail-Adresse ist ungültig",
     passwordRequired: "Geben Sie Ihr Passwort ein.",
@@ -406,6 +407,14 @@ const de: Translations = {
     },
     professional: {
       title: "Berufsprofil",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Berufsprofil bearbeiten",
+      years: "Jahre Erfahrung",
+      description: "Kurze Vorstellung",
+      specialties: "Spezialisierungen",
+      /** Los botones − y + de los años, para el lector de pantalla. */
+      fewerYears: "Ein Jahr weniger",
+      moreYears: "Ein Jahr mehr",
       empty: "Du hast es noch nicht ausgefüllt",
     },
     clubs: {

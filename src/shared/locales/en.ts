@@ -347,6 +347,7 @@ const en: Translations = {
     preferNotToSay: "Prefer not to say it",
   },
   validation: {
+    descriptionMax: "The introduction can't be longer than 500 characters",
     emailRequired: "Enter your email.",
     emailInvalid: "Enter a valid email address",
     passwordRequired: "Enter your password.",
@@ -406,6 +407,14 @@ const en: Translations = {
     },
     professional: {
       title: "Professional profile",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Edit professional profile",
+      years: "Years of experience",
+      description: "Short introduction",
+      specialties: "Specialties",
+      /** Los botones − y + de los años, para el lector de pantalla. */
+      fewerYears: "One year less",
+      moreYears: "One year more",
       empty: "You haven't filled it in yet",
     },
     clubs: {

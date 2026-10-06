@@ -34,6 +34,8 @@ export const ENDPOINTS = {
   MOBILE_TEACHER: {
     /** Las sedes donde trabaja («Mis clubes»). */
     CLUBS: "/MobileTeacher/clubs",
+    /** Los deportes y especialidades que puede elegir en su perfil, traducidos. */
+    SPORTS: "/MobileTeacher/sports",
     /** Las sedes a las que puede pedir unirse, paginadas (`page`, `size`). */
     JOINABLE_SCHOOLS: "/MobileTeacher/schools",
     /** Sus clases entre dos fechas (`from`, `to`) y la próxima. */

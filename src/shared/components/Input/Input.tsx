@@ -17,7 +17,14 @@ export interface InputProps extends TextInputProps {
   variant?: "glass" | "solid";
 }
 
-/** Campo de texto del tema con etiqueta, mensaje de error y accesorio opcional. */
+/** Las líneas que se ven de un campo de varias líneas antes de desplazarse dentro. */
+const MULTILINE_ROWS = 4;
+
+/**
+ * Campo de texto del tema con etiqueta, mensaje de error y accesorio opcional.
+ * Con `multiline` deja de ser una píldora: crece hasta `MULTILINE_ROWS` líneas,
+ * con el texto arriba (la presentación de Perfil, el motivo de una baja).
+ */
 export function Input({
   label,
   error,
@@ -33,13 +40,20 @@ export function Input({
     <View style={styles.container}>
       <Text>{label}</Text>
       <View
-        style={[styles.field, variant === "solid" && styles.solid, error ? styles.fieldError : null]}
+        style={[
+          styles.field,
+          variant === "solid" && styles.solid,
+          rest.multiline && styles.multilineField,
+          error ? styles.fieldError : null,
+        ]}
         testID="input-field"
       >
         <TextInput
           accessibilityLabel={label}
           placeholderTextColor={theme.colors.textSecondary}
-          style={[styles.input, variant === "solid" && styles.solidInput, style]}
+          style={[styles.input, variant === "solid" && styles.solidInput, rest.multiline && styles.multilineInput, style]}
+          numberOfLines={rest.multiline ? MULTILINE_ROWS : undefined}
+          textAlignVertical={rest.multiline ? "top" : undefined}
           {...rest}
         />
         {rightAccessory ? <View style={styles.accessory}>{rightAccessory}</View> : null}

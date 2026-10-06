@@ -352,6 +352,7 @@ const es = {
     preferNotToSay: "Prefiero no decirlo",
   },
   validation: {
+    descriptionMax: "La presentación no puede pasar de 500 caracteres",
     emailRequired: "Escribe tu email.",
     emailInvalid: "El correo electrónico no es válido",
     passwordRequired: "Escribe tu contraseña.",
@@ -417,6 +418,14 @@ const es = {
     },
     professional: {
       title: "Perfil profesional",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Editar perfil profesional",
+      years: "Años de experiencia",
+      description: "Presentación breve",
+      specialties: "Especialidades",
+      /** Los botones − y + de los años, para el lector de pantalla. */
+      fewerYears: "Un año menos",
+      moreYears: "Un año más",
       /** Sin presentación ni deportes. */
       empty: "Aún no lo has completado",
     },

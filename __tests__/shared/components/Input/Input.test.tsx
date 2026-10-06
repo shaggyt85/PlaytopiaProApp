@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
+import { StyleSheet } from "react-native";
 
 import { Input } from "@/shared/components/Input";
 import { Text } from "@/shared/components/Text";
@@ -43,4 +44,14 @@ describe("Input", () => {
 
     expect(screen.getByText("ojo")).toBeTruthy();
   });
+
+  it("de varias líneas: el texto arriba y sin el alto fijo de la píldora", () => {
+    render(<Input label="Presentación" multiline value="" onChangeText={jest.fn()} />);
+
+    const input = screen.getByLabelText("Presentación");
+    expect(input.props.multiline).toBe(true);
+    expect(input.props.textAlignVertical).toBe("top");
+    expect(StyleSheet.flatten(screen.getByTestId("input-field").props.style).height).toBeUndefined();
+  });
 });
+

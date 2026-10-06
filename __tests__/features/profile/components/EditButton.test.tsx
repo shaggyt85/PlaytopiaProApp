@@ -1,15 +1,20 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import { EditButton } from "@/features/profile/components/EditButton";
+import { useProfileEditorStore } from "@/features/profile/store/profileEditorStore";
 
 describe("EditButton", () => {
-  it("«Editar», con lo que edita para el lector de pantalla", () => {
-    const onPress = jest.fn();
-    render(<EditButton onPress={onPress} accessibilityLabel="Editar datos personales" />);
+  beforeEach(() => useProfileEditorStore.getState().close());
 
-    fireEvent.press(screen.getByRole("button", { name: "Editar datos personales" }));
+  it.each([
+    ["personal", "Editar datos personales"],
+    ["professional", "Editar perfil profesional"],
+  ] as const)("«Editar» abre su sección (%s) y dice cuál al lector de pantalla", (section, label) => {
+    render(<EditButton section={section} />);
+
+    fireEvent.press(screen.getByRole("button", { name: label }));
 
     expect(screen.getByText("Editar")).toBeTruthy();
-    expect(onPress).toHaveBeenCalledTimes(1);
+    expect(useProfileEditorStore.getState().section).toBe(section);
   });
 });

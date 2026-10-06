@@ -17,6 +17,14 @@ export const useStyles = makeStyles((theme) => ({
   },
   solid: solidField(theme),
   solidInput: theme.typography.body,
+  // Varias líneas: ni alto fijo ni píldora (`rounded-2xl p-3`).
+  multilineField: {
+    height: undefined,
+    minHeight: theme.controlHeight * 2,
+    alignItems: "flex-start",
+    borderRadius: theme.radius.xxl,
+  },
+  multilineInput: { height: undefined, paddingVertical: theme.spacing.sm + theme.spacing.xs },
   fieldError: { borderColor: theme.colors.danger },
   input: {
     ...theme.typography.input,

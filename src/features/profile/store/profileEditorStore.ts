@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 /** Las partes de Perfil que se editan en su panel. Cada fase añade la suya. */
-export type ProfileSection = "personal";
+export type ProfileSection = "personal" | "professional";
 
 /**
  * Qué editor de Perfil está abierto. Estado de la interfaz, en memoria: el

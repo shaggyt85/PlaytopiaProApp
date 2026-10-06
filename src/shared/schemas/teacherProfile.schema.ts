@@ -50,8 +50,27 @@ export const TeacherProfileSchema = z.object({
 });
 export type TeacherProfile = z.infer<typeof TeacherProfileSchema>;
 
+/** Un deporte elegido con sus especialidades, por sus códigos (`ChosenSportBody`). */
+export interface ChosenSport {
+  code: string;
+  specialties: string[];
+}
+
+/** El perfil profesional como lo espera Core. */
+export interface ProfessionalRequest {
+  /** `null` (o vacía) la borra. */
+  description: string | null;
+  /** `null` lo borra. */
+  experience_years: number | null;
+  /** **Todos** los que da: sustituyen a los que tenía; vacía, los quita. */
+  sports: ChosenSport[];
+}
+
 /**
- * Lo que la app cambia del perfil (`PATCH /api/UserTeacher/{id}`): los términos
- * y los datos personales, como los espera Core. Lo que no viene no se toca.
+ * Lo que la app cambia del perfil (`PATCH /api/UserTeacher/{id}`): los términos,
+ * los datos personales y el perfil profesional, como los espera Core. Lo que no
+ * viene no se toca.
  */
-export type TeacherProfileChanges = Partial<Pick<TeacherProfile, "terms_version"> & PersonalDataRequest>;
+export type TeacherProfileChanges = Partial<
+  Pick<TeacherProfile, "terms_version"> & PersonalDataRequest & ProfessionalRequest
+>;

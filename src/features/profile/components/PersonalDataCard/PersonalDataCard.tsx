@@ -4,7 +4,6 @@ import { IconText } from "@/shared/components/IconText";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 
-import { useProfileEditorStore } from "../../store/profileEditorStore";
 import { personalRows } from "../../utils/personalRows";
 import { EditButton } from "../EditButton";
 import { ProfileCard } from "../ProfileCard";
@@ -19,12 +18,11 @@ interface PersonalDataCardProps {
  */
 export function PersonalDataCard({ profile }: PersonalDataCardProps) {
   const { t } = useTranslation();
-  const open = useProfileEditorStore((state) => state.open);
   return (
     <ProfileCard
       Icon={IconLoUser}
       title={t("profile.personal.title")}
-      aside={<EditButton onPress={() => open("personal")} accessibilityLabel={t("profile.personal.edit")} />}
+      aside={<EditButton section="personal" />}
       testID="personal-data-card"
     >
       {personalRows(profile, t).map(({ key, Icon, label }) => (

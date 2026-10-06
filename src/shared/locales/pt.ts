@@ -347,6 +347,7 @@ const pt: Translations = {
     preferNotToSay: "Prefiro não dizê-lo",
   },
   validation: {
+    descriptionMax: "A apresentação não pode passar de 500 caracteres",
     emailRequired: "Digite seu email.",
     emailInvalid: "Digite um endereço de e-mail válido",
     passwordRequired: "Digite sua senha.",
@@ -406,6 +407,14 @@ const pt: Translations = {
     },
     professional: {
       title: "Perfil profissional",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Editar perfil profissional",
+      years: "Anos de experiência",
+      description: "Apresentação breve",
+      specialties: "Especialidades",
+      /** Los botones − y + de los años, para el lector de pantalla. */
+      fewerYears: "Um ano a menos",
+      moreYears: "Um ano a mais",
       empty: "Você ainda não o preencheu",
     },
     clubs: {

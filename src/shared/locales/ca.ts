@@ -347,6 +347,7 @@ const ca: Translations = {
     preferNotToSay: "Prefereixo no dir-ho",
   },
   validation: {
+    descriptionMax: "La presentació no pot passar de 500 caràcters",
     emailRequired: "Escriu el teu email.",
     emailInvalid: "El correu electrònic no és vàlid",
     passwordRequired: "Escriu la teva contrasenya.",
@@ -406,6 +407,14 @@ const ca: Translations = {
     },
     professional: {
       title: "Perfil professional",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Editar perfil professional",
+      years: "Anys d'experiència",
+      description: "Presentació breu",
+      specialties: "Especialitats",
+      /** Los botones − y + de los años, para el lector de pantalla. */
+      fewerYears: "Un any menys",
+      moreYears: "Un any més",
       empty: "Encara no l'has completat",
     },
     clubs: {
