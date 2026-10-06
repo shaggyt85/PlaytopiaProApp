@@ -33,11 +33,18 @@ export interface HttpClientDeps {
   refreshSession: () => Promise<RefreshResult>;
   /** Ve las cabeceras de toda respuesta, buena o de error (p. ej. la hora del servidor). */
   observeResponseHeaders?: (headers: Record<string, unknown>) => void;
+  /**
+   * El idioma activo de la app, que viaja en `Accept-Language` en cada
+   * petición: Core devuelve en él lo que traduce él (p. ej. los nombres de
+   * los deportes). Se lee en cada petición, así que un cambio de idioma vale
+   * desde la siguiente.
+   */
+  requestLanguage?: () => string;
 }
 
 /**
  * Cliente HTTP base. Coordina tres cosas y nada más:
- * - pone el token en cada petición;
+ * - pone el token y el idioma en cada petición;
  * - ante un 401 con sesión, la renueva una vez y reintenta;
  * - convierte cualquier fallo en un `HttpError`.
  *
@@ -49,6 +56,7 @@ export class BaseHttpClient implements IHttpClient {
   private readonly tokens: ITokenStorage;
   private readonly refreshSession: () => Promise<RefreshResult>;
   private readonly observeHeaders: (headers: Record<string, unknown>) => void;
+  private readonly requestLanguage?: () => string;
   private sessionExpiredHandler: () => void = () => {};
 
   constructor(deps: HttpClientDeps) {
@@ -56,7 +64,9 @@ export class BaseHttpClient implements IHttpClient {
     this.tokens = deps.tokens;
     this.refreshSession = deps.refreshSession;
     this.observeHeaders = deps.observeResponseHeaders ?? (() => {});
+    this.requestLanguage = deps.requestLanguage;
     this.instance.interceptors.request.use((config) => this.withToken(config));
+    this.instance.interceptors.request.use((config) => this.withLanguage(config));
     this.instance.interceptors.response.use(
       (response) => {
         this.observeHeaders(response.headers ?? {});
@@ -76,6 +86,11 @@ export class BaseHttpClient implements IHttpClient {
   ): Promise<InternalAxiosRequestConfig> {
     const token = await this.tokens.getAccessToken();
     if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  }
+
+  private withLanguage(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
+    if (this.requestLanguage) config.headers["Accept-Language"] = this.requestLanguage();
     return config;
   }
 

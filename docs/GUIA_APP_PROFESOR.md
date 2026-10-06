@@ -712,6 +712,7 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 - Claves agrupadas por pantalla: `signIn.title`, `schedule.emptyState`. Textos comunes en `common.*`; errores en `errors.byType.*` y `errors.byStatus.*` (ver [sección 6](#6-manejo-de-errores-rfc-9457)). Un `type` nuevo de Core se traduce añadiéndolo a `errors.byType` en los 6 idiomas.
 - En componentes se usa el hook `useTranslation()`, que vuelve a pintar al cambiar de idioma; el `t` suelto solo fuera de React. Las claves están tipadas: una clave que no existe no compila.
 - Solo se carga en memoria el diccionario del idioma activo (los 6 van en el bundle). El idioma elegido a mano se guarda en AsyncStorage (solo el código, p. ej. `"es"`) y se aplica antes de pintar la app; si no hay ninguno, se usa el del móvil y, si no está soportado, inglés.
+- **Lo que traduce Core** (los nombres de los deportes y especialidades del catálogo, que escribe el Super Admin) no está en `shared/locales/`: Core lo devuelve ya en el idioma de la app. Para eso `httpClient` manda el idioma activo (`getLocale()`) en `Accept-Language` en cada petición; si falta la traducción, Core lo da en español. Las queries con textos de Core llevan el idioma en su query key, para pedirlos de nuevo al cambiarlo.
 - Nada de concatenar frases: se interpola con parámetros (`t("schedule.classesToday", { count })`), con plurales cuando haga falta.
 - **«Biometría», nunca «huella»**, en los 6 idiomas: el móvil puede usar huella, cara o su código.
 

@@ -17,6 +17,7 @@ function buildClient(options: {
   handler: (config: InternalAxiosRequestConfig) => FakeReply;
   access?: string | null;
   refreshResult?: RefreshResult;
+  language?: () => string;
 }) {
   const tokens = createFakeTokenStorage({ access: options.access ?? null });
   const { adapter, calls } = createFakeAdapter(options.handler);
@@ -31,6 +32,7 @@ function buildClient(options: {
     tokens,
     refreshSession,
     observeResponseHeaders,
+    requestLanguage: options.language,
   });
   const sessionExpired = jest.fn();
   client.onSessionExpired(sessionExpired);
@@ -69,6 +71,21 @@ describe("BaseHttpClient", () => {
     await client.get("/publico");
 
     expect(authHeader(calls[0])).toBeUndefined();
+  });
+
+  it("manda el idioma activo en Accept-Language, y un cambio vale desde la siguiente petición", async () => {
+    let language = "es";
+    const { client, calls } = buildClient({
+      language: () => language,
+      handler: () => ({ status: 200, data: {} }),
+    });
+
+    await client.get("/perfil");
+    language = "ca";
+    await client.get("/perfil");
+
+    expect(calls[0].headers["Accept-Language"]).toBe("es");
+    expect(calls[1].headers["Accept-Language"]).toBe("ca");
   });
 
   it("un error de Core sale como HttpError con su ProblemDetail", async () => {

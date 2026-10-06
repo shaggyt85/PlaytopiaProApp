@@ -1,4 +1,5 @@
 import { env } from "@/shared/config/env";
+import { getLocale } from "@/shared/config/i18n";
 import { recordServerDate } from "@/shared/utils/serverClock";
 
 import { BaseHttpClient, type IHttpClient } from "./BaseHttpClient";
@@ -24,6 +25,8 @@ const client = new BaseHttpClient({
   refreshSession,
   // Cada respuesta trae la hora del servidor en la cabecera Date.
   observeResponseHeaders: (headers) => recordServerDate(headers.date),
+  // El idioma activo: el del teléfono o, si lo cambió, el que eligió.
+  requestLanguage: getLocale,
 });
 
 export const httpClient: IHttpClient = client;
