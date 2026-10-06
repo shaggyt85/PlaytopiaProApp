@@ -4,6 +4,7 @@ import type { TranslationKey } from "@/shared/locales";
 import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 
 import type { ProfileSection } from "../../store/profileEditorStore";
+import { AvailabilityEditor } from "../AvailabilityEditor";
 import { PersonalDataEditor } from "../PersonalDataEditor";
 import { ProfessionalEditor } from "../ProfessionalEditor";
 
@@ -25,6 +26,11 @@ export const PROFILE_EDITORS = {
     title: "profile.professional.title",
     editLabel: "profile.professional.edit",
     Editor: ProfessionalEditor,
+  },
+  availability: {
+    title: "profile.availability.title",
+    editLabel: "profile.availability.edit",
+    Editor: AvailabilityEditor,
   },
 } as const satisfies Record<
   ProfileSection,

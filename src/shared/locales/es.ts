@@ -435,6 +435,29 @@ const es = {
     },
     availability: {
       title: "Disponibilidad",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Editar disponibilidad",
+      /** El editor: la sede, las franjas, los días y la semana resultante. */
+      club: "Sede",
+      bandsTitle: "Franja horaria",
+      daysTitle: "Días de la semana",
+      weekTitle: "Tu semana",
+      bands: {
+        morning: "Mañana",
+        afternoon: "Tarde",
+        evening: "Noche",
+        allDay: "Todo",
+      },
+      /** Cada día por su número de Core, para el lector de pantalla (el chip solo dice «L»). */
+      weekdays: {
+        "0": "Domingo",
+        "1": "Lunes",
+        "2": "Martes",
+        "3": "Miércoles",
+        "4": "Jueves",
+        "5": "Viernes",
+        "6": "Sábado",
+      },
       /** Una sede sin ninguna hora indicada. */
       empty: "Aún no has indicado tu disponibilidad",
       /** «3 días · 14 h semanales». */

@@ -1,12 +1,16 @@
-import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
+import { act, fireEvent, screen, waitFor, within } from "@testing-library/react-native";
 
 import { ProfileEditorSheet } from "@/features/profile/components/ProfileEditorSheet";
+import { availabilityService } from "@/features/profile/services/availabilityService";
+import { profileDetailsService } from "@/features/profile/services/profileDetailsService";
 import { sportsCatalogService } from "@/features/profile/services/sportsCatalogService";
 import { useProfileEditorStore } from "@/features/profile/store/profileEditorStore";
 import { HttpError } from "@/shared/services/HttpError";
+import { myClubsService } from "@/shared/services/myClubsService";
 import { teacherProfileService } from "@/shared/services/teacherProfileService";
 
-import { teacherProfile } from "../../../helpers/profileFactories";
+import { schoolCard } from "../../../helpers/networkFactories";
+import { profileClub, profileDetails, teacherProfile } from "../../../helpers/profileFactories";
 import { renderWithProviders } from "../../../helpers/renderWithProviders";
 import { signInTeacher } from "../../../helpers/scheduleMocks";
 
@@ -14,6 +18,15 @@ jest.mock("@/shared/services/teacherProfileService", () => ({
   ...jest.requireActual("@/shared/services/teacherProfileService"),
   teacherProfileService: { get: jest.fn(), update: jest.fn() },
 }));
+jest.mock("@/features/profile/services/profileDetailsService", () => ({
+  ...jest.requireActual("@/features/profile/services/profileDetailsService"),
+  profileDetailsService: { get: jest.fn() },
+}));
+jest.mock("@/features/profile/services/availabilityService", () => ({
+  ...jest.requireActual("@/features/profile/services/availabilityService"),
+  availabilityService: { replace: jest.fn() },
+}));
+jest.mock("@/shared/services/myClubsService", () => require("../../../helpers/scheduleMocks").myClubsServiceModule());
 jest.mock("@/features/profile/services/sportsCatalogService", () => ({
   ...jest.requireActual("@/features/profile/services/sportsCatalogService"),
   sportsCatalogService: { getCatalog: jest.fn() },
@@ -41,6 +54,17 @@ describe("ProfileEditorSheet", () => {
     useProfileEditorStore.getState().close();
     jest.mocked(teacherProfileService.get).mockResolvedValue(teacherProfile());
     jest.mocked(sportsCatalogService.getCatalog).mockResolvedValue(CATALOG);
+    jest.mocked(myClubsService.getMyClubs).mockResolvedValue({
+      clubs: [schoolCard(7, 70, { club_name: "Indoor Centro" }), schoolCard(7, 71, { club_name: "Indoor Norte" })],
+    });
+    jest.mocked(profileDetailsService.get).mockResolvedValue(
+      profileDetails({
+        availability: [
+          { ...profileClub, week: { "1": [18, 19, 20, 21, 22, 23], "3": [18, 19, 20, 21, 22, 23] } },
+          { ...profileClub, club_id: 71, club_name: "Indoor Norte", week: {} },
+        ],
+      }),
+    );
   });
 
   it("cerrado no pinta nada", async () => {
@@ -165,5 +189,68 @@ describe("ProfileEditorSheet", () => {
 
     expect(await screen.findByRole("button", { name: "Reintentar" })).toBeTruthy();
     expect(screen.queryByTestId("professional-editor")).toBeNull();
+  });
+
+  it("abierto en «availability»: la sede, y lo guardado marcado en franjas y días", async () => {
+    renderWithProviders(<ProfileEditorSheet />);
+    act(() => useProfileEditorStore.getState().open("availability"));
+
+    expect(await screen.findByTestId("availability-editor")).toBeTruthy();
+    expect(screen.getByRole("header", { name: "Disponibilidad" })).toBeTruthy();
+    expect(await screen.findByRole("checkbox", { name: "Indoor Centro", checked: true })).toBeTruthy();
+    expect(screen.getByRole("checkbox", { name: "Noche", checked: true })).toBeTruthy();
+    expect(screen.getByRole("checkbox", { name: "Mañana", checked: false })).toBeTruthy();
+    expect(screen.getByRole("checkbox", { name: "Lunes", checked: true })).toBeTruthy();
+    expect(screen.getByRole("checkbox", { name: "Martes", checked: false })).toBeTruthy();
+    expect(within(screen.getByTestId("availability-week")).getByText("Lun 18:00–24:00")).toBeTruthy();
+  });
+
+  it("marcar franjas y días cambia «Tu semana» y «Guardar» envía la semana de esa sede", async () => {
+    jest.mocked(availabilityService.replace).mockResolvedValue({ ...profileClub, week: {} });
+    renderWithProviders(<ProfileEditorSheet />);
+    act(() => useProfileEditorStore.getState().open("availability"));
+
+    await screen.findByTestId("availability-editor");
+    fireEvent.press(screen.getByRole("checkbox", { name: "Tarde" }));
+    fireEvent.press(screen.getByRole("checkbox", { name: "Martes" }));
+    expect(within(screen.getByTestId("availability-week")).getByText("Lun 12:00–24:00")).toBeTruthy();
+    await act(async () => {
+      fireEvent.press(screen.getByRole("button", { name: "Guardar" }));
+    });
+
+    const hours = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+    expect(availabilityService.replace).toHaveBeenCalledWith(7, 70, { "1": hours, "2": hours, "3": hours });
+    await waitFor(() => expect(useProfileEditorStore.getState().section).toBeNull());
+  });
+
+  it("se puede guardar la semana vacía: borra la disponibilidad de esa sede, como acepta Core", async () => {
+    jest.mocked(availabilityService.replace).mockResolvedValue({ ...profileClub, week: {} });
+    renderWithProviders(<ProfileEditorSheet />);
+    act(() => useProfileEditorStore.getState().open("availability"));
+
+    await screen.findByTestId("availability-editor");
+    fireEvent.press(screen.getByRole("checkbox", { name: "Noche" }));
+    expect(within(screen.getByTestId("availability-week")).getByText("Aún no has indicado tu disponibilidad")).toBeTruthy();
+    await act(async () => {
+      fireEvent.press(screen.getByRole("button", { name: "Guardar" }));
+    });
+
+    expect(availabilityService.replace).toHaveBeenCalledWith(7, 70, {});
+  });
+
+  it("otra sede carga su semana y guarda en ella", async () => {
+    jest.mocked(availabilityService.replace).mockResolvedValue({ ...profileClub, club_id: 71, week: {} });
+    renderWithProviders(<ProfileEditorSheet />);
+    act(() => useProfileEditorStore.getState().open("availability"));
+
+    fireEvent.press(await screen.findByRole("checkbox", { name: "Indoor Norte" }));
+    expect(screen.getByRole("checkbox", { name: "Noche", checked: false })).toBeTruthy();
+    fireEvent.press(screen.getByRole("checkbox", { name: "Mañana" }));
+    fireEvent.press(screen.getByRole("checkbox", { name: "Sábado" }));
+    await act(async () => {
+      fireEvent.press(screen.getByRole("button", { name: "Guardar" }));
+    });
+
+    expect(availabilityService.replace).toHaveBeenCalledWith(7, 71, { "6": [6, 7, 8, 9, 10, 11] });
   });
 });

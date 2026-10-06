@@ -423,6 +423,29 @@ const fr: Translations = {
     },
     availability: {
       title: "Disponibilité",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Modifier la disponibilité",
+      /** El editor: la sede, las franjas, los días y la semana resultante. */
+      club: "Site",
+      bandsTitle: "Créneau",
+      daysTitle: "Jours de la semaine",
+      weekTitle: "Ta semaine",
+      bands: {
+        morning: "Matin",
+        afternoon: "Après-midi",
+        evening: "Soir",
+        allDay: "Toute la journée",
+      },
+      /** Cada día por su número de Core, para el lector de pantalla (el chip solo dice «L»). */
+      weekdays: {
+        "0": "Dimanche",
+        "1": "Lundi",
+        "2": "Mardi",
+        "3": "Mercredi",
+        "4": "Jeudi",
+        "5": "Vendredi",
+        "6": "Samedi",
+      },
       /** Una sede sin ninguna hora indicada. */
       empty: "Tu n'as pas encore indiqué ta disponibilité",
       /** «3 días · 14 h semanales». */

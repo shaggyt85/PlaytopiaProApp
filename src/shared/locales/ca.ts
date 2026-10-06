@@ -423,6 +423,29 @@ const ca: Translations = {
     },
     availability: {
       title: "Disponibilitat",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Editar disponibilitat",
+      /** El editor: la sede, las franjas, los días y la semana resultante. */
+      club: "Seu",
+      bandsTitle: "Franja horària",
+      daysTitle: "Dies de la setmana",
+      weekTitle: "La teva setmana",
+      bands: {
+        morning: "Matí",
+        afternoon: "Tarda",
+        evening: "Nit",
+        allDay: "Tot",
+      },
+      /** Cada día por su número de Core, para el lector de pantalla (el chip solo dice «L»). */
+      weekdays: {
+        "0": "Diumenge",
+        "1": "Dilluns",
+        "2": "Dimarts",
+        "3": "Dimecres",
+        "4": "Dijous",
+        "5": "Divendres",
+        "6": "Dissabte",
+      },
       /** Una sede sin ninguna hora indicada. */
       empty: "Encara no has indicat la teva disponibilitat",
       /** «3 días · 14 h semanales». */

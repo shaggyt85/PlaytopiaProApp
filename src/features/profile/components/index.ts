@@ -1,4 +1,5 @@
 export { AvailabilityCard } from "./AvailabilityCard";
+export { AvailabilityEditor } from "./AvailabilityEditor";
 export { ClubHoursRow } from "./ClubHoursRow";
 export { ClubName } from "./ClubName";
 export { EditButton } from "./EditButton";

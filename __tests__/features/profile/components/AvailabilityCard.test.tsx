@@ -1,7 +1,8 @@
-import { screen, within } from "@testing-library/react-native";
+import { fireEvent, screen, within } from "@testing-library/react-native";
 
 import { AvailabilityCard } from "@/features/profile/components/AvailabilityCard";
 import { profileDetailsService } from "@/features/profile/services/profileDetailsService";
+import { useProfileEditorStore } from "@/features/profile/store/profileEditorStore";
 import { HttpError } from "@/shared/services/HttpError";
 import { myClubsService } from "@/shared/services/myClubsService";
 
@@ -24,7 +25,7 @@ describe("AvailabilityCard", () => {
     });
   });
 
-  it("cada sede con su nombre de la agenda, su resumen y sus tramos", async () => {
+  it("cada sede con su nombre de la agenda y su resumen, como el prototipo (sin los tramos)", async () => {
     jest.mocked(profileDetailsService.get).mockResolvedValue(profileDetails());
     renderWithProviders(<AvailabilityCard />);
 
@@ -32,7 +33,7 @@ describe("AvailabilityCard", () => {
     expect(screen.getByRole("header", { name: "Disponibilidad" })).toBeTruthy();
     expect(await sede.findByText("Indoor Centro")).toBeTruthy();
     expect(sede.getByText("2 días · 5 h semanales")).toBeTruthy();
-    expect(sede.getByText("Lun 16:00–19:00 · Mié 09:00–11:00")).toBeTruthy();
+    expect(sede.queryByText(/16:00/)).toBeNull();
   });
 
   it("una sede sin semana, dice que aún no la ha indicado", async () => {
@@ -60,11 +61,13 @@ describe("AvailabilityCard", () => {
     expect(await screen.findByRole("button", { name: "Reintentar" })).toBeTruthy();
   });
 
-  it("sin «Editar» hasta que llegue su editor", async () => {
+  it("«Editar» abre su editor en el panel de Perfil", async () => {
+    useProfileEditorStore.getState().close();
     jest.mocked(profileDetailsService.get).mockResolvedValue(profileDetails());
     renderWithProviders(<AvailabilityCard />);
 
-    await screen.findByTestId("availability-7-70");
-    expect(screen.queryByRole("button")).toBeNull();
+    fireEvent.press(await screen.findByRole("button", { name: "Editar disponibilidad" }));
+
+    expect(useProfileEditorStore.getState().section).toBe("availability");
   });
 });

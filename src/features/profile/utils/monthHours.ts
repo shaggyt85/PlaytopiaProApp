@@ -4,6 +4,8 @@ import { sedeKey } from "@/shared/utils/sedeKey";
 
 import type { HoursMonth, HoursTally, ProfileClub, TeacherHours } from "../schemas/profileDetails.schema";
 
+import { profileClubLabel } from "./profileClubLabel";
+
 // Las horas de Perfil son el avance del mes: lo hecho de lo planificado. Cada
 // barra se llena con lo hecho sobre lo planificado de su fila (un mes pasado,
 // llena; el actual, según avanza). Las cuentas, aquí; las tarjetas solo pintan.
@@ -34,12 +36,11 @@ export interface ClubHours {
  */
 export function clubBreakdown(month: HoursMonth, clubs: readonly ProfileClub[], clubOf: ClubOf): ClubHours[] {
   return month.clubs.map((tally) => {
-    const club = clubOf(tally);
     const fromCore = clubs.find((c) => c.db_id === tally.db_id && c.club_id === tally.club_id);
     return {
       key: sedeKey(tally),
-      label: club.label || (fromCore?.club_name ?? fromCore?.school_name ?? ""),
-      colors: club.colors,
+      label: fromCore ? profileClubLabel(fromCore, clubOf) : clubOf(tally).label,
+      colors: clubOf(tally).colors,
       doneMinutes: tally.done_minutes,
       plannedMinutes: tally.planned_minutes,
       share: progress(tally),

@@ -423,6 +423,29 @@ const de: Translations = {
     },
     availability: {
       title: "Verfügbarkeit",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Verfügbarkeit bearbeiten",
+      /** El editor: la sede, las franjas, los días y la semana resultante. */
+      club: "Standort",
+      bandsTitle: "Tageszeit",
+      daysTitle: "Wochentage",
+      weekTitle: "Deine Woche",
+      bands: {
+        morning: "Morgen",
+        afternoon: "Nachmittag",
+        evening: "Abend",
+        allDay: "Ganztägig",
+      },
+      /** Cada día por su número de Core, para el lector de pantalla (el chip solo dice «L»). */
+      weekdays: {
+        "0": "Sonntag",
+        "1": "Montag",
+        "2": "Dienstag",
+        "3": "Mittwoch",
+        "4": "Donnerstag",
+        "5": "Freitag",
+        "6": "Samstag",
+      },
       /** Una sede sin ninguna hora indicada. */
       empty: "Du hast deine Verfügbarkeit noch nicht angegeben",
       /** «3 días · 14 h semanales». */

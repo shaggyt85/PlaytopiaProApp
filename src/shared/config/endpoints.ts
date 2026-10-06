@@ -36,6 +36,8 @@ export const ENDPOINTS = {
     CLUBS: "/MobileTeacher/clubs",
     /** Los deportes y especialidades que puede elegir en su perfil, traducidos. */
     SPORTS: "/MobileTeacher/sports",
+    /** Su semana en una de sus sedes: `PUT` con la semana entera, que sustituye a la que tenía. */
+    AVAILABILITY: (dbId: number, clubId: number) => `/MobileTeacher/clubs/${dbId}/${clubId}/availability`,
     /** Las sedes a las que puede pedir unirse, paginadas (`page`, `size`). */
     JOINABLE_SCHOOLS: "/MobileTeacher/schools",
     /** Sus clases entre dos fechas (`from`, `to`) y la próxima. */

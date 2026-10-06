@@ -423,6 +423,29 @@ const en: Translations = {
     },
     availability: {
       title: "Availability",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Edit availability",
+      /** El editor: la sede, las franjas, los días y la semana resultante. */
+      club: "Club",
+      bandsTitle: "Time of day",
+      daysTitle: "Days of the week",
+      weekTitle: "Your week",
+      bands: {
+        morning: "Morning",
+        afternoon: "Afternoon",
+        evening: "Evening",
+        allDay: "All day",
+      },
+      /** Cada día por su número de Core, para el lector de pantalla (el chip solo dice «L»). */
+      weekdays: {
+        "0": "Sunday",
+        "1": "Monday",
+        "2": "Tuesday",
+        "3": "Wednesday",
+        "4": "Thursday",
+        "5": "Friday",
+        "6": "Saturday",
+      },
       /** Una sede sin ninguna hora indicada. */
       empty: "You haven't set your availability yet",
       /** «3 días · 14 h semanales». */
