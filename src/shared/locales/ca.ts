@@ -383,7 +383,15 @@ const ca: Translations = {
     title: "El meu perfil",
     /** «Editar ›» a la derecha del título de una tarjeta. */
     edit: "Editar",
-    photo: "La teva foto de perfil",
+    /** La foto del profesor: tocarla la cambia. */
+    avatar: {
+      change: "Canviar la foto",
+      takePhoto: "Fer una foto",
+      chooseFromLibrary: "Triar de la galeria",
+      cameraDenied: "Sense accés a la càmera",
+      cameraDeniedMessage: "Permet l'accés a la càmera als ajustos per fer-te la foto.",
+      openSettings: "Obrir els ajustos",
+    },
     role: "Entrenador",
     roleWithExperience: {
       zero: "Entrenador · menys d'un any d'experiència",

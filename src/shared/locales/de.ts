@@ -383,7 +383,15 @@ const de: Translations = {
     title: "Mein Profil",
     /** «Editar ›» a la derecha del título de una tarjeta. */
     edit: "Bearbeiten",
-    photo: "Dein Profilfoto",
+    /** La foto del profesor: tocarla la cambia. */
+    avatar: {
+      change: "Foto ändern",
+      takePhoto: "Foto aufnehmen",
+      chooseFromLibrary: "Aus der Mediathek wählen",
+      cameraDenied: "Kein Kamerazugriff",
+      cameraDeniedMessage: "Erlaube den Kamerazugriff in den Einstellungen, um dein Foto aufzunehmen.",
+      openSettings: "Einstellungen öffnen",
+    },
     role: "Trainer",
     roleWithExperience: {
       zero: "Trainer · weniger als ein Jahr Erfahrung",

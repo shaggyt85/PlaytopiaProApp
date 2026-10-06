@@ -40,6 +40,8 @@ export const ENDPOINTS = {
   MOBILE_TEACHER: {
     /** Las sedes donde trabaja («Mis clubes»). */
     CLUBS: "/MobileTeacher/clubs",
+    /** Sube su foto de perfil (multipart, campo `avatarFile`) y devuelve su URL nueva. */
+    AVATAR_UPLOAD: "/MobileTeacher/UploadMobileTeacherAvatar",
     /** Los deportes y especialidades que puede elegir en su perfil, traducidos. */
     SPORTS: "/MobileTeacher/sports",
     /** Su semana en una de sus sedes: `PUT` con la semana entera, que sustituye a la que tenía. */

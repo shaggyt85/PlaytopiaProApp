@@ -83,4 +83,15 @@ describe("TeacherAvatar", () => {
 
     expect(lastImageProps().transition).toBe(0);
   });
+
+  it("ocupada: no se puede tocar y lo dice al lector de pantalla", () => {
+    const onPress = jest.fn();
+    render(<TeacherAvatar url={URL} onPress={onPress} busy accessibilityLabel="Cambiar foto" />);
+
+    fireEvent.press(screen.getByRole("button", { name: "Cambiar foto" }));
+
+    expect(onPress).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: "Cambiar foto" })).toBeBusy();
+    expect(screen.getByRole("button", { name: "Cambiar foto" })).toBeDisabled();
+  });
 });

@@ -388,8 +388,15 @@ const es = {
     title: "Mi perfil",
     /** «Editar ›» a la derecha del título de una tarjeta. */
     edit: "Editar",
-    /** La foto del profesor, para el lector de pantalla. */
-    photo: "Tu foto de perfil",
+    /** La foto del profesor: tocarla la cambia. */
+    avatar: {
+      change: "Cambiar foto",
+      takePhoto: "Hacer una foto",
+      chooseFromLibrary: "Elegir de la galería",
+      cameraDenied: "Sin acceso a la cámara",
+      cameraDeniedMessage: "Permite el acceso a la cámara en los ajustes para hacerte la foto.",
+      openSettings: "Abrir ajustes",
+    },
     /** Sin años de experiencia: solo el rol. */
     role: "Entrenador",
     /** El rol con sus años de experiencia. */

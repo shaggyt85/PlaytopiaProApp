@@ -9,6 +9,11 @@ describe("textos nativos", () => {
     }
   });
 
+  it("los permisos de la cámara y de las fotos hablan de la foto de perfil", () => {
+    expect(NATIVE_STRINGS.es.NSCameraUsageDescription).toMatch(/foto de perfil/);
+    expect(NATIVE_STRINGS.es.NSPhotoLibraryUsageDescription).toMatch(/perfil/);
+  });
+
   it("el permiso de Face ID habla de biometría", () => {
     expect(NATIVE_STRINGS.es.NSFaceIDUsageDescription).toMatch(/biometría/);
   });

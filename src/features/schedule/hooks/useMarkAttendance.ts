@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Alert } from "react-native";
 
 import type { AttendanceStatus, ScheduleClass, ScheduleResponse } from "@/shared/schemas/schedule.schema";
 import {
@@ -8,7 +7,7 @@ import {
   type AttendanceTarget,
   type IScheduleService,
 } from "@/shared/services/scheduleService";
-import { getErrorMessage } from "@/shared/utils/getErrorMessage";
+import { alertError } from "@/shared/utils/alertError";
 
 import { withAttendance, withStudentMark } from "../utils/withAttendance";
 
@@ -45,7 +44,7 @@ export function useMarkAttendance(service: Pick<IScheduleService, "markAttendanc
     },
     onError: (error, _vars, context) => {
       for (const [key, data] of context?.before ?? []) queryClient.setQueryData(key, data);
-      Alert.alert(getErrorMessage(error));
+      alertError(error);
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: scheduleKeys.all }),
   });

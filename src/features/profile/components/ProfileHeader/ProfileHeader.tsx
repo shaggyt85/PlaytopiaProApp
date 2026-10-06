@@ -1,12 +1,12 @@
 import { View } from "react-native";
 
-import { TeacherAvatar } from "@/shared/components/TeacherAvatar";
 import { Text } from "@/shared/components/Text";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 import { fullName } from "@/shared/utils/fullName";
 
 import { roleLine } from "../../utils/roleLine";
+import { EditableAvatar } from "../EditableAvatar";
 
 import { useStyles } from "./ProfileHeader.styles";
 
@@ -16,15 +16,15 @@ interface ProfileHeaderProps {
 
 /**
  * La cabecera de Perfil, como el prototipo: su foto grande con el aro de marca,
- * su nombre y su rol con los años de experiencia (`roleLine`). La foto aún no
- * se puede cambiar: llega con la subida del avatar.
+ * su nombre y su rol con los años de experiencia (`roleLine`). La foto se
+ * cambia tocándola (`EditableAvatar`).
  */
 export function ProfileHeader({ profile }: ProfileHeaderProps) {
   const styles = useStyles();
   const { t } = useTranslation();
   return (
     <View style={styles.container} testID="profile-header">
-      <TeacherAvatar url={profile.avatar} size="xl" accessibilityLabel={t("profile.photo")} />
+      <EditableAvatar url={profile.avatar} />
       <Text variant="subtitle" align="center" style={styles.name}>
         {fullName(profile)}
       </Text>

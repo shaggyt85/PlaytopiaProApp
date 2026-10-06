@@ -8,6 +8,7 @@ export { DayMode } from "./DayMode";
 export { DeleteAccountButton } from "./DeleteAccountButton";
 export { DeleteAccountEditor } from "./DeleteAccountEditor";
 export { EditButton } from "./EditButton";
+export { EditableAvatar } from "./EditableAvatar";
 export { ExpandChevron } from "./ExpandChevron";
 export { HoursCard } from "./HoursCard";
 export { HoursHistory } from "./HoursHistory";

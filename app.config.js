@@ -77,6 +77,16 @@ export default {
         { faceIDPermission: NATIVE_STRINGS.es.NSFaceIDUsageDescription },
       ],
       [
+        "expo-image-picker",
+        {
+          // Textos por defecto de los permisos de iOS; las traducciones, en `locales`.
+          cameraPermission: NATIVE_STRINGS.es.NSCameraUsageDescription,
+          photosPermission: NATIVE_STRINGS.es.NSPhotoLibraryUsageDescription,
+          // Solo fotos: sin micrófono, Android no pide RECORD_AUDIO.
+          microphonePermission: false,
+        },
+      ],
+      [
         "expo-navigation-bar",
         {
           // Con navegación por botones, Android pinta detrás una capa translúcida

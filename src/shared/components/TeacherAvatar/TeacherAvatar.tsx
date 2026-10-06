@@ -24,6 +24,8 @@ interface TeacherAvatarProps {
   onPress?: () => void;
   /** Lo que dice el lector de pantalla: a dónde lleva o de quién es la foto. */
   accessibilityLabel?: string;
+  /** Mientras algo la cambia (la subida en Perfil): ocupada y sin poder tocarla. */
+  busy?: boolean;
 }
 
 /**
@@ -32,7 +34,7 @@ interface TeacherAvatarProps {
  * carga, queda el círculo vacío: sin foto propia, Core ya manda la de por
  * defecto, así que nunca hay iniciales.
  */
-export function TeacherAvatar({ url, size = "md", onPress, accessibilityLabel }: TeacherAvatarProps) {
+export function TeacherAvatar({ url, size = "md", onPress, accessibilityLabel, busy = false }: TeacherAvatarProps) {
   const styles = useStyles();
   const keys = STYLE_KEYS[size];
   const reduceMotion = useReduceMotion();
@@ -64,8 +66,10 @@ export function TeacherAvatar({ url, size = "md", onPress, accessibilityLabel }:
     <Pressable
       style={styles[keys.ring]}
       onPress={onPress}
+      disabled={busy}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
+      accessibilityState={{ busy, disabled: busy }}
       testID="teacher-avatar"
     >
       {content}

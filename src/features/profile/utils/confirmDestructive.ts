@@ -1,6 +1,6 @@
-import { Alert } from "react-native";
-
 import type { t as translate } from "@/shared/config/i18n";
+
+import { chooseAction } from "./chooseAction";
 
 interface DestructiveConfirmation {
   /** La pregunta, ya traducida: «¿Quieres cerrar sesión?». */
@@ -13,12 +13,10 @@ interface DestructiveConfirmation {
 }
 
 /**
- * Confirmación nativa (`Alert`) antes de algo que saca de la cuenta:
- * «Cancelar» y el botón rojo, como en el prototipo. Solo `onConfirm` hace algo.
+ * Confirmación nativa antes de algo que saca de la cuenta: «Cancelar» y el
+ * botón rojo, como en el prototipo (`chooseAction` con una sola opción, en
+ * rojo). Solo `onConfirm` hace algo.
  */
 export function confirmDestructive({ title, message, confirm, onConfirm }: DestructiveConfirmation, t: typeof translate) {
-  Alert.alert(title, message, [
-    { text: t("common.cancel"), style: "cancel" },
-    { text: confirm, style: "destructive", onPress: onConfirm },
-  ]);
+  chooseAction({ title, message, actions: [{ text: confirm, onPress: onConfirm, destructive: true }] }, t);
 }
