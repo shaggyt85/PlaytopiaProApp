@@ -253,4 +253,66 @@ describe("ProfileEditorSheet", () => {
 
     expect(availabilityService.replace).toHaveBeenCalledWith(7, 71, { "6": [6, 7, 8, 9, 10, 11] });
   });
+
+  it("una semana de franjas se abre «Por franja»", async () => {
+    renderWithProviders(<ProfileEditorSheet />);
+    act(() => useProfileEditorStore.getState().open("availability"));
+
+    expect(await screen.findByRole("tab", { name: "Por franja", selected: true })).toBeTruthy();
+  });
+
+  it("«Por día»: empieza en el primer día con horas y marca y quita horas de ese día", async () => {
+    jest.mocked(availabilityService.replace).mockResolvedValue({ ...profileClub, week: {} });
+    renderWithProviders(<ProfileEditorSheet />);
+    act(() => useProfileEditorStore.getState().open("availability"));
+
+    fireEvent.press(await screen.findByRole("tab", { name: "Por día" }));
+    expect(screen.getByRole("checkbox", { name: "Lunes", checked: true })).toBeTruthy();
+    expect(screen.getByText("Horas del Lunes")).toBeTruthy();
+    const hours = within(screen.getByTestId("day-hours"));
+    expect(hours.getByRole("checkbox", { name: "18:00", checked: true })).toBeTruthy();
+    fireEvent.press(hours.getByRole("checkbox", { name: "09:00" }));
+    fireEvent.press(hours.getByRole("checkbox", { name: "23:00" }));
+    expect(within(screen.getByTestId("availability-week")).getByText("Lun 09:00–10:00 y 18:00–23:00")).toBeTruthy();
+
+    fireEvent.press(screen.getByRole("checkbox", { name: "Martes" }));
+    fireEvent.press(within(screen.getByTestId("day-hours")).getByRole("checkbox", { name: "07:00" }));
+    await act(async () => {
+      fireEvent.press(screen.getByRole("button", { name: "Guardar" }));
+    });
+
+    expect(availabilityService.replace).toHaveBeenCalledWith(7, 70, {
+      "1": [9, 18, 19, 20, 21, 22],
+      "2": [7],
+      "3": [18, 19, 20, 21, 22, 23],
+    });
+  });
+
+  it("una sede con horas sueltas se abre «Por día», con su primer día", async () => {
+    jest.mocked(profileDetailsService.get).mockResolvedValue(
+      profileDetails({ availability: [{ ...profileClub, week: { "4": [9, 10, 17] } }] }),
+    );
+    renderWithProviders(<ProfileEditorSheet />);
+    act(() => useProfileEditorStore.getState().open("availability"));
+
+    expect(await screen.findByRole("tab", { name: "Por día", selected: true })).toBeTruthy();
+    expect(screen.getByRole("checkbox", { name: "Jueves", checked: true })).toBeTruthy();
+    expect(within(screen.getByTestId("day-hours")).getByRole("checkbox", { name: "17:00", checked: true })).toBeTruthy();
+  });
+
+  it("volver a «Por franja» marca las franjas de la semana editada «Por día»", async () => {
+    renderWithProviders(<ProfileEditorSheet />);
+    act(() => useProfileEditorStore.getState().open("availability"));
+
+    fireEvent.press(await screen.findByRole("tab", { name: "Por día" }));
+    fireEvent.press(screen.getByRole("checkbox", { name: "Miércoles" }));
+    for (const hour of ["18:00", "19:00", "20:00", "21:00", "22:00", "23:00"]) {
+      fireEvent.press(within(screen.getByTestId("day-hours")).getByRole("checkbox", { name: hour }));
+    }
+    fireEvent.press(screen.getByRole("tab", { name: "Por franja" }));
+
+    expect(screen.getByRole("checkbox", { name: "Noche", checked: true })).toBeTruthy();
+    expect(screen.getByRole("checkbox", { name: "Lunes", checked: true })).toBeTruthy();
+    expect(screen.getByRole("checkbox", { name: "Miércoles", checked: false })).toBeTruthy();
+  });
 });

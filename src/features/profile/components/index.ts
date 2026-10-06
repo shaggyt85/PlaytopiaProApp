@@ -1,7 +1,10 @@
 export { AvailabilityCard } from "./AvailabilityCard";
 export { AvailabilityEditor } from "./AvailabilityEditor";
+export { BandsMode } from "./BandsMode";
+export { ChipGroup } from "./ChipGroup";
 export { ClubHoursRow } from "./ClubHoursRow";
 export { ClubName } from "./ClubName";
+export { DayMode } from "./DayMode";
 export { EditButton } from "./EditButton";
 export { ExpandChevron } from "./ExpandChevron";
 export { HoursCard } from "./HoursCard";
@@ -20,4 +23,6 @@ export { ProfileHeader } from "./ProfileHeader";
 export { SignOutButton } from "./SignOutButton";
 export { SpecialtyPicker } from "./SpecialtyPicker";
 export { ToggleChip } from "./ToggleChip";
+export { WeekDayChips } from "./WeekDayChips";
+export { WeekSummary } from "./WeekSummary";
 export { YearsStepper } from "./YearsStepper";

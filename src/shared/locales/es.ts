@@ -442,6 +442,14 @@ const es = {
       bandsTitle: "Franja horaria",
       daysTitle: "Días de la semana",
       weekTitle: "Tu semana",
+      /** Las dos formas de configurar la semana. */
+      modes: {
+        bands: "Por franja",
+        day: "Por día",
+      },
+      pickDay: "Elige un día",
+      /** Las horas del día que se edita en «Por día». */
+      dayHours: "Horas del %{day}",
       bands: {
         morning: "Mañana",
         afternoon: "Tarde",

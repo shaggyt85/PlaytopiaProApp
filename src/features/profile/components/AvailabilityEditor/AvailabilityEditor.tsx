@@ -1,34 +1,31 @@
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { View } from "react-native";
 
 import { DataState } from "@/shared/components/DataState";
-import { SectionLabel } from "@/shared/components/SectionLabel";
+import { SegmentedTabs } from "@/shared/components/SegmentedTabs";
 import { Text } from "@/shared/components/Text";
 import { useScheduleClubs } from "@/shared/hooks/useScheduleClubs";
 import { useTranslation } from "@/shared/hooks/useTranslation";
-import { formatWeekdayInitials } from "@/shared/utils/formatDate";
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 import { sedeKey } from "@/shared/utils/sedeKey";
 
 import { useProfileDetails } from "../../hooks/useProfileDetails";
 import { useSaveAvailability } from "../../hooks/useSaveAvailability";
 import type { ClubAvailability } from "../../schemas/profileDetails.schema";
-import { WEEK_DISPLAY_ORDER, type WeekDay, type WeeklyHours } from "../../schemas/weeklyHours.schema";
-import { dayRangesLabel } from "../../utils/dayRangesLabel";
+import type { WeeklyHours } from "../../schemas/weeklyHours.schema";
+import { AVAILABILITY_MODES, initialMode, type AvailabilityMode } from "../../utils/availabilityModes";
 import { profileClubLabel } from "../../utils/profileClubLabel";
-import { applyBands, bandsOf, TIME_BANDS, type BandId, type BandSelection } from "../../utils/timeBands";
+import { BandsMode } from "../BandsMode";
+import { ChipGroup } from "../ChipGroup";
+import { DayMode } from "../DayMode";
 import { ProfileEditorForm } from "../ProfileEditorForm";
 import type { ProfileEditorProps } from "../ProfileEditorSheet/profileEditors";
-import { ToggleChip } from "../ToggleChip";
-
-import { useStyles } from "./AvailabilityEditor.styles";
+import { WeekSummary } from "../WeekSummary";
 
 /**
  * Editor de la disponibilidad, con la configuración de la app de alumnos y el
- * aspecto de la Pro: la sede (si trabaja en varias), las franjas y los días
- * («Por franja») y «Tu semana» con los tramos de cada día. Las sedes y sus
- * semanas salen de la misma caché que la tarjeta (`useProfileDetails`).
+ * aspecto de la Pro. Las sedes y sus semanas salen de la misma caché que la
+ * tarjeta (`useProfileDetails`).
  */
 export function AvailabilityEditor({ onDone }: ProfileEditorProps) {
   const details = useProfileDetails();
@@ -39,8 +36,11 @@ export function AvailabilityEditor({ onDone }: ProfileEditorProps) {
   );
 }
 
-const toggle = <T,>(list: readonly T[], item: T): T[] =>
-  list.includes(item) ? list.filter((x) => x !== item) : [...list, item];
+/** Lo que pinta cada modo; los dos editan la misma semana. */
+const MODE_VIEWS = { bands: BandsMode, day: DayMode } as const satisfies Record<
+  AvailabilityMode,
+  typeof BandsMode
+>;
 
 interface AvailabilityFormProps {
   clubs: readonly ClubAvailability[];
@@ -48,22 +48,20 @@ interface AvailabilityFormProps {
 }
 
 /**
- * Lo que se guarda es la semana (`week`, el valor del formulario). Lo marcado en
- * «Por franja» es su entrada (se pueden marcar días antes que franjas) y la
- * semana se recalcula de ello en cada cambio (`applyBands`). Al abrir una sede,
- * lo marcado sale de su semana guardada (`bandsOf`).
+ * La sede (si hay varias), el modo («Por franja» o «Por día»), lo del modo,
+ * «Tu semana» y guardar. Lo que se guarda es la semana (el valor del
+ * formulario); los modos la cambian. Al cambiar de sede se carga la suya y se
+ * pierde lo no guardado, como en la app de alumnos.
  */
 function AvailabilityForm({ clubs, onDone }: AvailabilityFormProps) {
-  const styles = useStyles();
   const { t } = useTranslation();
   const { clubOf } = useScheduleClubs();
   const save = useSaveAvailability();
   const [clubKey, setClubKey] = useState(clubs[0] ? sedeKey(clubs[0]) : "");
   const club = clubs.find((c) => sedeKey(c) === clubKey);
+  const [mode, setMode] = useState<AvailabilityMode>(() => initialMode(club?.week ?? {}));
   const form = useForm<{ week: WeeklyHours }>({ defaultValues: { week: club?.week ?? {} } });
-  const [selection, setSelection] = useState<BandSelection>(() => bandsOf(club?.week ?? {}));
   const week = useWatch({ control: form.control, name: "week" });
-  const letters = formatWeekdayInitials();
 
   if (!club) {
     return (
@@ -73,16 +71,12 @@ function AvailabilityForm({ clubs, onDone }: AvailabilityFormProps) {
     );
   }
 
-  const select = (next: BandSelection) => {
-    setSelection(next);
-    form.setValue("week", applyBands(next), { shouldDirty: true });
-  };
-
-  // Otra sede: su semana guardada; lo no guardado de la anterior se pierde, como en la app de alumnos.
-  const changeClub = (next: ClubAvailability) => {
-    setClubKey(sedeKey(next));
+  const changeClub = (key: string) => {
+    const next = clubs.find((c) => sedeKey(c) === key);
+    if (!next) return;
+    setClubKey(key);
     form.reset({ week: next.week });
-    setSelection(bandsOf(next.week));
+    setMode(initialMode(next.week));
   };
 
   const submit = form.handleSubmit(async ({ week: saved }) => {
@@ -91,7 +85,7 @@ function AvailabilityForm({ clubs, onDone }: AvailabilityFormProps) {
     if (done) onDone();
   });
 
-  const daysWithHours = WEEK_DISPLAY_ORDER.filter((day) => (week[day]?.length ?? 0) > 0);
+  const ModeView = MODE_VIEWS[mode];
 
   return (
     <ProfileEditorForm
@@ -102,64 +96,25 @@ function AvailabilityForm({ clubs, onDone }: AvailabilityFormProps) {
       testID="availability-editor"
     >
       {clubs.length > 1 ? (
-        <View style={styles.block}>
-          <SectionLabel label={t("profile.availability.club")} />
-          <View style={styles.chips}>
-            {clubs.map((c) => (
-              <ToggleChip
-                key={sedeKey(c)}
-                label={profileClubLabel(c, clubOf)}
-                selected={sedeKey(c) === clubKey}
-                onPress={() => changeClub(c)}
-              />
-            ))}
-          </View>
-        </View>
+        <ChipGroup
+          label={t("profile.availability.club")}
+          options={clubs.map((c) => ({ key: sedeKey(c), label: profileClubLabel(c, clubOf), selected: sedeKey(c) === clubKey }))}
+          onPress={changeClub}
+        />
       ) : null}
-
-      <View style={styles.block}>
-        <SectionLabel label={t("profile.availability.bandsTitle")} />
-        <View style={styles.chips}>
-          {TIME_BANDS.map((band) => (
-            <ToggleChip
-              key={band.id}
-              label={t(band.label)}
-              selected={selection.bands.includes(band.id)}
-              onPress={() => select({ ...selection, bands: toggle<BandId>(selection.bands, band.id) })}
-            />
-          ))}
-        </View>
-      </View>
-
-      <View style={styles.block}>
-        <SectionLabel label={t("profile.availability.daysTitle")} />
-        <View style={styles.chips}>
-          {WEEK_DISPLAY_ORDER.map((day, index) => (
-            <ToggleChip
-              key={day}
-              label={letters[index]}
-              accessibilityLabel={t(`profile.availability.weekdays.${day}`)}
-              selected={selection.days.includes(day)}
-              onPress={() => select({ ...selection, days: toggle<WeekDay>(selection.days, day) })}
-            />
-          ))}
-        </View>
-      </View>
-
-      <View style={styles.week} testID="availability-week">
-        <SectionLabel label={t("profile.availability.weekTitle")} />
-        {daysWithHours.length > 0 ? (
-          daysWithHours.map((day) => (
-            <Text key={day} variant="caption">
-              {dayRangesLabel(day, week[day] ?? [], t)}
-            </Text>
-          ))
-        ) : (
-          <Text variant="caption" color="textSecondary">
-            {t("profile.availability.empty")}
-          </Text>
-        )}
-      </View>
+      <SegmentedTabs
+        options={AVAILABILITY_MODES.map((option) => ({ key: option.key, label: t(option.label) }))}
+        value={mode}
+        onChange={setMode}
+        testID="availability-modes"
+      />
+      {/* Por sede y modo: al entrar en un modo, lo marcado sale de la semana de ese momento. */}
+      <ModeView
+        key={`${clubKey}-${mode}`}
+        week={week}
+        onChange={(next) => form.setValue("week", next, { shouldDirty: true })}
+      />
+      <WeekSummary week={week} />
     </ProfileEditorForm>
   );
 }

@@ -430,6 +430,14 @@ const de: Translations = {
       bandsTitle: "Tageszeit",
       daysTitle: "Wochentage",
       weekTitle: "Deine Woche",
+      /** Las dos formas de configurar la semana. */
+      modes: {
+        bands: "Nach Tageszeit",
+        day: "Nach Tag",
+      },
+      pickDay: "Wähle einen Tag",
+      /** Las horas del día que se edita en «Por día». */
+      dayHours: "Stunden am %{day}",
       bands: {
         morning: "Morgen",
         afternoon: "Nachmittag",

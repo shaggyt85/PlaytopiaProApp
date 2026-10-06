@@ -430,6 +430,14 @@ const pt: Translations = {
       bandsTitle: "Faixa horária",
       daysTitle: "Dias da semana",
       weekTitle: "Sua semana",
+      /** Las dos formas de configurar la semana. */
+      modes: {
+        bands: "Por faixa",
+        day: "Por dia",
+      },
+      pickDay: "Escolha um dia",
+      /** Las horas del día que se edita en «Por día». */
+      dayHours: "Horas de %{day}",
       bands: {
         morning: "Manhã",
         afternoon: "Tarde",

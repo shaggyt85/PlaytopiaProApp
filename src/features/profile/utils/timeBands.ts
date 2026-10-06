@@ -1,6 +1,8 @@
 import type { TranslationKey } from "@/shared/locales";
 
-import { LAST_HOUR, WEEK_DISPLAY_ORDER, type WeekDay, type WeeklyHours } from "../schemas/weeklyHours.schema";
+import { LAST_HOUR, type WeekDay, type WeeklyHours } from "../schemas/weeklyHours.schema";
+
+import { daysWithHours } from "./daysWithHours";
 
 /** Las horas que se ofrecen, como en la app de alumnos: de las 06:00 a la última. */
 export const FIRST_OFFERED_HOUR = 6;
@@ -62,7 +64,7 @@ export function applyBands({ days, bands }: BandSelection): WeeklyHours {
  * cual.
  */
 export function bandsOf(week: WeeklyHours): BandSelection {
-  const days = WEEK_DISPLAY_ORDER.filter((day) => (week[day]?.length ?? 0) > 0);
+  const days = daysWithHours(week);
   const first = [...new Set(week[days[0]] ?? [])].sort((a, b) => a - b);
   const same = days.every((day) => sameHours(week[day] ?? [], first));
   const bands = TIME_BANDS.filter((band) => band.hours.every((hour) => first.includes(hour))).map((band) => band.id);

@@ -1,5 +1,7 @@
 import type { ChosenSport } from "@/shared/schemas/teacherProfile.schema";
 
+import { toggleIn } from "./toggleIn";
+
 /**
  * Elige o quita una especialidad de un deporte y devuelve la nueva lista, sin
  * tocar la de entrada. Sin especialidad (`null`), elige o quita el deporte
@@ -16,9 +18,7 @@ export function toggleSpecialty(
 
   if (specialtyCode === null) return current ? others : [...chosen, { code: sportCode, specialties: [] }];
 
-  const specialties = current?.specialties.includes(specialtyCode)
-    ? current.specialties.filter((code) => code !== specialtyCode)
-    : [...(current?.specialties ?? []), specialtyCode];
+  const specialties = toggleIn(current?.specialties ?? [], specialtyCode);
   return specialties.length > 0 ? [...others, { code: sportCode, specialties }] : others;
 }
 

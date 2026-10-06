@@ -430,6 +430,14 @@ const fr: Translations = {
       bandsTitle: "Créneau",
       daysTitle: "Jours de la semaine",
       weekTitle: "Ta semaine",
+      /** Las dos formas de configurar la semana. */
+      modes: {
+        bands: "Par créneau",
+        day: "Par jour",
+      },
+      pickDay: "Choisis un jour",
+      /** Las horas del día que se edita en «Por día». */
+      dayHours: "Heures du %{day}",
       bands: {
         morning: "Matin",
         afternoon: "Après-midi",

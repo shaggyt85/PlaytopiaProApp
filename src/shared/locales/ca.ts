@@ -430,6 +430,14 @@ const ca: Translations = {
       bandsTitle: "Franja horària",
       daysTitle: "Dies de la setmana",
       weekTitle: "La teva setmana",
+      /** Las dos formas de configurar la semana. */
+      modes: {
+        bands: "Per franja",
+        day: "Per dia",
+      },
+      pickDay: "Tria un dia",
+      /** Las horas del día que se edita en «Por día». */
+      dayHours: "Hores del %{day}",
       bands: {
         morning: "Matí",
         afternoon: "Tarda",

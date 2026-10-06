@@ -1,6 +1,8 @@
 import type { t as translate } from "@/shared/config/i18n";
 
-import { WEEK_DAYS, type WeeklyHours } from "../schemas/weeklyHours.schema";
+import type { WeeklyHours } from "../schemas/weeklyHours.schema";
+
+import { daysWithHours } from "./daysWithHours";
 
 /**
  * Lo que dice la tarjeta de una semana, como el prototipo: «3 días · 14 h
@@ -9,7 +11,7 @@ import { WEEK_DAYS, type WeeklyHours } from "../schemas/weeklyHours.schema";
  * en el editor (`dayRangesLabel`).
  */
 export function availabilitySummary(week: WeeklyHours, t: typeof translate): string {
-  const days = WEEK_DAYS.filter((day) => (week[day]?.length ?? 0) > 0);
+  const days = daysWithHours(week);
   if (days.length === 0) return t("profile.availability.empty");
 
   const hours = days.reduce((sum, day) => sum + new Set(week[day]).size, 0);
