@@ -20,8 +20,10 @@ export const PROFILE_INCLUDES = ["hours", "availability"] as const;
  * refresca a la vez el inicio y Perfil. Llevan el idioma, como el perfil.
  */
 export const profileKeys = {
+  /** Los detalles de cualquier profesor e idioma: lo que se invalida tras editar. */
+  allDetails: [...teacherKeys.all, "details"] as const,
   details: (teacherId: number | undefined, locale: Locale) =>
-    [...teacherKeys.all, "details", teacherId, locale] as const,
+    [...profileKeys.allDetails, teacherId, locale] as const,
 };
 
 /** El perfil con sus horas y su disponibilidad. */

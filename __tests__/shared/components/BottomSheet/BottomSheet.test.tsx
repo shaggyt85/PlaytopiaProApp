@@ -1,9 +1,10 @@
-import { fireEvent, render, screen } from "@testing-library/react-native";
+import { fireEvent, render, screen, within } from "@testing-library/react-native";
 import { BlurView } from "expo-blur";
-import { BackHandler, Text } from "react-native";
+import { BackHandler, Dimensions, StyleSheet, Text } from "react-native";
 
 import { BlurTarget, BlurTargetProvider } from "@/shared/components/BlurTarget";
 import { BottomSheet } from "@/shared/components/BottomSheet";
+import { PANEL_MAX_HEIGHT_RATIO } from "@/shared/components/BottomSheet/BottomSheet.styles";
 
 describe("BottomSheet", () => {
   it("cerrado no pinta nada", () => {
@@ -24,6 +25,22 @@ describe("BottomSheet", () => {
     );
 
     expect(screen.getByText("Contenido")).toBeTruthy();
+  });
+
+  it("su contenido se desplaza si no cabe, sin barra, y no pasa del 88 % del alto", () => {
+    render(
+      <BottomSheet visible onClose={jest.fn()}>
+        <Text>Contenido</Text>
+      </BottomSheet>,
+    );
+
+    const content = screen.getByTestId("bottom-sheet-content");
+    expect(content.props.showsVerticalScrollIndicator).toBe(false);
+    expect(within(content).getByText("Contenido")).toBeTruthy();
+    const limited = screen.UNSAFE_root.findAll((node) => StyleSheet.flatten(node.props.style)?.maxHeight !== undefined);
+    expect(StyleSheet.flatten(limited[0].props.style).maxHeight).toBeCloseTo(
+      Dimensions.get("window").height * PANEL_MAX_HEIGHT_RATIO,
+    );
   });
 
   it("se cierra con la X y tocando fuera", () => {

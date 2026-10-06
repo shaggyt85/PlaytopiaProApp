@@ -50,6 +50,7 @@ const de: Translations = {
       "student-not-in-class": "Dieser Schüler ist nicht mehr in der Stunde.",
       "attendance-not-open": "Die Anwesenheit wird erfasst, sobald die Stunde beginnt.",
       "attendance-closed": "Die Frist für die Anwesenheit dieser Stunde ist abgelaufen.",
+      "email-already-registered": "Diese E-Mail gehört bereits zu einem anderen Konto.",
     },
   },
   auth: {
@@ -73,11 +74,6 @@ const de: Translations = {
     },
     signUp: {
       title: "Registrieren Sie sich!",
-      firstNameLabel: "Vorname",
-      firstNamePlaceholder: "Ihr Vorname",
-      lastNameLabel: "Nachname",
-      lastNamePlaceholder: "Ihr Nachname",
-      birthdayLabel: "Geburtsdatum",
       confirmPasswordLabel: "Passwort wiederholen",
       submit: "Weiter",
       submitting: "Registrierung läuft...",
@@ -371,8 +367,18 @@ const de: Translations = {
     passwordsDontMatch: "Die Passwörter stimmen nicht überein",
     acceptTerms: "Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren",
   },
+  /** Los campos de los datos personales: el alta y el editor de Perfil. */
+  personalData: {
+    firstNameLabel: "Vorname",
+    firstNamePlaceholder: "Ihr Vorname",
+    lastNameLabel: "Nachname",
+    lastNamePlaceholder: "Ihr Nachname",
+    birthdayLabel: "Geburtsdatum",
+  },
   profile: {
     title: "Mein Profil",
+    /** «Editar ›» a la derecha del título de una tarjeta. */
+    edit: "Bearbeiten",
     photo: "Dein Profilfoto",
     role: "Trainer",
     roleWithExperience: {
@@ -395,6 +401,8 @@ const de: Translations = {
     },
     personal: {
       title: "Persönliche Daten",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Persönliche Daten bearbeiten",
     },
     professional: {
       title: "Berufsprofil",

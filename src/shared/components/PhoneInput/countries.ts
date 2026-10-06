@@ -271,6 +271,26 @@ export const countryByCode = (cca2: string): CountryData | undefined => BY_CODE[
 /** Prefijo principal de un país, sin "+". */
 export const callingCodeOf = (cca2: string): string => BY_CODE[cca2]?.callingCode[0] ?? "";
 
+/** El teléfono como lo guarda Core: el prefijo del país y el número, «+34600123456». */
+export const joinPhone = (cca2: string, number: string): string => `+${callingCodeOf(cca2)}${number}`;
+
+/** Los prefijos de mayor a menor: el más largo que encaje gana («+1 268» antes que «+1»). */
+const BY_CALLING_CODE = [...COUNTRIES]
+  .flatMap((c) => c.callingCode.map((code) => ({ code, cca2: c.cca2 })))
+  .sort((a, b) => b.code.length - a.code.length);
+
+/**
+ * Lo contrario de `joinPhone`: «+34600123456» → España y «600123456», para
+ * editarlo. Entre países con el mismo prefijo gana el primero del catálogo.
+ * Sin prefijo conocido, el país de `fallback` y los dígitos tal cual.
+ */
+export function splitPhone(phone: string, fallback = "ES"): { country: string; number: string } {
+  const digits = phone.replace(/\D/g, "");
+  if (!phone.trim().startsWith("+")) return { country: fallback, number: digits };
+  const match = BY_CALLING_CODE.find(({ code }) => digits.startsWith(code));
+  return match ? { country: match.cca2, number: digits.slice(match.code.length) } : { country: fallback, number: digits };
+}
+
 /** Emoji de bandera a partir del código ISO. */
 export const flagEmoji = (cca2: string): string =>
   String.fromCodePoint(...[...cca2.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65));

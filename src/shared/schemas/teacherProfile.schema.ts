@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import type { PersonalDataRequest } from "@/shared/schemas/personalData.schema";
+
 /** Un código estable de Core con su nombre ya traducido (`Accept-Language`). */
 const NamedCodeSchema = z.object({
   /** Estable: es lo que se manda al guardar el perfil. */
@@ -48,5 +50,8 @@ export const TeacherProfileSchema = z.object({
 });
 export type TeacherProfile = z.infer<typeof TeacherProfileSchema>;
 
-/** Lo que la app cambia del perfil. */
-export type TeacherProfileChanges = Partial<Pick<TeacherProfile, "terms_version">>;
+/**
+ * Lo que la app cambia del perfil (`PATCH /api/UserTeacher/{id}`): los términos
+ * y los datos personales, como los espera Core. Lo que no viene no se toca.
+ */
+export type TeacherProfileChanges = Partial<Pick<TeacherProfile, "terms_version"> & PersonalDataRequest>;

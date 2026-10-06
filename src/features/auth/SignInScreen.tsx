@@ -4,12 +4,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { Button } from "@/shared/components/Button";
+import { EmailInput } from "@/shared/components/EmailInput";
+import { FormError } from "@/shared/components/FormError";
+import { useFieldErrorText } from "@/shared/hooks/useFieldErrorText";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { useSessionStore } from "@/shared/store/sessionStore";
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
-import { AuthLayout, EmailInput, FormError, LegalFooter, PendingTermsModal } from "./components";
-import { useBiometricSignIn, useCheckEmail, useFieldErrorText } from "./hooks";
+import { AuthLayout, LegalFooter, PendingTermsModal } from "./components";
+import { useBiometricSignIn, useCheckEmail } from "./hooks";
 import { EmailFormSchema, type EmailForm } from "./schemas/auth.schema";
 import { useAuthFlowStore } from "./store/authFlowStore";
 import { signInNextStep, type SignInNextStep } from "./utils/signInNextStep";

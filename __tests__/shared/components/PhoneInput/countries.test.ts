@@ -1,6 +1,8 @@
 import {
   COUNTRIES,
   callingCodeOf,
+  joinPhone,
+  splitPhone,
   countryByCode,
   flagEmoji,
 } from "@/shared/components/PhoneInput/countries";
@@ -29,5 +31,30 @@ describe("catálogo de países", () => {
   it("la bandera sale del código ISO", () => {
     expect(flagEmoji("ES")).toBe("🇪🇸");
     expect(flagEmoji("ar")).toBe("🇦🇷");
+  });
+});
+
+describe("joinPhone", () => {
+  it("el prefijo del país y el número, como lo guarda Core", () => {
+    expect(joinPhone("ES", "600123456")).toBe("+34600123456");
+  });
+});
+
+describe("splitPhone", () => {
+  it("lo contrario de joinPhone: el país por su prefijo y el número", () => {
+    expect(splitPhone("+34600123456")).toEqual({ country: "ES", number: "600123456" });
+    expect(splitPhone(joinPhone("AR", "1155556666"))).toEqual({ country: "AR", number: "1155556666" });
+  });
+
+  it("gana el prefijo más largo que encaja", () => {
+    expect(splitPhone("+3906698123456")).toEqual({ country: "VA", number: "123456" });
+  });
+
+  it("sin «+» no hay prefijo que leer: el país por defecto y los dígitos", () => {
+    expect(splitPhone("600 123 456")).toEqual({ country: "ES", number: "600123456" });
+  });
+
+  it("un prefijo que no existe deja los dígitos con el país por defecto", () => {
+    expect(splitPhone("+999123", "PT")).toEqual({ country: "PT", number: "999123" });
   });
 });

@@ -1,0 +1,1 @@
+export { PersonalDataEditor } from "./PersonalDataEditor";

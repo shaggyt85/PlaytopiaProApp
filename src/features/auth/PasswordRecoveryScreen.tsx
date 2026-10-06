@@ -3,13 +3,16 @@ import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/Button";
+import { EmailInput } from "@/shared/components/EmailInput";
+import { FormError } from "@/shared/components/FormError";
 import { Text } from "@/shared/components/Text";
+import { useFieldErrorText } from "@/shared/hooks/useFieldErrorText";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TranslationKey } from "@/shared/locales";
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
-import { AuthLayout, EmailInput, FormError } from "./components";
-import { useFieldErrorText, usePasswordRecovery } from "./hooks";
+import { AuthLayout } from "./components";
+import { usePasswordRecovery } from "./hooks";
 import { EmailFormSchema, type EmailForm } from "./schemas/auth.schema";
 import { useAuthFlowStore } from "./store/authFlowStore";
 

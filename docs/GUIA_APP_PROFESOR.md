@@ -644,7 +644,9 @@ useQuery({
 - **Historial de horas** (`HoursHistory`, cerrado de entrada): un mes por fila (`HoursMonthRow`: nombre, el actual en magenta; barra de su avance; «9:00 / 12:00 h»), **solo los meses con algo planificado** (los que no trabajó no salen; sin ninguno, no hay historial). Al tocar un mes, «8 de 11 clases» y, solo si trabajó en dos sedes o más, lo de cada una (con una, sus horas ya están en la fila). Uno abierto a la vez; la › gira al abrir (`ExpandChevron`, Reanimated, respeta «reducir movimiento») y el lector de pantalla sabe si está abierto (`PressableScale` `expanded`).
 - **Disponibilidad** (`AvailabilityCard`, tras los clubes), por sede porque cada sede tiene su horario: su punto y su nombre de la agenda (`ClubName`, el mismo de «Clubes donde trabajas»), «3 días · 14 h semanales» y sus tramos de lunes a domingo («Lun 16:00–19:00 · Mié 09:00–11:00 y 17:00–19:00»), con `availabilitySummary`. Los tramos los calcula `weekRanges` (horas seguidas → un tramo; solo números, la reutiliza el editor) y los escribe `formatHourOfDay` (la hora 24 es «24:00», no «00:00») con `common.timeRange` (el mismo texto que el horario de una clase). El orden de la semana, una vez: `WEEK_DISPLAY_ORDER`. La misma petición que las horas; sin semana, «Aún no has indicado tu disponibilidad».
 - **Cerrar sesión:** `Button` `danger` con su icono; confirma con un `Alert` y cierra con `session.end()`.
-- **Pendiente, por fases:** los editores, la baja de la cuenta y la subida de la foto.
+- **Editores** (`ProfileEditorSheet`): un solo panel, montado en `(app)/_layout.tsx` fuera del `BlurTarget` y por encima de la barra, como el de la biometría. «Editar ›» (`EditButton`, en el `aside` de la tarjeta) abre su sección en un store de UI (`profileEditorStore`, Zustand); el panel busca su editor y su título en `PROFILE_EDITORS` (un editor nuevo es una entrada). Cada vez que se abre, el editor empieza con lo guardado; cerrar sin guardar lo descarta.
+- **Datos personales** (`PersonalDataEditor`): los mismos campos y reglas que el alta (`PersonalDataFields` y `PersonalDataFormSchema`, en `shared/`; el alta los extiende con la contraseña y los términos), rellenos con `personalDataDefaults` (`splitPhone` separa el teléfono guardado). Guardar convierte con `toPersonalDataRequest` (la misma conversión que el alta) y `useUpdateProfile` deja en la caché el perfil que devuelve Core e invalida los detalles. Un email de otra cuenta (`email-already-registered`, `isProblem`) se marca en su campo; cualquier otro error, abajo con `FormError`.
+- **Pendiente, por fases:** el editor del perfil profesional, el de la disponibilidad, la baja de la cuenta y la subida de la foto.
 
 ### Red de clubes
 
@@ -772,6 +774,8 @@ Así llegan las fechas de Core y así se tratan (`src/shared/utils/clubClock.ts`
 - **Vibración** con `selectionFeedback()` (`shared/utils/haptics.ts`), que no falla si el móvil no vibra.
 
 ### Paneles inferiores (`BottomSheet`)
+
+- **Su contenido se desplaza** si no cabe (hasta el 88 % del alto, `PANEL_MAX_HEIGHT_RATIO`, sin barra) y **sube con el teclado**: un formulario dentro nunca queda tapado.
 
 - **El panel de Lovable:** sube desde abajo (300 ms; baja en 250) sobre un velo negro al 60 % desenfocado (`expo-blur`, el `backdrop-blur-sm` del prototipo). Tarjeta `card` con las esquinas de arriba de radio `xxxl`, borde fino, barrita de agarre y la X. Ancho máximo 448 en tablets.
 - **Sin `Modal`:** es una capa encima de la pantalla. Así los `Alert` y lo que venga después se ven encima, y en Android se puede desenfocar lo de debajo.

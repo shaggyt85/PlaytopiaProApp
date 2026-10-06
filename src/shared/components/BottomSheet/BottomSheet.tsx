@@ -1,15 +1,16 @@
 import { IconLoX } from "@playtopia/icons/react-native";
 import { BlurView } from "expo-blur";
 import { useEffect, type ReactNode } from "react";
-import { BackHandler, Pressable, StyleSheet, View } from "react-native";
+import { BackHandler, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { AppScrollView } from "@/shared/components/AppScrollView";
 import { useBlurTarget } from "@/shared/components/BlurTarget";
 import { IconButton } from "@/shared/components/IconButton";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
-import { useStyles } from "./BottomSheet.styles";
+import { PANEL_MAX_HEIGHT_RATIO, useStyles } from "./BottomSheet.styles";
 
 // Lo que tarda en subir y en bajar (como la hoja de la app de alumnos).
 const OPEN_MS = 300;
@@ -30,12 +31,15 @@ export interface BottomSheetProps {
  * Panel que sube desde abajo, el de Lovable: fondo oscuro desenfocado, tarjeta
  * con la barrita de agarre y la X. No usa `Modal`: es una capa encima de la
  * pantalla, así que va fuera del `BlurTarget` que desenfoca. Con «reducir
- * movimiento» aparece sin deslizarse (Reanimated lo respeta solo).
+ * movimiento» aparece sin deslizarse (Reanimated lo respeta solo). Su contenido
+ * se desplaza si no cabe (`max-h-[88vh] overflow-y-auto`) y sube con el
+ * teclado, como el acceso: un formulario dentro nunca queda tapado.
  */
 export function BottomSheet({ visible, onClose, children }: BottomSheetProps) {
   const styles = useStyles();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
   const blurTarget = useBlurTarget();
 
   useEffect(() => {
@@ -73,19 +77,32 @@ export function BottomSheet({ visible, onClose, children }: BottomSheetProps) {
               testID="bottom-sheet-backdrop"
             />
           </Animated.View>
-          <Animated.View
-            entering={SlideInDown.duration(OPEN_MS)}
-            exiting={SlideOutDown.duration(CLOSE_MS)}
-            style={[styles.panel, { paddingBottom: styles.panel.paddingBottom + insets.bottom }]}
+          <KeyboardAvoidingView
+            style={styles.keyboard}
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
+            pointerEvents="box-none"
+            // Modal el envoltorio, que es el hermano del fondo: así el fondo
+            // queda oculto al lector de pantalla y allí se cierra con la X.
             accessibilityViewIsModal
           >
-            <View style={styles.handle} />
-            {children}
-            {/* Último hijo: se pinta encima por orden, sin zIndex (se desmonta con el panel). */}
-            <View style={styles.close}>
-              <IconButton Icon={IconLoX} size={CLOSE_SIZE} onPress={onClose} accessibilityLabel={t("common.close")} />
-            </View>
-          </Animated.View>
+            <Animated.View
+              entering={SlideInDown.duration(OPEN_MS)}
+              exiting={SlideOutDown.duration(CLOSE_MS)}
+              style={[
+                styles.panel,
+                { paddingBottom: styles.panel.paddingBottom + insets.bottom, maxHeight: height * PANEL_MAX_HEIGHT_RATIO },
+              ]}
+            >
+              <View style={styles.handle} />
+              <AppScrollView style={styles.content} keyboardShouldPersistTaps="handled" testID="bottom-sheet-content">
+                {children}
+              </AppScrollView>
+              {/* Último hijo: se pinta encima por orden, sin zIndex (se desmonta con el panel). */}
+              <View style={styles.close}>
+                <IconButton Icon={IconLoX} size={CLOSE_SIZE} onPress={onClose} accessibilityLabel={t("common.close")} />
+              </View>
+            </Animated.View>
+          </KeyboardAvoidingView>
         </>
       ) : null}
     </View>

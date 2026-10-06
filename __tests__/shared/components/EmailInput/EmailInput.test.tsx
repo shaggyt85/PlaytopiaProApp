@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react-native";
 
-import { EmailInput } from "@/features/auth/components/EmailInput";
+import { EmailInput } from "@/shared/components/EmailInput";
 
 describe("EmailInput", () => {
   it("trae la etiqueta, el teclado, el autocompletado y el tope de un email", () => {

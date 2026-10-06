@@ -50,6 +50,7 @@ const pt: Translations = {
       "student-not-in-class": "Este aluno não está mais na aula.",
       "attendance-not-open": "As presenças são marcadas quando a aula começa.",
       "attendance-closed": "Já passou o prazo para marcar as presenças desta aula.",
+      "email-already-registered": "Esse email já é de outra conta.",
     },
   },
   auth: {
@@ -73,11 +74,6 @@ const pt: Translations = {
     },
     signUp: {
       title: "Cadastre-se!",
-      firstNameLabel: "Nome",
-      firstNamePlaceholder: "Seu nome",
-      lastNameLabel: "Sobrenome",
-      lastNamePlaceholder: "Seu sobrenome",
-      birthdayLabel: "Data de nascimento",
       confirmPasswordLabel: "Repita sua senha",
       submit: "Continuar",
       submitting: "Registrando...",
@@ -371,8 +367,18 @@ const pt: Translations = {
     passwordsDontMatch: "As senhas não coincidem",
     acceptTerms: "Você deve aceitar os termos e condições",
   },
+  /** Los campos de los datos personales: el alta y el editor de Perfil. */
+  personalData: {
+    firstNameLabel: "Nome",
+    firstNamePlaceholder: "Seu nome",
+    lastNameLabel: "Sobrenome",
+    lastNamePlaceholder: "Seu sobrenome",
+    birthdayLabel: "Data de nascimento",
+  },
   profile: {
     title: "Meu perfil",
+    /** «Editar ›» a la derecha del título de una tarjeta. */
+    edit: "Editar",
     photo: "Sua foto de perfil",
     role: "Treinador",
     roleWithExperience: {
@@ -395,6 +401,8 @@ const pt: Translations = {
     },
     personal: {
       title: "Dados pessoais",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Editar dados pessoais",
     },
     professional: {
       title: "Perfil profissional",

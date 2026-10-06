@@ -1,9 +1,12 @@
 import { z } from "zod";
 
-import { callingCodeOf } from "@/shared/components/PhoneInput";
 import { GENDER } from "@/shared/config/gender";
-
-import { EmailSchema, message } from "./auth.schema";
+import {
+  PersonalDataFormSchema,
+  message,
+  toPersonalDataRequest,
+  type PersonalDataRequest,
+} from "@/shared/schemas/personalData.schema";
 
 /**
  * Versión vigente de los términos y condiciones, la que se acepta al
@@ -26,32 +29,20 @@ const PasswordSchema = z
   .regex(/[!@#$%^&*(),.?":{}|<>]/, message("validation.passwordSpecialChar"))
   .refine((value) => !/\s/.test(value), message("validation.passwordNoSpaces"));
 
-/** El número sin prefijo: el prefijo sale del país elegido. */
-const PhoneSchema = z
-  .string()
-  .regex(/^\d*$/, message("validation.phoneNumbersOnly"))
-  .min(9, message("validation.phoneMin"))
-  .max(15, message("validation.phoneMax"));
-
-/** Única fuente de las reglas del formulario de registro. */
-export const SignUpFormSchema = z
-  .object({
-    firstName: z.string().trim().min(2, message("validation.firstNameMin")),
-    lastName: z.string().trim().min(2, message("validation.lastNameMin")),
-    email: EmailSchema,
-    country: z.string().length(2),
-    phone: PhoneSchema,
-    /** Fecha de calendario "YYYY-MM-DD". */
-    birthday: z.string().min(1, message("validation.birthdayRequired")),
-    gender: z.union([z.literal(GENDER.NONE), z.literal(GENDER.MALE), z.literal(GENDER.FEMALE)]),
-    password: PasswordSchema,
-    confirmPassword: z.string().min(1, message("validation.confirmPasswordRequired")),
-    acceptedTerms: z.boolean().refine((accepted) => accepted, message("validation.acceptTerms")),
-  })
-  .refine((form) => form.password === form.confirmPassword, {
-    ...message("validation.passwordsDontMatch"),
-    path: ["confirmPassword"],
-  });
+/**
+ * El formulario de registro: los datos personales (las mismas reglas que en
+ * Perfil, `PersonalDataFormSchema`), con la fecha de nacimiento obligatoria, y
+ * la contraseña y los términos.
+ */
+export const SignUpFormSchema = PersonalDataFormSchema.extend({
+  birthday: z.string().min(1, message("validation.birthdayRequired")),
+  password: PasswordSchema,
+  confirmPassword: z.string().min(1, message("validation.confirmPasswordRequired")),
+  acceptedTerms: z.boolean().refine((accepted) => accepted, message("validation.acceptTerms")),
+}).refine((form) => form.password === form.confirmPassword, {
+  ...message("validation.passwordsDontMatch"),
+  path: ["confirmPassword"],
+});
 
 /** Lo que se escribe en el formulario (antes de validar). */
 export type SignUpFormInput = z.input<typeof SignUpFormSchema>;
@@ -74,15 +65,8 @@ export const SIGN_UP_DEFAULTS: SignUpFormInput = {
 // ── Contrato de Core (Scalar) ─────────────────────────────────────────────
 
 /** POST /api/UserTeacher sin el `registration_token`, que firma el servicio. */
-export interface SignUpRequest {
-  name: string;
-  last_name: string;
-  email: string;
+export interface SignUpRequest extends PersonalDataRequest {
   password: string;
-  phone_number: string;
-  /** `NaiveDateTime` de Core: la fecha con hora 00:00:00. */
-  birthday: string;
-  gender: number;
   terms_version: string;
 }
 
@@ -93,16 +77,7 @@ export const SignUpResponseSchema = z.object({
 });
 export type SignUpResponse = z.infer<typeof SignUpResponseSchema>;
 
-/** Del formulario validado al cuerpo que espera Core. */
+/** Del formulario validado al cuerpo que espera Core: los datos personales, como en Perfil, y la contraseña. */
 export function toSignUpRequest(form: SignUpForm): SignUpRequest {
-  return {
-    name: form.firstName,
-    last_name: form.lastName,
-    email: form.email,
-    password: form.password,
-    phone_number: `+${callingCodeOf(form.country)}${form.phone}`,
-    birthday: `${form.birthday}T00:00:00`,
-    gender: form.gender,
-    terms_version: TERMS_VERSION,
-  };
+  return { ...toPersonalDataRequest(form), password: form.password, terms_version: TERMS_VERSION };
 }

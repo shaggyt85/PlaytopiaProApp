@@ -1,17 +1,6 @@
 import { z } from "zod";
 
-import type { TranslationKey } from "@/shared/locales";
-
-// Los mensajes de validación son claves de i18n tipadas: una clave que no
-// existe no compila. La pantalla las traduce al mostrarlas.
-export const message = (key: TranslationKey) => ({ error: key });
-
-/** Email de cualquier formulario del flujo (login, registro, recuperación). */
-export const EmailSchema = z
-  .string(message("validation.emailRequired"))
-  .trim()
-  .min(1, message("validation.emailRequired"))
-  .pipe(z.email(message("validation.emailInvalid")));
+import { EmailSchema, message } from "@/shared/schemas/personalData.schema";
 
 export const EmailFormSchema = z.object({ email: EmailSchema });
 export type EmailForm = z.infer<typeof EmailFormSchema>;

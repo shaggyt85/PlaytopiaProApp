@@ -8,7 +8,7 @@ const EMAIL_MAX_LENGTH = 254;
 type EmailInputProps = Omit<InputProps, "label"> & { label?: string };
 
 /**
- * Campo de email del acceso (login, registro y recuperación), con el teclado,
+ * Campo de email del acceso (login, registro y recuperación) y de Perfil, con el teclado,
  * el autocompletado y el tope de un email. Lo que cambia entre pantallas —el
  * valor, los eventos, la tecla de retorno— llega por props, y cualquiera de las
  * fijas se puede sobrescribir.

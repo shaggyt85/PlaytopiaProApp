@@ -50,6 +50,7 @@ const ca: Translations = {
       "student-not-in-class": "Aquest alumne ja no és a la classe.",
       "attendance-not-open": "L'assistència es marca quan comença la classe.",
       "attendance-closed": "Ja ha passat el termini per marcar l'assistència d'aquesta classe.",
+      "email-already-registered": "Aquest correu ja és d'un altre compte.",
     },
   },
   auth: {
@@ -73,11 +74,6 @@ const ca: Translations = {
     },
     signUp: {
       title: "Registra't!",
-      firstNameLabel: "Nom",
-      firstNamePlaceholder: "El teu nom",
-      lastNameLabel: "Cognoms",
-      lastNamePlaceholder: "El teu cognom",
-      birthdayLabel: "Data de naixement",
       confirmPasswordLabel: "Repeteix la teva contrasenya",
       submit: "Continuar",
       submitting: "Registrant...",
@@ -371,8 +367,18 @@ const ca: Translations = {
     passwordsDontMatch: "Les contrasenyes no coincideixen",
     acceptTerms: "Has d'acceptar els termes i condicions",
   },
+  /** Los campos de los datos personales: el alta y el editor de Perfil. */
+  personalData: {
+    firstNameLabel: "Nom",
+    firstNamePlaceholder: "El teu nom",
+    lastNameLabel: "Cognoms",
+    lastNamePlaceholder: "El teu cognom",
+    birthdayLabel: "Data de naixement",
+  },
   profile: {
     title: "El meu perfil",
+    /** «Editar ›» a la derecha del título de una tarjeta. */
+    edit: "Editar",
     photo: "La teva foto de perfil",
     role: "Entrenador",
     roleWithExperience: {
@@ -395,6 +401,8 @@ const ca: Translations = {
     },
     personal: {
       title: "Dades personals",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Editar dades personals",
     },
     professional: {
       title: "Perfil professional",

@@ -52,6 +52,7 @@ const es = {
       "student-not-in-class": "Este alumno ya no está en la clase.",
       "attendance-not-open": "La asistencia se marca cuando empieza la clase.",
       "attendance-closed": "Ya pasó el plazo para marcar la asistencia de esta clase.",
+      "email-already-registered": "Ese email ya es de otra cuenta.",
     },
   },
   auth: {
@@ -75,11 +76,6 @@ const es = {
     },
     signUp: {
       title: "¡Regístrate!",
-      firstNameLabel: "Nombre",
-      firstNamePlaceholder: "Tu nombre",
-      lastNameLabel: "Apellidos",
-      lastNamePlaceholder: "Tu apellido",
-      birthdayLabel: "Fecha de nacimiento",
       confirmPasswordLabel: "Repetir tu contraseña",
       submit: "Continuar",
       submitting: "Registrando...",
@@ -376,8 +372,18 @@ const es = {
     passwordsDontMatch: "Las contraseñas no coinciden",
     acceptTerms: "Debes aceptar los términos y condiciones",
   },
+  /** Los campos de los datos personales: el alta y el editor de Perfil. */
+  personalData: {
+    firstNameLabel: "Nombre",
+    firstNamePlaceholder: "Tu nombre",
+    lastNameLabel: "Apellidos",
+    lastNamePlaceholder: "Tu apellido",
+    birthdayLabel: "Fecha de nacimiento",
+  },
   profile: {
     title: "Mi perfil",
+    /** «Editar ›» a la derecha del título de una tarjeta. */
+    edit: "Editar",
     /** La foto del profesor, para el lector de pantalla. */
     photo: "Tu foto de perfil",
     /** Sin años de experiencia: solo el rol. */
@@ -406,6 +412,8 @@ const es = {
     },
     personal: {
       title: "Datos personales",
+      /** «Editar» de la tarjeta, para el lector de pantalla. */
+      edit: "Editar datos personales",
     },
     professional: {
       title: "Perfil profesional",

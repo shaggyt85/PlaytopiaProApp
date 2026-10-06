@@ -1,6 +1,7 @@
-import { render, screen } from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import { PersonalDataCard } from "@/features/profile/components/PersonalDataCard";
+import { useProfileEditorStore } from "@/features/profile/store/profileEditorStore";
 
 import { teacherProfile } from "../../../helpers/profileFactories";
 
@@ -15,9 +16,12 @@ describe("PersonalDataCard", () => {
     expect(screen.getByText("Masculino")).toBeTruthy();
   });
 
-  it("sin «Editar» hasta que llegue su editor", () => {
+  it("«Editar» abre su editor en el panel de Perfil", () => {
+    useProfileEditorStore.getState().close();
     render(<PersonalDataCard profile={teacherProfile()} />);
 
-    expect(screen.queryByRole("button")).toBeNull();
+    fireEvent.press(screen.getByRole("button", { name: "Editar datos personales" }));
+
+    expect(useProfileEditorStore.getState().section).toBe("personal");
   });
 });

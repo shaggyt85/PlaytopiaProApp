@@ -1,6 +1,8 @@
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
-// Medidas de la hoja de Lovable (`max-w-md`, barrita `h-1.5 w-10`).
+// Medidas de la hoja de Lovable (`max-w-md`, `max-h-[88vh]`, barrita `h-1.5 w-10`).
+/** La parte del alto de la pantalla que puede ocupar: lo que no cabe se desplaza dentro. */
+export const PANEL_MAX_HEIGHT_RATIO = 0.88;
 const PANEL_MAX_WIDTH = 448;
 const HANDLE_WIDTH = 40;
 const HANDLE_HEIGHT = 6;
@@ -19,6 +21,8 @@ export const useStyles = makeStyles((theme) => ({
     flex: 1,
     backgroundColor: theme.colors.sheetOverlay,
   },
+  // Lo que sube con el teclado: el panel, pegado abajo.
+  keyboard: { width: "100%", alignItems: "center" },
   panel: {
     width: "100%",
     maxWidth: PANEL_MAX_WIDTH,
@@ -39,6 +43,8 @@ export const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.border,
     marginBottom: theme.spacing.md,
   },
+  // El contenido no estira el panel más de lo que necesita.
+  content: { flexGrow: 0 },
   close: {
     position: "absolute",
     top: theme.spacing.md,

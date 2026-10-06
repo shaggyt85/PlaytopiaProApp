@@ -1,2 +1,2 @@
-export { callingCodeOf } from "./countries";
+export { callingCodeOf, joinPhone, splitPhone } from "./countries";
 export { PhoneInput } from "./PhoneInput";

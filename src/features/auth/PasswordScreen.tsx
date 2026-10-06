@@ -3,12 +3,14 @@ import { Redirect, useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/Button";
+import { FormError } from "@/shared/components/FormError";
+import { useFieldErrorText } from "@/shared/hooks/useFieldErrorText";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { isHttpError } from "@/shared/services/HttpError";
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
-import { AuthLayout, FormError, PasswordInput, PendingTermsModal } from "./components";
-import { useFieldErrorText, useSignIn } from "./hooks";
+import { AuthLayout, PasswordInput, PendingTermsModal } from "./components";
+import { useSignIn } from "./hooks";
 import { PasswordFormSchema, type PasswordForm } from "./schemas/auth.schema";
 import { useAuthFlowStore } from "./store/authFlowStore";
 

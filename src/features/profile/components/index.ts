@@ -1,6 +1,7 @@
 export { AvailabilityCard } from "./AvailabilityCard";
 export { ClubHoursRow } from "./ClubHoursRow";
 export { ClubName } from "./ClubName";
+export { EditButton } from "./EditButton";
 export { ExpandChevron } from "./ExpandChevron";
 export { HoursCard } from "./HoursCard";
 export { HoursHistory } from "./HoursHistory";
@@ -8,7 +9,9 @@ export { HoursMonthRow } from "./HoursMonthRow";
 export { HoursProgressRow } from "./HoursProgressRow";
 export { MyClubsCard } from "./MyClubsCard";
 export { PersonalDataCard } from "./PersonalDataCard";
+export { PersonalDataEditor } from "./PersonalDataEditor";
 export { ProfessionalCard } from "./ProfessionalCard";
 export { ProfileCard } from "./ProfileCard";
+export { ProfileEditorSheet } from "./ProfileEditorSheet";
 export { ProfileHeader } from "./ProfileHeader";
 export { SignOutButton } from "./SignOutButton";
