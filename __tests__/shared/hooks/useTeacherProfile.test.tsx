@@ -2,13 +2,13 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 
-import { useTeacherProfile } from "@/features/schedule/hooks/useTeacherProfile";
+import { useTeacherProfile } from "@/shared/hooks/useTeacherProfile";
 import { createQueryClient } from "@/shared/config/queryClient";
 import { teacherKeys } from "@/shared/services/teacherProfileService";
 import { useSessionStore } from "@/shared/store/sessionStore";
 
-import { teacherProfile } from "../../../helpers/authFactories";
-import { settle } from "../../../helpers/settle";
+import { teacherProfile } from "../../helpers/profileFactories";
+import { settle } from "../../helpers/settle";
 
 function setup() {
   const client = createQueryClient();
@@ -37,7 +37,7 @@ describe("useTeacherProfile", () => {
 
   it("si el acceso ya lo dejó en la caché, no lo vuelve a pedir", async () => {
     const { client, service, render } = setup();
-    client.setQueryData(teacherKeys.profile(42), teacherProfile());
+    client.setQueryData(teacherKeys.profile(42, "es"), teacherProfile());
     const { result } = render();
     await settle();
 
@@ -59,5 +59,14 @@ describe("useTeacherProfile", () => {
     await settle();
 
     expect(service.get).not.toHaveBeenCalled();
+  });
+
+  it("en otro idioma lo pide de nuevo: lleva los deportes traducidos por Core", async () => {
+    const { client, service, render } = setup();
+    client.setQueryData(teacherKeys.profile(42, "en"), teacherProfile());
+    const { result } = render();
+
+    await waitFor(() => expect(result.current.data?.name).toBe("David"));
+    expect(service.get).toHaveBeenCalledWith(42);
   });
 });

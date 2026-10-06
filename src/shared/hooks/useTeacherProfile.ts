@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 import {
   teacherProfileQuery,
@@ -16,9 +17,11 @@ interface Options<T> {
 
 /**
  * Perfil del profesor con la sesión abierta. Tras entrar ya está en la caché
- * (lo deja el acceso): solo se pide al reabrir la app.
+ * (lo deja el acceso): solo se pide al reabrir la app o al cambiar de idioma
+ * (lleva los deportes traducidos por Core). Lo usan el inicio y Perfil.
  */
 export function useTeacherProfile<T = TeacherProfile>({ select, service = teacherProfileService }: Options<T> = {}) {
   const teacherId = useSessionUserId();
-  return useQuery({ ...teacherProfileQuery(teacherId, service), select });
+  const { locale } = useTranslation();
+  return useQuery({ ...teacherProfileQuery(teacherId, locale, service), select });
 }

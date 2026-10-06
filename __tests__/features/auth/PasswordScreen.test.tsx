@@ -87,7 +87,7 @@ describe("PasswordScreen", () => {
     expect(teacherProfileService.update).toHaveBeenCalledWith(42, { terms_version: TERMS_VERSION });
     expect(session.start).toHaveBeenCalledWith(tokens.access_token, "refresco");
     // El perfil que devuelve Core queda en la caché: el inicio no lo vuelve a pedir.
-    expect(client.getQueryData(teacherKeys.profile(42))).toEqual(terms(TERMS_VERSION));
+    expect(client.getQueryData(teacherKeys.profile(42, "es"))).toEqual(terms(TERMS_VERSION));
   });
 
   it("si cierra el modal sin aceptar, no entra y se borran los tokens", async () => {

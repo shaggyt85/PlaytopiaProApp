@@ -2,6 +2,7 @@ import { TERMS_VERSION } from "@/features/auth/schemas/signUp.schema";
 import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 
 import { createTestJwt, teacherClaims } from "./jwt";
+import { teacherProfile as profileOf } from "./profileFactories";
 
 /**
  * Respuesta de `POST /api/auth/login/teacher` del profesor 42 de la escuela 7.
@@ -16,10 +17,5 @@ export const signInTokens = {
 };
 
 /** Perfil del profesor 42 con esa versión de los términos aceptada (`null`: nunca los aceptó). */
-export const teacherProfile = (version: string | null = TERMS_VERSION): TeacherProfile => ({
-  id: 42,
-  name: "David",
-  avatar: "https://img.test/avatars/teacher/42.jpg",
-  terms_version: version,
-  accepted_terms_at: version ? "2026-09-26T10:00:00" : null,
-});
+export const teacherProfile = (version: string | null = TERMS_VERSION): TeacherProfile =>
+  profileOf({ terms_version: version, accepted_terms_at: version ? "2026-09-26T10:00:00" : null });

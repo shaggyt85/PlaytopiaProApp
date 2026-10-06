@@ -11,6 +11,7 @@ import type { IconComponent } from "@/shared/config/icons";
 import type { Theme } from "@/shared/config/theme";
 import { useForegroundNow } from "@/shared/hooks/useForegroundNow";
 import { useScheduleClubs } from "@/shared/hooks/useScheduleClubs";
+import { useTeacherProfile } from "@/shared/hooks/useTeacherProfile";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TranslationKey } from "@/shared/locales";
@@ -21,7 +22,6 @@ import { NextClassCard, ScheduleAgenda, StatTile, TeacherAvatar } from "./compon
 import { useNextClass } from "./hooks/useNextClass";
 import { useScheduleMonth } from "./hooks/useScheduleMonth";
 import { ScheduleScrollProvider, useScheduleScrollRefs } from "./hooks/useScheduleScroll";
-import { useTeacherProfile } from "./hooks/useTeacherProfile";
 import { useTodayHeader } from "./hooks/useTodayHeader";
 import { heroClass } from "./utils/heroClass";
 import { localToday, wallNow } from "./utils/scheduleDates";

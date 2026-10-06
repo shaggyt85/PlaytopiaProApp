@@ -8,17 +8,10 @@ import {
 } from "@/shared/services/teacherProfileService";
 
 import { createFakeHttpClient as fakeHttp } from "../../helpers/fakeHttpClient";
+import { teacherProfile, teacherProfileResponse } from "../../helpers/profileFactories";
 
-// Core devuelve el TeacherResponse entero; la app solo se queda con lo que usa.
-const teacher = {
-  id: 42,
-  name: "David",
-  last_name: "García",
-  email: "david@club.com",
-  avatar: "https://img.test/avatars/teacher/42.jpg",
-  terms_version: null,
-  accepted_terms_at: null,
-};
+// Core devuelve el perfil entero; la app solo se queda con lo que usa.
+const teacher = teacherProfileResponse({ terms_version: null, accepted_terms_at: null });
 
 describe("TeacherProfileService", () => {
   it("lee el perfil del profesor", async () => {
@@ -27,13 +20,7 @@ describe("TeacherProfileService", () => {
     const result = await new TeacherProfileService(http).get(42);
 
     expect(http.get).toHaveBeenCalledWith("/UserTeacher/42");
-    expect(result).toEqual({
-      id: 42,
-      name: "David",
-      avatar: "https://img.test/avatars/teacher/42.jpg",
-      terms_version: null,
-      accepted_terms_at: null,
-    });
+    expect(result).toEqual(teacherProfile({ terms_version: null, accepted_terms_at: null }));
   });
 
   it("actualiza con un PATCH al mismo perfil y devuelve el perfil nuevo", async () => {
@@ -51,20 +38,20 @@ describe("TeacherProfileService", () => {
     await expect(new TeacherProfileService(http).get(42)).rejects.toThrow();
   });
 
-  it("la clave de caché del perfil lleva el id del profesor", () => {
-    expect(teacherKeys.profile(42)).toEqual(["teacher", "profile", 42]);
+  it("la clave de caché del perfil lleva el id del profesor y el idioma (los deportes los traduce Core)", () => {
+    expect(teacherKeys.profile(42, "es")).toEqual(["teacher", "profile", 42, "es"]);
   });
 
   it("la receta de la query: su clave, cómo se pide y la caché STANDARD", async () => {
     const service = { get: jest.fn().mockResolvedValue("perfil") };
-    const query = teacherProfileQuery(42, service);
+    const query = teacherProfileQuery(42, "es", service);
 
-    expect(query.queryKey).toEqual(["teacher", "profile", 42]);
+    expect(query.queryKey).toEqual(["teacher", "profile", 42, "es"]);
     expect(query.staleTime).toBe(CachePolicy.STANDARD.staleTime);
     expect(query.queryFn).not.toBe(skipToken);
   });
 
   it("sin profesor la receta no pide nada", () => {
-    expect(teacherProfileQuery(undefined).queryFn).toBe(skipToken);
+    expect(teacherProfileQuery(undefined, "es").queryFn).toBe(skipToken);
   });
 });

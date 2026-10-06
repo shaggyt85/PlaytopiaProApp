@@ -43,7 +43,7 @@ describe("completeSignIn", () => {
 
       await completeSignIn(tokens, d);
 
-      expect(d.cache.setQueryData).toHaveBeenCalledWith(teacherKeys.profile(42), teacherProfile(version));
+      expect(d.cache.setQueryData).toHaveBeenCalledWith(teacherKeys.profile(42, "es"), teacherProfile(version));
     }
   });
 

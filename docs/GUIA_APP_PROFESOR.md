@@ -249,7 +249,8 @@ Tabla viva: se actualiza cada vez que una pantalla empieza a usar un endpoint o 
 | POST | `/api/UserTeacher` | auth (registro) | real |
 | POST | `/api/PassRecovery/request` (con `scope: "teacher"`) | auth (recuperar) | real |
 | POST | `/api/PassRecovery/validate` | la web de recuperación, no la app | real |
-| GET | `/api/UserTeacher/{id}` | auth (términos tras el login), schedule (nombre), profile | real |
+| GET | `/api/UserTeacher/{id}` | auth (términos tras el login), schedule (nombre y foto), profile (datos personales y profesionales, de la misma caché) | real |
+| GET | `/api/UserTeacher/{id}?include=hours,availability` | profile (horas por mes y sede, y la semana de cada sede; solo al abrir Perfil) | real |
 | PATCH | `/api/UserTeacher/{id}` | auth (aceptar términos), profile | real |
 | DELETE | `/api/UserTeacher/{id}` | settings (borrar cuenta) | real |
 | PATCH | `/api/UserTeacher/password` | profile | real |

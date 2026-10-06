@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { useTranslation } from "@/shared/hooks/useTranslation";
 import { session } from "@/shared/services/session";
 import {
   teacherProfileQuery,
@@ -18,12 +19,13 @@ import { TERMS_VERSION } from "../schemas/signUp.schema";
  */
 export function useAcceptTerms(profile: Pick<ITeacherProfileService, "update"> = teacherProfileService) {
   const queryClient = useQueryClient();
+  const { locale } = useTranslation();
   return useMutation({
     mutationFn: async (tokens: SessionTokens) => {
       const teacherId = decodeSessionClaims(tokens.access_token)?.userId;
       if (teacherId === undefined) throw new Error("El access token no dice qué profesor es.");
       const updated = await profile.update(teacherId, { terms_version: TERMS_VERSION });
-      queryClient.setQueryData(teacherProfileQuery(teacherId).queryKey, updated);
+      queryClient.setQueryData(teacherProfileQuery(teacherId, locale).queryKey, updated);
       await session.start(tokens.access_token, tokens.refresh_token);
     },
   });
