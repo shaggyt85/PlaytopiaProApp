@@ -43,4 +43,15 @@ describe("useScheduleClubs", () => {
       colors: darkTheme.clubColorUnknown,
     });
   });
+
+  it("clubs: la misma lista, en el orden de «Mis clubes», con el mismo nombre y color que clubOf", async () => {
+    const { result } = setup([
+      schoolCard(4, 7, { name: "DN Padel Academy", club_name: "Sede Centro" }),
+      schoolCard(5, 1, { name: "Wave Padel Club", club_name: null }),
+    ]);
+
+    await waitFor(() => expect(result.current.hasData).toBe(true));
+    expect(result.current.clubs.map(({ label }) => label)).toEqual(["Sede Centro", "Wave Padel Club"]);
+    expect(result.current.clubs[1]).toMatchObject(result.current.clubOf({ db_id: 5, club_id: 1 }));
+  });
 });

@@ -1,7 +1,8 @@
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
-import { useRouter } from "expo-router";
+import { StyleSheet } from "react-native";
 
-import { TeacherAvatar } from "@/features/schedule/components/TeacherAvatar";
+import { TeacherAvatar } from "@/shared/components/TeacherAvatar";
+import { AVATAR_SIZES } from "@/shared/components/TeacherAvatar/TeacherAvatar.styles";
 import { useReduceMotion } from "@/shared/hooks/useReduceMotion";
 
 type ImageProps = { onError: () => void; transition: number; source: { uri: string } };
@@ -13,17 +14,14 @@ jest.mock("expo-image", () => ({
     return null;
   },
 }));
-jest.mock("expo-router", () => ({ useRouter: jest.fn() }));
 jest.mock("@/shared/hooks/useReduceMotion", () => ({ useReduceMotion: jest.fn(() => false) }));
 
 const URL = "https://img.test/avatars/teacher/42.jpg";
 const lastImageProps = () => mockImage.mock.calls.at(-1)?.[0] as ImageProps;
+const widthOf = () => StyleSheet.flatten(screen.getByTestId("teacher-avatar").props.style).width;
 
 describe("TeacherAvatar", () => {
-  beforeEach(() => {
-    jest.mocked(useRouter).mockReturnValue({ navigate: jest.fn() } as never);
-    jest.mocked(useReduceMotion).mockReturnValue(false);
-  });
+  beforeEach(() => jest.mocked(useReduceMotion).mockReturnValue(false));
 
   it("pinta la foto del perfil con un fundido corto", () => {
     render(<TeacherAvatar url={URL} />);
@@ -32,14 +30,32 @@ describe("TeacherAvatar", () => {
     expect(lastImageProps().transition).toBe(200);
   });
 
-  it("al tocarlo lleva a Perfil", () => {
-    const navigate = jest.fn();
-    jest.mocked(useRouter).mockReturnValue({ navigate } as never);
-    render(<TeacherAvatar url={URL} />);
+  it("con onPress es un botón (la Agenda lleva a Perfil)", () => {
+    const onPress = jest.fn();
+    render(<TeacherAvatar url={URL} onPress={onPress} accessibilityLabel="Mi perfil" />);
 
     fireEvent.press(screen.getByRole("button", { name: "Mi perfil" }));
 
-    expect(navigate).toHaveBeenCalledWith("/profile");
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  it("sin onPress es solo la foto, con su nombre para el lector de pantalla", () => {
+    render(<TeacherAvatar url={URL} accessibilityLabel="Tu foto de perfil" />);
+
+    expect(screen.queryByRole("button")).toBeNull();
+    expect(screen.getByRole("image", { name: "Tu foto de perfil" })).toBeTruthy();
+  });
+
+  it.each(["md", "xl"] as const)("el tamaño %s es el de AVATAR_SIZES", (size) => {
+    render(<TeacherAvatar url={URL} size={size} />);
+
+    expect(widthOf()).toBe(AVATAR_SIZES[size].side);
+  });
+
+  it("sin tamaño, el de la cabecera de la Agenda", () => {
+    render(<TeacherAvatar url={URL} />);
+
+    expect(widthOf()).toBe(AVATAR_SIZES.md.side);
   });
 
   it("mientras no hay perfil, el círculo vacío", () => {

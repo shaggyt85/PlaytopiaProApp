@@ -22,6 +22,8 @@ export const useStyles = makeStyles((theme) => ({
     borderWidth: 1,
     borderColor: theme.colors.primary,
   },
+  // `bg-card ring-soft`, el texto en `text-destructive`.
+  danger: { backgroundColor: theme.colors.card, ...theme.ringSoft },
   link: {
     minHeight: theme.touchTarget,
     alignItems: "center",

@@ -1,4 +1,3 @@
-import { ComingSoonScreen } from "@/shared/components/ComingSoonScreen";
+import { ProfileScreen } from "@/features/profile";
 
-// Sin contenido todavía.
-export default ComingSoonScreen;
+export default ProfileScreen;

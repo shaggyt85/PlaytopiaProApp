@@ -11,7 +11,7 @@ import type { TranslationKey } from "@/shared/locales";
 import type { AttendanceStatus, ClassStudent } from "@/shared/schemas/schedule.schema";
 import { formatLevel } from "@/shared/utils/formatLevel";
 import { joinParts } from "@/shared/utils/joinParts";
-import { studentName } from "@/shared/utils/studentName";
+import { fullName } from "@/shared/utils/fullName";
 
 import type { AttendanceState } from "../../utils/attendanceWindow";
 import { AttendanceToggle } from "../AttendanceToggle";
@@ -50,7 +50,7 @@ interface StudentRowProps {
 export const StudentRow = memo(function StudentRow({ student, index, attendance, onMark }: StudentRowProps) {
   const styles = useStyles();
   const { t } = useTranslation();
-  const name = studentName(student);
+  const name = fullName(student);
   const level = formatLevel(student.level);
   const recovery = student.is_recovery ? t("schedule.detail.recovery") : null;
 

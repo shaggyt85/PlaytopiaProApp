@@ -367,6 +367,28 @@ const de: Translations = {
     passwordsDontMatch: "Die Passwörter stimmen nicht überein",
     acceptTerms: "Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren",
   },
+  profile: {
+    title: "Mein Profil",
+    photo: "Dein Profilfoto",
+    role: "Trainer",
+    roleWithExperience: {
+      zero: "Trainer · weniger als ein Jahr Erfahrung",
+      one: "Trainer · 1 Jahr Erfahrung",
+      other: "Trainer · %{count} Jahre Erfahrung",
+    },
+    personal: {
+      title: "Persönliche Daten",
+    },
+    professional: {
+      title: "Berufsprofil",
+      empty: "Du hast es noch nicht ausgefüllt",
+    },
+    clubs: {
+      title: "Clubs, in denen du arbeitest",
+      empty: "Du arbeitest noch in keinem Club",
+    },
+    signOutConfirm: "Möchtest du dich abmelden?",
+  },
   splash: {
     tagline: "Ihr Sport-Universum",
   },

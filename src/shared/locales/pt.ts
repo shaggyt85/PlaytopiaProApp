@@ -367,6 +367,28 @@ const pt: Translations = {
     passwordsDontMatch: "As senhas não coincidem",
     acceptTerms: "Você deve aceitar os termos e condições",
   },
+  profile: {
+    title: "Meu perfil",
+    photo: "Sua foto de perfil",
+    role: "Treinador",
+    roleWithExperience: {
+      zero: "Treinador · menos de um ano de experiência",
+      one: "Treinador · 1 ano de experiência",
+      other: "Treinador · %{count} anos de experiência",
+    },
+    personal: {
+      title: "Dados pessoais",
+    },
+    professional: {
+      title: "Perfil profissional",
+      empty: "Você ainda não o preencheu",
+    },
+    clubs: {
+      title: "Clubes onde você trabalha",
+      empty: "Você ainda não trabalha em nenhum clube",
+    },
+    signOutConfirm: "Quer sair da sua conta?",
+  },
   splash: {
     tagline: "Seu universo esportivo",
   },

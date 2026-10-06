@@ -12,7 +12,7 @@ import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { ClassStudent } from "@/shared/schemas/schedule.schema";
 import { formatLevel } from "@/shared/utils/formatLevel";
 import { joinParts } from "@/shared/utils/joinParts";
-import { studentName } from "@/shared/utils/studentName";
+import { fullName } from "@/shared/utils/fullName";
 
 import { useStyles } from "./GroupStudentsCard.styles";
 
@@ -45,7 +45,7 @@ export function GroupStudentsCard({ students, onOpen }: GroupStudentsCardProps) 
       ) : (
         <View accessibilityRole="list">
           {students.map((student, index) => {
-            const name = studentName(student);
+            const name = fullName(student);
             const level = formatLevel(student.level);
             return (
               <PressableScale

@@ -15,32 +15,40 @@ export interface ScheduleClub {
   colors: ColorPair;
 }
 
+/** Una sede de «Mis clubes» con lo que se enseña de ella: la lista de Perfil. */
+export interface MyClub extends ScheduleClub {
+  /** `sedeKey`: la clave de la fila. */
+  key: string;
+}
+
 /** El club de una clase por su sede (`useScheduleClubs().clubOf`). */
 export type ClubOf = (sede: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
 
 /**
  * Los clubes de la agenda, a partir de «Mis clubes» (misma caché que «Red de
  * clubes»): `clubOf` da el club de cada clase, con su nombre corto y su color,
- * fijo por su posición. Todo sale del mismo cálculo, así las tarjetas y el
- * detalle nunca dan colores ni nombres distintos.
+ * fijo por su posición; `clubs`, la lista con lo mismo (la tarjeta de clubes de
+ * Perfil). Todo sale del mismo cálculo, así las tarjetas, el detalle y Perfil
+ * nunca dan colores ni nombres distintos.
  *
  * Una sede que no esté en «Mis clubes» —le acaban de dar de baja y la caché aún
  * no lo sabe— sale sin nombre y con el color neutro: la clase se ve igual.
  */
 export function useScheduleClubs(service: IMyClubsService = myClubsService) {
   const theme = useTheme();
-  const { data } = useMyClubs(service);
+  const { data, error, refetch } = useMyClubs(service);
 
-  const byKey = useMemo(
+  // Un solo cálculo del nombre y el color de cada sede: la lista y `clubOf` salen de él.
+  const clubs = useMemo<readonly MyClub[]>(
     () =>
-      new Map<string, ScheduleClub>(
-        (data?.clubs ?? []).map((club, index) => [
-          sedeKey(club),
-          { label: club.club_name ?? club.name, colors: colorAt(theme.clubColors, index) },
-        ]),
-      ),
+      (data?.clubs ?? []).map((club, index) => ({
+        key: sedeKey(club),
+        label: club.club_name ?? club.name,
+        colors: colorAt(theme.clubColors, index),
+      })),
     [data, theme.clubColors],
   );
+  const byKey = useMemo(() => new Map<string, ScheduleClub>(clubs.map((club) => [club.key, club])), [clubs]);
 
   const clubOf = useCallback<ClubOf>(
     (sede): ScheduleClub =>
@@ -48,5 +56,5 @@ export function useScheduleClubs(service: IMyClubsService = myClubsService) {
     [byKey, theme.clubColorUnknown],
   );
 
-  return { clubOf };
+  return { clubOf, clubs, hasData: data !== undefined, error, refetch };
 }

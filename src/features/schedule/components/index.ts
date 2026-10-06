@@ -1,7 +1,6 @@
 export { AttendanceCount } from "./AttendanceCount";
 export { AttendanceToggle } from "./AttendanceToggle";
 export { ClassHero } from "./ClassHero";
-export { ClubDot } from "./ClubDot";
 export { DayButton, DAY_MARK_COLORS } from "./DayButton";
 export { DayClassList, type DayClassRowProps } from "./DayClassList";
 export { DayDots } from "./DayDots";
@@ -26,7 +25,6 @@ export { StatTile } from "./StatTile";
 export { StatusPill } from "./StatusPill";
 export { StudentList } from "./StudentList";
 export { StudentRow } from "./StudentRow";
-export { TeacherAvatar } from "./TeacherAvatar";
 export { TimeSquare } from "./TimeSquare";
 export { WeekClassRow } from "./WeekClassRow";
 export { WeekDayCard } from "./WeekDayCard";

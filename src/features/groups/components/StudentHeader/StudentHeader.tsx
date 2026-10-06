@@ -7,7 +7,7 @@ import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { ClassStudent } from "@/shared/schemas/schedule.schema";
 import { formatLevel } from "@/shared/utils/formatLevel";
-import { studentName } from "@/shared/utils/studentName";
+import { fullName } from "@/shared/utils/fullName";
 
 import { DetailBack } from "../DetailBack";
 
@@ -38,7 +38,7 @@ export function StudentHeader({ student, index, onBack }: StudentHeaderProps) {
         <StudentAvatar student={student} index={index} size="lg" />
         <View style={styles.texts}>
           <Text variant="title" accessibilityRole="header" numberOfLines={1}>
-            {studentName(student)}
+            {fullName(student)}
           </Text>
           {level ? (
             <View style={styles.level} accessible accessibilityLabel={t("schedule.next.level", { range: level })}>

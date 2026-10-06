@@ -367,6 +367,28 @@ const ca: Translations = {
     passwordsDontMatch: "Les contrasenyes no coincideixen",
     acceptTerms: "Has d'acceptar els termes i condicions",
   },
+  profile: {
+    title: "El meu perfil",
+    photo: "La teva foto de perfil",
+    role: "Entrenador",
+    roleWithExperience: {
+      zero: "Entrenador · menys d'un any d'experiència",
+      one: "Entrenador · 1 any d'experiència",
+      other: "Entrenador · %{count} anys d'experiència",
+    },
+    personal: {
+      title: "Dades personals",
+    },
+    professional: {
+      title: "Perfil professional",
+      empty: "Encara no l'has completat",
+    },
+    clubs: {
+      title: "Clubs on treballes",
+      empty: "Encara no treballes a cap club",
+    },
+    signOutConfirm: "Vols tancar la sessió?",
+  },
   splash: {
     tagline: "El teu univers esportiu",
   },

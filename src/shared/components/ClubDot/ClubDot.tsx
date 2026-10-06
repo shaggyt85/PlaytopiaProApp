@@ -7,7 +7,10 @@ interface ClubDotProps {
   color: string;
 }
 
-/** El punto delante del nombre del club en la cabecera del detalle de una clase. */
+/**
+ * El punto del color de un club delante de su nombre: en la cabecera del detalle
+ * de una clase y en las tarjetas de Perfil (horas y clubes).
+ */
 export function ClubDot({ color }: ClubDotProps) {
   const styles = useStyles();
   return <View style={[styles.dot, { backgroundColor: color }]} testID="club-dot" />;

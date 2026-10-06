@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react-native";
 import { StyleSheet } from "react-native";
 
-import { ClubDot } from "@/features/schedule/components/ClubDot";
+import { ClubDot } from "@/shared/components/ClubDot";
 
 describe("ClubDot", () => {
   it("un punto redondo de 8 del color que se le dé", () => {

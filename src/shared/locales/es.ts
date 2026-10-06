@@ -372,6 +372,32 @@ const es = {
     passwordsDontMatch: "Las contraseñas no coinciden",
     acceptTerms: "Debes aceptar los términos y condiciones",
   },
+  profile: {
+    title: "Mi perfil",
+    /** La foto del profesor, para el lector de pantalla. */
+    photo: "Tu foto de perfil",
+    /** Sin años de experiencia: solo el rol. */
+    role: "Entrenador",
+    /** El rol con sus años de experiencia. */
+    roleWithExperience: {
+      zero: "Entrenador · menos de un año de experiencia",
+      one: "Entrenador · 1 año de experiencia",
+      other: "Entrenador · %{count} años de experiencia",
+    },
+    personal: {
+      title: "Datos personales",
+    },
+    professional: {
+      title: "Perfil profesional",
+      /** Sin presentación ni deportes. */
+      empty: "Aún no lo has completado",
+    },
+    clubs: {
+      title: "Clubes donde trabajas",
+      empty: "Aún no trabajas en ningún club",
+    },
+    signOutConfirm: "¿Quieres cerrar sesión?",
+  },
   splash: {
     tagline: "Tu universo deportivo",
   },

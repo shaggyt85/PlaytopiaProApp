@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
 
 import { Button } from "@/shared/components/Button";
+import { darkTheme } from "@/shared/config/theme";
 
 describe("Button", () => {
   it("llama a onPress al pulsar", () => {
@@ -49,5 +50,13 @@ describe("Button", () => {
 
     expect(onPress).not.toHaveBeenCalled();
     expect(screen.getByRole("button")).toBeDisabled();
+  });
+
+  it("danger pinta su icono y su texto en el color de peligro", () => {
+    const Icon = jest.fn(() => null);
+    render(<Button title="Cerrar sesión" variant="danger" Icon={Icon} onPress={jest.fn()} />);
+
+    expect(screen.getByText("Cerrar sesión")).toBeTruthy();
+    expect(Icon).toHaveBeenCalledWith(expect.objectContaining({ size: 16, color: darkTheme.colors.danger }), undefined);
   });
 });

@@ -367,6 +367,28 @@ const en: Translations = {
     passwordsDontMatch: "Passwords do not match",
     acceptTerms: "You must accept the terms and conditions",
   },
+  profile: {
+    title: "My profile",
+    photo: "Your profile photo",
+    role: "Coach",
+    roleWithExperience: {
+      zero: "Coach · less than a year of experience",
+      one: "Coach · 1 year of experience",
+      other: "Coach · %{count} years of experience",
+    },
+    personal: {
+      title: "Personal details",
+    },
+    professional: {
+      title: "Professional profile",
+      empty: "You haven't filled it in yet",
+    },
+    clubs: {
+      title: "Clubs where you work",
+      empty: "You don't work at any club yet",
+    },
+    signOutConfirm: "Do you want to sign out?",
+  },
   splash: {
     tagline: "Your sports universe",
   },

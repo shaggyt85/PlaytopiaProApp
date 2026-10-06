@@ -1,12 +1,13 @@
 import { IconLoBell, IconLoCalendar, IconLoClock, IconLoUsers } from "@playtopia/icons/react-native";
+import { useRouter } from "expo-router";
 import { useMemo } from "react";
 import { View } from "react-native";
 
-import { Button } from "@/shared/components/Button";
 import { IconButton } from "@/shared/components/IconButton";
 import { ScreenHeader } from "@/shared/components/ScreenHeader";
 import { TabScreen } from "@/shared/components/TabScreen";
 import { TabScrollView } from "@/shared/components/TabScrollView";
+import { TeacherAvatar } from "@/shared/components/TeacherAvatar";
 import type { IconComponent } from "@/shared/config/icons";
 import type { Theme } from "@/shared/config/theme";
 import { useForegroundNow } from "@/shared/hooks/useForegroundNow";
@@ -16,9 +17,8 @@ import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TranslationKey } from "@/shared/locales";
 import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
-import { session } from "@/shared/services/session";
 
-import { NextClassCard, ScheduleAgenda, StatTile, TeacherAvatar } from "./components";
+import { NextClassCard, ScheduleAgenda, StatTile } from "./components";
 import { useNextClass } from "./hooks/useNextClass";
 import { useScheduleMonth } from "./hooks/useScheduleMonth";
 import { ScheduleScrollProvider, useScheduleScrollRefs } from "./hooks/useScheduleScroll";
@@ -59,12 +59,13 @@ const TODAY_STATS: readonly TodayStat[] = [
  * perfil no llega, la cabecera sale igual sin el nombre.
  *
  * Provisional: la campana se ve pero aún no hace nada (las notificaciones
- * vendrán después) y el botón de cerrar sesión sigue hasta que exista Perfil.
+ * vendrán después). Cerrar sesión está en Perfil.
  */
 export function ScheduleScreen() {
   const styles = useStyles();
   const { t } = useTranslation();
   const theme = useTheme();
+  const router = useRouter();
   // Un solo reloj para la cabecera y la agenda: nunca dicen días distintos.
   const now = useForegroundNow({ everyMinute: true });
   const header = useTodayHeader(now);
@@ -84,7 +85,13 @@ export function ScheduleScreen() {
     <TabScreen testID="schedule-screen">
       <TabScrollView scrollRef={scrollRefs.scrollRef} innerViewRef={scrollRefs.innerViewRef}>
         <ScreenHeader
-          left={<TeacherAvatar url={profile.data?.avatar} />}
+          left={
+            <TeacherAvatar
+              url={profile.data?.avatar}
+              onPress={() => router.navigate("/profile")}
+              accessibilityLabel={t("schedule.myProfile")}
+            />
+          }
           greeting={t(header.greeting)}
           title={profile.data?.name}
           loading={profile.isPending}
@@ -107,9 +114,6 @@ export function ScheduleScreen() {
         <ScheduleScrollProvider {...scrollRefs}>
           <ScheduleAgenda now={now} today={today} nextClassId={nextClass?.id} clubOf={clubOf} />
         </ScheduleScrollProvider>
-        <View style={styles.signOut}>
-          <Button title={t("common.signOut")} variant="secondary" onPress={() => session.end()} />
-        </View>
       </TabScrollView>
     </TabScreen>
   );

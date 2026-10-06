@@ -10,18 +10,23 @@ import {
 
 import { BrandGradient } from "@/shared/components/BrandGradient";
 import { Text } from "@/shared/components/Text";
+import type { IconComponent } from "@/shared/config/icons";
 import type { ThemeColor } from "@/shared/config/theme";
 import { useTheme } from "@/shared/hooks/useTheme";
 
 import { useStyles } from "./Button.styles";
 
-export type ButtonVariant = "primary" | "solid" | "secondary" | "link";
+export type ButtonVariant = "primary" | "solid" | "secondary" | "danger" | "link";
+
+/** El icono delante del texto (`h-4 w-4`). */
+const BUTTON_ICON_SIZE = 16;
 
 /** Color del texto de cada variante, activa y cuando no se puede pulsar. */
 const TEXT_COLOR: Record<ButtonVariant, { active: ThemeColor; inactive: ThemeColor }> = {
   primary: { active: "onPrimary", inactive: "onPrimary" },
   solid: { active: "onPrimary", inactive: "textSecondary" },
   secondary: { active: "primary", inactive: "primary" },
+  danger: { active: "danger", inactive: "textSecondary" },
   link: { active: "link", inactive: "link" },
 };
 
@@ -31,6 +36,8 @@ export interface ButtonProps extends Omit<PressableProps, "onPress" | "children"
   onPress: () => void | Promise<unknown>;
   variant?: ButtonVariant;
   loading?: boolean;
+  /** Delante del texto, de su mismo color (el ⎋ de «Cerrar sesión»). */
+  Icon?: IconComponent;
 }
 
 /**
@@ -38,6 +45,8 @@ export interface ButtonProps extends Omit<PressableProps, "onPress" | "children"
  * - `primary`: píldora con el degradado de marca; gris si no se puede pulsar.
  * - `solid`: píldora lisa del color primario, la del registro; apagada si no se puede pulsar.
  * - `secondary`: píldora con borde.
+ * - `danger`: tarjeta con el texto en rojo, para lo que saca de la cuenta
+ *   («Cerrar sesión», «Borrar cuenta»).
  * - `link`: texto subrayado ("¿Has olvidado tu contraseña?").
  *
  * Ignora las pulsaciones mientras está ocupado (`loading` o la promesa de
@@ -49,6 +58,7 @@ export function Button({
   variant = "primary",
   loading = false,
   disabled = false,
+  Icon,
   ...rest
 }: ButtonProps) {
   const styles = useStyles();
@@ -80,6 +90,7 @@ export function Button({
   const bodyStyle: Record<Exclude<ButtonVariant, "primary">, StyleProp<ViewStyle>> = {
     solid: [styles.body, styles.solid, inactive && styles.solidInactive],
     secondary: [styles.body, styles.secondary],
+    danger: [styles.body, styles.danger],
     link: styles.link,
   };
 
@@ -88,6 +99,7 @@ export function Button({
       {busy && (
         <ActivityIndicator color={theme.colors[textColor]} testID="button-loading" />
       )}
+      {Icon && !busy ? <Icon size={BUTTON_ICON_SIZE} color={theme.colors[textColor]} /> : null}
       <Text
         variant={variant === "link" ? "link" : "button"}
         color={textColor}

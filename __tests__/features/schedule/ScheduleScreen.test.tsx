@@ -1,9 +1,9 @@
-import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
+import { fireEvent, screen, waitFor } from "@testing-library/react-native";
+import { useRouter } from "expo-router";
 
 import { ScheduleScreen } from "@/features/schedule/ScheduleScreen";
 import { myClubsService } from "@/shared/services/myClubsService";
 import { scheduleService } from "@/shared/services/scheduleService";
-import { session } from "@/shared/services/session";
 import { teacherProfileService } from "@/shared/services/teacherProfileService";
 import { serverNow } from "@/shared/utils/serverClock";
 
@@ -13,9 +13,7 @@ import { renderWithProviders } from "../../helpers/renderWithProviders";
 import { signInTeacher } from "../../helpers/scheduleMocks";
 import { nextClass, scheduleClass, scheduleResponse } from "../../helpers/scheduleFactories";
 
-jest.mock("@/shared/services/session", () => ({
-  session: { end: jest.fn().mockResolvedValue(undefined) },
-}));
+jest.mock("expo-router", () => ({ ...jest.requireActual("expo-router"), useRouter: jest.fn() }));
 jest.mock("@/shared/services/teacherProfileService", () => ({
   ...jest.requireActual("@/shared/services/teacherProfileService"),
   teacherProfileService: { get: jest.fn(), update: jest.fn() },
@@ -37,7 +35,10 @@ jest.mock("@/shared/services/myClubsService", () => require("../../helpers/sched
 const MORNING = new Date(2026, 10, 20, 9, 30).getTime();
 
 describe("ScheduleScreen", () => {
+  const navigate = jest.fn();
+
   beforeEach(() => {
+    jest.mocked(useRouter).mockReturnValue({ navigate, push: jest.fn(), back: jest.fn() } as never);
     signInTeacher();
     jest.mocked(serverNow).mockReturnValue(MORNING);
     jest.mocked(teacherProfileService.get).mockResolvedValue(teacherProfile());
@@ -183,13 +184,18 @@ describe("ScheduleScreen", () => {
     expect(await screen.findByRole("button", { name: "Notificaciones" })).toBeDisabled();
   });
 
-  it("Cerrar sesión (provisional) cierra la sesión", async () => {
+  it("su foto lleva a Perfil", async () => {
     renderWithProviders(<ScheduleScreen />);
 
-    await act(async () => {
-      fireEvent.press(await screen.findByRole("button", { name: "Cerrar sesión" }));
-    });
+    fireEvent.press(await screen.findByRole("button", { name: "Mi perfil" }));
 
-    expect(session.end).toHaveBeenCalledTimes(1);
+    expect(navigate).toHaveBeenCalledWith("/profile");
+  });
+
+  it("ya no tiene «Cerrar sesión»: está en Perfil", async () => {
+    renderWithProviders(<ScheduleScreen />);
+
+    expect(await screen.findByTestId("class-31")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Cerrar sesión" })).toBeNull();
   });
 });

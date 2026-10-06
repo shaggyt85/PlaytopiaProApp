@@ -1,0 +1,59 @@
+import { screen } from "@testing-library/react-native";
+
+import { ProfileScreen } from "@/features/profile/ProfileScreen";
+import { HttpError } from "@/shared/services/HttpError";
+import { myClubsService } from "@/shared/services/myClubsService";
+import { teacherProfileService } from "@/shared/services/teacherProfileService";
+
+import { schoolCard } from "../../helpers/networkFactories";
+import { teacherProfile } from "../../helpers/profileFactories";
+import { renderWithProviders } from "../../helpers/renderWithProviders";
+import { signInTeacher } from "../../helpers/scheduleMocks";
+
+jest.mock("expo-image", () => ({ Image: () => null }));
+jest.mock("@/shared/services/teacherProfileService", () => ({
+  ...jest.requireActual("@/shared/services/teacherProfileService"),
+  teacherProfileService: { get: jest.fn(), update: jest.fn() },
+}));
+jest.mock("@/shared/services/myClubsService", () => require("../../helpers/scheduleMocks").myClubsServiceModule());
+
+describe("ProfileScreen", () => {
+  beforeEach(() => {
+    signInTeacher();
+    jest.mocked(myClubsService.getMyClubs).mockResolvedValue({
+      clubs: [schoolCard(4, 7, { club_name: "Club Padel Indoor Madrid" })],
+    });
+  });
+
+  it("«Mi perfil», su cabecera, sus datos, su perfil profesional, sus clubes y cerrar sesión", async () => {
+    jest.mocked(teacherProfileService.get).mockResolvedValue(teacherProfile());
+    renderWithProviders(<ProfileScreen />);
+
+    expect(await screen.findByText("David Álvarez")).toBeTruthy();
+    expect(screen.getByText("Mi perfil")).toBeTruthy();
+    expect(screen.getByText("Entrenador · 6 años de experiencia")).toBeTruthy();
+    expect(screen.getByTestId("personal-data-card")).toBeTruthy();
+    expect(screen.getByTestId("professional-card")).toBeTruthy();
+    expect(await screen.findByText("Club Padel Indoor Madrid")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Cerrar sesión" })).toBeTruthy();
+  });
+
+  it("pide el perfil una sola vez: el mismo que usa la Agenda", async () => {
+    jest.mocked(teacherProfileService.get).mockResolvedValue(teacherProfile());
+    renderWithProviders(<ProfileScreen />);
+
+    await screen.findByText("David Álvarez");
+    expect(teacherProfileService.get).toHaveBeenCalledTimes(1);
+    expect(teacherProfileService.get).toHaveBeenCalledWith(42);
+  });
+
+  it("si el perfil no llega, el error con «Reintentar»", async () => {
+    jest
+      .mocked(teacherProfileService.get)
+      .mockRejectedValue(HttpError.fromResponse(403, { type: "about:blank", title: "Forbidden", status: 403 }));
+    renderWithProviders(<ProfileScreen />);
+
+    expect(await screen.findByRole("button", { name: "Reintentar" })).toBeTruthy();
+    expect(screen.queryByTestId("profile-header")).toBeNull();
+  });
+});

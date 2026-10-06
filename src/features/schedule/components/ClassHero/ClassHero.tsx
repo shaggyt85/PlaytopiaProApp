@@ -17,7 +17,7 @@ import { formatClassDate } from "@/shared/utils/formatDate";
 import { joinParts } from "@/shared/utils/joinParts";
 import { studentsLabel } from "@/shared/utils/seatsLabel";
 
-import { ClubDot } from "../ClubDot";
+import { ClubDot } from "@/shared/components/ClubDot";
 
 import { BACK_SIZE, CORNER_GLOW, useStyles } from "./ClassHero.styles";
 

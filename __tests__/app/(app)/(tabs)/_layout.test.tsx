@@ -72,14 +72,14 @@ describe("menú inferior", () => {
     expect(screen.getByTestId("groups-screen")).toBeTruthy();
   });
 
-  it.each([["Perfil", "/profile"]])("la pestaña %s lleva a %s y muestra su «Próximamente»", (label, path) => {
+  it("la pestaña Perfil lleva a /profile y muestra «Mi perfil»", () => {
     renderRouter(routes, { initialUrl: "/", wrapper });
 
-    fireEvent.press(screen.getByRole("tab", { name: label }));
+    fireEvent.press(screen.getByRole("tab", { name: "Perfil" }));
 
-    expect(screen).toHavePathname(path);
-    expect(screen.getByRole("tab", { name: label, selected: true })).toBeTruthy();
-    expect(screen.getByText("Próximamente")).toBeTruthy();
+    expect(screen).toHavePathname("/profile");
+    expect(screen.getByRole("tab", { name: "Perfil", selected: true })).toBeTruthy();
+    expect(screen.getByTestId("profile-screen")).toBeTruthy();
   });
 
   it("Red está oculta: no sale en el menú y /network lleva a la Agenda", () => {
