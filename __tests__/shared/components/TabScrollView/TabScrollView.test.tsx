@@ -28,4 +28,13 @@ describe("TabScrollView", () => {
     const paddingBottom = [contentContainerStyle].flat().find((s) => s?.paddingBottom)?.paddingBottom;
     expect(paddingBottom).toBeGreaterThanOrEqual(TAB_BAR_HEIGHT);
   });
+  it("sin barra de desplazamiento: es un móvil", () => {
+    render(
+      <TabScrollView>
+        <Text>Contenido</Text>
+      </TabScrollView>,
+    );
+
+    expect(screen.UNSAFE_getByType(ScrollView).props.showsVerticalScrollIndicator).toBe(false);
+  });
 });

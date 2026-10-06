@@ -75,6 +75,7 @@ export function CountryPickerModal({ visible, selected, onSelect, onClose }: Cou
         />
 
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={countries}
           keyExtractor={(c) => c.cca2}
           keyboardShouldPersistTaps="handled"

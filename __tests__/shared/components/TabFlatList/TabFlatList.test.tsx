@@ -31,4 +31,9 @@ describe("TabFlatList", () => {
     const paddingBottom = [contentContainerStyle].flat(2).find((s) => s?.paddingBottom)?.paddingBottom;
     expect(paddingBottom).toBeGreaterThanOrEqual(TAB_BAR_HEIGHT);
   });
+  it("sin barra de desplazamiento: es un móvil", () => {
+    renderList();
+
+    expect(screen.UNSAFE_getByType(FlatList).props.showsVerticalScrollIndicator).toBe(false);
+  });
 });

@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Alert, Animated, Linking, Modal, Pressable, ScrollView, View } from "react-native";
+import { Alert, Animated, Linking, Modal, Pressable, View } from "react-native";
 
+import { AppScrollView } from "@/shared/components/AppScrollView";
 import { Button } from "@/shared/components/Button";
 import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
 import { Text } from "@/shared/components/Text";
@@ -80,7 +81,7 @@ export function LegalModal({ document, onClose, onAccept, error }: LegalModalPro
                   <Ionicons name="close" size={24} color={theme.colors.text} />
                 </Pressable>
               </View>
-              <ScrollView contentContainerStyle={styles.content}>
+              <AppScrollView contentContainerStyle={styles.content}>
                 <View style={styles.iconCircle}>
                   <Ionicons name={ICON[document]} size={48} color={theme.colors.text} />
                 </View>
@@ -94,7 +95,7 @@ export function LegalModal({ document, onClose, onAccept, error }: LegalModalPro
                     </Text>
                   ) : null}
                 </View>
-              </ScrollView>
+              </AppScrollView>
             </DiagonalGradient>
           </Animated.View>
         ) : null}

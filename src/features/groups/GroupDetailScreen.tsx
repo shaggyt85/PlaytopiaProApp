@@ -1,5 +1,6 @@
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 
+import { AppScrollView } from "@/shared/components/AppScrollView";
 import { DataState } from "@/shared/components/DataState";
 import { DetailFrame } from "@/shared/components/DetailFrame";
 import { DetailRoute } from "@/shared/components/DetailRoute";
@@ -55,10 +56,10 @@ function GroupDetail({ dbId, groupId }: GroupDetailParams) {
     <DetailFrame testID="group-detail-screen">
       <DataState hasData={hasData} error={error} onRetry={refetch}>
         {group ? (
-          <ScrollView contentContainerStyle={styles.content}>
+          <AppScrollView contentContainerStyle={styles.content}>
             <GroupHeader group={group} onBack={goBack} />
             <GroupBody group={group} groupId={groupId} />
-          </ScrollView>
+          </AppScrollView>
         ) : (
           <NotFoundState title={t("groups.detail.notFound")} />
         )}

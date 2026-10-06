@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 
+import { AppScrollView } from "@/shared/components/AppScrollView";
 import { DataState } from "@/shared/components/DataState";
 import { DetailFrame } from "@/shared/components/DetailFrame";
 import { DetailRoute } from "@/shared/components/DetailRoute";
@@ -84,7 +85,7 @@ function StudentFile({ group, groupId, student, index }: StudentFileProps) {
   );
 
   return (
-    <ScrollView contentContainerStyle={styles.content}>
+    <AppScrollView contentContainerStyle={styles.content}>
       <StudentHeader student={student} index={index} onBack={goBack} />
       <View style={styles.sections}>
         <GroupSummaryCard
@@ -100,7 +101,7 @@ function StudentFile({ group, groupId, student, index }: StudentFileProps) {
         ) : null}
         <NextSessionCard next={next} onPress={() => openClass(next)} />
       </View>
-    </ScrollView>
+    </AppScrollView>
   );
 }
 

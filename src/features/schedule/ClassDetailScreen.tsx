@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
-import { ScrollView } from "react-native";
 
+import { AppScrollView } from "@/shared/components/AppScrollView";
 import { DataState } from "@/shared/components/DataState";
 import { DetailFrame } from "@/shared/components/DetailFrame";
 import { DetailRoute } from "@/shared/components/DetailRoute";
@@ -77,7 +77,7 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
     >
       <DataState hasData={hasData} error={error} onRetry={refetch}>
         {item && colors ? (
-          <ScrollView contentContainerStyle={styles.content}>
+          <AppScrollView contentContainerStyle={styles.content}>
             <ClassHero item={item} clubLabel={clubOf(item).label} colors={colors} onBack={goBack} />
             <DetailSection
               title={t("schedule.detail.students")}
@@ -91,7 +91,7 @@ function ClassDetail({ dbId, classId, date }: ClassDetailParams) {
                 <PreviousClassCard item={previous} onPress={() => setPreviousOpen(true)} />
               </DetailSection>
             ) : null}
-          </ScrollView>
+          </AppScrollView>
         ) : (
           <NotFoundState title={t("schedule.detail.notFound")} />
         )}

@@ -11,7 +11,8 @@ export interface TabFlatListProps<T> extends Omit<FlatListProps<T>, "ListHeaderC
 
 /**
  * Lista larga de una pestaña del menú: lo mismo que `TabScrollView` (el logo
- * arriba y el hueco de la barra flotante abajo), pero virtualizada.
+ * arriba, el hueco de la barra flotante abajo y sin barra de desplazamiento),
+ * pero virtualizada.
  */
 export function TabFlatList<T>({ header, contentContainerStyle, ...rest }: TabFlatListProps<T>) {
   const contentStyle = useTabContentStyle();
@@ -26,6 +27,7 @@ export function TabFlatList<T>({ header, contentContainerStyle, ...rest }: TabFl
         </>
       }
       contentContainerStyle={[contentStyle, contentContainerStyle]}
+      showsVerticalScrollIndicator={false}
     />
   );
 }

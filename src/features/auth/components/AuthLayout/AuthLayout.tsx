@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
+import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { AppScrollView } from "@/shared/components/AppScrollView";
 import { BackButton } from "@/shared/components/BackButton";
 import { BrandBackground } from "@/shared/components/BrandBackground";
 
@@ -41,12 +42,12 @@ export function AuthLayout({
           style={styles.flex}
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
-          <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+          <AppScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
             <View style={styles.content}>
               {showLogo ? <LogoSection subtitle={subtitle} /> : null}
               {children}
             </View>
-          </ScrollView>
+          </AppScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
       {/* Último hijo: se pinta encima por orden, sin zIndex. */}
