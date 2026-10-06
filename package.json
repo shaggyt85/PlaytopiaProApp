@@ -27,7 +27,7 @@
     "@expo-google-fonts/sora": "^0.4.2",
     "@expo/vector-icons": "^15.1.1",
     "@hookform/resolvers": "^5.9.1",
-    "@playtopia/icons": "1.9.0",
+    "@playtopia/icons": "1.10.0",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/datetimepicker": "9.1.0",
     "@sentry/react-native": "~7.11.0",

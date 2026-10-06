@@ -1,4 +1,4 @@
-import { IconLoActivity, IconLoCheck, IconLoX } from "@playtopia/icons/react-native";
+import { IconLoBarChart2, IconLoCheck, IconLoX } from "@playtopia/icons/react-native";
 import type { ComponentType } from "react";
 
 import type { AttendanceStatus } from "@/shared/schemas/schedule.schema";
@@ -10,12 +10,8 @@ import type { AttendanceStatus } from "@/shared/schemas/schedule.schema";
  */
 export type IconComponent = ComponentType<{ size?: number; color?: string; strokeWidth?: number }>;
 
-/**
- * El icono del nivel, en todos los sitios que lo enseñan. Provisional:
- * `IconLoActivity` hasta que `@playtopia/icons` publique `IconLoBarChart2`
- * (1.10.0); entonces se cambia aquí y nada más.
- */
-export const LEVEL_ICON: IconComponent = IconLoActivity;
+/** El icono del nivel, en todos los sitios que lo enseñan: el del prototipo. */
+export const LEVEL_ICON: IconComponent = IconLoBarChart2;
 
 /** El icono de cada marca de asistencia: ✓ vino, ✗ faltó. */
 export const ATTENDANCE_ICON = {
