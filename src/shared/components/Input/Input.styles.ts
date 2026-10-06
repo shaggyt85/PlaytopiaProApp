@@ -34,4 +34,6 @@ export const useStyles = makeStyles((theme) => ({
     color: theme.colors.text,
   },
   accessory: { paddingRight: theme.spacing.xs },
+  // Lo escrito de lo que cabe, a la derecha bajo el campo.
+  counter: { alignSelf: "flex-end" },
 }));

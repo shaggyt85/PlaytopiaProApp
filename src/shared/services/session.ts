@@ -9,6 +9,7 @@ import {
 } from "@/shared/store/sessionStore";
 import { decodeSessionClaims } from "@/shared/utils/jwt";
 
+import { biometricCredentialStore, type IBiometricCredentialStore } from "./biometricCredentialStore";
 import { tokenStorage, type ITokenStorage } from "./tokenStorage";
 
 /**
@@ -19,6 +20,8 @@ import { tokenStorage, type ITokenStorage } from "./tokenStorage";
  */
 export function createSessionService(deps: {
   tokens: ITokenStorage;
+  /** Tras una baja, la biometría guardada sería de una cuenta que ya no existe. */
+  biometric: Pick<IBiometricCredentialStore, "clear">;
   queryClient: Pick<QueryClient, "clear">;
   store: {
     setAuthenticated: (user: SessionUser) => void;
@@ -27,6 +30,8 @@ export function createSessionService(deps: {
 }) {
   const end = async (reason: SessionEndReason = "manual"): Promise<void> => {
     await deps.tokens.clearTokens();
+    // Cerrar sesión la conserva; dar de baja la cuenta, no.
+    if (reason === "deleted") await deps.biometric.clear();
     deps.queryClient.clear();
     deps.store.setAnonymous(reason);
   };
@@ -80,7 +85,8 @@ export function createSessionService(deps: {
 
     /**
      * Cierre de sesión. Por defecto `manual` (lo decidió el profesor);
-     * `expired` cuando Core la da por muerta.
+     * `expired` cuando Core la da por muerta; `deleted` tras dar de baja la
+     * cuenta, que además borra la biometría.
      */
     end,
   };
@@ -88,6 +94,7 @@ export function createSessionService(deps: {
 
 export const session = createSessionService({
   tokens: tokenStorage,
+  biometric: biometricCredentialStore,
   queryClient,
   store: useSessionStore.getState(),
 });

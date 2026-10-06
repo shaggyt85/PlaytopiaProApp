@@ -1,4 +1,5 @@
 import { makeStyles } from "@/shared/hooks/makeStyles";
+import { withAlpha } from "@/shared/utils/color";
 
 // Botón de Playtopia: píldora; el principal con el degradado de marca.
 
@@ -24,6 +25,8 @@ export const useStyles = makeStyles((theme) => ({
   },
   // `bg-card ring-soft`, el texto en `text-destructive`.
   danger: { backgroundColor: theme.colors.card, ...theme.ringSoft },
+  // `bg-card ring-1 ring-destructive/30`, el de «Borrar cuenta».
+  dangerOutline: { backgroundColor: theme.colors.card, borderWidth: 1, borderColor: withAlpha(theme.colors.danger, 0.3) },
   link: {
     minHeight: theme.touchTarget,
     alignItems: "center",

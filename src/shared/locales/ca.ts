@@ -347,6 +347,9 @@ const ca: Translations = {
     preferNotToSay: "Prefereixo no dir-ho",
   },
   validation: {
+    /** El motivo de la baja de la cuenta. */
+    reasonMin: "Explica'ns una mica més: almenys 10 caràcters",
+    reasonMax: "El motiu no pot passar de 1000 caràcters",
     descriptionMax: "La presentació no pot passar de 500 caràcters",
     emailRequired: "Escriu el teu email.",
     emailInvalid: "El correu electrònic no és vàlid",
@@ -468,6 +471,20 @@ const ca: Translations = {
       rangeSeparator: " i ",
     },
     signOutConfirm: "Vols tancar la sessió?",
+    /** La baja de la cuenta: su botón, su panel, la confirmación y el aviso final. */
+    deleteAccount: {
+      title: "Esborrar el compte",
+      warning: "Sortiràs dels teus clubs i les teves classes que encara no han començat es quedaran sense entrenador. Les teves dades personals s'esborraran al cap d'uns dies; fins aleshores pots recuperar el compte escrivint a suport.",
+      reason: "Per què te'n vas?",
+      confirm: "Vols esborrar el teu compte?",
+      confirmMessage: "Es tancarà la sessió i deixaràs els teus clubs.",
+      done: "Compte donat de baixa",
+      /** Con los días que da Core (`anonymize_after_days`). */
+      doneMessage: {
+        one: "Les teves dades personals s'esborraran d'aquí a 1 dia; fins aleshores pots recuperar el compte escrivint a suport.",
+        other: "Les teves dades personals s'esborraran d'aquí a %{count} dies; fins aleshores pots recuperar el compte escrivint a suport.",
+      },
+    },
   },
   splash: {
     tagline: "El teu univers esportiu",

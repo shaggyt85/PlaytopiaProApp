@@ -9,6 +9,7 @@ import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import {
   AvailabilityCard,
+  DeleteAccountButton,
   HoursCard,
   MyClubsCard,
   PersonalDataCard,
@@ -21,9 +22,10 @@ import { useStyles } from "./ProfileScreen.styles";
 /**
  * Perfil, como el prototipo: su cabecera (foto, nombre y rol), sus horas del
  * mes con el historial, sus datos personales, su perfil profesional, los clubes
- * donde trabaja, su disponibilidad por sede y cerrar sesión. Solo compone: cada dato sale de su caché (el
- * perfil que dejó el login, «Mis clubes» y, para las horas y la disponibilidad,
- * `useProfileDetails`, una sola petición). Los editores llegan en sus fases.
+ * donde trabaja, su disponibilidad por sede, cerrar sesión y borrar la cuenta.
+ * Solo compone: cada dato sale de su caché (el perfil que dejó el login, «Mis
+ * clubes» y, para las horas y la disponibilidad, `useProfileDetails`, una sola
+ * petición). Los editores y la baja se abren en su panel (`ProfileEditorSheet`).
  */
 export function ProfileScreen() {
   const styles = useStyles();
@@ -44,6 +46,7 @@ export function ProfileScreen() {
                 <MyClubsCard />
                 <AvailabilityCard />
                 <SignOutButton />
+                <DeleteAccountButton />
               </View>
             </>
           ) : null}

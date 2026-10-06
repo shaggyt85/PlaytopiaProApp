@@ -2,15 +2,11 @@ import { z } from "zod";
 
 import { joinPhone } from "@/shared/components/PhoneInput";
 import { GENDER } from "@/shared/config/gender";
-import type { TranslationKey } from "@/shared/locales";
+import { message } from "@/shared/schemas/validationMessage";
 
 // Los datos personales del profesor: las mismas reglas al darse de alta y al
 // editarlos en Perfil. Se escriben una vez aquí; cada formulario las usa o las
 // extiende.
-
-// Los mensajes de validación son claves de i18n tipadas: una clave que no
-// existe no compila. El formulario las traduce al mostrarlas (`useFieldErrorText`).
-export const message = (key: TranslationKey) => ({ error: key });
 
 /** Email de cualquier formulario (acceso, registro, recuperación y Perfil). */
 export const EmailSchema = z

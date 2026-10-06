@@ -5,6 +5,8 @@ export { ChipGroup } from "./ChipGroup";
 export { ClubHoursRow } from "./ClubHoursRow";
 export { ClubName } from "./ClubName";
 export { DayMode } from "./DayMode";
+export { DeleteAccountButton } from "./DeleteAccountButton";
+export { DeleteAccountEditor } from "./DeleteAccountEditor";
 export { EditButton } from "./EditButton";
 export { ExpandChevron } from "./ExpandChevron";
 export { HoursCard } from "./HoursCard";

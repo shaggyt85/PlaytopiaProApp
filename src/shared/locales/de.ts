@@ -347,6 +347,9 @@ const de: Translations = {
     preferNotToSay: "Möchte es nicht sagen",
   },
   validation: {
+    /** El motivo de la baja de la cuenta. */
+    reasonMin: "Erzähl uns etwas mehr: mindestens 10 Zeichen",
+    reasonMax: "Der Grund darf höchstens 1000 Zeichen lang sein",
     descriptionMax: "Die Vorstellung darf höchstens 500 Zeichen lang sein",
     emailRequired: "Geben Sie Ihre E-Mail ein.",
     emailInvalid: "Die E-Mail-Adresse ist ungültig",
@@ -468,6 +471,20 @@ const de: Translations = {
       rangeSeparator: " und ",
     },
     signOutConfirm: "Möchtest du dich abmelden?",
+    /** La baja de la cuenta: su botón, su panel, la confirmación y el aviso final. */
+    deleteAccount: {
+      title: "Konto löschen",
+      warning: "Du verlässt deine Clubs, und deine noch nicht begonnenen Stunden haben dann keinen Trainer mehr. Deine persönlichen Daten werden nach einigen Tagen gelöscht; bis dahin kannst du dein Konto über den Support wiederherstellen.",
+      reason: "Warum gehst du?",
+      confirm: "Dein Konto löschen?",
+      confirmMessage: "Du wirst abgemeldet und verlässt deine Clubs.",
+      done: "Konto gelöscht",
+      /** Con los días que da Core (`anonymize_after_days`). */
+      doneMessage: {
+        one: "Deine persönlichen Daten werden in 1 Tag gelöscht; bis dahin kannst du dein Konto über den Support wiederherstellen.",
+        other: "Deine persönlichen Daten werden in %{count} Tagen gelöscht; bis dahin kannst du dein Konto über den Support wiederherstellen.",
+      },
+    },
   },
   splash: {
     tagline: "Ihr Sport-Universum",

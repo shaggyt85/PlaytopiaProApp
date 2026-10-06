@@ -1,7 +1,10 @@
 import { create } from "zustand";
 
-/** Las partes de Perfil que se editan en su panel. Cada fase añade la suya. */
-export type ProfileSection = "personal" | "professional" | "availability";
+/** Lo que se abre en el panel de Perfil: los editores y la baja de la cuenta. */
+export type ProfileSection = "personal" | "professional" | "availability" | "deleteAccount";
+
+/** Lo que se abre con el «Editar» de una tarjeta: todo menos la baja, que tiene su botón. */
+export type EditableSection = Exclude<ProfileSection, "deleteAccount">;
 
 /**
  * Qué editor de Perfil está abierto. Estado de la interfaz, en memoria: el

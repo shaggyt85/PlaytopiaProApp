@@ -347,6 +347,9 @@ const fr: Translations = {
     preferNotToSay: "Je préfère ne pas le dire",
   },
   validation: {
+    /** El motivo de la baja de la cuenta. */
+    reasonMin: "Dis-nous-en un peu plus : au moins 10 caractères",
+    reasonMax: "Le motif ne peut pas dépasser 1000 caractères",
     descriptionMax: "La présentation ne peut pas dépasser 500 caractères",
     emailRequired: "Saisissez votre email.",
     emailInvalid: "L'adresse e-mail n'est pas valide",
@@ -468,6 +471,20 @@ const fr: Translations = {
       rangeSeparator: " et ",
     },
     signOutConfirm: "Veux-tu te déconnecter ?",
+    /** La baja de la cuenta: su botón, su panel, la confirmación y el aviso final. */
+    deleteAccount: {
+      title: "Supprimer le compte",
+      warning: "Tu quitteras tes clubs et tes cours qui n'ont pas encore commencé resteront sans entraîneur. Tes données personnelles seront supprimées au bout de quelques jours ; d'ici là, tu peux récupérer ton compte en écrivant au support.",
+      reason: "Pourquoi pars-tu ?",
+      confirm: "Supprimer ton compte ?",
+      confirmMessage: "Ta session sera fermée et tu quitteras tes clubs.",
+      done: "Compte supprimé",
+      /** Con los días que da Core (`anonymize_after_days`). */
+      doneMessage: {
+        one: "Tes données personnelles seront supprimées dans 1 jour ; d'ici là, tu peux récupérer ton compte en écrivant au support.",
+        other: "Tes données personnelles seront supprimées dans %{count} jours ; d'ici là, tu peux récupérer ton compte en écrivant au support.",
+      },
+    },
   },
   splash: {
     tagline: "Votre univers sportif",

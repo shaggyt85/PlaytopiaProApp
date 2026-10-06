@@ -3,7 +3,7 @@ import { useTranslation } from "@/shared/hooks/useTranslation";
 
 /**
  * Traduce el mensaje de un error de formulario. Los schemas guardan claves de
- * i18n tipadas (ver `message()` en `shared/schemas/personalData.schema`), así que aquí basta con
+ * i18n tipadas (`message()` de `shared/schemas/validationMessage`), así que aquí basta con
  * traducirlas; si no fuera una clave, se muestra tal cual.
  */
 export function useFieldErrorText() {

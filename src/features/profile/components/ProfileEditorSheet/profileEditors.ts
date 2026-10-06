@@ -5,6 +5,7 @@ import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 
 import type { ProfileSection } from "../../store/profileEditorStore";
 import { AvailabilityEditor } from "../AvailabilityEditor";
+import { DeleteAccountEditor } from "../DeleteAccountEditor";
 import { PersonalDataEditor } from "../PersonalDataEditor";
 import { ProfessionalEditor } from "../ProfessionalEditor";
 
@@ -15,24 +16,14 @@ export interface ProfileEditorProps {
 }
 
 /**
- * Todo lo de cada sección, en una entrada: su título (el de su tarjeta), lo que
- * dice su «Editar» al lector de pantalla y su editor. Una sección nueva es una
- * entrada aquí: ni el panel ni el botón cambian (`satisfies` obliga a que cada
- * sección tenga lo suyo).
+ * Lo que el panel necesita de cada sección: su título y su editor. Una sección
+ * nueva es una entrada aquí: el panel no cambia (`satisfies` obliga a que cada
+ * sección tenga lo suyo). Lo que dice cada «Editar», aparte (`EDIT_LABELS`):
+ * la baja no tiene.
  */
 export const PROFILE_EDITORS = {
-  personal: { title: "profile.personal.title", editLabel: "profile.personal.edit", Editor: PersonalDataEditor },
-  professional: {
-    title: "profile.professional.title",
-    editLabel: "profile.professional.edit",
-    Editor: ProfessionalEditor,
-  },
-  availability: {
-    title: "profile.availability.title",
-    editLabel: "profile.availability.edit",
-    Editor: AvailabilityEditor,
-  },
-} as const satisfies Record<
-  ProfileSection,
-  { title: TranslationKey; editLabel: TranslationKey; Editor: ComponentType<ProfileEditorProps> }
->;
+  personal: { title: "profile.personal.title", Editor: PersonalDataEditor },
+  professional: { title: "profile.professional.title", Editor: ProfessionalEditor },
+  availability: { title: "profile.availability.title", Editor: AvailabilityEditor },
+  deleteAccount: { title: "profile.deleteAccount.title", Editor: DeleteAccountEditor },
+} as const satisfies Record<ProfileSection, { title: TranslationKey; Editor: ComponentType<ProfileEditorProps> }>;

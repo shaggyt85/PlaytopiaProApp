@@ -30,6 +30,12 @@ export const ENDPOINTS = {
     PROFILE: (teacherId: number) => `/UserTeacher/${teacherId}`,
   },
 
+  /** Grupo Mobile: lo de la cuenta de la app, de alumno o de profesor. */
+  MOBILE: {
+    /** Da de baja la cuenta del token (`POST` con el motivo). No es un `DELETE`: Core la desmonta y la borra pasado un plazo. */
+    ACCOUNT_DELETE: "/Mobile/Account/Delete",
+  },
+
   /** Grupo Mobile Teacher: todo del profesor del token. */
   MOBILE_TEACHER: {
     /** Las sedes donde trabaja («Mis clubes»). */

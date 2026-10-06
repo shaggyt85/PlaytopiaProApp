@@ -8,8 +8,8 @@ import { SectionLabel } from "@/shared/components/SectionLabel";
 import { useFieldErrorText } from "@/shared/hooks/useFieldErrorText";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TeacherSport } from "@/shared/schemas/teacherProfile.schema";
-import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
+import { useEditorSave } from "../../hooks/useEditorSave";
 import { useSportsCatalog } from "../../hooks/useSportsCatalog";
 import { useUpdateProfile } from "../../hooks/useUpdateProfile";
 import {
@@ -46,7 +46,7 @@ function ProfessionalFormFields({ profile, catalog, onDone }: ProfileEditorProps
   const styles = useStyles();
   const { t } = useTranslation();
   const fieldError = useFieldErrorText();
-  const update = useUpdateProfile();
+  const { save, saving, error } = useEditorSave(useUpdateProfile(), onDone);
   const form = useForm<ProfessionalForm>({
     resolver: zodResolver(ProfessionalFormSchema),
     mode: "onTouched",
@@ -54,18 +54,14 @@ function ProfessionalFormFields({ profile, catalog, onDone }: ProfileEditorProps
   });
   const { control, formState } = form;
 
-  const save = form.handleSubmit(async (values) => {
-    // El error queda en update.error y sale abajo.
-    const saved = await update.mutateAsync(toProfessionalRequest(values)).catch(() => undefined);
-    if (saved) onDone();
-  });
+  const submit = form.handleSubmit((values) => save(toProfessionalRequest(values)));
 
   return (
     <ProfileEditorForm
       form={form}
-      onSave={save}
-      saving={update.isPending}
-      error={update.error ? getErrorMessage(update.error) : null}
+      onSave={submit}
+      saving={saving}
+      error={error}
       testID="professional-editor"
     >
       <View style={styles.field}>

@@ -7,8 +7,9 @@ function build(initial?: { access?: string | null; refresh?: string | null }) {
   const tokens = createFakeTokenStorage(initial);
   const queryClient = { clear: jest.fn() };
   const store = { setAuthenticated: jest.fn(), setAnonymous: jest.fn() };
-  const session = createSessionService({ tokens, queryClient, store });
-  return { session, tokens, queryClient, store };
+  const biometric = { clear: jest.fn().mockResolvedValue(undefined) };
+  const session = createSessionService({ tokens, biometric, queryClient, store });
+  return { session, tokens, biometric, queryClient, store };
 }
 
 const teacherToken = createTestJwt(teacherClaims());
@@ -123,6 +124,25 @@ describe("session.end", () => {
     await session.end("expired");
 
     expect(store.setAnonymous).toHaveBeenCalledWith("expired");
+  });
+
+  it("cerrar sesión conserva la biometría", async () => {
+    const { session, biometric } = build({ access: teacherToken, refresh: "refresco" });
+
+    await session.end();
+    await session.end("expired");
+
+    expect(biometric.clear).not.toHaveBeenCalled();
+  });
+
+  it("tras dar de baja la cuenta, el cierre es deleted y borra también la biometría", async () => {
+    const { session, store, biometric, tokens } = build({ access: teacherToken, refresh: "refresco" });
+
+    await session.end("deleted");
+
+    expect(biometric.clear).toHaveBeenCalledTimes(1);
+    expect(tokens.refresh).toBeNull();
+    expect(store.setAnonymous).toHaveBeenCalledWith("deleted");
   });
 
   it("al arrancar sin sesión no hay motivo de cierre", async () => {

@@ -23,7 +23,8 @@ const MULTILINE_ROWS = 4;
 /**
  * Campo de texto del tema con etiqueta, mensaje de error y accesorio opcional.
  * Con `multiline` deja de ser una píldora: crece hasta `MULTILINE_ROWS` líneas,
- * con el texto arriba (la presentación de Perfil, el motivo de una baja).
+ * con el texto arriba (la presentación de Perfil, el motivo de una baja); si
+ * tiene `maxLength`, debajo cuenta lo escrito («120/500»).
  */
 export function Input({
   label,
@@ -58,6 +59,11 @@ export function Input({
         />
         {rightAccessory ? <View style={styles.accessory}>{rightAccessory}</View> : null}
       </View>
+      {rest.multiline && rest.maxLength !== undefined ? (
+        <Text variant="caption" color="textSecondary" style={styles.counter} testID="input-counter">
+          {`${rest.value?.length ?? 0}/${rest.maxLength}`}
+        </Text>
+      ) : null}
       <FieldError message={error} />
     </View>
   );

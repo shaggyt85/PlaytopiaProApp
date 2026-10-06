@@ -6,9 +6,9 @@ import { SegmentedTabs } from "@/shared/components/SegmentedTabs";
 import { Text } from "@/shared/components/Text";
 import { useScheduleClubs } from "@/shared/hooks/useScheduleClubs";
 import { useTranslation } from "@/shared/hooks/useTranslation";
-import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 import { sedeKey } from "@/shared/utils/sedeKey";
 
+import { useEditorSave } from "../../hooks/useEditorSave";
 import { useProfileDetails } from "../../hooks/useProfileDetails";
 import { useSaveAvailability } from "../../hooks/useSaveAvailability";
 import type { ClubAvailability } from "../../schemas/profileDetails.schema";
@@ -56,7 +56,7 @@ interface AvailabilityFormProps {
 function AvailabilityForm({ clubs, onDone }: AvailabilityFormProps) {
   const { t } = useTranslation();
   const { clubOf } = useScheduleClubs();
-  const save = useSaveAvailability();
+  const { save, saving, error } = useEditorSave(useSaveAvailability(), onDone);
   const [clubKey, setClubKey] = useState(clubs[0] ? sedeKey(clubs[0]) : "");
   const club = clubs.find((c) => sedeKey(c) === clubKey);
   const [mode, setMode] = useState<AvailabilityMode>(() => initialMode(club?.week ?? {}));
@@ -80,9 +80,7 @@ function AvailabilityForm({ clubs, onDone }: AvailabilityFormProps) {
   };
 
   const submit = form.handleSubmit(async ({ week: saved }) => {
-    // El error queda en save.error y sale abajo.
-    const done = await save.mutateAsync({ dbId: club.db_id, clubId: club.club_id, week: saved }).catch(() => undefined);
-    if (done) onDone();
+    await save({ dbId: club.db_id, clubId: club.club_id, week: saved });
   });
 
   const ModeView = MODE_VIEWS[mode];
@@ -91,8 +89,8 @@ function AvailabilityForm({ clubs, onDone }: AvailabilityFormProps) {
     <ProfileEditorForm
       form={form}
       onSave={submit}
-      saving={save.isPending}
-      error={save.error ? getErrorMessage(save.error) : null}
+      saving={saving}
+      error={error}
       testID="availability-editor"
     >
       {clubs.length > 1 ? (

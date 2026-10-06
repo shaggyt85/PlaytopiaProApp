@@ -352,6 +352,9 @@ const es = {
     preferNotToSay: "Prefiero no decirlo",
   },
   validation: {
+    /** El motivo de la baja de la cuenta. */
+    reasonMin: "Cuéntanos un poco más: al menos 10 caracteres",
+    reasonMax: "El motivo no puede pasar de 1000 caracteres",
     descriptionMax: "La presentación no puede pasar de 500 caracteres",
     emailRequired: "Escribe tu email.",
     emailInvalid: "El correo electrónico no es válido",
@@ -480,6 +483,20 @@ const es = {
       rangeSeparator: " y ",
     },
     signOutConfirm: "¿Quieres cerrar sesión?",
+    /** La baja de la cuenta: su botón, su panel, la confirmación y el aviso final. */
+    deleteAccount: {
+      title: "Borrar cuenta",
+      warning: "Saldrás de tus clubes y tus clases que aún no han empezado se quedarán sin profesor. Tus datos personales se borrarán pasados unos días; hasta entonces puedes recuperar la cuenta escribiendo a soporte.",
+      reason: "¿Por qué te vas?",
+      confirm: "¿Borrar tu cuenta?",
+      confirmMessage: "Se cerrará tu sesión y dejarás tus clubes.",
+      done: "Cuenta dada de baja",
+      /** Con los días que da Core (`anonymize_after_days`). */
+      doneMessage: {
+        one: "Tus datos personales se borrarán en 1 día; hasta entonces puedes recuperar la cuenta escribiendo a soporte.",
+        other: "Tus datos personales se borrarán en %{count} días; hasta entonces puedes recuperar la cuenta escribiendo a soporte.",
+      },
+    },
   },
   splash: {
     tagline: "Tu universo deportivo",

@@ -33,6 +33,23 @@ describe("Input", () => {
     });
   });
 
+  it("varias líneas con maxLength: cuenta lo escrito de lo que cabe", () => {
+    render(<Input label="Motivo" multiline maxLength={1000} value="Me cambio" />);
+
+    expect(screen.getByTestId("input-counter")).toHaveTextContent("9/1000");
+  });
+
+  it("sin maxLength, o en una línea, no hay contador", () => {
+    render(
+      <>
+        <Input label="Motivo" multiline />
+        <Input label="Email" maxLength={50} value="ana" />
+      </>,
+    );
+
+    expect(screen.queryByTestId("input-counter")).toBeNull();
+  });
+
   it("sin error no muestra mensaje", () => {
     render(<Input label="Email" />);
 

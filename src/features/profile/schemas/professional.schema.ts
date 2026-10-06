@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { message } from "@/shared/schemas/personalData.schema";
 import type { ChosenSport, ProfessionalRequest } from "@/shared/schemas/teacherProfile.schema";
+import { message } from "@/shared/schemas/validationMessage";
 
 /** Los años de experiencia, de 0 a este tope: el mismo que valida Core (`EXPERIENCE_YEARS_MAX`). */
 export const EXPERIENCE_YEARS_MAX = 60;

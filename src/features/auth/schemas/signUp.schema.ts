@@ -3,10 +3,10 @@ import { z } from "zod";
 import { GENDER } from "@/shared/config/gender";
 import {
   PersonalDataFormSchema,
-  message,
   toPersonalDataRequest,
   type PersonalDataRequest,
 } from "@/shared/schemas/personalData.schema";
+import { message } from "@/shared/schemas/validationMessage";
 
 /**
  * Versión vigente de los términos y condiciones, la que se acepta al

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-import { EmailSchema, message } from "@/shared/schemas/personalData.schema";
+import { EmailSchema } from "@/shared/schemas/personalData.schema";
+import { message } from "@/shared/schemas/validationMessage";
 
 export const EmailFormSchema = z.object({ email: EmailSchema });
 export type EmailForm = z.infer<typeof EmailFormSchema>;

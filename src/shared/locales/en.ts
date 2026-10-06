@@ -347,6 +347,9 @@ const en: Translations = {
     preferNotToSay: "Prefer not to say it",
   },
   validation: {
+    /** El motivo de la baja de la cuenta. */
+    reasonMin: "Tell us a bit more: at least 10 characters",
+    reasonMax: "The reason can't be longer than 1000 characters",
     descriptionMax: "The introduction can't be longer than 500 characters",
     emailRequired: "Enter your email.",
     emailInvalid: "Enter a valid email address",
@@ -468,6 +471,20 @@ const en: Translations = {
       rangeSeparator: " and ",
     },
     signOutConfirm: "Do you want to sign out?",
+    /** La baja de la cuenta: su botón, su panel, la confirmación y el aviso final. */
+    deleteAccount: {
+      title: "Delete account",
+      warning: "You'll leave your clubs, and your classes that haven't started yet will be left without a coach. Your personal data will be deleted after a few days; until then you can recover your account by writing to support.",
+      reason: "Why are you leaving?",
+      confirm: "Delete your account?",
+      confirmMessage: "You'll be signed out and leave your clubs.",
+      done: "Account deleted",
+      /** Con los días que da Core (`anonymize_after_days`). */
+      doneMessage: {
+        one: "Your personal data will be deleted in 1 day; until then you can recover your account by writing to support.",
+        other: "Your personal data will be deleted in %{count} days; until then you can recover your account by writing to support.",
+      },
+    },
   },
   splash: {
     tagline: "Your sports universe",

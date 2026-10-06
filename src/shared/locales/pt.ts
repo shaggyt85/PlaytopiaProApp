@@ -347,6 +347,9 @@ const pt: Translations = {
     preferNotToSay: "Prefiro não dizê-lo",
   },
   validation: {
+    /** El motivo de la baja de la cuenta. */
+    reasonMin: "Conte-nos um pouco mais: pelo menos 10 caracteres",
+    reasonMax: "O motivo não pode passar de 1000 caracteres",
     descriptionMax: "A apresentação não pode passar de 500 caracteres",
     emailRequired: "Digite seu email.",
     emailInvalid: "Digite um endereço de e-mail válido",
@@ -468,6 +471,20 @@ const pt: Translations = {
       rangeSeparator: " e ",
     },
     signOutConfirm: "Quer sair da sua conta?",
+    /** La baja de la cuenta: su botón, su panel, la confirmación y el aviso final. */
+    deleteAccount: {
+      title: "Apagar conta",
+      warning: "Sairá dos seus clubes e as suas aulas que ainda não começaram ficarão sem treinador. Os seus dados pessoais serão apagados ao fim de alguns dias; até lá pode recuperar a conta escrevendo ao suporte.",
+      reason: "Porque está a sair?",
+      confirm: "Apagar a sua conta?",
+      confirmMessage: "A sua sessão será terminada e sairá dos seus clubes.",
+      done: "Conta apagada",
+      /** Con los días que da Core (`anonymize_after_days`). */
+      doneMessage: {
+        one: "Os seus dados pessoais serão apagados em 1 dia; até lá pode recuperar a conta escrevendo ao suporte.",
+        other: "Os seus dados pessoais serão apagados em %{count} dias; até lá pode recuperar a conta escrevendo ao suporte.",
+      },
+    },
   },
   splash: {
     tagline: "Seu universo esportivo",

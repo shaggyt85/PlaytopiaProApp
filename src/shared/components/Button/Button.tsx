@@ -16,7 +16,7 @@ import { useTheme } from "@/shared/hooks/useTheme";
 
 import { useStyles } from "./Button.styles";
 
-export type ButtonVariant = "primary" | "solid" | "secondary" | "danger" | "link";
+export type ButtonVariant = "primary" | "solid" | "secondary" | "danger" | "dangerOutline" | "link";
 
 /** El icono delante del texto (`h-4 w-4`). */
 const BUTTON_ICON_SIZE = 16;
@@ -27,6 +27,7 @@ const TEXT_COLOR: Record<ButtonVariant, { active: ThemeColor; inactive: ThemeCol
   solid: { active: "onPrimary", inactive: "textSecondary" },
   secondary: { active: "primary", inactive: "primary" },
   danger: { active: "danger", inactive: "textSecondary" },
+  dangerOutline: { active: "danger", inactive: "textSecondary" },
   link: { active: "link", inactive: "link" },
 };
 
@@ -45,8 +46,9 @@ export interface ButtonProps extends Omit<PressableProps, "onPress" | "children"
  * - `primary`: píldora con el degradado de marca; gris si no se puede pulsar.
  * - `solid`: píldora lisa del color primario, la del registro; apagada si no se puede pulsar.
  * - `secondary`: píldora con borde.
- * - `danger`: tarjeta con el texto en rojo, para lo que saca de la cuenta
- *   («Cerrar sesión», «Borrar cuenta»).
+ * - `danger`: tarjeta con el texto en rojo, para salir de la cuenta («Cerrar sesión»).
+ * - `dangerOutline`: la de `danger` con el borde rojo suave, para lo que no
+ *   tiene vuelta atrás desde la app («Borrar cuenta»).
  * - `link`: texto subrayado ("¿Has olvidado tu contraseña?").
  *
  * Ignora las pulsaciones mientras está ocupado (`loading` o la promesa de
@@ -91,6 +93,7 @@ export function Button({
     solid: [styles.body, styles.solid, inactive && styles.solidInactive],
     secondary: [styles.body, styles.secondary],
     danger: [styles.body, styles.danger],
+    dangerOutline: [styles.body, styles.dangerOutline],
     link: styles.link,
   };
 

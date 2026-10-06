@@ -1,12 +1,15 @@
 import { act, fireEvent, screen, waitFor, within } from "@testing-library/react-native";
+import { Alert, type AlertButton } from "react-native";
 
 import { ProfileEditorSheet } from "@/features/profile/components/ProfileEditorSheet";
+import { accountDeletionService } from "@/features/profile/services/accountDeletionService";
 import { availabilityService } from "@/features/profile/services/availabilityService";
 import { profileDetailsService } from "@/features/profile/services/profileDetailsService";
 import { sportsCatalogService } from "@/features/profile/services/sportsCatalogService";
 import { useProfileEditorStore } from "@/features/profile/store/profileEditorStore";
 import { HttpError } from "@/shared/services/HttpError";
 import { myClubsService } from "@/shared/services/myClubsService";
+import { session } from "@/shared/services/session";
 import { teacherProfileService } from "@/shared/services/teacherProfileService";
 
 import { schoolCard } from "../../../helpers/networkFactories";
@@ -25,6 +28,14 @@ jest.mock("@/features/profile/services/profileDetailsService", () => ({
 jest.mock("@/features/profile/services/availabilityService", () => ({
   ...jest.requireActual("@/features/profile/services/availabilityService"),
   availabilityService: { replace: jest.fn() },
+}));
+jest.mock("@/features/profile/services/accountDeletionService", () => ({
+  ...jest.requireActual("@/features/profile/services/accountDeletionService"),
+  accountDeletionService: { request: jest.fn() },
+}));
+jest.mock("@/shared/services/session", () => ({
+  ...jest.requireActual("@/shared/services/session"),
+  session: { end: jest.fn().mockResolvedValue(undefined) },
 }));
 jest.mock("@/shared/services/myClubsService", () => require("../../../helpers/scheduleMocks").myClubsServiceModule());
 jest.mock("@/features/profile/services/sportsCatalogService", () => ({
@@ -314,5 +325,94 @@ describe("ProfileEditorSheet", () => {
     expect(screen.getByRole("checkbox", { name: "Noche", checked: true })).toBeTruthy();
     expect(screen.getByRole("checkbox", { name: "Lunes", checked: true })).toBeTruthy();
     expect(screen.getByRole("checkbox", { name: "Miércoles", checked: false })).toBeTruthy();
+  });
+
+  describe("la baja de la cuenta", () => {
+    const REASON = "Dejo de dar clases este año";
+    /** Pulsa un botón del último `Alert`. */
+    const pressAlertButton = (text: string) => {
+      const buttons = jest.mocked(Alert.alert).mock.calls.at(-1)?.[2] as AlertButton[];
+      buttons.find((button) => button.text === text)?.onPress?.();
+    };
+    const openDeletion = async () => {
+      renderWithProviders(<ProfileEditorSheet />);
+      act(() => useProfileEditorStore.getState().open("deleteAccount"));
+      return screen.findByTestId("delete-account-editor");
+    };
+    const pressDelete = async () => {
+      await act(async () => {
+        fireEvent.press(within(screen.getByTestId("delete-account-editor")).getByRole("button", { name: "Borrar cuenta" }));
+      });
+    };
+
+    beforeEach(() => {
+      jest.spyOn(Alert, "alert").mockImplementation(() => undefined);
+      jest.mocked(accountDeletionService.request).mockResolvedValue({
+        summary: { schools_count: 1, clubs_count: 2, unassigned_sessions: 0 },
+        anonymize_after_days: 30,
+      });
+    });
+
+    it("su título, qué pasa y el motivo con su contador", async () => {
+      await openDeletion();
+
+      expect(screen.getByRole("header", { name: "Borrar cuenta" })).toBeTruthy();
+      expect(screen.getByText(/Saldrás de tus clubes/)).toBeTruthy();
+      expect(screen.getByLabelText("¿Por qué te vas?")).toBeTruthy();
+      expect(screen.getByTestId("input-counter")).toHaveTextContent("0/1000");
+    });
+
+    it("un motivo corto se marca en su campo y no pregunta nada", async () => {
+      await openDeletion();
+
+      fireEvent.changeText(screen.getByLabelText("¿Por qué te vas?"), "corto");
+      await pressDelete();
+
+      expect(await screen.findByText("Cuéntanos un poco más: al menos 10 caracteres")).toBeTruthy();
+      expect(Alert.alert).not.toHaveBeenCalled();
+      expect(accountDeletionService.request).not.toHaveBeenCalled();
+    });
+
+    it("pide confirmar; al confirmar envía el motivo y termina la sesión como baja", async () => {
+      await openDeletion();
+
+      fireEvent.changeText(screen.getByLabelText("¿Por qué te vas?"), `  ${REASON}  `);
+      await pressDelete();
+      expect(Alert.alert).toHaveBeenCalledWith(
+        "¿Borrar tu cuenta?",
+        "Se cerrará tu sesión y dejarás tus clubes.",
+        expect.any(Array),
+      );
+      await act(async () => pressAlertButton("Borrar cuenta"));
+
+      expect(accountDeletionService.request).toHaveBeenCalledWith(REASON);
+      await waitFor(() => expect(session.end).toHaveBeenCalledWith("deleted"));
+      expect(useProfileEditorStore.getState().section).toBeNull();
+    });
+
+    it("al cancelar no envía nada", async () => {
+      await openDeletion();
+
+      fireEvent.changeText(screen.getByLabelText("¿Por qué te vas?"), REASON);
+      await pressDelete();
+      await act(async () => pressAlertButton("Cancelar"));
+
+      expect(accountDeletionService.request).not.toHaveBeenCalled();
+    });
+
+    it("si Core no la da de baja, el error sale abajo, traducido, y la sesión sigue", async () => {
+      jest
+        .mocked(accountDeletionService.request)
+        .mockRejectedValue(HttpError.fromResponse(409, { type: "urn:playtopia:problem:conflict", title: "Conflict", status: 409 }));
+      await openDeletion();
+
+      fireEvent.changeText(screen.getByLabelText("¿Por qué te vas?"), REASON);
+      await pressDelete();
+      await act(async () => pressAlertButton("Borrar cuenta"));
+
+      expect(await screen.findByText("Esta acción choca con datos que ya existen.")).toBeTruthy();
+      expect(session.end).not.toHaveBeenCalled();
+      expect(useProfileEditorStore.getState().section).toBe("deleteAccount");
+    });
   });
 });
