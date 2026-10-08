@@ -2,6 +2,10 @@ import type { Translations } from "./es";
 
 const pt: Translations = {
   common: {
+    /** Rechazar una oferta para luego: la biometría, la versión nueva. */
+    notNow: "Agora não",
+    /** Un enlace externo que el sistema no pudo abrir (`openExternalUrl`). */
+    openFailed: "Falha ao abrir o link. Tente novamente.",
     /** Un tiempo exacto: «5:50 h» (`courtTimeLabel`). */
     /** De qué hora a qué hora: «08:30–09:30», «16:00–19:00». */
     timeRange: "%{start}–%{end}",
@@ -103,7 +107,6 @@ const pt: Translations = {
         encrypted: "Dados criptografados",
         enable: "Ativar biometria",
         enabling: "Ativando…",
-        notNow: "Agora não",
         prompt: "Verifique sua identidade para ativar a biometria",
         enabledTitle: "Biometria ativada",
         enabledMessage: "Da próxima vez você poderá entrar com sua biometria.",
@@ -133,7 +136,6 @@ const pt: Translations = {
       summary: "Playtopia SL processa seus dados pessoais de acordo com o GDPR para gestão de atividades esportivas, comunicações e pagamentos. Coletamos dados de identificação, contato, acadêmicos e de pagamento (tokenizados via Stripe). Acesso opcional à câmera para fotos de perfil. Base legal: consentimento, execução de contrato e interesse legítimo. Compartilhamos com provedores autorizados (Stripe, CRM). Você tem direitos de acesso, retificação, exclusão e portabilidade. Dados de menores requerem consentimento parental. Implementamos medidas de segurança adequadas.",
     },
     viewFullDocument: "Ver Documento Completo",
-    openFailed: "Falha ao abrir o documento. Tente novamente.",
   },
   schedule: {
     greeting: {
@@ -493,6 +495,21 @@ const pt: Translations = {
         other: "Os seus dados pessoais serão apagados em %{count} dias; até lá pode recuperar a conta escrevendo ao suporte.",
       },
     },
+  },
+  /** Los avisos de actualizar la app (version-check). */
+  appUpdate: {
+    force: {
+      title: "Atualize o Playtopia Pro",
+      message: "Esta versão já não funciona. Instale a nova para continuar a usar a app.",
+      action: "Atualizar agora",
+    },
+    soft: {
+      title: "Há uma nova versão",
+      message: "Atualize para ter o mais recente do Playtopia Pro.",
+      action: "Atualizar",
+    },
+    /** Sin URL de la tienda: dónde actualizarla. */
+    noStore: "Atualize-a na App Store ou no Google Play.",
   },
   splash: {
     tagline: "Seu universo esportivo",

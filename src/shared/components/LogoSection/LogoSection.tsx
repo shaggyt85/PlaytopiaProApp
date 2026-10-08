@@ -1,8 +1,8 @@
-import Constants from "expo-constants";
 import { View } from "react-native";
 
 import { BrandLogo } from "@/shared/components/BrandLogo";
 import { Text } from "@/shared/components/Text";
+import { APP_VERSION } from "@/shared/config/appVersion";
 
 import { LOGO_SIZE, useStyles } from "./LogoSection.styles";
 
@@ -10,12 +10,13 @@ import { LOGO_SIZE, useStyles } from "./LogoSection.styles";
 const BRAND_NAME = "Playtopia Pro";
 
 /**
- * Cabecera de las pantallas de acceso: logo, marca, versión y, si se pasa,
- * un subtítulo pegado debajo (p. ej. el correo en la pantalla de contraseña).
+ * Cabecera de marca: logo, «Playtopia Pro», versión y, si se pasa, un
+ * subtítulo pegado debajo (p. ej. el correo en la pantalla de contraseña). La
+ * usan las pantallas de acceso y la de actualizar la app.
  */
 export function LogoSection({ subtitle }: { subtitle?: string }) {
   const styles = useStyles();
-  const version = Constants.expoConfig?.version;
+  const version = APP_VERSION;
 
   return (
     <View style={styles.container}>

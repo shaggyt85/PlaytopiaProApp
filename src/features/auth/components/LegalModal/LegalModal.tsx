@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Alert, Animated, Linking, Modal, Pressable, View } from "react-native";
+import { Animated, Modal, Pressable, View } from "react-native";
 
 import { AppScrollView } from "@/shared/components/AppScrollView";
 import { Button } from "@/shared/components/Button";
@@ -8,6 +8,7 @@ import { DiagonalGradient } from "@/shared/components/DiagonalGradient";
 import { Text } from "@/shared/components/Text";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import { openExternalUrl } from "@/shared/utils/openExternalUrl";
 
 import { useStyles } from "./LegalModal.styles";
 
@@ -54,11 +55,7 @@ export function LegalModal({ document, onClose, onAccept, error }: LegalModalPro
 
   const openFullDocument = async () => {
     if (!document) return;
-    try {
-      await Linking.openURL(DOCUMENT_URL[document]);
-    } catch {
-      Alert.alert(t("legalDocs.openFailed"));
-    }
+    await openExternalUrl(DOCUMENT_URL[document], t);
   };
 
   return (

@@ -5,8 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AppScrollView } from "@/shared/components/AppScrollView";
 import { BackButton } from "@/shared/components/BackButton";
 import { BrandBackground } from "@/shared/components/BrandBackground";
-
-import { LogoSection } from "../LogoSection";
+import { LogoSection } from "@/shared/components/LogoSection";
 
 import { useStyles } from "./AuthLayout.styles";
 

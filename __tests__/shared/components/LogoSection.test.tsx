@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react-native";
 
-import { LogoSection } from "@/features/auth/components/LogoSection";
+import { LogoSection } from "@/shared/components/LogoSection";
 
 jest.mock("expo-constants", () => ({ expoConfig: { version: "1.0.0" } }));
 

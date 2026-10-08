@@ -2,6 +2,10 @@ import type { Translations } from "./es";
 
 const ca: Translations = {
   common: {
+    /** Rechazar una oferta para luego: la biometría, la versión nueva. */
+    notNow: "Ara no",
+    /** Un enlace externo que el sistema no pudo abrir (`openExternalUrl`). */
+    openFailed: "Error en obrir l'enllaç. Torna-ho a provar.",
     /** Un tiempo exacto: «5:50 h» (`courtTimeLabel`). */
     /** De qué hora a qué hora: «08:30–09:30», «16:00–19:00». */
     timeRange: "%{start}–%{end}",
@@ -103,7 +107,6 @@ const ca: Translations = {
         encrypted: "Dades xifrades",
         enable: "Activa la biometria",
         enabling: "Activant…",
-        notNow: "Ara no",
         prompt: "Verifica la teva identitat per activar la biometria",
         enabledTitle: "Biometria activada",
         enabledMessage: "La propera vegada podràs entrar amb la teva biometria.",
@@ -133,7 +136,6 @@ const ca: Translations = {
       summary: "Playtopia SL tracta les teves dades personals d'acord amb el RGPD per a gestió d'activitats esportives, comunicacions i pagaments. Recopilem dades d'identificació, contacte, acadèmiques i de pagament (tokenitzades via Stripe). Utilitzem càmera opcional per a foto de perfil. Base legal: consentiment, execució contractual i interès legítim. Compartim amb proveïdors autoritzats (Stripe, CRM). Tens dret a accés, rectificació, supressió i portabilitat. Les dades de menors requereixen consentiment parental. Implementem mesures de seguretat adequades.",
     },
     viewFullDocument: "Veure Document Complet",
-    openFailed: "Error en obrir el document. Torna-ho a provar.",
   },
   schedule: {
     greeting: {
@@ -493,6 +495,21 @@ const ca: Translations = {
         other: "Les teves dades personals s'esborraran d'aquí a %{count} dies; fins aleshores pots recuperar el compte escrivint a suport.",
       },
     },
+  },
+  /** Los avisos de actualizar la app (version-check). */
+  appUpdate: {
+    force: {
+      title: "Actualitza Playtopia Pro",
+      message: "Aquesta versió ja no funciona. Instal·la la nova per continuar fent servir l'app.",
+      action: "Actualitza ara",
+    },
+    soft: {
+      title: "Hi ha una versió nova",
+      message: "Actualitza per tenir el més recent de Playtopia Pro.",
+      action: "Actualitza",
+    },
+    /** Sin URL de la tienda: dónde actualizarla. */
+    noStore: "Actualitza-la des de l'App Store o Google Play.",
   },
   splash: {
     tagline: "El teu univers esportiu",

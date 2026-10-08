@@ -6,6 +6,7 @@ import AppLayout from "@/app/(app)/_layout";
 import AuthLayout from "@/app/(auth)/_layout";
 import SignInRoute from "@/app/(auth)/sign-in";
 import RootLayout from "@/app/_layout";
+import { versionCheckService } from "@/features/app-update/services/versionCheckService";
 import { useSessionStore } from "@/shared/store/sessionStore";
 
 jest.mock("@/shared/hooks/useAppReady", () => ({ useAppReady: () => true }));
@@ -18,6 +19,13 @@ jest.mock("@/shared/services/httpClient", () => ({ onSessionExpired: jest.fn() }
 jest.mock("@/shared/config/queryManagers", () => ({
   setupQueryManagers: () => () => undefined,
 }));
+jest.mock("@/shared/config/appVersion", () => ({ APP_VERSION: "1.0.0" }));
+jest.mock("@/features/app-update/services/versionCheckService", () => ({
+  ...jest.requireActual("@/features/app-update/services/versionCheckService"),
+  versionCheckService: { check: jest.fn() },
+}));
+
+const storeUrls = { ios: "https://apps.apple.com/pro", android: null };
 
 const routes = {
   _layout: RootLayout,
@@ -29,6 +37,10 @@ const routes = {
 };
 
 describe("guards de navegación", () => {
+  beforeEach(() =>
+    jest.mocked(versionCheckService.check).mockResolvedValue({ update_type: "none", store_url: storeUrls }),
+  );
+
   it("sin sesión solo existe el login, aunque se pida el inicio", () => {
     useSessionStore.getState().setAnonymous();
 
@@ -55,5 +67,17 @@ describe("guards de navegación", () => {
     act(() => useSessionStore.getState().setAnonymous());
 
     expect(screen.getByTestId("sign-in-screen")).toBeTruthy();
+  });
+});
+
+describe("versión de la app", () => {
+  it("si esta versión ya no vale, la pantalla de actualizar en lugar de la app", async () => {
+    jest.mocked(versionCheckService.check).mockResolvedValue({ update_type: "force", store_url: storeUrls });
+    useSessionStore.getState().setAuthenticated({ userId: 42, dbId: 7 });
+
+    renderRouter(routes, { initialUrl: "/" });
+
+    expect(await screen.findByTestId("force-update-screen")).toBeTruthy();
+    expect(screen.queryByTestId("schedule-screen")).toBeNull();
   });
 });

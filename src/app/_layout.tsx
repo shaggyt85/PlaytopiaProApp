@@ -3,6 +3,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useState } from "react";
 
+import { AppUpdateGate } from "@/features/app-update";
 import { AnimatedSplash } from "@/features/splash";
 import { AppProviders } from "@/shared/components/AppProviders";
 import { initSentry, wrapWithSentry } from "@/shared/config/sentry";
@@ -44,19 +45,22 @@ function RootLayout() {
     <AppProviders>
       {/* Tema oscuro fijo: texto claro en la barra de estado */}
       <StatusBar style="light" />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: theme.colors.background },
-        }}
-      >
-        <Stack.Protected guard={isAuthenticated}>
-          <Stack.Screen name="(app)" />
-        </Stack.Protected>
-        <Stack.Protected guard={!isAuthenticated}>
-          <Stack.Screen name="(auth)" />
-        </Stack.Protected>
-      </Stack>
+      {/* La app, o la pantalla de actualizar si esta versión ya no vale. */}
+      <AppUpdateGate>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: theme.colors.background },
+          }}
+        >
+          <Stack.Protected guard={isAuthenticated}>
+            <Stack.Screen name="(app)" />
+          </Stack.Protected>
+          <Stack.Protected guard={!isAuthenticated}>
+            <Stack.Screen name="(auth)" />
+          </Stack.Protected>
+        </Stack>
+      </AppUpdateGate>
       {showSplash && (
         <AnimatedSplash onReady={hideNativeSplash} onFinish={handleSplashFinish} />
       )}

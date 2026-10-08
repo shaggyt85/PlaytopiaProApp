@@ -22,6 +22,12 @@ export const ENDPOINTS = {
     PASSWORD_RECOVERY: "/PassRecovery/request",
   },
 
+  /** Grupo System. Públicas. */
+  SYSTEM: {
+    /** Si la versión instalada tiene que actualizarse (`?platform=&current_version=&app=`). */
+    VERSION_CHECK: "/App/version-check",
+  },
+
   /** Grupo Users → Teachers. */
   TEACHERS: {
     /** Alta de profesor. Pública: la protege el `registration_token`. */

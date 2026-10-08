@@ -2,6 +2,10 @@ import type { Translations } from "./es";
 
 const fr: Translations = {
   common: {
+    /** Rechazar una oferta para luego: la biometría, la versión nueva. */
+    notNow: "Pas maintenant",
+    /** Un enlace externo que el sistema no pudo abrir (`openExternalUrl`). */
+    openFailed: "Erreur lors de l'ouverture du lien. Réessayez.",
     /** Un tiempo exacto: «5:50 h» (`courtTimeLabel`). */
     /** De qué hora a qué hora: «08:30–09:30», «16:00–19:00». */
     timeRange: "%{start}–%{end}",
@@ -103,7 +107,6 @@ const fr: Translations = {
         encrypted: "Données chiffrées",
         enable: "Activer la biométrie",
         enabling: "Activation…",
-        notNow: "Pas maintenant",
         prompt: "Vérifiez votre identité pour activer la biométrie",
         enabledTitle: "Biométrie activée",
         enabledMessage: "La prochaine fois, vous pourrez vous connecter avec votre biométrie.",
@@ -133,7 +136,6 @@ const fr: Translations = {
       summary: "Playtopia SL traite vos données personnelles conformément au RGPD pour la gestion des activités sportives, les communications et les paiements. Nous collectons des données d'identification, de contact, académiques et de paiement (tokenisées via Stripe). Nous utilisons la caméra en option pour la photo de profil. Base légale : consentement, exécution contractuelle et intérêt légitime. Nous partageons avec des fournisseurs autorisés (Stripe, CRM). Vous avez le droit d'accès, de rectification, de suppression et de portabilité. Les données des mineurs nécessitent le consentement parental. Nous mettons en œuvre des mesures de sécurité appropriées.",
     },
     viewFullDocument: "Voir le document complet",
-    openFailed: "Erreur lors de l'ouverture du document. Réessayez.",
   },
   schedule: {
     greeting: {
@@ -493,6 +495,21 @@ const fr: Translations = {
         other: "Tes données personnelles seront supprimées dans %{count} jours ; d'ici là, tu peux récupérer ton compte en écrivant au support.",
       },
     },
+  },
+  /** Los avisos de actualizar la app (version-check). */
+  appUpdate: {
+    force: {
+      title: "Mets à jour Playtopia Pro",
+      message: "Cette version ne fonctionne plus. Installe la nouvelle pour continuer à utiliser l'app.",
+      action: "Mettre à jour maintenant",
+    },
+    soft: {
+      title: "Une nouvelle version est disponible",
+      message: "Mets à jour pour profiter des nouveautés de Playtopia Pro.",
+      action: "Mettre à jour",
+    },
+    /** Sin URL de la tienda: dónde actualizarla. */
+    noStore: "Mets-la à jour depuis l'App Store ou Google Play.",
   },
   splash: {
     tagline: "Votre univers sportif",

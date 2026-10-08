@@ -1,8 +1,7 @@
 import { IconLoLock, IconLoShield, IconLoZap } from "@playtopia/icons/react-native";
 import { Alert, View } from "react-native";
 
-import { BottomSheet } from "@/shared/components/BottomSheet";
-import { Button } from "@/shared/components/Button";
+import { PromptSheet } from "@/shared/components/PromptSheet";
 import { Text } from "@/shared/components/Text";
 import type { IconComponent } from "@/shared/config/icons";
 import { useTheme } from "@/shared/hooks/useTheme";
@@ -13,7 +12,6 @@ import { useBiometricOffer, type OfferResult } from "../../hooks/useBiometricOff
 
 import { useStyles } from "./BiometricOfferModal.styles";
 
-const ICON = 32;
 const BENEFIT_ICON = 20;
 
 const BENEFITS: readonly { Icon: IconComponent; label: TranslationKey }[] = [
@@ -53,19 +51,19 @@ export function BiometricOfferModal() {
   };
 
   return (
-    <BottomSheet visible={visible} onClose={isEnabling ? noop : dismiss}>
-      <View style={styles.header}>
-        <View style={styles.iconCircle}>
-          <IconLoShield size={ICON} color={theme.colors.primary} />
-        </View>
-        <Text variant="title" align="center" accessibilityRole="header">
-          {t("auth.biometric.offer.title")}
-        </Text>
-        <Text color="textSecondary" align="center">
-          {t("auth.biometric.offer.subtitle")}
-        </Text>
-      </View>
-
+    <PromptSheet
+      visible={visible}
+      onClose={isEnabling ? noop : dismiss}
+      Icon={IconLoShield}
+      title={t("auth.biometric.offer.title")}
+      subtitle={t("auth.biometric.offer.subtitle")}
+      primary={{
+        title: t(isEnabling ? "auth.biometric.offer.enabling" : "auth.biometric.offer.enable"),
+        onPress: activate,
+        loading: isEnabling,
+      }}
+      secondary={{ title: t("common.notNow"), onPress: dismiss, disabled: isEnabling }}
+    >
       <View style={styles.benefits}>
         {BENEFITS.map(({ Icon, label }) => (
           <View key={label} style={styles.benefit}>
@@ -74,21 +72,7 @@ export function BiometricOfferModal() {
           </View>
         ))}
       </View>
-
-      <View style={styles.actions}>
-        <Button
-          title={t(isEnabling ? "auth.biometric.offer.enabling" : "auth.biometric.offer.enable")}
-          onPress={activate}
-          loading={isEnabling}
-        />
-        <Button
-          variant="secondary"
-          title={t("auth.biometric.offer.notNow")}
-          onPress={dismiss}
-          disabled={isEnabling}
-        />
-      </View>
-    </BottomSheet>
+    </PromptSheet>
   );
 }
 
