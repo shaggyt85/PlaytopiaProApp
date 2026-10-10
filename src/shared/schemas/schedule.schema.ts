@@ -84,12 +84,16 @@ export const ScheduleClassSchema = z.object({
   max_participants: z.number().int(),
   /** Plazas ocupadas: el «3» de «3/4». */
   current_participants: z.number().int(),
-  /** Rango de nivel, `min - max` («2.5 - 3»). */
-  level_range: z.string(),
-  /** Vacío si la clase no tiene pista. */
-  track_name: z.string(),
+  /** Rango de nivel, `min - max` («2.5 - 3»); `null` si la clase no tiene. */
+  level_range: z.string().nullable(),
+  /** `null` si la clase no tiene pista. */
+  track_name: z.string().nullable(),
   class_type: z.number().int(),
-  is_private: z.number().int(),
+  /**
+   * `true/false` desde Core `722c0465`. El `0/1` de antes se acepta mientras
+   * esté desplegado el Core anterior: la app sale primero.
+   */
+  is_private: z.union([z.boolean(), z.number().int()]),
   /** `null` en las clases sueltas antiguas, sin grupo. */
   group_id: z.number().int().nullable(),
   /** Cuántas clases tiene su grupo («una de 40»). */

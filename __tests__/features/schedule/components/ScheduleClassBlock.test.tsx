@@ -58,6 +58,21 @@ describe("ScheduleClassBlock", () => {
     expect(screen.getByLabelText(/^Cantera Tarde, 16:00, 75 minutos/)).toBeTruthy();
   });
 
+  it("sin nivel, no pinta el nivel", () => {
+    render(
+      <ScheduleClassBlock
+        item={scheduleClass({ level_range: null })}
+        colors={colors}
+        club={club}
+        status="upcoming"
+        geometry={{ top: 512, height: 100 }}
+      />,
+    );
+
+    expect(screen.queryByText("2.5 - 3", hidden)).toBeNull();
+    expect(screen.getByText("75 min", hidden)).toBeTruthy();
+  });
+
   it("la tarjeta oscura con la franja de su color en el día, no el de su club", () => {
     setup();
 

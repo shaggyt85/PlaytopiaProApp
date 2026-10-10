@@ -40,6 +40,13 @@ describe("ClassHero", () => {
     expect(screen.getByText("2/4 alumnos")).toBeTruthy();
   });
 
+  it("sin nivel, no pinta el nivel", () => {
+    renderHero({ item: { ...item, level_range: null } });
+
+    expect(screen.queryByText("2.5 - 3")).toBeNull();
+    expect(screen.getByText("2/4 alumnos")).toBeTruthy();
+  });
+
   it("con el degradado de la clase", () => {
     renderHero();
 

@@ -9,7 +9,8 @@ import { joinParts } from "@/shared/utils/joinParts";
 export function durationMeta(
   c: Pick<ScheduleClass, "duration_minutes">,
   t: typeof translate,
-  extra: readonly string[] = [],
+  // Lo que falte (una clase sin pista) no se pinta: lo descarta `joinParts`.
+  extra: readonly (string | null)[] = [],
 ): string {
   return joinParts([t("schedule.day.minutes", { count: c.duration_minutes }), ...extra]);
 }

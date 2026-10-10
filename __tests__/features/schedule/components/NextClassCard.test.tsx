@@ -38,6 +38,14 @@ describe("NextClassCard", () => {
     expect(screen.getByText("2.5 - 3")).toBeTruthy();
   });
 
+  it("sin nivel, no pinta el nivel", () => {
+    const withoutLevel = { item: { ...nextClass(), level_range: null }, live: false } as const;
+    render(<NextClassCard hero={withoutLevel} club={club} today="2026-10-05" now={START - 3 * 60 * MINUTE} />);
+
+    expect(screen.queryByText("2.5 - 3")).toBeNull();
+    expect(screen.getByText("16:00–17:15")).toBeTruthy();
+  });
+
   it("dice cuándo empieza: en minutos si falta una hora o menos, mañana u otro día", () => {
     const { rerender } = render(<NextClassCard hero={cantera} club={club} today="2026-10-05" now={START - 45 * MINUTE} />);
     expect(screen.getByText("Próxima clase · en 45 min")).toBeTruthy();

@@ -85,9 +85,11 @@ function GroupHeader({ group, onBack }: { group: TeacherGroup; onBack: () => voi
         <Text variant="title" accessibilityRole="header" style={styles.title}>
           {next.title}
         </Text>
-        <View accessible accessibilityLabel={t("schedule.next.level", { range: next.level_range })}>
-          <IconText Icon={LEVEL_ICON} label={next.level_range} size="heading" color="text" iconColor="primary" />
-        </View>
+        {next.level_range ? (
+          <View accessible accessibilityLabel={t("schedule.next.level", { range: next.level_range })}>
+            <IconText Icon={LEVEL_ICON} label={next.level_range} size="heading" color="text" iconColor="primary" />
+          </View>
+        ) : null}
       </View>
       <Text variant="label" color="textSecondary" style={styles.place}>
         {groupPlace(next, clubOf(next).label)}

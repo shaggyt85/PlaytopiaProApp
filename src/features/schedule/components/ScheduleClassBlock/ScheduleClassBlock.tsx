@@ -92,7 +92,7 @@ export const ScheduleClassBlock = memo(function ScheduleClassBlock({
             {item.track_name ? <IconText Icon={IconLoMapPin} label={item.track_name} numberOfLines={1} /> : null}
             <View style={styles.metaRow}>
               <IconText Icon={IconLoClock} label={t("schedule.day.minutes", { count: item.duration_minutes })} />
-              <IconText Icon={LEVEL_ICON} label={item.level_range} />
+              {item.level_range ? <IconText Icon={LEVEL_ICON} label={item.level_range} /> : null}
               <IconText Icon={IconLoUsers} label={studentsLabel(item, t)} />
             </View>
           </View>

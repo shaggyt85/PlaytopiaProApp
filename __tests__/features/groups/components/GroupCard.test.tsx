@@ -39,6 +39,18 @@ describe("GroupCard", () => {
     expect(screen.getByText("2/4 alumnos", hidden)).toHaveStyle({ color: colors.color });
   });
 
+  it("una clase sin nivel no lo pinta ni lo lee", () => {
+    const withoutLevel = { ...group, next: { ...group.next, level_range: null } };
+    render(<GroupCard group={withoutLevel} colors={colors} clubLabel="Club Padel Indoor Madrid" onPress={jest.fn()} />);
+
+    expect(screen.queryByText("2.5 - 3", hidden)).toBeNull();
+    expect(
+      screen.getByRole("button", {
+        name: "Cantera Intermedios, Lunes, miércoles · 18:00–19:30, Club Padel Indoor Madrid · Pista 1, 2/4 alumnos",
+      }),
+    ).toBeTruthy();
+  });
+
   it("sus alumnos y, hasta las plazas, los huecos libres", () => {
     renderCard();
 

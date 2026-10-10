@@ -30,6 +30,14 @@ describe("GroupSummaryCard", () => {
     expect(screen.getByText("2,0–3,0", { includeHiddenElements: true })).toBeTruthy();
   });
 
+  it("sin nivel, no pinta la fila del rango ni lo lee", () => {
+    const withoutLevel = { ...group, next: { ...group.next, level_range: null } };
+    render(<GroupSummaryCard group={withoutLevel} clubLabel="Sede Centro" onPress={jest.fn()} />);
+
+    expect(screen.queryByText("2,0–3,0", { includeHiddenElements: true })).toBeNull();
+    expect(screen.getByLabelText("Su grupo, Cantera Intermedios, Lunes · 18:00–19:30, Sede Centro · Pista 1")).toBeTruthy();
+  });
+
   it("se lee de una vez y, al tocarla, vuelve al grupo", () => {
     const onPress = jest.fn();
     render(<GroupSummaryCard group={group} clubLabel="Sede Centro" onPress={onPress} />);

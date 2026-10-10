@@ -96,7 +96,9 @@ export function ClassHero({ item, clubLabel, colors, onBack }: ClassHeroProps) {
           {item.track_name ? (
             <IconText Icon={IconLoMapPin} label={item.track_name} size="hero" color="onPrimary" />
           ) : null}
-          <IconText Icon={LEVEL_ICON} label={item.level_range} size="hero" color="onPrimary" />
+          {item.level_range ? (
+            <IconText Icon={LEVEL_ICON} label={item.level_range} size="hero" color="onPrimary" />
+          ) : null}
           <IconText Icon={IconLoUsers} label={studentsLabel(item, t)} size="hero" color="onPrimary" />
         </View>
       </View>

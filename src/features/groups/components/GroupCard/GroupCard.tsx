@@ -47,7 +47,10 @@ export const GroupCard = memo(function GroupCard({ group, colors, clubLabel, onP
   return (
     <PressableScale
       onPress={() => onPress(group)}
-      accessibilityLabel={joinParts([next.title, t("schedule.next.level", { range: next.level_range }), when, place, seats], ", ")}
+      accessibilityLabel={joinParts(
+        [next.title, next.level_range ? t("schedule.next.level", { range: next.level_range }) : null, when, place, seats],
+        ", ",
+      )}
       testID="group-card"
     >
       <StripeCard stripe={colors.gradient}>
@@ -57,7 +60,9 @@ export const GroupCard = memo(function GroupCard({ group, colors, clubLabel, onP
               <Text variant="subtitle" numberOfLines={1}>
                 {next.title}
               </Text>
-              <IconText Icon={LEVEL_ICON} label={next.level_range} size="rowTitle" tint={colors.color} style={styles.level} />
+              {next.level_range ? (
+                <IconText Icon={LEVEL_ICON} label={next.level_range} size="rowTitle" tint={colors.color} style={styles.level} />
+              ) : null}
             </View>
             <View style={styles.chevron}>
               <Chevron size="md" />

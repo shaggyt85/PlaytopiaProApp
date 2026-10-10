@@ -27,6 +27,17 @@ describe("ScheduleResponseSchema", () => {
     expect(ScheduleResponseSchema.parse(scheduleResponse({ classes: [loose] })).classes[0]).toEqual(loose);
   });
 
+  it("una clase sin nivel ni pista llega con los dos a null", () => {
+    const bare = scheduleClass({ level_range: null, track_name: null });
+    expect(ScheduleResponseSchema.parse(scheduleResponse({ classes: [bare] })).classes[0]).toEqual(bare);
+  });
+
+  it("la privada llega como sí/no, y como el 0/1 del Core anterior", () => {
+    const classes = [scheduleClass({ is_private: true }), scheduleClass({ is_private: 0 })];
+    const parsed = ScheduleResponseSchema.parse(scheduleResponse({ classes }));
+    expect(parsed.classes.map((c) => c.is_private)).toEqual([true, 0]);
+  });
+
   it("una clase sin alumnos no cumple el contrato", () => {
     const { students: _students, ...withoutStudents } = scheduleClass();
     expect(ScheduleResponseSchema.safeParse({ classes: [withoutStudents], next_class: null }).success).toBe(

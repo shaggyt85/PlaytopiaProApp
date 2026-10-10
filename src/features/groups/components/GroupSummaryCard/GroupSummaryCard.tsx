@@ -44,7 +44,13 @@ export function GroupSummaryCard({ group, clubLabel, onPress }: GroupSummaryCard
     <PressableScale
       onPress={onPress}
       accessibilityLabel={joinParts(
-        [t("groups.student.group"), next.title, when, place, `${t("groups.student.groupRange")} ${next.level_range}`],
+        [
+          t("groups.student.group"),
+          next.title,
+          when,
+          place,
+          next.level_range ? `${t("groups.student.groupRange")} ${next.level_range}` : null,
+        ],
         ", ",
       )}
       accessibilityHint={t("groups.student.openGroup")}
@@ -64,10 +70,12 @@ export function GroupSummaryCard({ group, clubLabel, onPress }: GroupSummaryCard
         <IconText Icon={IconLoCalendarDays} label={when} size="card" />
         {place ? <IconText Icon={IconLoMapPin} label={place} size="card" numberOfLines={1} /> : null}
       </View>
-      <View style={styles.range}>
-        <IconText Icon={LEVEL_ICON} label={t("groups.student.groupRange")} size="card" style={styles.rangeLabel} />
-        <Text variant="rowLabel">{next.level_range}</Text>
-      </View>
+      {next.level_range ? (
+        <View style={styles.range}>
+          <IconText Icon={LEVEL_ICON} label={t("groups.student.groupRange")} size="card" style={styles.rangeLabel} />
+          <Text variant="rowLabel">{next.level_range}</Text>
+        </View>
+      ) : null}
     </PressableScale>
   );
 }

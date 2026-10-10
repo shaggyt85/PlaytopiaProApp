@@ -118,7 +118,9 @@ export function NextClassCard({ hero, club, today, now }: NextClassCardProps) {
 
         <View style={styles.footer}>
           <IconText Icon={IconLoClock} label={classTimeRange(item, t)} size="card" iconColor="primary" />
-          <IconText Icon={LEVEL_ICON} label={item.level_range} size="card" iconColor="primary" />
+          {item.level_range ? (
+            <IconText Icon={LEVEL_ICON} label={item.level_range} size="card" iconColor="primary" />
+          ) : null}
         </View>
       </View>
     </PressableScale>
