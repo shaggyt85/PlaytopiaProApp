@@ -42,7 +42,7 @@ export const scheduleClass = (overrides: Partial<ScheduleClass> = {}): ScheduleC
   level_range: "2.5 - 3",
   track_name: "Pista 1",
   class_type: 0,
-  is_private: 0,
+  is_private: false,
   group_id: 11,
   number_of_classes: 40,
   // Ya en el orden en que los deja el contrato (por nombre).

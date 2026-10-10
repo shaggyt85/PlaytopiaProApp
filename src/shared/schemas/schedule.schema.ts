@@ -89,11 +89,7 @@ export const ScheduleClassSchema = z.object({
   /** `null` si la clase no tiene pista. */
   track_name: z.string().nullable(),
   class_type: z.number().int(),
-  /**
-   * `true/false` desde Core `722c0465`. El `0/1` de antes se acepta mientras
-   * esté desplegado el Core anterior: la app sale primero.
-   */
-  is_private: z.union([z.boolean(), z.number().int()]),
+  is_private: z.boolean(),
   /** `null` en las clases sueltas antiguas, sin grupo. */
   group_id: z.number().int().nullable(),
   /** Cuántas clases tiene su grupo («una de 40»). */

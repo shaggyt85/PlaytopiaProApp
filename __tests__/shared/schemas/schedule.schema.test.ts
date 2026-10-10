@@ -32,10 +32,16 @@ describe("ScheduleResponseSchema", () => {
     expect(ScheduleResponseSchema.parse(scheduleResponse({ classes: [bare] })).classes[0]).toEqual(bare);
   });
 
-  it("la privada llega como sí/no, y como el 0/1 del Core anterior", () => {
-    const classes = [scheduleClass({ is_private: true }), scheduleClass({ is_private: 0 })];
+  it("la privada llega como sí/no", () => {
+    const classes = [scheduleClass({ is_private: true }), scheduleClass({ is_private: false })];
     const parsed = ScheduleResponseSchema.parse(scheduleResponse({ classes }));
-    expect(parsed.classes.map((c) => c.is_private)).toEqual([true, 0]);
+    expect(parsed.classes.map((c) => c.is_private)).toEqual([true, false]);
+  });
+
+  // El 0/1 lo mandaba el Core anterior: si llega, el despliegue no casa con la app.
+  it("la privada como 0/1 no cumple el contrato", () => {
+    const classes = [{ ...scheduleClass(), is_private: 0 }];
+    expect(ScheduleResponseSchema.safeParse({ classes, next_class: null }).success).toBe(false);
   });
 
   it("una clase sin alumnos no cumple el contrato", () => {
