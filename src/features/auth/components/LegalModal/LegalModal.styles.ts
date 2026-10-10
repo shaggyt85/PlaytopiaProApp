@@ -27,6 +27,9 @@ export const useStyles = makeStyles((theme) => ({
     borderWidth: 1,
     borderColor: theme.colors.hairlineStrong,
   },
+  // Sin esto el degradado mide todo el texto, la tarjeta lo recorta y el
+  // scroll no tiene nada que desplazar: «Aceptar» queda fuera de la vista.
+  body: { flexShrink: 1 },
   header: {
     flexDirection: "row",
     alignItems: "center",

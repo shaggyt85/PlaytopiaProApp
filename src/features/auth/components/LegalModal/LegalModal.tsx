@@ -64,7 +64,7 @@ export function LegalModal({ document, onClose, onAccept, error }: LegalModalPro
         <Pressable style={styles.overlay} onPress={onClose} accessibilityLabel={t("common.close")} />
         {document ? (
           <Animated.View style={[styles.card, { transform: [{ scale }] }]}>
-            <DiagonalGradient colors={theme.gradients.modal}>
+            <DiagonalGradient colors={theme.gradients.modal} style={styles.body}>
               <View style={styles.header}>
                 <Text variant="subtitle" style={styles.title} accessibilityRole="header">
                   {t(`legalDocs.${document}.title`)}
