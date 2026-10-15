@@ -10,7 +10,7 @@ import { versionCheckService } from "@/features/app-update/services/versionCheck
 import { useSessionStore } from "@/shared/store/sessionStore";
 
 jest.mock("@/shared/hooks/useAppReady", () => ({ useAppReady: () => true }));
-jest.mock("@/features/splash", () => ({ AnimatedSplash: () => null }));
+jest.mock("@/features/splash", () => ({ Splash: () => null }));
 jest.mock("expo-splash-screen", () => ({
   preventAutoHideAsync: jest.fn(),
   hideAsync: jest.fn(),

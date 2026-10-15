@@ -5,6 +5,8 @@ import { withAlpha } from "@/shared/utils/color";
 
 // Medidas propias de la composición del splash (no hay token equivalente).
 export const SPLASH_LOGO_SIZE = 120;
+/** Separación del hueco de abajo con el borde (más la zona segura). */
+export const SPLASH_FOOTER_GAP = 40;
 
 const SPLASH_LAYOUT = {
   logoGap: 60,
@@ -12,7 +14,7 @@ const SPLASH_LAYOUT = {
   taglinePaddingX: 20,
 };
 
-const { colors, spacing, radius, typography, shadows } = darkTheme;
+const { colors, spacing, radius, typography, shadows, gutter } = darkTheme;
 
 export const styles = StyleSheet.create({
   // Sin zIndex a propósito: el splash es el último hijo del layout y se pinta
@@ -31,6 +33,12 @@ export const styles = StyleSheet.create({
   },
   textContainer: {
     alignItems: "center",
+  },
+  // El hueco de abajo (la tarjeta de la actualización), con los márgenes de la app.
+  footer: {
+    position: "absolute",
+    left: gutter,
+    right: gutter,
   },
   title: {
     ...typography.display,

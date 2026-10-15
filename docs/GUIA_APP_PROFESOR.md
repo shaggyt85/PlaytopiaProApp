@@ -689,6 +689,12 @@ useQuery({
 - Los textos de los avisos, en `UPDATE_NOTICES` (un aviso nuevo es una entrada). Las notas de la versión de Core no se enseñan.
 - Es igual en desarrollo: en `core-dev`, sin versiones de profesores configuradas, Core contesta `none`. Para probar un aviso, se pone una versión de profesores en `core-dev`.
 
+**El splash espera a la actualización por OTA** (`features/splash`)
+- `expo-updates` busca y descarga la actualización solo al abrir la app (`fallbackToCacheTimeout: 0`). La app no lanza descargas: lee su estado con `useUpdates()`, con el progreso real (`downloadProgress`).
+- Mientras baja, el splash no se va: `AnimatedSplash` recibe `hold` y, abajo, `OtaProgressCard` («Actualizando Playtopia Pro», el porcentaje y la barra). Al terminar, `useOtaUpdate` reinicia con `Updates.reloadAsync` y la pantalla de recarga (`OTA_RELOAD_OPTIONS`): se entra ya con la versión nueva, sin ver nunca la vieja.
+- Sin actualización, el splash de siempre. Si la pregunta inicial pasa de `OTA_CHECK_TIMEOUT_MS` (5 s) o la descarga falla, se entra con la versión que hay y no se espera más en ese arranque. Empezada la descarga, no hay tope.
+- Piezas: `otaPhase` (función pura), `useOtaUpdate`, `OtaProgressCard` y `Splash`, que las compone y monta el layout raíz. En desarrollo `expo-updates` está apagado: nunca retiene. Igual en la app de alumnos.
+
 ## 9. Formularios
 
 - Todos usan **react-hook-form + `zodResolver`**.

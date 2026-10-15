@@ -513,6 +513,12 @@ const fr: Translations = {
   },
   splash: {
     tagline: "Votre univers sportif",
+    /** La tarjeta del splash mientras baja una actualización por OTA. */
+    ota: {
+      title: "Mise à jour de Playtopia Pro",
+      subtitle: "Vous entrerez dès que ce sera terminé",
+      percent: "{{percent}} %",
+    },
   },
 };
 

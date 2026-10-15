@@ -1,6 +1,7 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react-native";
+import { Text } from "react-native";
 
-import { AnimatedSplash } from "@/features/splash";
+import { AnimatedSplash } from "@/features/splash/components/AnimatedSplash";
 import { SPLASH_TIMING } from "@/features/splash/components/AnimatedSplash/AnimatedSplash";
 
 describe("AnimatedSplash", () => {
@@ -59,5 +60,31 @@ describe("AnimatedSplash", () => {
     const textFullyVisible = textStarts + textFadeIn;
 
     expect(duration - textFullyVisible).toBeGreaterThanOrEqual(500);
+  });
+
+  it("con hold no se va al cumplirse la duración, y se va en cuanto se suelta", () => {
+    const onFinish = jest.fn();
+    const { rerender } = render(<AnimatedSplash onFinish={onFinish} duration={3000} hold />);
+
+    act(() => {
+      jest.advanceTimersByTime(3000 + 400 + 100);
+    });
+    expect(onFinish).not.toHaveBeenCalled();
+
+    rerender(<AnimatedSplash onFinish={onFinish} duration={3000} hold={false} />);
+    act(() => {
+      jest.advanceTimersByTime(400 + 100);
+    });
+    expect(onFinish).toHaveBeenCalledTimes(1);
+  });
+
+  it("pinta abajo lo que recibe (la tarjeta de la actualización)", () => {
+    render(
+      <AnimatedSplash onFinish={jest.fn()}>
+        <Text>Actualizando</Text>
+      </AnimatedSplash>,
+    );
+
+    expect(screen.getByText("Actualizando")).toBeTruthy();
   });
 });

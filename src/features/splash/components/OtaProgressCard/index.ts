@@ -1,0 +1,1 @@
+export { OtaProgressCard } from "./OtaProgressCard";

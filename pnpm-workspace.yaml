@@ -21,7 +21,7 @@ overrides:
   react-native-worklets: 0.10.1
   "@react-native/metro-config": 0.86.3
 
-# Excepción aprobada por Robert (26-sep-2026; 1.9.0 el 29-sep-2026; 1.10.0 el 6-oct-2026): @playtopia/icons es la librería
+# Excepción aprobada por Robert (26-sep-2026; 1.9.0 el 29-sep-2026; 1.10.0 el 6-oct-2026; 1.11.0 el 16-oct-2026): @playtopia/icons es la librería
 # propia, publicada desde su workflow con procedencia verificada. Solo esta versión.
 minimumReleaseAgeExclude:
-  - '@playtopia/icons@1.10.0'
+  - '@playtopia/icons@1.11.0'

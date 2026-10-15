@@ -1,22 +1,31 @@
-import { memo, useEffect, useRef } from "react";
+import { memo, useCallback, useEffect, useRef, type ReactNode } from "react";
 import {
   Animated,
   Text,
   useWindowDimensions,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { BrandBackground } from "@/shared/components/BrandBackground";
 import { BrandLogo } from "@/shared/components/BrandLogo";
 import { t } from "@/shared/config/i18n";
 
-import { SPLASH_LOGO_SIZE, styles } from "./AnimatedSplash.styles";
+import { SPLASH_FOOTER_GAP, SPLASH_LOGO_SIZE, styles } from "./AnimatedSplash.styles";
 
 interface AnimatedSplashProps {
   /** Ya está pintado: es el momento de ocultar el splash nativo. */
   onReady?: () => void;
   onFinish: () => void;
   duration?: number;
+  /**
+   * Mientras sea true, al cumplirse `duration` el splash se queda (p. ej. con
+   * una actualización bajando) y se desvanece en cuanto pase a false. Una vez
+   * empezado el desvanecimiento, ya no se para.
+   */
+  hold?: boolean;
+  /** Lo que se pinta abajo, encima del fondo (la tarjeta de la actualización). */
+  children?: ReactNode;
 }
 
 /**
@@ -41,14 +50,22 @@ export const SPLASH_TIMING = {
 /**
  * Splash de marca que se monta encima de la app al abrirla:
  * el logo cae girando y rebota tres veces, aparece "PLAYTOPIA" con su lema
- * y todo se desvanece al cumplirse `duration`.
+ * y todo se desvanece al cumplirse `duration`, o más tarde si `hold` lo retiene.
  */
 export const AnimatedSplash = memo(function AnimatedSplash({
   onReady,
   onFinish,
   duration = SPLASH_TIMING.duration,
+  hold = false,
+  children,
 }: AnimatedSplashProps) {
   const { height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  // Lo último que se sabe de `hold`, para el temporizador del final.
+  const holdRef = useRef(hold);
+  holdRef.current = hold;
+  const timeUp = useRef(false);
+  const fading = useRef(false);
 
   // El logo arranca por encima de la pantalla; se fija al montar para que un
   // giro del dispositivo no reinicie la animación.
@@ -61,6 +78,25 @@ export const AnimatedSplash = memo(function AnimatedSplash({
   // Opaco desde el primer frame: sustituye al splash nativo (mismo `BRAND.night`)
   // sin dejar ver lo que hay debajo. Solo se desvanece al terminar.
   const backgroundOpacity = useRef(new Animated.Value(1)).current;
+
+  // Desvanecerse y avisar. Una sola vez: empezado, ya no se para.
+  const fadeOut = useCallback(() => {
+    if (fading.current) return;
+    fading.current = true;
+    Animated.parallel(
+      [logoOpacity, textOpacity, backgroundOpacity].map((value) =>
+        Animated.timing(value, {
+          toValue: 0,
+          duration: SPLASH_TIMING.fadeOut,
+          useNativeDriver: true,
+        }),
+      ),
+    ).start(({ finished }) => {
+      if (finished) onFinish();
+    });
+  }, [logoOpacity, textOpacity, backgroundOpacity, onFinish]);
+  const fadeOutRef = useRef(fadeOut);
+  fadeOutRef.current = fadeOut;
 
   useEffect(() => {
     // Un rebote: sube `altura` y vuelve, con un "aplastado" de escala al tocar.
@@ -133,18 +169,10 @@ export const AnimatedSplash = memo(function AnimatedSplash({
       ]),
     ]).start();
 
+    // Al cumplirse `duration` se va, salvo que `hold` lo retenga.
     const finishTimer = setTimeout(() => {
-      Animated.parallel(
-        [logoOpacity, textOpacity, backgroundOpacity].map((value) =>
-          Animated.timing(value, {
-            toValue: 0,
-            duration: SPLASH_TIMING.fadeOut,
-            useNativeDriver: true,
-          }),
-        ),
-      ).start(({ finished }) => {
-        if (finished) onFinish();
-      });
+      timeUp.current = true;
+      if (!holdRef.current) fadeOutRef.current();
     }, duration);
 
     return () => {
@@ -167,9 +195,13 @@ export const AnimatedSplash = memo(function AnimatedSplash({
     textOpacity,
     textTranslateY,
     backgroundOpacity,
-    onFinish,
     duration,
   ]);
+
+  // Retenido al cumplirse `duration`: se va en cuanto se suelta.
+  useEffect(() => {
+    if (timeUp.current && !hold) fadeOut();
+  }, [hold, fadeOut]);
 
   return (
     <Animated.View
@@ -219,6 +251,9 @@ export const AnimatedSplash = memo(function AnimatedSplash({
           </Animated.View>
         </View>
 
+        {children ? (
+          <View style={[styles.footer, { bottom: insets.bottom + SPLASH_FOOTER_GAP }]}>{children}</View>
+        ) : null}
       </BrandBackground>
     </Animated.View>
   );

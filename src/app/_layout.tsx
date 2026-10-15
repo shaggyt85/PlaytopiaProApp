@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { useCallback, useState } from "react";
 
 import { AppUpdateGate } from "@/features/app-update";
-import { AnimatedSplash } from "@/features/splash";
+import { Splash } from "@/features/splash";
 import { AppProviders } from "@/shared/components/AppProviders";
 import { initSentry, wrapWithSentry } from "@/shared/config/sentry";
 import { useAppReady } from "@/shared/hooks/useAppReady";
@@ -62,7 +62,7 @@ function RootLayout() {
         </Stack>
       </AppUpdateGate>
       {showSplash && (
-        <AnimatedSplash onReady={hideNativeSplash} onFinish={handleSplashFinish} />
+        <Splash onReady={hideNativeSplash} onFinish={handleSplashFinish} />
       )}
     </AppProviders>
   );

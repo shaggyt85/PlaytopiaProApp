@@ -524,6 +524,12 @@ const es = {
   },
   splash: {
     tagline: "Tu universo deportivo",
+    /** La tarjeta del splash mientras baja una actualización por OTA. */
+    ota: {
+      title: "Actualizando Playtopia Pro",
+      subtitle: "Entrarás en cuanto termine",
+      percent: "{{percent}} %",
+    },
   },
 };
 
