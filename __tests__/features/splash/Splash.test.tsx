@@ -1,7 +1,7 @@
 import { act, cleanup, render, screen } from "@testing-library/react-native";
 import { useUpdates } from "expo-updates";
 
-import { SPLASH_TIMING } from "@/features/splash/components/AnimatedSplash/AnimatedSplash";
+import { SPLASH_TIMING } from "@/features/splash/components/AnimatedSplash/AnimatedSplash.animation";
 import { Splash } from "@/features/splash";
 
 jest.mock("expo-updates", () => ({

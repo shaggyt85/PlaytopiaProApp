@@ -1,8 +1,8 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react-native";
-import { Text } from "react-native";
+import { AccessibilityInfo, Text } from "react-native";
 
 import { AnimatedSplash } from "@/features/splash/components/AnimatedSplash";
-import { SPLASH_TIMING } from "@/features/splash/components/AnimatedSplash/AnimatedSplash";
+import { SPLASH_TIMING } from "@/features/splash/components/AnimatedSplash/AnimatedSplash.animation";
 
 describe("AnimatedSplash", () => {
   beforeEach(() => {
@@ -53,13 +53,19 @@ describe("AnimatedSplash", () => {
     expect(onReady).toHaveBeenCalledTimes(1);
   });
 
-  it("el título cabe en la duración: se ve completo al menos medio segundo", () => {
-    const { fall, bounces, pauseBeforeText, textFadeIn, duration } = SPLASH_TIMING;
-    const textStarts =
-      fall + bounces.reduce((total, [, subida]) => total + 2 * subida, 0) + pauseBeforeText;
-    const textFullyVisible = textStarts + textFadeIn;
+  it("con «reducir movimiento», el logo y el texto están quietos en su sitio", async () => {
+    jest.spyOn(AccessibilityInfo, "isReduceMotionEnabled").mockResolvedValue(true);
+    render(<AnimatedSplash onFinish={jest.fn()} />);
+    await act(async () => {});
+    // Reanimated pinta el cambio en el siguiente frame.
+    act(() => {
+      jest.advanceTimersByTime(16);
+    });
 
-    expect(duration - textFullyVisible).toBeGreaterThanOrEqual(500);
+    expect(screen.getByTestId("splash-logo")).toHaveAnimatedStyle({
+      transform: [{ translateY: 0 }, { scale: 1 }, { rotate: "0deg" }],
+    });
+    expect(screen.getByTestId("splash-text")).toHaveAnimatedStyle({ transform: [{ translateY: 0 }] });
   });
 
   it("con hold no se va al cumplirse la duración, y se va en cuanto se suelta", () => {
