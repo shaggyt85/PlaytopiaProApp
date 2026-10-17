@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
 
-import { FieldError } from "@/shared/components/FieldError";
+import { FormField } from "@/shared/components/FormField";
 import { Text } from "@/shared/components/Text";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
@@ -42,8 +42,7 @@ export function PhoneInput({
   const countryName = countryByCode(country)?.names[locale] ?? country;
 
   return (
-    <View style={styles.container}>
-      <Text>{label}</Text>
+    <FormField label={label} error={error}>
       <View style={styles.row}>
         <Pressable
           onPress={() => setPickerOpen(true)}
@@ -72,7 +71,6 @@ export function PhoneInput({
           testID="phone-input-field"
         />
       </View>
-      <FieldError message={error} />
 
       <CountryPickerModal
         visible={pickerOpen}
@@ -83,6 +81,6 @@ export function PhoneInput({
         }}
         onClose={() => setPickerOpen(false)}
       />
-    </View>
+    </FormField>
   );
 }

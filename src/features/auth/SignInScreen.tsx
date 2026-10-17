@@ -1,9 +1,7 @@
-import { Controller } from "react-hook-form";
-
 import { Button } from "@/shared/components/Button";
+import { ControlledField } from "@/shared/components/ControlledField";
 import { EmailInput } from "@/shared/components/EmailInput";
 import { FormError } from "@/shared/components/FormError";
-import { useFieldErrorText } from "@/shared/hooks/useFieldErrorText";
 
 import { AuthLayout, LegalFooter, PendingTermsModal } from "./components";
 import { useSignInFlow } from "./hooks";
@@ -14,16 +12,15 @@ import { useSignInFlow } from "./hooks";
  * la pantalla solo pinta.
  */
 export function SignInScreen() {
-  const fieldError = useFieldErrorText();
   const { form, submit, onEmailEdited, editable, errorText, button, pendingTokens, dismissPendingTerms } =
     useSignInFlow();
 
   return (
     <AuthLayout testID="sign-in-screen">
-      <Controller
+      <ControlledField
         control={form.control}
         name="email"
-        render={({ field: { onChange, onBlur, value } }) => (
+        render={({ value, onChange, onBlur, error }) => (
           <EmailInput
             returnKeyType="done"
             editable={editable}
@@ -34,7 +31,7 @@ export function SignInScreen() {
               onEmailEdited();
             }}
             onSubmitEditing={submit}
-            error={fieldError(form.formState.errors.email?.message)}
+            error={error}
           />
         )}
       />

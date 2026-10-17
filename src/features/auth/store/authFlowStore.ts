@@ -25,3 +25,6 @@ export const useAuthFlowStore = create<AuthFlowState>((set) => ({
   setCheckedEmail: (email, facts) => set({ email, ...facts }),
   reset: () => set(EMPTY),
 }));
+
+/** El email que dejó el paso anterior: el valor inicial de los formularios del acceso. */
+export const rememberedEmail = (): string => useAuthFlowStore.getState().email;

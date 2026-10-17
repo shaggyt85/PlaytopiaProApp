@@ -15,4 +15,13 @@ describe("PasswordInput", () => {
     fireEvent.press(screen.getByRole("button", { name: "Ocultar contraseña" }));
     expect(campo().props.secureTextEntry).toBe(true);
   });
+
+  it("trae la etiqueta y el ejemplo de la contraseña; la confirmación pone la suya", () => {
+    const { rerender } = render(<PasswordInput />);
+    expect(screen.getByText("Contraseña")).toBeTruthy();
+    expect(screen.getByLabelText("Contraseña").props.placeholder).toBeTruthy();
+
+    rerender(<PasswordInput label="Confirmar contraseña" />);
+    expect(screen.getByText("Confirmar contraseña")).toBeTruthy();
+  });
 });

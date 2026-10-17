@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { View } from "react-native";
 
+import { ControlledField } from "@/shared/components/ControlledField";
 import { DataState } from "@/shared/components/DataState";
 import { Input } from "@/shared/components/Input";
 import { SectionLabel } from "@/shared/components/SectionLabel";
-import { useFieldErrorText } from "@/shared/hooks/useFieldErrorText";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TeacherSport } from "@/shared/schemas/teacherProfile.schema";
 
@@ -45,14 +45,13 @@ export function ProfessionalEditor({ profile, onDone }: ProfileEditorProps) {
 function ProfessionalFormFields({ profile, catalog, onDone }: ProfileEditorProps & { catalog: readonly TeacherSport[] }) {
   const styles = useStyles();
   const { t } = useTranslation();
-  const fieldError = useFieldErrorText();
   const { save, saving, error } = useEditorSave(useUpdateProfile(), onDone);
   const form = useForm<ProfessionalForm>({
     resolver: zodResolver(ProfessionalFormSchema),
     mode: "onTouched",
     defaultValues: professionalDefaults(profile, catalog),
   });
-  const { control, formState } = form;
+  const { control } = form;
 
   const submit = form.handleSubmit((values) => save(toProfessionalRequest(values)));
 
@@ -66,17 +65,17 @@ function ProfessionalFormFields({ profile, catalog, onDone }: ProfileEditorProps
     >
       <View style={styles.field}>
         <SectionLabel label={t("profile.professional.years")} />
-        <Controller
+        <ControlledField
           control={control}
           name="experienceYears"
-          render={({ field: { value, onChange } }) => <YearsStepper value={value} onChange={onChange} />}
+          render={({ value, onChange, error }) => <YearsStepper value={value} onChange={onChange} />}
         />
       </View>
 
-      <Controller
+      <ControlledField
         control={control}
         name="description"
-        render={({ field: { value, onChange, onBlur } }) => (
+        render={({ value, onChange, onBlur, error }) => (
           <Input
             variant="solid"
             multiline
@@ -85,17 +84,17 @@ function ProfessionalFormFields({ profile, catalog, onDone }: ProfileEditorProps
             onChangeText={onChange}
             onBlur={onBlur}
             maxLength={DESCRIPTION_MAX_LENGTH}
-            error={fieldError(formState.errors.description?.message)}
+            error={error}
           />
         )}
       />
 
       <View style={styles.field}>
         <SectionLabel label={t("profile.professional.specialties")} />
-        <Controller
+        <ControlledField
           control={control}
           name="sports"
-          render={({ field: { value, onChange } }) => (
+          render={({ value, onChange, error }) => (
             <SpecialtyPicker catalog={catalog} value={value} onChange={onChange} />
           )}
         />

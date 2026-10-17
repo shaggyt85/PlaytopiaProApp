@@ -1,6 +1,6 @@
 import { changeLanguage } from "@/shared/config/i18n";
 import { HttpError } from "@/shared/services/HttpError";
-import { getErrorMessage } from "@/shared/utils/getErrorMessage";
+import { errorMessageOrNull, getErrorMessage } from "@/shared/utils/getErrorMessage";
 
 const problem = (type: string, status: number) =>
   HttpError.fromResponse(status, { type, status, detail: "prosa interna de Core" });
@@ -59,5 +59,13 @@ describe("getErrorMessage", () => {
     expect(getErrorMessage(HttpError.network())).toBe(
       "No connection. Check your network and try again.",
     );
+  });
+});
+
+describe("errorMessageOrNull", () => {
+  it("sin error, nada; con él, su texto", () => {
+    expect(errorMessageOrNull(null)).toBeNull();
+    expect(errorMessageOrNull(undefined)).toBeNull();
+    expect(errorMessageOrNull(HttpError.network())).toBe(getErrorMessage(HttpError.network()));
   });
 });

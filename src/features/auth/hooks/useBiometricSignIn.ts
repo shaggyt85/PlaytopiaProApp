@@ -2,16 +2,19 @@ import { useMutation } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import type { TranslationKey } from "@/shared/locales";
 import {
   isRefreshRejected,
   requestTokenRefresh,
   type SessionTokens,
 } from "@/shared/services/tokenRefresh";
-import { getErrorMessage } from "@/shared/utils/getErrorMessage";
+import { errorMessageOrNull } from "@/shared/utils/getErrorMessage";
+import { ignoreRejection } from "@/shared/utils/ignoreRejection";
 
 import { completeSignIn, type SignInOutcome } from "../services/completeSignIn";
 import { biometricService, type IBiometricService } from "../services/biometricService";
 import { sameEmail } from "../utils/email";
+import { firstError } from "../utils/signInMode";
 
 import { useBiometricStatus } from "./useBiometricStatus";
 
@@ -27,6 +30,13 @@ type Attempt =
   | { status: "expired" }
   /** Sin red: la biometría se conserva. */
   | { status: "offline" };
+
+/** El texto de cada resultado que se enseña; los demás (entró, canceló) no dicen nada. */
+const RESULT_MESSAGE: Partial<Record<Attempt["status"], TranslationKey>> = {
+  failed: "auth.biometric.failed",
+  expired: "auth.biometric.expired",
+  offline: "errors.network",
+};
 
 interface Deps {
   service: IBiometricService;
@@ -80,17 +90,13 @@ export function useBiometricSignIn({ service, refresh }: Deps = defaultDeps) {
   );
 
   const result = attempt.data;
-  const message = attempt.error
-    ? getErrorMessage(attempt.error)
-    : tooManyFailures
-      ? t("auth.biometric.tooManyAttempts")
-      : result?.status === "failed"
-        ? t("auth.biometric.failed")
-        : result?.status === "expired"
-          ? t("auth.biometric.expired")
-          : result?.status === "offline"
-            ? t("errors.network")
-            : null;
+  const resultText = result ? RESULT_MESSAGE[result.status] : undefined;
+  // El primero que haya: el error, el «demasiados intentos» y el del resultado.
+  const message = firstError(
+    errorMessageOrNull(attempt.error),
+    tooManyFailures && t("auth.biometric.tooManyAttempts"),
+    resultText && t(resultText),
+  );
 
   return {
     /** Ya se sabe si hay biometría y qué email tiene guardado. */
@@ -98,7 +104,7 @@ export function useBiometricSignIn({ service, refresh }: Deps = defaultDeps) {
     available,
     savedEmail,
     canUseFor,
-    signIn: () => attempt.mutateAsync().catch(() => undefined),
+    signIn: () => ignoreRejection(attempt.mutateAsync()),
     isPending: attempt.isPending,
     message,
     /** Tokens de una entrada a la que le faltan los términos vigentes. */

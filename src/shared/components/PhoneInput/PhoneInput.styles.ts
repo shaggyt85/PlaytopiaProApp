@@ -1,4 +1,4 @@
-import { solidField } from "@/shared/config/theme";
+import { fieldInvalid, solidField } from "@/shared/config/theme";
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
 // La misma píldora sólida que los campos del registro.
@@ -9,7 +9,6 @@ export const useStyles = makeStyles((theme) => {
   const pill = solidField(theme);
 
   return {
-    container: { gap: theme.spacing.sm },
     row: { flexDirection: "row", alignItems: "center", gap: theme.spacing.sm },
     country: {
       ...pill,
@@ -28,6 +27,6 @@ export const useStyles = makeStyles((theme) => {
       paddingHorizontal: theme.spacing.md,
       color: theme.colors.text,
     },
-    fieldError: { borderColor: theme.colors.danger },
+    fieldError: fieldInvalid(theme),
   };
 });

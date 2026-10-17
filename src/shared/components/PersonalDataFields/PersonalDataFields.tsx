@@ -1,11 +1,11 @@
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
+import { ControlledField } from "@/shared/components/ControlledField";
 import { DateInput } from "@/shared/components/DateInput";
 import { EmailInput } from "@/shared/components/EmailInput";
 import { GenderSelector } from "@/shared/components/GenderSelector";
 import { Input } from "@/shared/components/Input";
 import { PhoneInput } from "@/shared/components/PhoneInput";
-import { useFieldErrorText } from "@/shared/hooks/useFieldErrorText";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { PersonalDataFormInput } from "@/shared/schemas/personalData.schema";
 
@@ -23,20 +23,16 @@ interface PersonalDataFieldsProps {
  */
 export function PersonalDataFields({ birthdayRequired = false }: PersonalDataFieldsProps) {
   const { t } = useTranslation();
-  const fieldError = useFieldErrorText();
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext<PersonalDataFormInput>();
+  const { control } = useFormContext<PersonalDataFormInput>();
   // Hasta hoy mismo: nadie nace en el futuro.
   const today = new Date();
 
   return (
     <>
-      <Controller
+      <ControlledField
         control={control}
         name="firstName"
-        render={({ field: { onChange, onBlur, value } }) => (
+        render={({ value, onChange, onBlur, error }) => (
           <Input
             variant="solid"
             label={t("personalData.firstNameLabel")}
@@ -47,15 +43,15 @@ export function PersonalDataFields({ birthdayRequired = false }: PersonalDataFie
             value={value}
             onChangeText={onChange}
             onBlur={onBlur}
-            error={fieldError(errors.firstName?.message)}
+            error={error}
           />
         )}
       />
 
-      <Controller
+      <ControlledField
         control={control}
         name="lastName"
-        render={({ field: { onChange, onBlur, value } }) => (
+        render={({ value, onChange, onBlur, error }) => (
           <Input
             variant="solid"
             label={t("personalData.lastNameLabel")}
@@ -66,50 +62,50 @@ export function PersonalDataFields({ birthdayRequired = false }: PersonalDataFie
             value={value}
             onChangeText={onChange}
             onBlur={onBlur}
-            error={fieldError(errors.lastName?.message)}
+            error={error}
           />
         )}
       />
 
-      <Controller
+      <ControlledField
         control={control}
         name="email"
-        render={({ field: { onChange, onBlur, value } }) => (
+        render={({ value, onChange, onBlur, error }) => (
           <EmailInput
             variant="solid"
             value={value}
             onChangeText={onChange}
             onBlur={onBlur}
-            error={fieldError(errors.email?.message)}
+            error={error}
           />
         )}
       />
 
-      <Controller
+      <ControlledField
         control={control}
         name="country"
-        render={({ field: country }) => (
-          <Controller
+        render={(country) => (
+          <ControlledField
             control={control}
             name="phone"
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ value, onChange, onBlur, error }) => (
               <PhoneInput
                 country={country.value}
                 onCountryChange={country.onChange}
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
-                error={fieldError(errors.phone?.message)}
+                error={error}
               />
             )}
           />
         )}
       />
 
-      <Controller
+      <ControlledField
         control={control}
         name="birthday"
-        render={({ field: { onChange, onBlur, value } }) => (
+        render={({ value, onChange, onBlur, error }) => (
           <DateInput
             label={t("personalData.birthdayLabel")}
             value={value}
@@ -117,16 +113,16 @@ export function PersonalDataFields({ birthdayRequired = false }: PersonalDataFie
             onBlur={onBlur}
             maximumDate={today}
             required={birthdayRequired}
-            error={fieldError(errors.birthday?.message)}
+            error={error}
           />
         )}
       />
 
-      <Controller
+      <ControlledField
         control={control}
         name="gender"
-        render={({ field: { onChange, value } }) => (
-          <GenderSelector value={value} onChange={onChange} error={fieldError(errors.gender?.message)} />
+        render={({ value, onChange, error }) => (
+          <GenderSelector value={value} onChange={onChange} error={error} />
         )}
       />
     </>

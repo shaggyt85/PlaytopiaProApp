@@ -1,7 +1,5 @@
-import { View } from "react-native";
-
 import { Checkbox } from "@/shared/components/Checkbox";
-import { FieldError } from "@/shared/components/FieldError";
+import { FormField } from "@/shared/components/FormField";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import { LegalLinks, legalSentence } from "../LegalLinks";
@@ -18,11 +16,10 @@ export function TermsCheckbox({ checked, onChange, error }: TermsCheckboxProps) 
   const { t } = useTranslation();
 
   return (
-    <View>
+    <FormField error={error}>
       <Checkbox checked={checked} onChange={onChange} accessibilityLabel={legalSentence(t)}>
         <LegalLinks variant="label" />
       </Checkbox>
-      <FieldError message={error} />
-    </View>
+    </FormField>
   );
 }

@@ -1,11 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Redirect, useRouter } from "expo-router";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/Button";
+import { ControlledField } from "@/shared/components/ControlledField";
 import { FormError } from "@/shared/components/FormError";
-import { useFieldErrorText } from "@/shared/hooks/useFieldErrorText";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import { ignoreRejection } from "@/shared/utils/ignoreRejection";
 
 import { AuthLayout, PasswordInput, PendingTermsModal } from "./components";
 import { useSignIn } from "./hooks";
@@ -21,13 +22,12 @@ import { passwordErrorText } from "./utils/passwordErrorText";
 export function PasswordScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const fieldError = useFieldErrorText();
   const signIn = useSignIn();
   const pendingTokens = signIn.data?.termsPending ? signIn.data.tokens : null;
   const email = useAuthFlowStore((s) => s.email);
   const isStudent = useAuthFlowStore((s) => s.isStudent);
 
-  const { control, handleSubmit, formState } = useForm<PasswordForm>({
+  const { control, handleSubmit } = useForm<PasswordForm>({
     resolver: zodResolver(PasswordFormSchema),
     defaultValues: { password: "" },
   });
@@ -36,19 +36,17 @@ export function PasswordScreen() {
   if (!email) return <Redirect href="/sign-in" />;
 
   const submit = handleSubmit(async ({ password }) => {
-    await signIn.mutateAsync({ username: email, password }).catch(() => undefined);
+    await ignoreRejection(signIn.mutateAsync({ username: email, password }));
   });
 
   return (
     <AuthLayout subtitle={email} showBackButton testID="password-screen">
 
-      <Controller
+      <ControlledField
         control={control}
         name="password"
-        render={({ field: { onChange, onBlur, value } }) => (
+        render={({ value, onChange, onBlur, error }) => (
           <PasswordInput
-            label={t("auth.password.label")}
-            placeholder={t("auth.password.placeholder")}
             returnKeyType="go"
             value={value}
             onBlur={onBlur}
@@ -57,7 +55,7 @@ export function PasswordScreen() {
               signIn.reset();
             }}
             onSubmitEditing={submit}
-            error={fieldError(formState.errors.password?.message)}
+            error={error}
           />
         )}
       />

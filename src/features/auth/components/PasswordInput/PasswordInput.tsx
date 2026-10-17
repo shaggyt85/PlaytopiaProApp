@@ -8,7 +8,10 @@ import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import { useStyles } from "./PasswordInput.styles";
 
-type PasswordInputProps = Omit<InputProps, "secureTextEntry" | "rightAccessory">;
+type PasswordInputProps = Omit<InputProps, "secureTextEntry" | "rightAccessory" | "label"> & {
+  /** Por defecto, «Contraseña» (la confirmación del registro pone la suya). */
+  label?: string;
+};
 
 /** Campo de contraseña con botón para mostrarla u ocultarla. */
 export function PasswordInput(props: PasswordInputProps) {
@@ -24,6 +27,8 @@ export function PasswordInput(props: PasswordInputProps) {
       autoCorrect={false}
       textContentType="password"
       autoComplete="password"
+      label={t("auth.password.label")}
+      placeholder={t("auth.password.placeholder")}
       {...props}
       secureTextEntry={!visible}
       rightAccessory={

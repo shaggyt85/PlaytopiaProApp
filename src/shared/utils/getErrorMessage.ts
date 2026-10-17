@@ -26,3 +26,5 @@ export function getErrorMessage(error: unknown): string {
   return hasTranslation(byStatus) ? i18n.t(byStatus) : t("errors.unknown");
 }
 
+/** El texto de un error que puede no haberlo: `null` si no lo hay (lo que pinta `FormError`). */
+export const errorMessageOrNull = (error: unknown): string | null => (error ? getErrorMessage(error) : null);

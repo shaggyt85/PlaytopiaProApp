@@ -316,3 +316,6 @@ export const solidField = (theme: Theme) =>
   }) as const;
 export type ThemeColor = keyof Theme["colors"];
 export type TextVariant = keyof Theme["typography"];
+
+/** El borde de un campo con error. */
+export const fieldInvalid = (theme: Theme) => ({ borderColor: theme.colors.danger }) as const;

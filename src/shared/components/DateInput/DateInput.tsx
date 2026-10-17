@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Modal, Platform, Pressable, View } from "react-native";
 
 import { Button } from "@/shared/components/Button";
-import { FieldError } from "@/shared/components/FieldError";
+import { FormField } from "@/shared/components/FormField";
 import { Text } from "@/shared/components/Text";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
@@ -83,11 +83,7 @@ export function DateInput({
   };
 
   return (
-    <View style={styles.container}>
-      <Text variant="emphasis">
-        {label}
-        {required ? <Text color="danger"> *</Text> : null}
-      </Text>
+    <FormField label={label} labelVariant="emphasis" required={required} error={error}>
       <Pressable
         onPress={open}
         accessibilityRole="button"
@@ -101,7 +97,6 @@ export function DateInput({
         </Text>
         <Ionicons name="calendar-outline" size={20} color={theme.colors.option} />
       </Pressable>
-      <FieldError message={error} />
 
       {Platform.OS === "ios" ? (
         <Modal visible={draft !== null} transparent animationType="slide" onRequestClose={() => closeIos(false)}>
@@ -133,6 +128,6 @@ export function DateInput({
           </View>
         </Modal>
       ) : null}
-    </View>
+    </FormField>
   );
 }

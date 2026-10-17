@@ -1,20 +1,21 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/Button";
+import { ControlledField } from "@/shared/components/ControlledField";
 import { EmailInput } from "@/shared/components/EmailInput";
 import { FormError } from "@/shared/components/FormError";
 import { Text } from "@/shared/components/Text";
-import { useFieldErrorText } from "@/shared/hooks/useFieldErrorText";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TranslationKey } from "@/shared/locales";
-import { getErrorMessage } from "@/shared/utils/getErrorMessage";
+import { errorMessageOrNull } from "@/shared/utils/getErrorMessage";
+import { ignoreRejection } from "@/shared/utils/ignoreRejection";
 
 import { AuthLayout } from "./components";
 import { usePasswordRecovery } from "./hooks";
 import { EmailFormSchema, type EmailForm } from "./schemas/auth.schema";
-import { useAuthFlowStore } from "./store/authFlowStore";
+import { rememberedEmail, useAuthFlowStore } from "./store/authFlowStore";
 
 /**
  * A qué viene el profesor: a recuperar una contraseña que olvidó, o a crear la
@@ -51,19 +52,18 @@ const RECOVERY_COPY: Record<
 export function PasswordRecoveryScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const fieldError = useFieldErrorText();
   const recovery = usePasswordRecovery();
   const needsPasswordSetup = useAuthFlowStore((s) => s.needsPasswordSetup);
   const copy = RECOVERY_COPY[needsPasswordSetup ? "setup" : "recovery"];
 
   const { control, handleSubmit, formState } = useForm<EmailForm>({
     resolver: zodResolver(EmailFormSchema),
-    defaultValues: { email: needsPasswordSetup ? useAuthFlowStore.getState().email : "" },
+    defaultValues: { email: needsPasswordSetup ? rememberedEmail() : "" },
   });
 
   const submit = handleSubmit(async ({ email }) => {
     // El error queda en recovery.error y se pinta abajo.
-    await recovery.mutateAsync(email).catch(() => undefined);
+    await ignoreRejection(recovery.mutateAsync(email));
   });
 
   // Mismo mensaje exista o no la cuenta: Core siempre responde igual.
@@ -93,10 +93,10 @@ export function PasswordRecoveryScreen() {
         {t(copy.subtitle)}
       </Text>
 
-      <Controller
+      <ControlledField
         control={control}
         name="email"
-        render={({ field: { onChange, onBlur, value } }) => (
+        render={({ value, onChange, onBlur, error }) => (
           <EmailInput
             returnKeyType="send"
             value={value}
@@ -106,12 +106,12 @@ export function PasswordRecoveryScreen() {
               recovery.reset();
             }}
             onSubmitEditing={submit}
-            error={fieldError(formState.errors.email?.message)}
+            error={error}
           />
         )}
       />
 
-      <FormError message={recovery.error ? getErrorMessage(recovery.error) : null} />
+      <FormError message={errorMessageOrNull(recovery.error)} />
 
       <Button
         title={t("auth.passwordRecovery.submit")}

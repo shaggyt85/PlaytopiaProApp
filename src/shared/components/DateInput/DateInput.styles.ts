@@ -1,3 +1,4 @@
+import { fieldInvalid } from "@/shared/config/theme";
 import { makeStyles } from "@/shared/hooks/makeStyles";
 import { withAlpha } from "@/shared/utils/color";
 
@@ -6,7 +7,6 @@ import { withAlpha } from "@/shared/utils/color";
 const FIELD_PADDING = 14;
 
 export const useStyles = makeStyles((theme) => ({
-  container: { gap: theme.spacing.sm },
   field: {
     flexDirection: "row",
     alignItems: "center",
@@ -18,7 +18,7 @@ export const useStyles = makeStyles((theme) => ({
     borderColor: "transparent",
     backgroundColor: theme.colors.glass,
   },
-  fieldError: { borderColor: theme.colors.danger },
+  fieldError: fieldInvalid(theme),
   value: { flex: 1 },
   backdrop: {
     flex: 1,

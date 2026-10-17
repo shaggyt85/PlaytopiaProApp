@@ -4,7 +4,6 @@ import { makeStyles } from "@/shared/hooks/makeStyles";
 const OPTION_PADDING = 14;
 
 export const useStyles = makeStyles((theme) => ({
-  container: { gap: theme.spacing.sm },
   options: { flexDirection: "row", gap: theme.spacing.sm, marginBottom: theme.spacing.xs },
   option: {
     flex: 1,

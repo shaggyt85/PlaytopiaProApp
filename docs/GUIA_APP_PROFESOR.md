@@ -948,6 +948,12 @@ Si algo pasa a usarse en una segunda pantalla, se mueve a `shared/<su tipo>/` y 
 - Lo que decide un error concreto (el 401 de la contraseña son credenciales incorrectas), en `utils/` (`passwordErrorText`), no en la pantalla.
 - La sesión se tipa por su interfaz (`ISessionService`); los hooks piden solo lo que usan de un servicio (`Pick`).
 
+**Formularios** (revisión de DRY, 17-oct-2026, la misma que en la app de alumnos):
+
+- Cada campo con `ControlledField` (el `Controller` que lee el error de su campo y lo traduce): nada de `fieldError(errors.x?.message)` ni `useFieldErrorText` en las pantallas.
+- Un campo nuevo se compone con `FormField` (etiqueta, campo y error).
+- Al enviar: `ignoreRejection(mutation.mutateAsync(...))` (el error queda en la mutación), `errorMessageOrNull(mutation.error)` para `FormError` y `rememberedEmail()` para el email del paso anterior.
+
 ---
 
 ## 19. Publicación

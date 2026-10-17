@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconLoTrash2 } from "@playtopia/icons/react-native";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
+import { ControlledField } from "@/shared/components/ControlledField";
 import { Input } from "@/shared/components/Input";
 import { Text } from "@/shared/components/Text";
-import { useFieldErrorText } from "@/shared/hooks/useFieldErrorText";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import { useDeleteAccount } from "../../hooks/useDeleteAccount";
@@ -25,7 +25,6 @@ import type { ProfileEditorProps } from "../ProfileEditorSheet/profileEditors";
  */
 export function DeleteAccountEditor({ onDone }: ProfileEditorProps) {
   const { t } = useTranslation();
-  const fieldError = useFieldErrorText();
   const { save, saving, error } = useEditorSave(useDeleteAccount(), onDone);
   const form = useForm<DeleteAccountForm>({
     resolver: zodResolver(DeleteAccountFormSchema),
@@ -55,10 +54,10 @@ export function DeleteAccountEditor({ onDone }: ProfileEditorProps) {
       testID="delete-account-editor"
     >
       <Text color="textSecondary">{t("profile.deleteAccount.warning")}</Text>
-      <Controller
+      <ControlledField
         control={form.control}
         name="reason"
-        render={({ field: { value, onChange, onBlur } }) => (
+        render={({ value, onChange, onBlur, error }) => (
           <Input
             variant="solid"
             multiline
@@ -67,7 +66,7 @@ export function DeleteAccountEditor({ onDone }: ProfileEditorProps) {
             onChangeText={onChange}
             onBlur={onBlur}
             maxLength={REASON_MAX_LENGTH}
-            error={fieldError(form.formState.errors.reason?.message)}
+            error={error}
           />
         )}
       />

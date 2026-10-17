@@ -1,6 +1,7 @@
 import { session } from "@/shared/services/session";
 import type { SessionTokens } from "@/shared/services/tokenRefresh";
-import { getErrorMessage } from "@/shared/utils/getErrorMessage";
+import { errorMessageOrNull } from "@/shared/utils/getErrorMessage";
+import { ignoreRejection } from "@/shared/utils/ignoreRejection";
 
 import { useAcceptTerms } from "../../hooks/useAcceptTerms";
 import { LegalModal } from "../LegalModal";
@@ -24,9 +25,9 @@ export function PendingTermsModal({ tokens, onDismiss }: PendingTermsModalProps)
     <LegalModal
       document={tokens ? "terms" : null}
       onAccept={async () => {
-        if (tokens) await accept.mutateAsync(tokens).catch(() => undefined);
+        if (tokens) await ignoreRejection(accept.mutateAsync(tokens));
       }}
-      error={accept.error ? getErrorMessage(accept.error) : null}
+      error={errorMessageOrNull(accept.error)}
       onClose={() => {
         accept.reset();
         session.end();

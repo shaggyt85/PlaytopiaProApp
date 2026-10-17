@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { TextInput, View, type TextInputProps } from "react-native";
 
-import { FieldError } from "@/shared/components/FieldError";
+import { FormField } from "@/shared/components/FormField";
 import { Text } from "@/shared/components/Text";
 import { useTheme } from "@/shared/hooks/useTheme";
 
@@ -38,8 +38,7 @@ export function Input({
   const theme = useTheme();
 
   return (
-    <View style={styles.container}>
-      <Text>{label}</Text>
+    <FormField label={label} error={error}>
       <View
         style={[
           styles.field,
@@ -64,7 +63,6 @@ export function Input({
           {`${rest.value?.length ?? 0}/${rest.maxLength}`}
         </Text>
       ) : null}
-      <FieldError message={error} />
-    </View>
+    </FormField>
   );
 }

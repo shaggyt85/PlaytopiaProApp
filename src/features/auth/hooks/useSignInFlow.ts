@@ -5,10 +5,11 @@ import { useForm, useWatch } from "react-hook-form";
 
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { useSessionStore } from "@/shared/store/sessionStore";
-import { getErrorMessage } from "@/shared/utils/getErrorMessage";
+import { errorMessageOrNull } from "@/shared/utils/getErrorMessage";
+import { ignoreRejection } from "@/shared/utils/ignoreRejection";
 
 import { EmailFormSchema, type EmailForm } from "../schemas/auth.schema";
-import { useAuthFlowStore } from "../store/authFlowStore";
+import { rememberedEmail, useAuthFlowStore } from "../store/authFlowStore";
 import { firstError, SIGN_IN_BUTTON_TITLE, signInMode, type SignInMode } from "../utils/signInMode";
 import { signInNextStep, type SignInNextStep } from "../utils/signInNextStep";
 
@@ -49,7 +50,7 @@ export function useSignInFlow() {
 
   const form = useForm<EmailForm>({
     resolver: zodResolver(EmailFormSchema),
-    defaultValues: { email: useAuthFlowStore.getState().email },
+    defaultValues: { email: rememberedEmail() },
   });
   const { control, handleSubmit, getValues, setValue } = form;
   const useBiometric = biometric.canUseFor(useWatch({ control, name: "email" }));
@@ -74,7 +75,7 @@ export function useSignInFlow() {
   const submit = handleSubmit(async ({ email }) => {
     setNotFound(false);
     // El error queda en checkEmail.error y se pinta.
-    const result = await checkEmail.mutateAsync(email).catch(() => undefined);
+    const result = await ignoreRejection(checkEmail.mutateAsync(email));
     if (!result) return;
     const step = signInNextStep(result);
     // Se guarda siempre: la siguiente pantalla lo muestra ya escrito.
@@ -108,7 +109,7 @@ export function useSignInFlow() {
     errorText: firstError(
       biometric.message,
       notFound && t("auth.signIn.notFound"),
-      checkEmail.error ? getErrorMessage(checkEmail.error) : null,
+      errorMessageOrNull(checkEmail.error),
     ),
     button: { title: t(SIGN_IN_BUTTON_TITLE[mode]), onPress: action[mode], loading: biometric.isPending },
     /** Entrar con biometría también comprueba los términos. */

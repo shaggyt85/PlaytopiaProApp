@@ -1,11 +1,10 @@
-import { solidField } from "@/shared/config/theme";
+import { fieldInvalid, solidField } from "@/shared/config/theme";
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
 // Campo de Playtopia: píldora "cristal" sobre el fondo de marca. El registro
 // usa la misma píldora, sólida y con borde del color primario.
 
 export const useStyles = makeStyles((theme) => ({
-  container: { gap: theme.spacing.sm },
   field: {
     flexDirection: "row",
     alignItems: "center",
@@ -25,7 +24,7 @@ export const useStyles = makeStyles((theme) => ({
     borderRadius: theme.radius.xxl,
   },
   multilineInput: { height: undefined, paddingVertical: theme.spacing.sm + theme.spacing.xs },
-  fieldError: { borderColor: theme.colors.danger },
+  fieldError: fieldInvalid(theme),
   input: {
     ...theme.typography.input,
     flex: 1,

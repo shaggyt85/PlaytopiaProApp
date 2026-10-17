@@ -1,14 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/Button";
+import { ControlledField } from "@/shared/components/ControlledField";
 import { FormError } from "@/shared/components/FormError";
 import { PersonalDataFields } from "@/shared/components/PersonalDataFields";
 import { Text } from "@/shared/components/Text";
-import { useFieldErrorText } from "@/shared/hooks/useFieldErrorText";
 import { useTranslation } from "@/shared/hooks/useTranslation";
-import { getErrorMessage } from "@/shared/utils/getErrorMessage";
+import { errorMessageOrNull } from "@/shared/utils/getErrorMessage";
+import { ignoreRejection } from "@/shared/utils/ignoreRejection";
 
 import { AuthLayout, PasswordInput, TermsCheckbox } from "./components";
 import { useSignUp } from "./hooks";
@@ -18,7 +19,7 @@ import {
   type SignUpForm,
   type SignUpFormInput,
 } from "./schemas/signUp.schema";
-import { useAuthFlowStore } from "./store/authFlowStore";
+import { rememberedEmail } from "./store/authFlowStore";
 
 /**
  * Registro del profesor, igual que el de la app de alumnos (sin documento ni
@@ -31,20 +32,18 @@ import { useAuthFlowStore } from "./store/authFlowStore";
 export function SignUpScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const fieldError = useFieldErrorText();
   const signUp = useSignUp();
 
   const form = useForm<SignUpFormInput, unknown, SignUpForm>({
     resolver: zodResolver(SignUpFormSchema),
     mode: "onTouched",
-    defaultValues: { ...SIGN_UP_DEFAULTS, email: useAuthFlowStore.getState().email },
+    defaultValues: { ...SIGN_UP_DEFAULTS, email: rememberedEmail() },
   });
   const { control, handleSubmit, formState } = form;
-  const { errors } = formState;
 
   const submit = handleSubmit(async (values) => {
     // El error queda en signUp.error y se pinta bajo el botón.
-    const created = await signUp.mutateAsync(values).catch(() => undefined);
+    const created = await ignoreRejection(signUp.mutateAsync(values));
     if (created) router.dismissTo("/sign-in");
   });
 
@@ -57,50 +56,47 @@ export function SignUpScreen() {
 
         <PersonalDataFields birthdayRequired />
 
-        <Controller
+        <ControlledField
           control={control}
           name="password"
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({ value, onChange, onBlur, error }) => (
             <PasswordInput
               variant="solid"
-              label={t("auth.password.label")}
-              placeholder={t("auth.password.placeholder")}
               textContentType="newPassword"
               autoComplete="new-password"
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
-              error={fieldError(errors.password?.message)}
+              error={error}
             />
           )}
         />
 
-        <Controller
+        <ControlledField
           control={control}
           name="confirmPassword"
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({ value, onChange, onBlur, error }) => (
             <PasswordInput
               variant="solid"
               label={t("auth.signUp.confirmPasswordLabel")}
-              placeholder={t("auth.password.placeholder")}
               textContentType="newPassword"
               autoComplete="new-password"
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
-              error={fieldError(errors.confirmPassword?.message)}
+              error={error}
             />
           )}
         />
 
-        <Controller
+        <ControlledField
           control={control}
           name="acceptedTerms"
-          render={({ field: { onChange, value } }) => (
+          render={({ value, onChange, error }) => (
             <TermsCheckbox
               checked={value}
               onChange={onChange}
-              error={fieldError(errors.acceptedTerms?.message)}
+              error={error}
             />
           )}
         />
@@ -113,7 +109,7 @@ export function SignUpScreen() {
           loading={signUp.isPending}
         />
 
-        <FormError message={signUp.error ? getErrorMessage(signUp.error) : null} />
+        <FormError message={errorMessageOrNull(signUp.error)} />
       </FormProvider>
     </AuthLayout>
   );

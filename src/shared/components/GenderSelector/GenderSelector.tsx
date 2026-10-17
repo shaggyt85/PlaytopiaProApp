@@ -1,7 +1,7 @@
 import { Pressable, View } from "react-native";
 
 import { Checkbox } from "@/shared/components/Checkbox";
-import { FieldError } from "@/shared/components/FieldError";
+import { FormField } from "@/shared/components/FormField";
 import { Text } from "@/shared/components/Text";
 import { GENDER, GENDER_OPTIONS, type Gender } from "@/shared/config/gender";
 import { useTranslation } from "@/shared/hooks/useTranslation";
@@ -25,8 +25,7 @@ export function GenderSelector({ value, onChange, error }: GenderSelectorProps) 
   const hidden = value === GENDER.NONE;
 
   return (
-    <View style={styles.container}>
-      <Text>{t("gender.label")}</Text>
+    <FormField label={t("gender.label")} error={error}>
       <View style={styles.options}>
         {GENDER_OPTIONS.map((option) => {
           const selected = value === option.value;
@@ -50,7 +49,6 @@ export function GenderSelector({ value, onChange, error }: GenderSelectorProps) 
       >
         {t("gender.preferNotToSay")}
       </Checkbox>
-      <FieldError message={error} />
-    </View>
+    </FormField>
   );
 }
