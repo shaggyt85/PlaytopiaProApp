@@ -21,12 +21,11 @@ export function SoftUpdateSheet({ visible, storeUrl, onDismiss }: SoftUpdateShee
   return (
     <PromptSheet
       visible={visible}
-      onClose={onDismiss}
+      onDismiss={onDismiss}
       Icon={IconLoSparkles}
       title={t(NOTICE.title)}
       subtitle={t(NOTICE.message)}
       primary={{ title: t(NOTICE.action), onPress: () => openExternalUrl(storeUrl, t) }}
-      secondary={{ title: t("common.notNow"), onPress: onDismiss }}
       testID="soft-update-sheet"
     />
   );

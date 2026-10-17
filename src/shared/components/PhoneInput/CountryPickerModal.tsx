@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { FlatList, Modal, Pressable, TextInput, View } from "react-native";
 
 import { Text } from "@/shared/components/Text";
+import { CloseButton } from "@/shared/components/CloseButton";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
@@ -53,14 +54,7 @@ export function CountryPickerModal({ visible, selected, onSelect, onClose }: Cou
       <View style={styles.container}>
         <View style={styles.header}>
           <Text variant="subtitle">{t("countryPicker.title")}</Text>
-          <Pressable
-            onPress={close}
-            hitSlop={theme.spacing.md}
-            accessibilityRole="button"
-            accessibilityLabel={t("common.close")}
-          >
-            <Text style={styles.close}>✕</Text>
-          </Pressable>
+          <CloseButton onPress={close} />
         </View>
 
         <TextInput

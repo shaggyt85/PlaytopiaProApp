@@ -1,6 +1,5 @@
 import { fieldInvalid } from "@/shared/config/theme";
 import { makeStyles } from "@/shared/hooks/makeStyles";
-import { withAlpha } from "@/shared/utils/color";
 
 // Campo de fecha: cristal, esquinas `md` y 14 de alto
 // alrededor del texto.
@@ -23,7 +22,7 @@ export const useStyles = makeStyles((theme) => ({
   backdrop: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: withAlpha(theme.colors.background, 0.6),
+    backgroundColor: theme.colors.overlay,
   },
   sheet: {
     padding: theme.spacing.md,

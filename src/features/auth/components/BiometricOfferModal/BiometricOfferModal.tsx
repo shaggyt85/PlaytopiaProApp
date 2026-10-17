@@ -53,16 +53,15 @@ export function BiometricOfferModal() {
   return (
     <PromptSheet
       visible={visible}
-      onClose={isEnabling ? noop : dismiss}
+      onDismiss={dismiss}
+      busy={isEnabling}
       Icon={IconLoShield}
       title={t("auth.biometric.offer.title")}
       subtitle={t("auth.biometric.offer.subtitle")}
       primary={{
         title: t(isEnabling ? "auth.biometric.offer.enabling" : "auth.biometric.offer.enable"),
         onPress: activate,
-        loading: isEnabling,
       }}
-      secondary={{ title: t("common.notNow"), onPress: dismiss, disabled: isEnabling }}
     >
       <View style={styles.benefits}>
         {BENEFITS.map(({ Icon, label }) => (
@@ -76,5 +75,3 @@ export function BiometricOfferModal() {
   );
 }
 
-// Mientras se activa no se cierra: el diálogo del sistema está en marcha.
-const noop = () => undefined;

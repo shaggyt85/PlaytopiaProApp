@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
-import { KeyboardAvoidingView, Platform, View } from "react-native";
+import { KeyboardAvoidingView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AppScrollView } from "@/shared/components/AppScrollView";
 import { BackButton } from "@/shared/components/BackButton";
 import { BrandBackground } from "@/shared/components/BrandBackground";
 import { LogoSection } from "@/shared/components/LogoSection";
+import { KEYBOARD_AVOIDING_BEHAVIOR } from "@/shared/config/keyboard";
 
 import { useStyles } from "./AuthLayout.styles";
 
@@ -39,7 +40,7 @@ export function AuthLayout({
       <SafeAreaView style={styles.flex}>
         <KeyboardAvoidingView
           style={styles.flex}
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          behavior={KEYBOARD_AVOIDING_BEHAVIOR}
         >
           <AppScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
             <View style={styles.content}>

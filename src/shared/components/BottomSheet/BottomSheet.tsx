@@ -1,14 +1,14 @@
-import { IconLoX } from "@playtopia/icons/react-native";
 import { BlurView } from "expo-blur";
 import { useEffect, type ReactNode } from "react";
-import { BackHandler, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
+import { BackHandler, KeyboardAvoidingView, Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AppScrollView } from "@/shared/components/AppScrollView";
 import { useBlurTarget } from "@/shared/components/BlurTarget";
-import { IconButton } from "@/shared/components/IconButton";
+import { CloseButton } from "@/shared/components/CloseButton";
 import { useTranslation } from "@/shared/hooks/useTranslation";
+import { KEYBOARD_AVOIDING_BEHAVIOR } from "@/shared/config/keyboard";
 
 import { PANEL_MAX_HEIGHT_RATIO, useStyles } from "./BottomSheet.styles";
 
@@ -17,8 +17,6 @@ const OPEN_MS = 300;
 const CLOSE_MS = 250;
 // El `backdrop-blur-sm` de Lovable.
 const BLUR_INTENSITY = 20;
-// La X de la hoja de Lovable (`h-9 w-9`).
-const CLOSE_SIZE = 36;
 
 export interface BottomSheetProps {
   visible: boolean;
@@ -79,7 +77,7 @@ export function BottomSheet({ visible, onClose, children }: BottomSheetProps) {
           </Animated.View>
           <KeyboardAvoidingView
             style={styles.keyboard}
-            behavior={Platform.OS === "ios" ? "padding" : undefined}
+            behavior={KEYBOARD_AVOIDING_BEHAVIOR}
             pointerEvents="box-none"
             // Modal el envoltorio, que es el hermano del fondo: así el fondo
             // queda oculto al lector de pantalla y allí se cierra con la X.
@@ -98,9 +96,7 @@ export function BottomSheet({ visible, onClose, children }: BottomSheetProps) {
                 {children}
               </AppScrollView>
               {/* Último hijo: se pinta encima por orden, sin zIndex (se desmonta con el panel). */}
-              <View style={styles.close}>
-                <IconButton Icon={IconLoX} size={CLOSE_SIZE} onPress={onClose} accessibilityLabel={t("common.close")} />
-              </View>
+              <CloseButton onPress={onClose} corner />
             </Animated.View>
           </KeyboardAvoidingView>
         </>

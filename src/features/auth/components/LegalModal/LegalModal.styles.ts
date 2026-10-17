@@ -1,3 +1,5 @@
+import { StyleSheet } from "react-native";
+
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
 const CARD_MAX_WIDTH = 400;
@@ -11,11 +13,7 @@ export const useStyles = makeStyles((theme) => ({
     paddingHorizontal: theme.spacing.lg,
   },
   overlay: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
+    ...StyleSheet.absoluteFill,
     backgroundColor: theme.colors.overlay,
   },
   card: {

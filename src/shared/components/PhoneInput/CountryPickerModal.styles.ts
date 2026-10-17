@@ -15,7 +15,6 @@ export const useStyles = makeStyles((theme) => ({
     paddingHorizontal: theme.spacing.lg - theme.spacing.xs,
     marginBottom: theme.spacing.md - theme.spacing.xs,
   },
-  close: { fontSize: FLAG_SIZE, paddingHorizontal: theme.spacing.xs },
   search: {
     ...theme.typography.body,
     height: SEARCH_HEIGHT,

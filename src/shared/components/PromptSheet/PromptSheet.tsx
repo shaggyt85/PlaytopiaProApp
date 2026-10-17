@@ -6,32 +6,37 @@ import { Button } from "@/shared/components/Button";
 import { Text } from "@/shared/components/Text";
 import type { IconComponent } from "@/shared/config/icons";
 import { useTheme } from "@/shared/hooks/useTheme";
+import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import { useStyles } from "./PromptSheet.styles";
 
 /** Lo que dice el icono del círculo (`h-8 w-8`). */
 const ICON = 32;
 
-/** Un botón del panel, con su texto ya traducido. */
+/** El botón de aceptar la oferta, con su texto ya traducido. */
 export interface PromptAction {
   title: string;
   onPress: () => void | Promise<unknown>;
-  loading?: boolean;
-  disabled?: boolean;
 }
+
+// Mientras se hace lo de aceptar, el panel no se cierra.
+const noop = () => undefined;
 
 interface PromptSheetProps {
   visible: boolean;
-  /** La X y tocar fuera. */
-  onClose: () => void;
+  /** Rechazarla: «Ahora no», la X y tocar fuera (las tres son lo mismo). */
+  onDismiss: () => void;
+  /**
+   * Se está haciendo lo de aceptar (el diálogo del sistema abierto): el botón
+   * principal enseña que trabaja, «Ahora no» no se toca y el panel no se cierra.
+   */
+  busy?: boolean;
   Icon: IconComponent;
   /** Ya traducido. */
   title: string;
   /** Ya traducido. */
   subtitle: string;
   primary: PromptAction;
-  /** El de rechazar («Ahora no»), con borde. */
-  secondary?: PromptAction;
   /** Lo propio de cada oferta entre la cabecera y los botones (las ventajas de la biometría). */
   children?: ReactNode;
   testID?: string;
@@ -40,23 +45,25 @@ interface PromptSheetProps {
 /**
  * Un panel que ofrece algo, como el de la biometría del prototipo: el icono en
  * su círculo, el título y el subtítulo centrados, lo propio de la oferta y sus
- * botones. Lo usan la oferta de la biometría y el aviso de versión nueva.
+ * botones: aceptar y «Ahora no», que pone él. Lo usan la oferta de la
+ * biometría y el aviso de versión nueva.
  */
 export function PromptSheet({
   visible,
-  onClose,
+  onDismiss,
+  busy = false,
   Icon,
   title,
   subtitle,
   primary,
-  secondary,
   children,
   testID,
 }: PromptSheetProps) {
   const styles = useStyles();
   const theme = useTheme();
+  const { t } = useTranslation();
   return (
-    <BottomSheet visible={visible} onClose={onClose}>
+    <BottomSheet visible={visible} onClose={busy ? noop : onDismiss}>
       <View style={styles.header} testID={testID}>
         <View style={styles.iconCircle}>
           <Icon size={ICON} color={theme.colors.primary} />
@@ -72,21 +79,8 @@ export function PromptSheet({
       {children ? <View style={styles.body}>{children}</View> : null}
 
       <View style={styles.actions}>
-        <Button
-          title={primary.title}
-          onPress={primary.onPress}
-          loading={primary.loading}
-          disabled={primary.disabled}
-        />
-        {secondary ? (
-          <Button
-            variant="secondary"
-            title={secondary.title}
-            onPress={secondary.onPress}
-            loading={secondary.loading}
-            disabled={secondary.disabled}
-          />
-        ) : null}
+        <Button title={primary.title} onPress={primary.onPress} loading={busy} />
+        <Button variant="secondary" title={t("common.notNow")} onPress={onDismiss} disabled={busy} />
       </View>
     </BottomSheet>
   );

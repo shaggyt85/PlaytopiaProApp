@@ -1,3 +1,5 @@
+import { StyleSheet } from "react-native";
+
 import { makeStyles } from "@/shared/hooks/makeStyles";
 
 // Medidas de la hoja de Lovable (`max-w-md`, `max-h-[88vh]`, barrita `h-1.5 w-10`).
@@ -9,11 +11,7 @@ const HANDLE_HEIGHT = 6;
 
 export const useStyles = makeStyles((theme) => ({
   root: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
+    ...StyleSheet.absoluteFill,
     justifyContent: "flex-end",
     alignItems: "center",
   },
@@ -45,9 +43,4 @@ export const useStyles = makeStyles((theme) => ({
   },
   // El contenido no estira el panel más de lo que necesita.
   content: { flexGrow: 0 },
-  close: {
-    position: "absolute",
-    top: theme.spacing.md,
-    right: theme.spacing.md,
-  },
 }));

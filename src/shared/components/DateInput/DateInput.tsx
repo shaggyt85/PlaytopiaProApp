@@ -98,6 +98,9 @@ export function DateInput({
         <Ionicons name="calendar-outline" size={20} color={theme.colors.option} />
       </Pressable>
 
+      {/* `Modal` y no `BottomSheet`: el campo va dentro de un formulario con
+          scroll, y la hoja tiene que tapar la pantalla entera; un `BottomSheet`
+          se pinta dentro de su contenedor y se montaría en mitad del formulario. */}
       {Platform.OS === "ios" ? (
         <Modal visible={draft !== null} transparent animationType="slide" onRequestClose={() => closeIos(false)}>
           <View style={styles.backdrop}>

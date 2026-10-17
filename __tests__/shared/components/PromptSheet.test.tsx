@@ -7,12 +7,11 @@ import { PromptSheet } from "@/shared/components/PromptSheet";
 describe("PromptSheet", () => {
   const props = () => ({
     visible: true,
-    onClose: jest.fn(),
+    onDismiss: jest.fn(),
     Icon: IconLoSparkles,
     title: "Hay una versión nueva",
     subtitle: "Actualiza para tener lo último",
     primary: { title: "Actualizar", onPress: jest.fn() },
-    secondary: { title: "Ahora no", onPress: jest.fn() },
   });
 
   it("su título como cabecera, el subtítulo y lo propio de la oferta", () => {
@@ -27,7 +26,7 @@ describe("PromptSheet", () => {
     expect(screen.getByText("Acceso instantáneo")).toBeTruthy();
   });
 
-  it("cada botón hace lo suyo", () => {
+  it("aceptar hace lo suyo; «Ahora no» lo rechaza", () => {
     const p = props();
     render(<PromptSheet {...p} />);
 
@@ -35,13 +34,17 @@ describe("PromptSheet", () => {
     fireEvent.press(screen.getByRole("button", { name: "Ahora no" }));
 
     expect(p.primary.onPress).toHaveBeenCalledTimes(1);
-    expect(p.secondary.onPress).toHaveBeenCalledTimes(1);
+    expect(p.onDismiss).toHaveBeenCalledTimes(1);
   });
 
-  it("sin botón secundario, solo el principal", () => {
-    const { secondary: _none, ...p } = props();
-    render(<PromptSheet {...p} />);
+  it("ocupado: aceptar trabaja, «Ahora no» no se toca y tocar fuera no lo cierra", () => {
+    const p = props();
+    render(<PromptSheet {...p} busy />);
 
-    expect(screen.queryByRole("button", { name: "Ahora no" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Actualizar" })).toBeBusy();
+    expect(screen.getByRole("button", { name: "Ahora no" })).toBeDisabled();
+    fireEvent.press(screen.getByTestId("bottom-sheet-backdrop", { includeHiddenElements: true }));
+
+    expect(p.onDismiss).not.toHaveBeenCalled();
   });
 });
