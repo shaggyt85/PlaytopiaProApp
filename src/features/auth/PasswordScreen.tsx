@@ -6,13 +6,12 @@ import { Button } from "@/shared/components/Button";
 import { FormError } from "@/shared/components/FormError";
 import { useFieldErrorText } from "@/shared/hooks/useFieldErrorText";
 import { useTranslation } from "@/shared/hooks/useTranslation";
-import { isHttpError } from "@/shared/services/HttpError";
-import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
 import { AuthLayout, PasswordInput, PendingTermsModal } from "./components";
 import { useSignIn } from "./hooks";
 import { PasswordFormSchema, type PasswordForm } from "./schemas/auth.schema";
 import { useAuthFlowStore } from "./store/authFlowStore";
+import { passwordErrorText } from "./utils/passwordErrorText";
 
 /**
  * Paso 2 del acceso: la contraseña, igual que la app de alumnos. Si entra,
@@ -63,7 +62,7 @@ export function PasswordScreen() {
         )}
       />
 
-      <FormError message={signInErrorText(signIn.error, isStudent, t)} />
+      <FormError message={passwordErrorText(signIn.error, isStudent, t)} />
 
       <Button title={t("auth.password.submit")} onPress={submit} />
       <Button
@@ -75,22 +74,4 @@ export function PasswordScreen() {
       <PendingTermsModal tokens={pendingTokens} onDismiss={signIn.reset} />
     </AuthLayout>
   );
-}
-
-/**
- * En el login, un 401 son credenciales incorrectas (Core no manda un `type`
- * propio). Si el email también es de alumno, se aclara que la contraseña es
- * la de la cuenta de profesor, que es otra.
- */
-function signInErrorText(
-  error: unknown,
-  isStudent: boolean,
-  t: ReturnType<typeof useTranslation>["t"],
-): string | null {
-  if (!error) return null;
-  if (isHttpError(error) && error.status === 401) {
-    const base = t("auth.password.invalidCredentials");
-    return isStudent ? `${base} ${t("auth.password.studentHint")}` : base;
-  }
-  return getErrorMessage(error);
 }

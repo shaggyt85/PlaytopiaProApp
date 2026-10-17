@@ -5,4 +5,5 @@ export { useBiometricStatus } from "./useBiometricStatus";
 export { useCheckEmail } from "./useCheckEmail";
 export { usePasswordRecovery } from "./usePasswordRecovery";
 export { useSignIn } from "./useSignIn";
+export { useSignInFlow } from "./useSignInFlow";
 export { useSignUp } from "./useSignUp";

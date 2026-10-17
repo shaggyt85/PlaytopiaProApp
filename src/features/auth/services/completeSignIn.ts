@@ -2,7 +2,7 @@ import type { QueryClient } from "@tanstack/react-query";
 
 import { getLocale } from "@/shared/config/i18n";
 import { queryClient } from "@/shared/config/queryClient";
-import { session } from "@/shared/services/session";
+import { session, type ISessionService } from "@/shared/services/session";
 import {
   teacherProfileQuery,
   teacherProfileService,
@@ -20,7 +20,7 @@ export interface SignInOutcome {
 }
 
 export interface CompleteSignInDeps {
-  session: Pick<typeof session, "saveTokens" | "start" | "end">;
+  session: Pick<ISessionService, "saveTokens" | "start" | "end">;
   profile: Pick<ITeacherProfileService, "get">;
   cache: Pick<QueryClient, "setQueryData">;
 }

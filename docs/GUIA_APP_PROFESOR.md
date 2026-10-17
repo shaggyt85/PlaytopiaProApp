@@ -941,6 +941,13 @@ Cada fila se trae **solo cuando una pantalla la necesita**, revisada y adaptada,
 
 Si algo pasa a usarse en una segunda pantalla, se mueve a `shared/<su tipo>/` y su test a `__tests__/shared/<su tipo>/`.
 
+**Que la pantalla solo componga** (revisión de SOLID, 17-oct-2026, la misma que en la app de alumnos):
+
+- El flujo de una pantalla (qué hace el botón, qué error se enseña, lo que se lanza solo al abrir) va en un hook de la feature, como `useSignInFlow` del acceso; la pantalla pinta lo que devuelve.
+- Los estados con texto y acción, en mapas (`SIGN_IN_BUTTON_TITLE`, `signInMode`), no en ternarios encadenados; el error que se enseña, con `firstError` si hay varios.
+- Lo que decide un error concreto (el 401 de la contraseña son credenciales incorrectas), en `utils/` (`passwordErrorText`), no en la pantalla.
+- La sesión se tipa por su interfaz (`ISessionService`); los hooks piden solo lo que usan de un servicio (`Pick`).
+
 ---
 
 ## 19. Publicación

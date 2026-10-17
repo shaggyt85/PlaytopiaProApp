@@ -12,6 +12,18 @@ import { decodeSessionClaims } from "@/shared/utils/jwt";
 import { biometricCredentialStore, type IBiometricCredentialStore } from "./biometricCredentialStore";
 import { tokenStorage, type ITokenStorage } from "./tokenStorage";
 
+/** La sesión, como los demás servicios: quien la usa depende de esto, no de la implementación. */
+export interface ISessionService {
+  /** Al arrancar: abre la sesión guardada, si la hay. */
+  restore(): Promise<void>;
+  /** Guarda los tokens sin abrir la sesión (mientras acepta los términos tras el login). */
+  saveTokens(accessToken: string, refreshToken: string): Promise<void>;
+  /** Tras login o registro: guarda los tokens y abre la sesión. `false` si el token no es de un profesor. */
+  start(accessToken: string, refreshToken: string): Promise<boolean>;
+  /** Cierra la sesión (`manual` por defecto, `expired`, `deleted`). */
+  end(reason?: SessionEndReason): Promise<void>;
+}
+
 /**
  * Inicio, recuperación y cierre de la sesión, en un solo sitio.
  *
@@ -27,7 +39,7 @@ export function createSessionService(deps: {
     setAuthenticated: (user: SessionUser) => void;
     setAnonymous: (endReason?: SessionEndReason) => void;
   };
-}) {
+}): ISessionService {
   const end = async (reason: SessionEndReason = "manual"): Promise<void> => {
     await deps.tokens.clearTokens();
     // Cerrar sesión la conserva; dar de baja la cuenta, no.
@@ -92,7 +104,7 @@ export function createSessionService(deps: {
   };
 }
 
-export const session = createSessionService({
+export const session: ISessionService = createSessionService({
   tokens: tokenStorage,
   biometric: biometricCredentialStore,
   queryClient,

@@ -17,7 +17,7 @@ const INITIAL: BiometricStatus = { loaded: false, available: false, savedEmail: 
  * ¿Puede el móvil usar la biometría y para qué email está activada? Se lee una
  * vez al montar. Si falla, cuenta como sin biometría.
  */
-export function useBiometricStatus(service: IBiometricService) {
+export function useBiometricStatus(service: Pick<IBiometricService, "isAvailable" | "savedEmail">) {
   const [status, setStatus] = useState<BiometricStatus>(INITIAL);
 
   useEffect(() => {
