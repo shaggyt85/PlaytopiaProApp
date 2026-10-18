@@ -85,7 +85,7 @@ docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 
 1. Rama `feature/<pantalla>` desde `dev`.
 2. Scalar → ruta en `shared/config/endpoints.ts` → `schemas/` → `services/` (query keys) → `hooks/` (con `CachePolicy`) → `components/` → `<X>Screen.tsx` → `index.ts`.
-3. Ruta en `src/app/`.
+3. Ruta en `src/app/` y, si se navega a ella desde el código, en `ROUTES` (`shared/config/routes.ts`; un test la comprueba contra `src/app/`).
 4. Textos en los 6 idiomas.
 5. Tests en la ruta espejo.
 6. Definition of Done → PR a `dev`.

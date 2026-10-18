@@ -1,7 +1,6 @@
 import { z } from "zod";
 
-/** La ruta de la ficha de un alumno (`src/app/(app)/student/[dbId]/[groupId]/[studentId].tsx`). */
-const STUDENT_DETAIL_PATH = "/student/[dbId]/[groupId]/[studentId]";
+import { ROUTES } from "@/shared/config/routes";
 
 const positiveId = z.coerce.number().int().positive();
 
@@ -21,6 +20,6 @@ export type StudentDetailParams = z.infer<typeof StudentDetailParamsSchema>;
 
 /** A dónde lleva tocar un alumno de un grupo: su ficha. */
 export const studentDetailHref = ({ dbId, groupId, studentId }: StudentDetailParams) => ({
-  pathname: STUDENT_DETAIL_PATH,
+  pathname: ROUTES.studentDetail,
   params: { dbId: String(dbId), groupId: String(groupId), studentId: String(studentId) },
 });

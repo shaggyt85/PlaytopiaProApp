@@ -7,6 +7,7 @@ import { ControlledField } from "@/shared/components/ControlledField";
 import { FormError } from "@/shared/components/FormError";
 import { PersonalDataFields } from "@/shared/components/PersonalDataFields";
 import { Text } from "@/shared/components/Text";
+import { ROUTES } from "@/shared/config/routes";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { errorMessageOrNull } from "@/shared/utils/getErrorMessage";
 import { ignoreRejection } from "@/shared/utils/ignoreRejection";
@@ -44,7 +45,7 @@ export function SignUpScreen() {
   const submit = handleSubmit(async (values) => {
     // El error queda en signUp.error y se pinta bajo el botón.
     const created = await ignoreRejection(signUp.mutateAsync(values));
-    if (created) router.dismissTo("/sign-in");
+    if (created) router.dismissTo(ROUTES.signIn);
   });
 
   return (

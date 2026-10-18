@@ -9,6 +9,7 @@ import { TabScreen } from "@/shared/components/TabScreen";
 import { TabScrollView } from "@/shared/components/TabScrollView";
 import { TeacherAvatar } from "@/shared/components/TeacherAvatar";
 import type { IconComponent } from "@/shared/config/icons";
+import { ROUTES } from "@/shared/config/routes";
 import type { Theme } from "@/shared/config/theme";
 import { useForegroundNow } from "@/shared/hooks/useForegroundNow";
 import { useScheduleClubs } from "@/shared/hooks/useScheduleClubs";
@@ -89,7 +90,7 @@ export function ScheduleScreen() {
           left={
             <TeacherAvatar
               url={profile.data?.avatar}
-              onPress={() => router.navigate("/profile")}
+              onPress={() => router.navigate(ROUTES.profile)}
               accessibilityLabel={t("schedule.myProfile")}
             />
           }

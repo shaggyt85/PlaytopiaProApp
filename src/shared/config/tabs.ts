@@ -2,6 +2,7 @@ import { IconLoCalendarDays, IconLoUser, IconLoUsers } from "@playtopia/icons/re
 import type { Href } from "expo-router";
 
 import type { IconComponent } from "@/shared/config/icons";
+import { ROUTES } from "@/shared/config/routes";
 
 import type { TranslationKey } from "@/shared/locales";
 
@@ -28,9 +29,9 @@ export interface TabItem {
  * basta con devolverla aquí.
  */
 export const TABS = [
-  { name: "index", href: "/", label: "tabs.calendar", Icon: IconLoCalendarDays },
-  { name: "groups", href: "/groups", label: "tabs.groups", Icon: IconLoUsers },
-  { name: "profile", href: "/profile", label: "tabs.profile", Icon: IconLoUser },
+  { name: "index", href: ROUTES.home, label: "tabs.calendar", Icon: IconLoCalendarDays },
+  { name: "groups", href: ROUTES.groups, label: "tabs.groups", Icon: IconLoUsers },
+  { name: "profile", href: ROUTES.profile, label: "tabs.profile", Icon: IconLoUser },
 ] as const satisfies readonly TabItem[];
 
 /**

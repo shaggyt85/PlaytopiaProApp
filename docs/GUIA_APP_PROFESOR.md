@@ -206,6 +206,7 @@ export const profileService: IProfileService = new ProfileService(httpClient);
 
 - Cada dato tiene una sola definición:
   - **ruta de Core**: en `shared/config/endpoints.ts`, agrupada como en Scalar. Es configuración del backend, como la URL base: no se mueve cuando un servicio pasa de una feature a `shared/` o al revés;
+  - **ruta de la app**: en `ROUTES` (`shared/config/routes.ts`), las de `(auth)`, las pestañas (`TABS` la toma de ahí) y las que entran encima, también las de parámetros, que arma cada una su `xDetailHref`. `Href` no comprueba que la ruta exista (la app no usa las rutas tipadas); lo hace `__tests__/shared/config/routes.test.ts` contra los ficheros de `src/app/`, como en la app de alumnos;
   - **tipo**: sale de `z.infer` del schema, sin interfaces duplicadas a mano;
   - **query keys**: en una factory por feature;
   - **textos**: en `shared/locales/`;
@@ -933,7 +934,7 @@ Cada fila se trae **solo cuando una pantalla la necesita**, revisada y adaptada,
    4. `components/`: `<Comp>/<Comp>.tsx`, `<Comp>.styles.ts`, `index.ts`.
    5. `<X>Screen.tsx`: compone hooks y componentes.
    6. `index.ts`: exporta la pantalla y lo que otras partes necesiten.
-4. Ruta en `src/app/` que monta `<X>Screen`.
+4. Ruta en `src/app/` que monta `<X>Screen`, y en `ROUTES` si se navega a ella desde el código.
 5. Textos en los 6 idiomas.
 6. Tests en la ruta espejo de `__tests__/`.
 7. Actualizar la tabla de Endpoints en uso.

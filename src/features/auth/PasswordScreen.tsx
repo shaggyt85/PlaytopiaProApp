@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/shared/components/Button";
 import { ControlledField } from "@/shared/components/ControlledField";
 import { FormError } from "@/shared/components/FormError";
+import { ROUTES } from "@/shared/config/routes";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { ignoreRejection } from "@/shared/utils/ignoreRejection";
 
@@ -33,7 +34,7 @@ export function PasswordScreen() {
   });
 
   // Sin email (se abrió esta ruta directamente) no hay nada que hacer aquí.
-  if (!email) return <Redirect href="/sign-in" />;
+  if (!email) return <Redirect href={ROUTES.signIn} />;
 
   const submit = handleSubmit(async ({ password }) => {
     await ignoreRejection(signIn.mutateAsync({ username: email, password }));
@@ -66,7 +67,7 @@ export function PasswordScreen() {
       <Button
         title={t("auth.password.forgot")}
         variant="link"
-        onPress={() => router.push("/password-recovery")}
+        onPress={() => router.push(ROUTES.passwordRecovery)}
       />
 
       <PendingTermsModal tokens={pendingTokens} onDismiss={signIn.reset} />

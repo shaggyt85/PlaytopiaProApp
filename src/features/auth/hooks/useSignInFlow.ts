@@ -3,6 +3,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
+import { ROUTES } from "@/shared/config/routes";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import { useSessionStore } from "@/shared/store/sessionStore";
 import { errorMessageOrNull } from "@/shared/utils/getErrorMessage";
@@ -67,8 +68,8 @@ export function useSignInFlow() {
 
   // Qué se hace con cada paso: el paso lo decide `signInNextStep`.
   const goTo: Record<SignInNextStep, () => void> = {
-    password: () => router.push("/password"),
-    passwordSetup: () => router.push("/password-recovery"),
+    password: () => router.push(ROUTES.password),
+    passwordSetup: () => router.push(ROUTES.passwordRecovery),
     register: () => setNotFound(true),
   };
 
@@ -89,7 +90,7 @@ export function useSignInFlow() {
   // Qué hace el botón en cada modo.
   const action: Record<SignInMode, () => void> = {
     biometric: signInWithBiometric,
-    register: () => router.push("/sign-up"),
+    register: () => router.push(ROUTES.signUp),
     continue: submit,
   };
   const mode = signInMode({ useBiometric, notFound });

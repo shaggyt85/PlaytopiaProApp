@@ -1,7 +1,6 @@
 import { z } from "zod";
 
-/** La ruta del detalle de un grupo (`src/app/(app)/group/[dbId]/[groupId].tsx`). */
-const GROUP_DETAIL_PATH = "/group/[dbId]/[groupId]";
+import { ROUTES } from "@/shared/config/routes";
 
 const positiveId = z.coerce.number().int().positive();
 
@@ -19,6 +18,6 @@ export type GroupDetailParams = z.infer<typeof GroupDetailParamsSchema>;
 
 /** A dónde lleva tocar un grupo: su detalle, con su escuela y su id. */
 export const groupDetailHref = (dbId: number, groupId: number) => ({
-  pathname: GROUP_DETAIL_PATH,
+  pathname: ROUTES.groupDetail,
   params: { dbId: String(dbId), groupId: String(groupId) },
 });

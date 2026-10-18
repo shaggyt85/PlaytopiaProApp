@@ -7,6 +7,7 @@ import { ControlledField } from "@/shared/components/ControlledField";
 import { EmailInput } from "@/shared/components/EmailInput";
 import { FormError } from "@/shared/components/FormError";
 import { Text } from "@/shared/components/Text";
+import { ROUTES } from "@/shared/config/routes";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { TranslationKey } from "@/shared/locales";
 import { errorMessageOrNull } from "@/shared/utils/getErrorMessage";
@@ -79,7 +80,7 @@ export function PasswordRecoveryScreen() {
         <Text color="textSecondary" align="center">
           {t(copy.sentMessage)}
         </Text>
-        <Button title={t("auth.passwordRecovery.backToLogin")} onPress={() => router.dismissTo("/sign-in")} />
+        <Button title={t("auth.passwordRecovery.backToLogin")} onPress={() => router.dismissTo(ROUTES.signIn)} />
       </AuthLayout>
     );
   }

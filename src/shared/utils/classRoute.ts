@@ -1,9 +1,7 @@
 import { z } from "zod";
 
+import { ROUTES } from "@/shared/config/routes";
 import type { ScheduleClass } from "@/shared/schemas/schedule.schema";
-
-/** La ruta del detalle de una clase (`src/app/(app)/class/[dbId]/[classId].tsx`). */
-const CLASS_DETAIL_PATH = "/class/[dbId]/[classId]";
 
 const positiveId = z.coerce.number().int().positive();
 
@@ -23,6 +21,6 @@ export type ClassDetailParams = z.infer<typeof ClassDetailParamsSchema>;
 
 /** A dónde lleva tocar una clase: su detalle, con su escuela, su id y su fecha. */
 export const classDetailHref = ({ db_id, id, class_date }: Pick<ScheduleClass, "db_id" | "id" | "class_date">) => ({
-  pathname: CLASS_DETAIL_PATH,
+  pathname: ROUTES.classDetail,
   params: { dbId: String(db_id), classId: String(id), date: class_date },
 });
