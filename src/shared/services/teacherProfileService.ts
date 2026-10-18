@@ -63,5 +63,6 @@ export const teacherProfileQuery = (
   queryOptions({
     queryKey: teacherKeys.profile(teacherId, locale),
     queryFn: teacherId === undefined ? skipToken : () => service.get(teacherId),
-    ...CachePolicy.STANDARD,
+    // LIVE: al volver a la app se mira si los términos siguen al día (OpenSessionTermsGate).
+    ...CachePolicy.LIVE,
   });

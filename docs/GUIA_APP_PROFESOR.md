@@ -473,7 +473,10 @@ useQuery({
   - Si Core no guarda la aceptación, el error sale dentro del modal.
   - Si no se puede leer el perfil tras el login, no entra y se borran los tokens.
   - Las piezas, como en la app de alumnos: `useAcceptTerms` es lo común (`accept(teacherId)` hace el PATCH y deja el perfil en la caché; `reject()` olvida el error y cierra la sesión); `useAcceptPendingTerms(tokens)` acepta y abre la sesión con los tokens de ese login; `PendingTermsModal` solo pinta.
-- **Límite conocido:** quien ya tiene la sesión abierta cuando sube la versión no ve el modal hasta su siguiente login. Se cubrirá cuando se pida.
+- **Con la sesión abierta** (como en la app de alumnos): quien ya la tenía abierta cuando sube la versión no vuelve a entrar, así que se miran también al abrir la app y al volver a ella. `useOpenSessionTerms` lee el `terms_version` del perfil (`useTeacherProfile`, que va en `CachePolicy.LIVE` por esto) y `OpenSessionTermsGate`, el último en `(app)/_layout.tsx`, saca el mismo `LegalModal` encima de todo si no son los vigentes.
+  - **Aceptar:** el mismo PATCH; el perfil al día en la caché cierra el modal.
+  - **Cerrar el modal:** cierra la sesión (`session.end()`, como cerrar sesión a mano: la biometría se conserva pero no se lanza sola).
+  - Si no se puede leer el perfil, no se piden: se vuelve a mirar al volver a la app.
 
 ### Recuperación de contraseña
 

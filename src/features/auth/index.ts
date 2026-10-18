@@ -6,3 +6,5 @@ export { SignInScreen } from "./SignInScreen";
 export { SignUpScreen } from "./SignUpScreen";
 // Oferta de activar la biometría tras entrar con contraseña (se monta con la sesión abierta).
 export { BiometricOfferModal } from "./components/BiometricOfferModal";
+// Los términos vigentes con la sesión abierta (se monta encima de todo).
+export { OpenSessionTermsGate } from "./components/OpenSessionTermsGate";

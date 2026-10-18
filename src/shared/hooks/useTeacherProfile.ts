@@ -17,8 +17,10 @@ interface Options<T> {
 
 /**
  * Perfil del profesor con la sesión abierta. Tras entrar ya está en la caché
- * (lo deja el acceso): solo se pide al reabrir la app o al cambiar de idioma
- * (lleva los deportes traducidos por Core). Lo usan el inicio y Perfil.
+ * (lo deja el acceso): se pide al reabrir la app, al volver a ella pasados
+ * 30 s (`LIVE`: así se ven los términos nuevos con la sesión abierta) o al
+ * cambiar de idioma (lleva los deportes traducidos por Core). Lo usan el
+ * inicio, Perfil y los términos con la sesión abierta.
  */
 export function useTeacherProfile<T = TeacherProfile>({ select, service = teacherProfileService }: Options<T> = {}) {
   const teacherId = useSessionUserId();

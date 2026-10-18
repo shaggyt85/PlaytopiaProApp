@@ -7,10 +7,17 @@ import AppLayout from "@/app/(app)/_layout";
 import { biometricService } from "@/features/auth/services/biometricService";
 import { useBiometricOfferStore } from "@/features/auth/store/biometricOfferStore";
 import { createQueryClient } from "@/shared/config/queryClient";
+import { teacherProfileService } from "@/shared/services/teacherProfileService";
 import { useSessionStore } from "@/shared/store/sessionStore";
+
+import { teacherProfile } from "../../helpers/authFactories";
 
 jest.mock("@/features/auth/services/biometricService", () => ({
   biometricService: require("../../helpers/biometricServiceMock").createBiometricServiceMock(),
+}));
+jest.mock("@/shared/services/teacherProfileService", () => ({
+  ...jest.requireActual("@/shared/services/teacherProfileService"),
+  teacherProfileService: { get: jest.fn(), update: jest.fn() },
 }));
 
 // En la app lo pone AppProviders, en el layout raíz.
@@ -29,6 +36,7 @@ describe("layout con sesión", () => {
     useBiometricOfferStore.getState().clear();
     jest.mocked(biometricService.isAvailable).mockResolvedValue(true);
     jest.mocked(biometricService.savedEmail).mockResolvedValue(null);
+    jest.mocked(teacherProfileService.get).mockResolvedValue(teacherProfile());
   });
 
   it("pinta la pantalla sin panel si no hay oferta de biometría", async () => {
@@ -45,5 +53,13 @@ describe("layout con sesión", () => {
     renderRouter(routes, { initialUrl: "/", wrapper });
 
     expect(await screen.findByText("Activa el acceso con biometría")).toBeTruthy();
+  });
+
+  it("si los términos cambiaron con la sesión abierta, los pide encima de la pantalla", async () => {
+    jest.mocked(teacherProfileService.get).mockResolvedValue(teacherProfile("2020-01-01"));
+    renderRouter(routes, { initialUrl: "/", wrapper });
+
+    expect(await screen.findByText("Términos y Condiciones")).toBeTruthy();
+    expect(screen.getByText("Pantalla de inicio")).toBeTruthy();
   });
 });

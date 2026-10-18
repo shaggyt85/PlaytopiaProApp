@@ -42,12 +42,12 @@ describe("TeacherProfileService", () => {
     expect(teacherKeys.profile(42, "es")).toEqual(["teacher", "profile", 42, "es"]);
   });
 
-  it("la receta de la query: su clave, cómo se pide y la caché STANDARD", async () => {
+  it("la receta de la query: su clave, cómo se pide y la caché LIVE (los términos al volver a la app)", async () => {
     const service = { get: jest.fn().mockResolvedValue("perfil") };
     const query = teacherProfileQuery(42, "es", service);
 
     expect(query.queryKey).toEqual(["teacher", "profile", 42, "es"]);
-    expect(query.staleTime).toBe(CachePolicy.STANDARD.staleTime);
+    expect(query.staleTime).toBe(CachePolicy.LIVE.staleTime);
     expect(query.queryFn).not.toBe(skipToken);
   });
 

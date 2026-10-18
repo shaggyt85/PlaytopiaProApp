@@ -4,6 +4,7 @@ export { useBiometricOffer } from "./useBiometricOffer";
 export { useBiometricSignIn } from "./useBiometricSignIn";
 export { useBiometricStatus } from "./useBiometricStatus";
 export { useCheckEmail } from "./useCheckEmail";
+export { useOpenSessionTerms } from "./useOpenSessionTerms";
 export { usePasswordRecovery } from "./usePasswordRecovery";
 export { useSignIn } from "./useSignIn";
 export { useSignInFlow } from "./useSignInFlow";
