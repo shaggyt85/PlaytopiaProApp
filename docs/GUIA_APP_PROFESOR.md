@@ -466,12 +466,13 @@ useQuery({
 
 ### Aceptación de términos
 
-- `TERMS_VERSION` (`features/auth/schemas/signUp.schema.ts`) es la fecha de la versión vigente. Los documentos están en la web; se sube a mano cuando cambian.
+- `TERMS_VERSION` (`features/auth/config/terms.ts`) es la fecha de la versión vigente, la misma que en la app de alumnos. Los documentos están en la web; se sube a mano cuando cambian. Si un perfil la tiene lo dice `hasCurrentTerms` (`utils/terms.ts`).
 - Si al hacer login el profesor no tiene la versión vigente, `useSignIn` guarda los tokens con `session.saveTokens()` **sin abrir la sesión**, y la pantalla de contraseña abre el `LegalModal` de los términos con el botón «Aceptar» (prop `onAccept`).
   - **Aceptar:** `PATCH /api/UserTeacher/{id}` con `terms_version` (Core sella `accepted_terms_at`), el perfil que devuelve a la caché y `session.start()`.
   - **Cerrar el modal:** no entra; `session.end()` borra los tokens.
   - Si Core no guarda la aceptación, el error sale dentro del modal.
   - Si no se puede leer el perfil tras el login, no entra y se borran los tokens.
+  - Las piezas, como en la app de alumnos: `useAcceptTerms` es lo común (`accept(teacherId)` hace el PATCH y deja el perfil en la caché; `reject()` olvida el error y cierra la sesión); `useAcceptPendingTerms(tokens)` acepta y abre la sesión con los tokens de ese login; `PendingTermsModal` solo pinta.
 - **Límite conocido:** quien ya tiene la sesión abierta cuando sube la versión no ve el modal hasta su siguiente login. Se cubrirá cuando se pida.
 
 ### Recuperación de contraseña

@@ -1,9 +1,7 @@
-import { session } from "@/shared/services/session";
 import type { SessionTokens } from "@/shared/services/tokenRefresh";
 import { errorMessageOrNull } from "@/shared/utils/getErrorMessage";
-import { ignoreRejection } from "@/shared/utils/ignoreRejection";
 
-import { useAcceptTerms } from "../../hooks/useAcceptTerms";
+import { useAcceptPendingTerms } from "../../hooks/useAcceptPendingTerms";
 import { LegalModal } from "../LegalModal";
 
 interface PendingTermsModalProps {
@@ -16,21 +14,18 @@ interface PendingTermsModalProps {
 /**
  * Modal de los términos tras entrar sin tenerlos aceptados, con contraseña o
  * con biometría. Al aceptarlos se abre la sesión; al cerrarlo, no se entra y
- * se borran los tokens de ese login.
+ * se borran los tokens de ese login (`useAcceptPendingTerms`). Solo pinta.
  */
 export function PendingTermsModal({ tokens, onDismiss }: PendingTermsModalProps) {
-  const accept = useAcceptTerms();
+  const { acceptAndEnter, reject, error } = useAcceptPendingTerms(tokens);
 
   return (
     <LegalModal
       document={tokens ? "terms" : null}
-      onAccept={async () => {
-        if (tokens) await ignoreRejection(accept.mutateAsync(tokens));
-      }}
-      error={errorMessageOrNull(accept.error)}
+      onAccept={acceptAndEnter}
+      error={errorMessageOrNull(error)}
       onClose={() => {
-        accept.reset();
-        session.end();
+        reject();
         onDismiss();
       }}
     />

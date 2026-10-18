@@ -1,4 +1,4 @@
-import { TERMS_VERSION } from "@/features/auth/schemas/signUp.schema";
+import { TERMS_VERSION } from "@/features/auth/config/terms";
 import { completeSignIn, type CompleteSignInDeps } from "@/features/auth/services/completeSignIn";
 import { HttpError } from "@/shared/services/HttpError";
 import { teacherKeys } from "@/shared/services/teacherProfileService";

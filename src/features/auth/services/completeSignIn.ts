@@ -11,7 +11,7 @@ import {
 import type { SessionTokens } from "@/shared/services/tokenRefresh";
 import { decodeSessionClaims } from "@/shared/utils/jwt";
 
-import { TERMS_VERSION } from "../schemas/signUp.schema";
+import { hasCurrentTerms } from "../utils/terms";
 
 export interface SignInOutcome {
   tokens: SessionTokens;
@@ -45,7 +45,7 @@ export async function completeSignIn(
     if (teacherId === undefined) throw new Error("El access token no dice qué profesor es.");
     const profile = await deps.profile.get(teacherId);
     deps.cache.setQueryData(teacherProfileQuery(teacherId, getLocale()).queryKey, profile);
-    if (profile.terms_version !== TERMS_VERSION) return { tokens, termsPending: true };
+    if (!hasCurrentTerms(profile)) return { tokens, termsPending: true };
   } catch (error) {
     // Sin saber si los aceptó no se entra: se borran los tokens guardados.
     await deps.session.end();

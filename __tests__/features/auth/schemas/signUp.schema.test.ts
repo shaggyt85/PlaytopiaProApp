@@ -1,10 +1,5 @@
-import {
-  SignUpFormSchema,
-  SignUpResponseSchema,
-  TERMS_VERSION,
-  toSignUpRequest,
-  type SignUpFormInput,
-} from "@/features/auth/schemas/signUp.schema";
+import { TERMS_VERSION } from "@/features/auth/config/terms";
+import { SignUpFormSchema, SignUpResponseSchema, toSignUpRequest, type SignUpFormInput } from "@/features/auth/schemas/signUp.schema";
 import { GENDER } from "@/shared/config/gender";
 
 const valid: SignUpFormInput = {

@@ -1,32 +1,44 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useTranslation } from "@/shared/hooks/useTranslation";
-import { session } from "@/shared/services/session";
+import { session, type ISessionService } from "@/shared/services/session";
 import {
   teacherProfileQuery,
   teacherProfileService,
   type ITeacherProfileService,
 } from "@/shared/services/teacherProfileService";
-import type { SessionTokens } from "@/shared/services/tokenRefresh";
-import { decodeSessionClaims } from "@/shared/utils/jwt";
+import { ignoreRejection } from "@/shared/utils/ignoreRejection";
 
-import { TERMS_VERSION } from "../schemas/signUp.schema";
+import { TERMS_VERSION } from "../config/terms";
+
+export interface AcceptTermsOptions {
+  service?: Pick<ITeacherProfileService, "update">;
+  sessionService?: Pick<ISessionService, "end">;
+}
 
 /**
- * Acepta la versión vigente de los términos (Core sella la fecha) y abre la
- * sesión con los tokens con los que se entró. El profesor sale del token. El
- * perfil que devuelve Core queda en la caché para el inicio.
+ * Lo que comparten los casos de los términos, como en la app de alumnos:
+ * aceptar la versión vigente (Core sella la fecha) o cerrarlos sin aceptar. El
+ * perfil que devuelve Core queda en la caché para el inicio. Cerrarlos sin
+ * aceptar olvida el error y termina la sesión (o borra los tokens del acceso
+ * que aún no la abrió). Qué pasa tras aceptar lo decide quien lo usa.
  */
-export function useAcceptTerms(profile: Pick<ITeacherProfileService, "update"> = teacherProfileService) {
+export function useAcceptTerms({ service = teacherProfileService, sessionService = session }: AcceptTermsOptions = {}) {
   const queryClient = useQueryClient();
   const { locale } = useTranslation();
-  return useMutation({
-    mutationFn: async (tokens: SessionTokens) => {
-      const teacherId = decodeSessionClaims(tokens.access_token)?.userId;
-      if (teacherId === undefined) throw new Error("El access token no dice qué profesor es.");
-      const updated = await profile.update(teacherId, { terms_version: TERMS_VERSION });
-      queryClient.setQueryData(teacherProfileQuery(teacherId, locale).queryKey, updated);
-      await session.start(tokens.access_token, tokens.refresh_token);
-    },
+  const mutation = useMutation({
+    mutationFn: (teacherId: number) => service.update(teacherId, { terms_version: TERMS_VERSION }),
+    onSuccess: (profile, teacherId) =>
+      queryClient.setQueryData(teacherProfileQuery(teacherId, locale).queryKey, profile),
   });
+
+  /** `true` si Core los aceptó; si no, el error queda en `error`. */
+  const accept = async (teacherId: number) => (await ignoreRejection(mutation.mutateAsync(teacherId))) !== undefined;
+
+  const reject = () => {
+    mutation.reset();
+    void sessionService.end();
+  };
+
+  return { accept, reject, error: mutation.error };
 }

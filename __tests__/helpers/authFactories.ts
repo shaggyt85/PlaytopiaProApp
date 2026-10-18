@@ -1,4 +1,4 @@
-import { TERMS_VERSION } from "@/features/auth/schemas/signUp.schema";
+import { TERMS_VERSION } from "@/features/auth/config/terms";
 import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 
 import { createTestJwt, teacherClaims } from "./jwt";

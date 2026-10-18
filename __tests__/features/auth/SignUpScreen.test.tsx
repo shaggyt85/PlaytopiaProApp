@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react-native";
 
-import { TERMS_VERSION } from "@/features/auth/schemas/signUp.schema";
+import { TERMS_VERSION } from "@/features/auth/config/terms";
 import { signUpService } from "@/features/auth/services/signUpService";
 import { SignUpScreen } from "@/features/auth/SignUpScreen";
 import { useAuthFlowStore } from "@/features/auth/store/authFlowStore";

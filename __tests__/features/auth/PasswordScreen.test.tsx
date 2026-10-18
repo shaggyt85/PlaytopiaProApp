@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
 
 import { PasswordScreen } from "@/features/auth/PasswordScreen";
-import { TERMS_VERSION } from "@/features/auth/schemas/signUp.schema";
+import { TERMS_VERSION } from "@/features/auth/config/terms";
 import { signInService } from "@/features/auth/services/signInService";
 import { useAuthFlowStore } from "@/features/auth/store/authFlowStore";
 import { HttpError } from "@/shared/services/HttpError";

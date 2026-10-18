@@ -1,3 +1,4 @@
+export { useAcceptPendingTerms } from "./useAcceptPendingTerms";
 export { useAcceptTerms } from "./useAcceptTerms";
 export { useBiometricOffer } from "./useBiometricOffer";
 export { useBiometricSignIn } from "./useBiometricSignIn";

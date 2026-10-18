@@ -3,7 +3,8 @@ import { act, renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 
 import { useSignUp } from "@/features/auth/hooks/useSignUp";
-import { SignUpFormSchema, TERMS_VERSION } from "@/features/auth/schemas/signUp.schema";
+import { TERMS_VERSION } from "@/features/auth/config/terms";
+import { SignUpFormSchema } from "@/features/auth/schemas/signUp.schema";
 import type { ISignUpService } from "@/features/auth/services/signUpService";
 import { createQueryClient } from "@/shared/config/queryClient";
 import { GENDER } from "@/shared/config/gender";
