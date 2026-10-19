@@ -1,4 +1,4 @@
-import { groupsFromAgenda } from "@/features/groups/utils/groupsFromAgenda";
+import { groupsFromSchedule } from "@/features/groups/utils/groupsFromSchedule";
 import { CLASS_TYPE } from "@/shared/schemas/schedule.schema";
 
 import { scheduleClass } from "../../../helpers/scheduleFactories";
@@ -17,9 +17,9 @@ const session = (id: number, group_id: number | null, date: string, extra = {}) 
     ...extra,
   });
 
-describe("groupsFromAgenda", () => {
+describe("groupsFromSchedule", () => {
   it("un grupo por grupo de Core, con su próxima clase y los días en que tiene clase", () => {
-    const groups = groupsFromAgenda(
+    const groups = groupsFromSchedule(
       [
         session(3, 11, "2026-10-12"), // lunes
         session(1, 11, "2026-10-05"), // lunes, hoy
@@ -35,13 +35,13 @@ describe("groupsFromAgenda", () => {
   });
 
   it("las clases que ya empezaron no cuentan: un grupo sin ninguna por delante no sale", () => {
-    const groups = groupsFromAgenda([session(1, 11, "2026-10-04"), session(2, 12, "2026-10-06")], NOW);
+    const groups = groupsFromSchedule([session(1, 11, "2026-10-04"), session(2, 12, "2026-10-06")], NOW);
 
     expect(groups.map((g) => g.next.id)).toEqual([2]);
   });
 
   it("una clase de una sola sesión también es un grupo; una plaza de recuperación, no", () => {
-    const groups = groupsFromAgenda(
+    const groups = groupsFromSchedule(
       [session(1, 20, "2026-10-06"), session(90, 21, "2026-10-06", { class_type: CLASS_TYPE.RECOVERY })],
       NOW,
     );
@@ -50,7 +50,7 @@ describe("groupsFromAgenda", () => {
   });
 
   it("los grupos son de cada escuela, y una clase antigua sin grupo es el suyo propio", () => {
-    const groups = groupsFromAgenda(
+    const groups = groupsFromSchedule(
       [
         session(1, 11, "2026-10-06", { db_id: 4 }),
         session(2, 11, "2026-10-07", { db_id: 5 }),
@@ -64,7 +64,7 @@ describe("groupsFromAgenda", () => {
   });
 
   it("ordenados por su próxima clase, la más cercana antes", () => {
-    const groups = groupsFromAgenda([session(1, 11, "2026-10-09"), session(2, 12, "2026-10-06")], NOW);
+    const groups = groupsFromSchedule([session(1, 11, "2026-10-09"), session(2, 12, "2026-10-06")], NOW);
 
     expect(groups.map((g) => g.next.id)).toEqual([2, 1]);
   });

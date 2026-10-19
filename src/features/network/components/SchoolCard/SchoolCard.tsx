@@ -11,7 +11,7 @@ import { Text } from "@/shared/components/Text";
 import { useReduceMotion } from "@/shared/hooks/useReduceMotion";
 import { useTheme } from "@/shared/hooks/useTheme";
 import type { SchoolCard as SchoolCardData } from "@/shared/schemas/schoolCard.schema";
-import { sedeKey } from "@/shared/utils/sedeKey";
+import { branchKey } from "@/shared/utils/branchKey";
 
 import { schoolLocation } from "../../utils/schoolLocation";
 
@@ -50,7 +50,7 @@ export const SchoolCard = memo(function SchoolCard({ card, testID }: SchoolCardP
           style={StyleSheet.absoluteFill}
           contentFit="cover"
           cachePolicy="memory-disk"
-          recyclingKey={sedeKey(card)}
+          recyclingKey={branchKey(card)}
           transition={reduceMotion ? 0 : IMAGE_FADE_MS}
           onError={() => setFailedUrl(card.background_url)}
           accessible={false}

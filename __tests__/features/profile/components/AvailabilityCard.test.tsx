@@ -29,11 +29,11 @@ describe("AvailabilityCard", () => {
     jest.mocked(profileDetailsService.get).mockResolvedValue(profileDetails());
     renderWithProviders(<AvailabilityCard />);
 
-    const sede = within(await screen.findByTestId("availability-7-70"));
+    const branch = within(await screen.findByTestId("availability-7-70"));
     expect(screen.getByRole("header", { name: "Disponibilidad" })).toBeTruthy();
-    expect(await sede.findByText("Indoor Centro")).toBeTruthy();
-    expect(sede.getByText("2 días · 5 h semanales")).toBeTruthy();
-    expect(sede.queryByText(/16:00/)).toBeNull();
+    expect(await branch.findByText("Indoor Centro")).toBeTruthy();
+    expect(branch.getByText("2 días · 5 h semanales")).toBeTruthy();
+    expect(branch.queryByText(/16:00/)).toBeNull();
   });
 
   it("una sede sin semana, dice que aún no la ha indicado", async () => {

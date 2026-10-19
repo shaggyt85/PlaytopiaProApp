@@ -2,7 +2,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, screen } from "@testing-library/react-native";
 import { AccessibilityInfo } from "react-native";
 
-import { ScheduleAgenda } from "@/features/schedule/components/ScheduleAgenda";
+import { MySchedule } from "@/features/schedule/components/MySchedule";
 import { darkTheme } from "@/shared/config/theme";
 import { scheduleService } from "@/shared/services/scheduleService";
 
@@ -37,13 +37,13 @@ const wednesday = scheduleClass({ id: 1, class_date: "2026-11-18", class_time: "
 const friday = scheduleClass({ id: 2, class_date: "2026-11-20", class_time: "18:00:00" });
 
 function setup(now = NOW) {
-  return renderWithProviders(<ScheduleAgenda now={now} today={TODAY} nextClassId={1} clubOf={clubOf} />);
+  return renderWithProviders(<MySchedule now={now} today={TODAY} nextClassId={1} clubOf={clubOf} />);
 }
 const pressView = (name: string) => fireEvent.press(screen.getByRole("tab", { name }));
 /** El texto del centro de la barra (‹ Hoy ›). */
 const current = () => screen.getByTestId("schedule-today").props.accessibilityLabel as string;
 
-describe("ScheduleAgenda", () => {
+describe("MySchedule", () => {
   beforeEach(() => {
     signInTeacher();
     mockDayRenders.count = 0;
@@ -133,7 +133,7 @@ describe("ScheduleAgenda", () => {
 
     rerender(
       <QueryClientProvider client={client}>
-        <ScheduleAgenda now={NOW + 60_000} today={TODAY} nextClassId={1} clubOf={clubOf} />
+        <MySchedule now={NOW + 60_000} today={TODAY} nextClassId={1} clubOf={clubOf} />
       </QueryClientProvider>,
     );
 

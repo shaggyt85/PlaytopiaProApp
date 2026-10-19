@@ -9,8 +9,8 @@ export function withClubWeek(details: ProfileDetails | undefined, saved: ClubAva
   if (!details) return details;
   return {
     ...details,
-    availability: details.availability.map((sede) =>
-      sede.db_id === saved.db_id && sede.club_id === saved.club_id ? { ...sede, week: saved.week } : sede,
+    availability: details.availability.map((branch) =>
+      branch.db_id === saved.db_id && branch.club_id === saved.club_id ? { ...branch, week: saved.week } : branch,
     ),
   };
 }

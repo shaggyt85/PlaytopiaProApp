@@ -32,7 +32,7 @@ const weekdayOf = (date: string) => (new Date(wallAsUtcMs(date)).getUTCDay() + 6
  * - Una clase antigua sin grupo (`group_id` a `null`) cuenta como su propio grupo.
  * - Cada grupo, con su próxima clase; ordenados por ella, la más cercana antes.
  */
-export function groupsFromAgenda(classes: readonly ScheduleClass[], nowMs: number): TeacherGroup[] {
+export function groupsFromSchedule(classes: readonly ScheduleClass[], nowMs: number): TeacherGroup[] {
   const byGroup = new Map<string, ScheduleClass[]>();
   for (const c of classes) {
     if (c.class_type === CLASS_TYPE.RECOVERY || startOf(c) <= nowMs) continue;

@@ -3,7 +3,7 @@ import { classTimeRange } from "@/shared/utils/classTimeRange";
 import { capitalize, formatWeekdayName, formatWeekdayShortDayMonth } from "@/shared/utils/formatDate";
 import { joinParts } from "@/shared/utils/joinParts";
 
-import type { TeacherGroup } from "./groupsFromAgenda";
+import type { TeacherGroup } from "./groupsFromSchedule";
 
 /**
  * Cuándo es un grupo, con la hora de su próxima clase: sus días de la semana

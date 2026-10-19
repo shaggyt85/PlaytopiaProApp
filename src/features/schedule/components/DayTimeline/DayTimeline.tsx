@@ -29,7 +29,7 @@ interface DayTimelineProps {
   now: number;
   /** La próxima clase según Core (`next_class`), para su marca. */
   nextClassId: number | undefined;
-  clubOf: (sede: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
+  clubOf: (branch: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
 }
 
 /** Dónde va una tarjeta: el inicio de su grupo en la escala y su sitio dentro de él. */

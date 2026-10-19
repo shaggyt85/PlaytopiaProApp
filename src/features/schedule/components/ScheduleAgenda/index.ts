@@ -1,1 +1,0 @@
-export { ScheduleAgenda } from "./ScheduleAgenda";

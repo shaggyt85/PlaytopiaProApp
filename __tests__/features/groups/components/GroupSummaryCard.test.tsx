@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import { GroupSummaryCard } from "@/features/groups/components/GroupSummaryCard";
-import type { TeacherGroup } from "@/features/groups/utils/groupsFromAgenda";
+import type { TeacherGroup } from "@/features/groups/utils/groupsFromSchedule";
 
 import { scheduleClass } from "../../../helpers/scheduleFactories";
 

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import { GroupCard } from "@/features/groups/components/GroupCard";
-import type { TeacherGroup } from "@/features/groups/utils/groupsFromAgenda";
+import type { TeacherGroup } from "@/features/groups/utils/groupsFromSchedule";
 import { darkTheme } from "@/shared/config/theme";
 
 import { classStudent, scheduleClass } from "../../../helpers/scheduleFactories";

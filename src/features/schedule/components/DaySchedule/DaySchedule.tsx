@@ -8,7 +8,7 @@ import { FreeDayCard } from "../FreeDayCard";
 /**
  * La vista Día, como el prototipo final: directamente la tira de horas o, según
  * los datos, «Cargando…», el error con «Reintentar» o «Día libre». La barra y el
- * día elegido los pone `ScheduleAgenda`, igual para las tres vistas.
+ * día elegido los pone `MySchedule`, igual para las tres vistas.
  */
 export function DaySchedule({ now, date, today, nextClassId, clubOf }: ScheduleViewProps) {
   const isToday = date === today;

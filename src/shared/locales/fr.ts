@@ -160,7 +160,7 @@ const fr: Translations = {
       month: "Mois",
     },
     /** El título encima de la navegación de la agenda («MI AGENDA»). */
-    myAgenda: "Mon agenda",
+    mySchedule: "Mon agenda",
     /** El centro de la barra: «Hoy» en la vista Día y, al tocarlo, volver a hoy. */
     toolbar: {
       today: "Aujourd'hui",

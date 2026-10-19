@@ -28,7 +28,7 @@ type Translate = typeof translate;
 
 /**
  * Lo que reciben las tres vistas (Día, Semana y Mes), lo mismo para todas: así
- * `ScheduleAgenda` las pinta desde un mapa. Solo lo que no se puede deducir: si
+ * `MySchedule` las pinta desde un mapa. Solo lo que no se puede deducir: si
  * el día es hoy sale de `date` y `today`.
  */
 export interface ScheduleViewProps {

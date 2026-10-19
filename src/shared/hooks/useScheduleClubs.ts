@@ -6,7 +6,7 @@ import { useTheme } from "@/shared/hooks/useTheme";
 import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 import { myClubsService, type IMyClubsService } from "@/shared/services/myClubsService";
 import { colorAt } from "@/shared/utils/colorAt";
-import { sedeKey } from "@/shared/utils/sedeKey";
+import { branchKey } from "@/shared/utils/branchKey";
 
 /** Lo que la agenda enseña del club de una clase. */
 export interface ScheduleClub {
@@ -17,12 +17,12 @@ export interface ScheduleClub {
 
 /** Una sede de «Mis clubes» con lo que se enseña de ella: la lista de Perfil. */
 export interface MyClub extends ScheduleClub {
-  /** `sedeKey`: la clave de la fila. */
+  /** `branchKey`: la clave de la fila. */
   key: string;
 }
 
 /** El club de una clase por su sede (`useScheduleClubs().clubOf`). */
-export type ClubOf = (sede: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
+export type ClubOf = (branch: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
 
 /**
  * Los clubes de la agenda, a partir de «Mis clubes» (misma caché que «Red de
@@ -42,7 +42,7 @@ export function useScheduleClubs(service: IMyClubsService = myClubsService) {
   const clubs = useMemo<readonly MyClub[]>(
     () =>
       (data?.clubs ?? []).map((club, index) => ({
-        key: sedeKey(club),
+        key: branchKey(club),
         label: club.club_name ?? club.name,
         colors: colorAt(theme.clubColors, index),
       })),
@@ -51,8 +51,8 @@ export function useScheduleClubs(service: IMyClubsService = myClubsService) {
   const byKey = useMemo(() => new Map<string, ScheduleClub>(clubs.map((club) => [club.key, club])), [clubs]);
 
   const clubOf = useCallback<ClubOf>(
-    (sede): ScheduleClub =>
-      byKey.get(sedeKey(sede)) ?? { label: "", colors: theme.clubColorUnknown },
+    (branch): ScheduleClub =>
+      byKey.get(branchKey(branch)) ?? { label: "", colors: theme.clubColorUnknown },
     [byKey, theme.clubColorUnknown],
   );
 

@@ -27,8 +27,8 @@ const CLUBS = [
 ];
 
 /** La agenda conoce la 70 (con su nombre corto y su color); la 71 ya no está en «Mis clubes». */
-const clubOf: ClubOf = (sede) =>
-  sede.club_id === 70
+const clubOf: ClubOf = (branch) =>
+  branch.club_id === 70
     ? { label: "Indoor Centro", colors: darkTheme.clubColors[0] }
     : { label: "", colors: darkTheme.clubColorUnknown };
 

@@ -1,6 +1,6 @@
 import type { ColorPair } from "@/shared/config/theme";
 import type { ClubOf } from "@/shared/hooks/useScheduleClubs";
-import { sedeKey } from "@/shared/utils/sedeKey";
+import { branchKey } from "@/shared/utils/branchKey";
 
 import type { HoursMonth, HoursTally, ProfileClub, TeacherHours } from "../schemas/profileDetails.schema";
 
@@ -38,7 +38,7 @@ export function clubBreakdown(month: HoursMonth, clubs: readonly ProfileClub[], 
   return month.clubs.map((tally) => {
     const fromCore = clubs.find((c) => c.db_id === tally.db_id && c.club_id === tally.club_id);
     return {
-      key: sedeKey(tally),
+      key: branchKey(tally),
       label: fromCore ? profileClubLabel(fromCore, clubOf) : clubOf(tally).label,
       colors: clubOf(tally).colors,
       doneMinutes: tally.done_minutes,

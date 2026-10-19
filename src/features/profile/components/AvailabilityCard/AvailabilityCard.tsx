@@ -5,7 +5,7 @@ import { DataState } from "@/shared/components/DataState";
 import { Text } from "@/shared/components/Text";
 import { useScheduleClubs } from "@/shared/hooks/useScheduleClubs";
 import { useTranslation } from "@/shared/hooks/useTranslation";
-import { sedeKey } from "@/shared/utils/sedeKey";
+import { branchKey } from "@/shared/utils/branchKey";
 
 import { useProfileDetails } from "../../hooks/useProfileDetails";
 import { availabilitySummary } from "../../utils/availabilitySummary";
@@ -38,10 +38,10 @@ export function AvailabilityCard() {
       <DataState hasData={data !== undefined} error={error} onRetry={refetch}>
         {data && data.availability.length > 0 ? (
           <View style={styles.clubs}>
-            {data.availability.map((sede) => (
-              <View key={sedeKey(sede)} style={styles.club} testID={`availability-${sedeKey(sede)}`}>
-                <ClubName club={{ ...clubOf(sede), label: profileClubLabel(sede, clubOf) }} />
-                <Text variant="caption">{availabilitySummary(sede.week, t)}</Text>
+            {data.availability.map((branch) => (
+              <View key={branchKey(branch)} style={styles.club} testID={`availability-${branchKey(branch)}`}>
+                <ClubName club={{ ...clubOf(branch), label: profileClubLabel(branch, clubOf) }} />
+                <Text variant="caption">{availabilitySummary(branch.week, t)}</Text>
               </View>
             ))}
           </View>

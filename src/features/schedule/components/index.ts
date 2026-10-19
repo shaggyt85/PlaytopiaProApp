@@ -18,7 +18,7 @@ export { NextClassCard } from "./NextClassCard";
 export { NowLine } from "./NowLine";
 export { PreviousClassCard } from "./PreviousClassCard";
 export { PreviousClassSheet } from "./PreviousClassSheet";
-export { ScheduleAgenda } from "./ScheduleAgenda";
+export { MySchedule } from "./MySchedule";
 export { ScheduleClassBlock } from "./ScheduleClassBlock";
 export { ScheduleToolbar } from "./ScheduleToolbar";
 export { StatTile } from "./StatTile";

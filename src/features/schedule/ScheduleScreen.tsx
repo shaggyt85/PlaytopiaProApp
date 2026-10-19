@@ -20,7 +20,7 @@ import type { TranslationKey } from "@/shared/locales";
 import type { TeacherProfile } from "@/shared/schemas/teacherProfile.schema";
 import { courtTimeLabel } from "@/shared/utils/courtTime";
 
-import { NextClassCard, ScheduleAgenda, StatTile } from "./components";
+import { NextClassCard, MySchedule, StatTile } from "./components";
 import { useNextClass } from "./hooks/useNextClass";
 import { useScheduleMonth } from "./hooks/useScheduleMonth";
 import { ScheduleScrollProvider, useScheduleScrollRefs } from "./hooks/useScheduleScroll";
@@ -114,7 +114,7 @@ export function ScheduleScreen() {
           </View>
         ) : null}
         <ScheduleScrollProvider {...scrollRefs}>
-          <ScheduleAgenda now={now} today={today} nextClassId={nextClass?.id} clubOf={clubOf} />
+          <MySchedule now={now} today={today} nextClassId={nextClass?.id} clubOf={clubOf} />
         </ScheduleScrollProvider>
       </TabScrollView>
     </TabScreen>

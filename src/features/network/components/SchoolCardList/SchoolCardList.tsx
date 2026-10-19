@@ -8,7 +8,7 @@ import { TabFlatList } from "@/shared/components/TabFlatList";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 import type { SchoolCard as SchoolCardData } from "@/shared/schemas/schoolCard.schema";
-import { sedeKey } from "@/shared/utils/sedeKey";
+import { branchKey } from "@/shared/utils/branchKey";
 
 import { SchoolCard } from "../SchoolCard";
 
@@ -60,7 +60,7 @@ export function SchoolCardList({
   const renderItem = useCallback<ListRenderItem<SchoolCardData>>(
     ({ item }) => (
       <View style={styles.item}>
-        <SchoolCard card={item} testID={testID ? `${testID}-${sedeKey(item)}` : undefined} />
+        <SchoolCard card={item} testID={testID ? `${testID}-${branchKey(item)}` : undefined} />
       </View>
     ),
     [styles.item, testID],
@@ -76,7 +76,7 @@ export function SchoolCardList({
   return (
     <TabFlatList
       data={schools}
-      keyExtractor={sedeKey}
+      keyExtractor={branchKey}
       renderItem={renderItem}
       ItemSeparatorComponent={renderSeparator}
       header={header}

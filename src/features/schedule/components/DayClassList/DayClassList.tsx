@@ -31,7 +31,7 @@ interface DayClassListProps {
   nowWall?: number;
   /** La próxima según Core: hoy se marca, como el prototipo. */
   nextClassId?: number;
-  clubOf: (sede: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
+  clubOf: (branch: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
   /** La fila de cada vista: `WeekClassRow` o `MonthClassRow`, como en su captura. */
   Row: ComponentType<DayClassRowProps>;
 }

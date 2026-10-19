@@ -13,7 +13,7 @@ import { MonthSchedule } from "../MonthSchedule";
 import { ScheduleToolbar } from "../ScheduleToolbar";
 import { WeekSchedule } from "../WeekSchedule";
 
-import { useStyles } from "./ScheduleAgenda.styles";
+import { useStyles } from "./MySchedule.styles";
 
 /**
  * Qué pinta cada vista, en un mapa y no en un `switch`: una vista nueva es una
@@ -26,7 +26,7 @@ const VIEW_COMPONENTS = {
   month: MonthSchedule,
 } satisfies Record<ScheduleView, ComponentType<ScheduleViewProps>>;
 
-interface ScheduleAgendaProps {
+interface MyScheduleProps {
   /** El reloj de la pantalla (`useForegroundNow` cada minuto). */
   now: number;
   today: string;
@@ -46,7 +46,7 @@ interface ScheduleAgendaProps {
  * tres leen la misma respuesta del mes, así que cambiar de vista no pide nada, y
  * el reloj no repinta lo que no se ve.
  */
-export function ScheduleAgenda({ now, today, nextClassId, clubOf }: ScheduleAgendaProps) {
+export function MySchedule({ now, today, nextClassId, clubOf }: MyScheduleProps) {
   const styles = useStyles();
   const { t } = useTranslation();
   const [view, setView] = useState<ScheduleView>(SCHEDULE_VIEWS[0].key);
@@ -57,7 +57,7 @@ export function ScheduleAgenda({ now, today, nextClassId, clubOf }: ScheduleAgen
   return (
     <View style={styles.container}>
       <View style={styles.divider} />
-      <SectionLabel label={t("schedule.myAgenda")} />
+      <SectionLabel label={t("schedule.mySchedule")} />
       <ScheduleToolbar
         view={view}
         date={date}

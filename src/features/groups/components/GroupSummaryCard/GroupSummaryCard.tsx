@@ -14,7 +14,7 @@ import { joinParts } from "@/shared/utils/joinParts";
 
 import { groupColors } from "../../utils/groupColors";
 import { groupPlace } from "../../utils/groupPlace";
-import type { TeacherGroup } from "../../utils/groupsFromAgenda";
+import type { TeacherGroup } from "../../utils/groupsFromSchedule";
 import { groupWhen } from "../../utils/groupWhen";
 
 import { useStyles } from "./GroupSummaryCard.styles";

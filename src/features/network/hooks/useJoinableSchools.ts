@@ -3,7 +3,7 @@ import { useCallback } from "react";
 
 import type { SchoolCard } from "@/shared/schemas/schoolCard.schema";
 import { useSessionUserId } from "@/shared/store/sessionStore";
-import { sedeKey } from "@/shared/utils/sedeKey";
+import { branchKey } from "@/shared/utils/branchKey";
 
 import type { JoinableSchoolsResponse } from "../schemas/network.schema";
 import {
@@ -30,7 +30,7 @@ export function mergePages(data: InfiniteData<JoinableSchoolsResponse>): Joinabl
   const schools = data.pages
     .flatMap((page) => page.schools)
     .filter((card) => {
-      const key = sedeKey(card);
+      const key = branchKey(card);
       if (seen.has(key)) return false;
       seen.add(key);
       return true;

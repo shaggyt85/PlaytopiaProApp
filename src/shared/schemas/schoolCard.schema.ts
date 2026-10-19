@@ -6,7 +6,7 @@ import { z } from "zod";
 
 /** Una sede, lo que pinta su tarjeta. */
 export const SchoolCardSchema = z.object({
-  /** Escuela. La identidad de una sede es `db_id` + `club_id` (`sedeKey`). */
+  /** Escuela. La identidad de una sede es `db_id` + `club_id` (`branchKey`). */
   db_id: z.number().int(),
   /** Sede dentro de la escuela. */
   club_id: z.number().int(),

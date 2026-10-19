@@ -15,7 +15,7 @@ import { withAlpha } from "@/shared/utils/color";
 import { joinParts } from "@/shared/utils/joinParts";
 import { studentsLabel } from "@/shared/utils/seatsLabel";
 
-import type { TeacherGroup } from "../../utils/groupsFromAgenda";
+import type { TeacherGroup } from "../../utils/groupsFromSchedule";
 import { groupPlace } from "../../utils/groupPlace";
 import { groupWhen } from "../../utils/groupWhen";
 

@@ -162,7 +162,7 @@ const es = {
       month: "Mes",
     },
     /** El título encima de la navegación de la agenda («MI AGENDA»). */
-    myAgenda: "Mi agenda",
+    mySchedule: "Mi agenda",
     /** El centro de la barra: «Hoy» en la vista Día y, al tocarlo, volver a hoy. */
     toolbar: {
       today: "Hoy",

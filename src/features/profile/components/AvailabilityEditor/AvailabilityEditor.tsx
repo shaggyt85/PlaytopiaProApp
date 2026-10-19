@@ -6,7 +6,7 @@ import { SegmentedTabs } from "@/shared/components/SegmentedTabs";
 import { Text } from "@/shared/components/Text";
 import { useScheduleClubs } from "@/shared/hooks/useScheduleClubs";
 import { useTranslation } from "@/shared/hooks/useTranslation";
-import { sedeKey } from "@/shared/utils/sedeKey";
+import { branchKey } from "@/shared/utils/branchKey";
 
 import { useEditorSave } from "../../hooks/useEditorSave";
 import { useProfileDetails } from "../../hooks/useProfileDetails";
@@ -57,8 +57,8 @@ function AvailabilityForm({ clubs, onDone }: AvailabilityFormProps) {
   const { t } = useTranslation();
   const { clubOf } = useScheduleClubs();
   const { save, saving, error } = useEditorSave(useSaveAvailability(), onDone);
-  const [clubKey, setClubKey] = useState(clubs[0] ? sedeKey(clubs[0]) : "");
-  const club = clubs.find((c) => sedeKey(c) === clubKey);
+  const [clubKey, setClubKey] = useState(clubs[0] ? branchKey(clubs[0]) : "");
+  const club = clubs.find((c) => branchKey(c) === clubKey);
   const [mode, setMode] = useState<AvailabilityMode>(() => initialMode(club?.week ?? {}));
   const form = useForm<{ week: WeeklyHours }>({ defaultValues: { week: club?.week ?? {} } });
   const week = useWatch({ control: form.control, name: "week" });
@@ -72,7 +72,7 @@ function AvailabilityForm({ clubs, onDone }: AvailabilityFormProps) {
   }
 
   const changeClub = (key: string) => {
-    const next = clubs.find((c) => sedeKey(c) === key);
+    const next = clubs.find((c) => branchKey(c) === key);
     if (!next) return;
     setClubKey(key);
     form.reset({ week: next.week });
@@ -96,7 +96,7 @@ function AvailabilityForm({ clubs, onDone }: AvailabilityFormProps) {
       {clubs.length > 1 ? (
         <ChipGroup
           label={t("profile.availability.club")}
-          options={clubs.map((c) => ({ key: sedeKey(c), label: profileClubLabel(c, clubOf), selected: sedeKey(c) === clubKey }))}
+          options={clubs.map((c) => ({ key: branchKey(c), label: profileClubLabel(c, clubOf), selected: branchKey(c) === clubKey }))}
           onPress={changeClub}
         />
       ) : null}

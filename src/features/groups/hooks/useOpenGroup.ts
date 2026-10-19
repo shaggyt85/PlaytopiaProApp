@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { useOpenClass } from "@/shared/hooks/useOpenClass";
 
 import { groupDetailHref } from "../utils/groupRoute";
-import type { TeacherGroup } from "../utils/groupsFromAgenda";
+import type { TeacherGroup } from "../utils/groupsFromSchedule";
 
 /**
  * Abrir un grupo: su detalle. Una clase antigua sin grupo no tiene detalle de

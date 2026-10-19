@@ -24,7 +24,7 @@ interface WeekDayCardProps {
   nowWall?: number;
   /** La próxima según Core, solo en la tarjeta de hoy: se marca «PRÓXIMA». */
   nextClassId?: number;
-  clubOf: (sede: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
+  clubOf: (branch: Pick<SchoolCard, "db_id" | "club_id">) => ScheduleClub;
 }
 
 /**

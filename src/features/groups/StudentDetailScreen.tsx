@@ -19,7 +19,7 @@ import { AttendanceHistoryCard, GroupSummaryCard, NextSessionCard, StudentHeader
 import { useGroupDetail } from "./hooks/useGroupDetail";
 import { useStudentAttendance } from "./hooks/useStudentAttendance";
 import { groupDetailHref } from "./utils/groupRoute";
-import type { TeacherGroup } from "./utils/groupsFromAgenda";
+import type { TeacherGroup } from "./utils/groupsFromSchedule";
 import { StudentDetailParamsSchema, type StudentDetailParams } from "./utils/studentRoute";
 
 import { useStyles } from "./StudentDetailScreen.styles";

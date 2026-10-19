@@ -21,7 +21,7 @@ import { useOpenStudent } from "./hooks/useOpenStudent";
 import { usePrefetchGroupAttendance } from "./hooks/usePrefetchGroupAttendance";
 import { groupColors } from "./utils/groupColors";
 import { GroupDetailParamsSchema, type GroupDetailParams } from "./utils/groupRoute";
-import type { TeacherGroup } from "./utils/groupsFromAgenda";
+import type { TeacherGroup } from "./utils/groupsFromSchedule";
 import { groupPlace } from "./utils/groupPlace";
 import { groupWhen } from "./utils/groupWhen";
 

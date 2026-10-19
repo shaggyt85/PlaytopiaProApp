@@ -15,7 +15,7 @@ import { useStyles } from "./GroupsScreen.styles";
 import { useOpenGroup } from "./hooks/useOpenGroup";
 import { useTeacherGroups } from "./hooks/useTeacherGroups";
 import { groupColors } from "./utils/groupColors";
-import type { TeacherGroup } from "./utils/groupsFromAgenda";
+import type { TeacherGroup } from "./utils/groupsFromSchedule";
 
 /**
  * «Mis grupos», como el prototipo: «Mis grupos», cuántos tiene activos y una
