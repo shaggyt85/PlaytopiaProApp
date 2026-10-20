@@ -523,6 +523,7 @@ useQuery({
 **Entrar**
 - En la pantalla del email: el email guardado aparece ya escrito, la biometría se lanza sola al abrir y el botón pasa a «Acceder con biometría» mientras el email escrito sea el guardado.
 - Si sale bien, se renueva la sesión con el refresh token guardado y se termina como el login con contraseña (`completeSignIn`: términos y abrir la sesión).
+- **`completeSignIn` saca el profesor del token una sola vez** y lo devuelve en su resultado (`SignInOutcome.userId`); un token que no dice quién es se rechaza antes de guardar nada. Lo que espera los términos es ese resultado entero (`pendingSignIn`), y `useSignIn` y `useBiometricSignIn` lo reciben inyectado (`complete`), como su servicio. `useSignIn` escribe en el store de la oferta (estado de interfaz) y `useBiometricOffer` lee con `getState()` dentro de la acción (el valor de ese momento): decidido así en la 3.ª revisión, igual en la app de alumnos.
 - Si Core rechaza el token guardado, se desactiva y se pide la contraseña; sin red, avisa y se conserva; tras 3 fallos seguidos, se pide la contraseña.
 
 **Cerrar sesión**

@@ -15,6 +15,8 @@ import { hasCurrentTerms } from "../utils/terms";
 
 export interface SignInOutcome {
   tokens: SessionTokens;
+  /** Quién entra, sacado del token una sola vez. */
+  userId: number;
   /** No tiene aceptada la versión vigente de los términos: la sesión sigue cerrada. */
   termsPending: boolean;
 }
@@ -40,17 +42,18 @@ export async function completeSignIn(
   deps: CompleteSignInDeps = defaultDeps,
 ): Promise<SignInOutcome> {
   const teacherId = decodeSessionClaims(tokens.access_token)?.userId;
+  // Sin saber quién es no se guarda nada.
+  if (teacherId === undefined) throw new Error("El access token no dice qué profesor es.");
   await deps.session.saveTokens(tokens.access_token, tokens.refresh_token);
   try {
-    if (teacherId === undefined) throw new Error("El access token no dice qué profesor es.");
     const profile = await deps.profile.get(teacherId);
     deps.cache.setQueryData(teacherProfileQuery(teacherId, getLocale()).queryKey, profile);
-    if (!hasCurrentTerms(profile)) return { tokens, termsPending: true };
+    if (!hasCurrentTerms(profile)) return { tokens, userId: teacherId, termsPending: true };
   } catch (error) {
     // Sin saber si los aceptó no se entra: se borran los tokens guardados.
     await deps.session.end();
     throw error;
   }
   await deps.session.start(tokens.access_token, tokens.refresh_token);
-  return { tokens, termsPending: false };
+  return { tokens, userId: teacherId, termsPending: false };
 }

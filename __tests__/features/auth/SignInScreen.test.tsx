@@ -171,7 +171,7 @@ describe("SignInScreen", () => {
       jest.mocked(biometricService.savedEmail).mockResolvedValue(saved.email);
       jest.mocked(biometricService.unlock).mockResolvedValue({ status: "ok", credentials: saved });
       jest.mocked(requestTokenRefresh).mockResolvedValue(tokens);
-      jest.mocked(completeSignIn).mockResolvedValue({ tokens, termsPending: false });
+      jest.mocked(completeSignIn).mockResolvedValue({ tokens, userId: 42, termsPending: false });
     });
 
     it("al abrir trae su email escrito y la lanza sola", async () => {
@@ -214,7 +214,7 @@ describe("SignInScreen", () => {
     });
 
     it("si le faltan los términos abre su modal", async () => {
-      jest.mocked(completeSignIn).mockResolvedValue({ tokens, termsPending: true });
+      jest.mocked(completeSignIn).mockResolvedValue({ tokens, userId: 42, termsPending: true });
       renderWithProviders(<SignInScreen />);
 
       expect(await screen.findByText("Términos y Condiciones")).toBeTruthy();

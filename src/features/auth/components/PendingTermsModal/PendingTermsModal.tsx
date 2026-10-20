@@ -1,12 +1,12 @@
-import type { SessionTokens } from "@/shared/services/tokenRefresh";
 import { errorMessageOrNull } from "@/shared/utils/getErrorMessage";
 
 import { useAcceptPendingTerms } from "../../hooks/useAcceptPendingTerms";
+import type { SignInOutcome } from "../../services/completeSignIn";
 import { LegalModal } from "../LegalModal";
 
 interface PendingTermsModalProps {
-  /** Tokens de un login al que le faltan los términos vigentes; null = cerrado. */
-  tokens: SessionTokens | null;
+  /** Un login al que le faltan los términos vigentes (sus tokens y quién es); null = cerrado. */
+  pending: SignInOutcome | null;
   /** Al cerrarlo sin aceptar (la pantalla olvida ese login). */
   onDismiss: () => void;
 }
@@ -16,12 +16,12 @@ interface PendingTermsModalProps {
  * con biometría. Al aceptarlos se abre la sesión; al cerrarlo, no se entra y
  * se borran los tokens de ese login (`useAcceptPendingTerms`). Solo pinta.
  */
-export function PendingTermsModal({ tokens, onDismiss }: PendingTermsModalProps) {
-  const { acceptAndEnter, reject, error } = useAcceptPendingTerms(tokens);
+export function PendingTermsModal({ pending, onDismiss }: PendingTermsModalProps) {
+  const { acceptAndEnter, reject, error } = useAcceptPendingTerms(pending);
 
   return (
     <LegalModal
-      document={tokens ? "terms" : null}
+      document={pending ? "terms" : null}
       onAccept={acceptAndEnter}
       error={errorMessageOrNull(error)}
       onClose={() => {

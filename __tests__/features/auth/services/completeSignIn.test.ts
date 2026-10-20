@@ -23,7 +23,7 @@ describe("completeSignIn", () => {
   it("con los términos vigentes abre la sesión", async () => {
     const d = deps(jest.fn().mockResolvedValue(teacherProfile()));
 
-    await expect(completeSignIn(tokens, d)).resolves.toEqual({ tokens, termsPending: false });
+    await expect(completeSignIn(tokens, d)).resolves.toEqual({ tokens, userId: 42, termsPending: false });
 
     expect(d.session.saveTokens).toHaveBeenCalledWith(tokens.access_token, "refresco");
     expect(d.session.start).toHaveBeenCalledWith(tokens.access_token, "refresco");
@@ -50,7 +50,7 @@ describe("completeSignIn", () => {
   it.each([null, "2020-01-01"])("con los términos en %s guarda los tokens pero no abre la sesión", async (version) => {
     const d = deps(jest.fn().mockResolvedValue(teacherProfile(version)));
 
-    await expect(completeSignIn(tokens, d)).resolves.toEqual({ tokens, termsPending: true });
+    await expect(completeSignIn(tokens, d)).resolves.toEqual({ tokens, userId: 42, termsPending: true });
 
     expect(d.session.saveTokens).toHaveBeenCalled();
     expect(d.session.start).not.toHaveBeenCalled();
@@ -65,12 +65,13 @@ describe("completeSignIn", () => {
     expect(d.session.start).not.toHaveBeenCalled();
   });
 
-  it("con un access token que no dice qué profesor es, no entra", async () => {
+  it("con un access token que no dice qué profesor es, no guarda nada ni entra", async () => {
     const d = deps(jest.fn());
 
     await expect(completeSignIn({ access_token: "ilegible", refresh_token: "r" }, d)).rejects.toThrow();
 
+    expect(d.session.saveTokens).not.toHaveBeenCalled();
     expect(d.profile.get).not.toHaveBeenCalled();
-    expect(d.session.end).toHaveBeenCalled();
+    expect(d.session.start).not.toHaveBeenCalled();
   });
 });

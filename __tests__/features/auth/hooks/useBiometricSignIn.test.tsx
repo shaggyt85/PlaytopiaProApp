@@ -4,13 +4,10 @@ import type { ReactNode } from "react";
 
 import { MAX_BIOMETRIC_FAILURES, useBiometricSignIn } from "@/features/auth/hooks/useBiometricSignIn";
 import type { UnlockResult } from "@/features/auth/services/biometricService";
-import { completeSignIn } from "@/features/auth/services/completeSignIn";
 import { createQueryClient } from "@/shared/config/queryClient";
 
 import { signInTokens } from "../../../helpers/authFactories";
 import { createBiometricServiceMock } from "../../../helpers/biometricServiceMock";
-
-jest.mock("@/features/auth/services/completeSignIn", () => ({ completeSignIn: jest.fn() }));
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={createQueryClient()}>{children}</QueryClientProvider>
@@ -18,6 +15,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 
 const saved = { email: "ana@club.com", userId: 42, refreshToken: "refresco-guardado" };
 const newTokens = { access_token: signInTokens.access_token, refresh_token: "refresco-nuevo" };
+const complete = jest.fn();
 
 function build(unlock: UnlockResult = { status: "ok", credentials: saved }) {
   const service = createBiometricServiceMock();
@@ -25,13 +23,13 @@ function build(unlock: UnlockResult = { status: "ok", credentials: saved }) {
   service.savedEmail.mockResolvedValue(saved.email);
   service.unlock.mockResolvedValue(unlock);
   const refresh = jest.fn().mockResolvedValue(newTokens);
-  const hook = renderHook(() => useBiometricSignIn({ service, refresh }), { wrapper });
+  const hook = renderHook(() => useBiometricSignIn({ service, refresh, complete }), { wrapper });
   return { service, refresh, ...hook };
 }
 
 describe("useBiometricSignIn", () => {
   beforeEach(() => {
-    jest.mocked(completeSignIn).mockResolvedValue({ tokens: newTokens, termsPending: false });
+    complete.mockReset().mockResolvedValue({ tokens: newTokens, userId: 42, termsPending: false });
   });
 
   it("carga si hay biometría y su email, y la ofrece solo para ese email", async () => {
@@ -55,18 +53,18 @@ describe("useBiometricSignIn", () => {
       cancel: "Cancelar",
     });
     expect(refresh).toHaveBeenCalledWith("refresco-guardado");
-    expect(completeSignIn).toHaveBeenCalledWith(newTokens);
+    expect(complete).toHaveBeenCalledWith(newTokens);
     expect(result.current.message).toBeNull();
   });
 
   it("si le faltan los términos, devuelve los tokens para el modal", async () => {
-    jest.mocked(completeSignIn).mockResolvedValue({ tokens: newTokens, termsPending: true });
+    complete.mockResolvedValue({ tokens: newTokens, userId: 42, termsPending: true });
     const { result } = build();
     await waitFor(() => expect(result.current.loaded).toBe(true));
 
     await act(() => result.current.signIn());
 
-    await waitFor(() => expect(result.current.pendingTokens).toEqual(newTokens));
+    await waitFor(() => expect(result.current.pendingSignIn).toEqual({ tokens: newTokens, userId: 42, termsPending: true }));
   });
 
   it("si cancela no pasa nada: ni aviso ni fallo", async () => {

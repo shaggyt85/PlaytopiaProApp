@@ -12,7 +12,7 @@ import { useSignInFlow } from "./hooks";
  * la pantalla solo pinta.
  */
 export function SignInScreen() {
-  const { form, submit, onEmailEdited, editable, errorText, button, pendingTokens, dismissPendingTerms } =
+  const { form, submit, onEmailEdited, editable, errorText, button, pendingSignIn, dismissPendingTerms } =
     useSignInFlow();
 
   return (
@@ -41,7 +41,7 @@ export function SignInScreen() {
       <Button title={button.title} onPress={button.onPress} loading={button.loading} />
 
       <LegalFooter />
-      <PendingTermsModal tokens={pendingTokens} onDismiss={dismissPendingTerms} />
+      <PendingTermsModal pending={pendingSignIn} onDismiss={dismissPendingTerms} />
     </AuthLayout>
   );
 }

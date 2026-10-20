@@ -41,16 +41,18 @@ const RESULT_MESSAGE: Partial<Record<Attempt["status"], TranslationKey>> = {
 interface Deps {
   service: IBiometricService;
   refresh: (refreshToken: string) => Promise<SessionTokens>;
+  /** Lo que sigue a tener tokens (términos y sesión), el mismo que con contraseña. */
+  complete: (tokens: SessionTokens) => Promise<SignInOutcome>;
 }
 
-const defaultDeps: Deps = { service: biometricService, refresh: requestTokenRefresh };
+const defaultDeps: Deps = { service: biometricService, refresh: requestTokenRefresh, complete: completeSignIn };
 
 /**
  * Entrar con biometría (código del móvil, huella o Face ID): verifica, renueva
  * la sesión con el refresh token guardado y termina como el login con
  * contraseña (`completeSignIn`). La pantalla solo pinta lo que devuelve.
  */
-export function useBiometricSignIn({ service, refresh }: Deps = defaultDeps) {
+export function useBiometricSignIn({ service, refresh, complete }: Deps = defaultDeps) {
   const { t } = useTranslation();
   const { loaded, available, savedEmail, forgetSavedEmail } = useBiometricStatus(service);
   const [failures, setFailures] = useState(0);
@@ -72,7 +74,7 @@ export function useBiometricSignIn({ service, refresh }: Deps = defaultDeps) {
         await service.disable();
         return { status: "expired" };
       }
-      return { status: "signed-in", outcome: await completeSignIn(tokens) };
+      return { status: "signed-in", outcome: await complete(tokens) };
     },
     onSuccess: (result) => {
       if (result.status === "failed") setFailures((count) => count + 1);
@@ -107,9 +109,8 @@ export function useBiometricSignIn({ service, refresh }: Deps = defaultDeps) {
     signIn: () => ignoreRejection(attempt.mutateAsync()),
     isPending: attempt.isPending,
     message,
-    /** Tokens de una entrada a la que le faltan los términos vigentes. */
-    pendingTokens:
-      result?.status === "signed-in" && result.outcome.termsPending ? result.outcome.tokens : null,
+    /** Una entrada a la que le faltan los términos vigentes (sus tokens y quién es). */
+    pendingSignIn: result?.status === "signed-in" && result.outcome.termsPending ? result.outcome : null,
     /** Olvida el último intento (al cerrar el modal de términos o cambiar el email). */
     reset: attempt.reset,
   };

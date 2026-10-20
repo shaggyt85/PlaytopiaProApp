@@ -3,7 +3,6 @@ import { act, renderHook, waitFor } from "@testing-library/react-native";
 import type { ReactNode } from "react";
 
 import { useSignIn } from "@/features/auth/hooks/useSignIn";
-import { completeSignIn } from "@/features/auth/services/completeSignIn";
 import type { ISignInService } from "@/features/auth/services/signInService";
 import { useBiometricOfferStore } from "@/features/auth/store/biometricOfferStore";
 import { createQueryClient } from "@/shared/config/queryClient";
@@ -11,32 +10,34 @@ import { createQueryClient } from "@/shared/config/queryClient";
 import { signInTokens } from "../../../helpers/authFactories";
 import { settle } from "../../../helpers/settle";
 
-jest.mock("@/features/auth/services/completeSignIn", () => ({ completeSignIn: jest.fn() }));
-
 const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={createQueryClient()}>{children}</QueryClientProvider>
 );
 const credentials = { username: "a@b.com", password: "x" };
 
+/** El login de Core y lo que sigue (términos y sesión), los dos falsos. */
+function build(signIn: jest.Mock, termsPending = false) {
+  const service: ISignInService = { signIn };
+  const complete = jest.fn().mockResolvedValue({ tokens: signInTokens, userId: 42, termsPending });
+  const hook = renderHook(() => useSignIn({ service, complete }), { wrapper });
+  return { ...hook, service, complete };
+}
+
 describe("useSignIn", () => {
   beforeEach(() => useBiometricOfferStore.getState().clear());
 
   it("con los tokens del login hace lo mismo que la biometría: completeSignIn", async () => {
-    jest.mocked(completeSignIn).mockResolvedValue({ tokens: signInTokens, termsPending: true });
-    const service: ISignInService = { signIn: jest.fn().mockResolvedValue(signInTokens) };
-    const { result } = renderHook(() => useSignIn(service), { wrapper });
+    const { result, service, complete } = build(jest.fn().mockResolvedValue(signInTokens), true);
 
     await act(() => result.current.mutateAsync(credentials));
 
     expect(service.signIn).toHaveBeenCalledWith(credentials);
-    expect(completeSignIn).toHaveBeenCalledWith(signInTokens);
+    expect(complete).toHaveBeenCalledWith(signInTokens);
     await waitFor(() => expect(result.current.data?.termsPending).toBe(true));
   });
 
   it("deja la oferta de activar la biometría para ese email y profesor", async () => {
-    jest.mocked(completeSignIn).mockResolvedValue({ tokens: signInTokens, termsPending: false });
-    const service: ISignInService = { signIn: jest.fn().mockResolvedValue(signInTokens) };
-    const { result } = renderHook(() => useSignIn(service), { wrapper });
+    const { result } = build(jest.fn().mockResolvedValue(signInTokens));
 
     await act(() => result.current.mutateAsync({ username: " A@B.com ", password: "x" }));
     await settle();
@@ -45,13 +46,12 @@ describe("useSignIn", () => {
   });
 
   it("si Core rechaza el login no sigue", async () => {
-    const service: ISignInService = { signIn: jest.fn().mockRejectedValue(new Error("401")) };
-    const { result } = renderHook(() => useSignIn(service), { wrapper });
+    const { result, complete } = build(jest.fn().mockRejectedValue(new Error("401")));
 
     await act(() => result.current.mutateAsync(credentials).catch(() => undefined));
     await waitFor(() => expect(result.current.isError).toBe(true));
 
-    expect(completeSignIn).not.toHaveBeenCalled();
+    expect(complete).not.toHaveBeenCalled();
     expect(useBiometricOfferStore.getState().offer).toBeNull();
   });
 });

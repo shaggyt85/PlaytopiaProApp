@@ -114,7 +114,7 @@ export function useSignInFlow() {
     ),
     button: { title: t(SIGN_IN_BUTTON_TITLE[mode]), onPress: action[mode], loading: biometric.isPending },
     /** Entrar con biometría también comprueba los términos. */
-    pendingTokens: biometric.pendingTokens,
+    pendingSignIn: biometric.pendingSignIn,
     dismissPendingTerms: biometric.reset,
   };
 }

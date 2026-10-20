@@ -7,7 +7,6 @@ import { useAcceptPendingTerms } from "@/features/auth/hooks/useAcceptPendingTer
 import { createQueryClient } from "@/shared/config/queryClient";
 
 import { signInTokens, teacherProfile } from "../../../helpers/authFactories";
-import { createTestJwt } from "../../../helpers/jwt";
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={createQueryClient()}>{children}</QueryClientProvider>
@@ -15,7 +14,9 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 
 const tokens = { access_token: signInTokens.access_token, refresh_token: signInTokens.refresh_token };
 
-const setup = (update: jest.Mock, pending: typeof tokens | null = tokens) => {
+const pendingSignIn = { tokens, userId: 42, termsPending: true };
+
+const setup = (update: jest.Mock, pending: typeof pendingSignIn | null = pendingSignIn) => {
   const sessionService = { start: jest.fn().mockResolvedValue(true), end: jest.fn().mockResolvedValue(undefined) };
   const view = renderHook(() => useAcceptPendingTerms(pending, { service: { update }, sessionService }), {
     wrapper,
@@ -24,7 +25,7 @@ const setup = (update: jest.Mock, pending: typeof tokens | null = tokens) => {
 };
 
 describe("useAcceptPendingTerms", () => {
-  it("acepta los términos del profesor del token y abre la sesión con esos tokens", async () => {
+  it("acepta los términos del profesor de esa entrada y abre la sesión con esos tokens", async () => {
     const update = jest.fn().mockResolvedValue(teacherProfile());
     const { result, sessionService } = setup(update);
 
@@ -43,9 +44,9 @@ describe("useAcceptPendingTerms", () => {
     await waitFor(() => expect(result.current.error).toBeTruthy());
   });
 
-  it("un token sin profesor no acepta nada", async () => {
+  it("sin una entrada pendiente no acepta nada", async () => {
     const update = jest.fn();
-    const { result } = setup(update, { access_token: createTestJwt({}), refresh_token: "r" });
+    const { result } = setup(update, null);
 
     await act(() => result.current.acceptAndEnter());
 

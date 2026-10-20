@@ -24,7 +24,7 @@ export function PasswordScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const signIn = useSignIn();
-  const pendingTokens = signIn.data?.termsPending ? signIn.data.tokens : null;
+  const pendingSignIn = signIn.data?.termsPending ? signIn.data : null;
   const email = useAuthFlowStore((s) => s.email);
   const isStudent = useAuthFlowStore((s) => s.isStudent);
 
@@ -70,7 +70,7 @@ export function PasswordScreen() {
         onPress={() => router.push(ROUTES.passwordRecovery)}
       />
 
-      <PendingTermsModal tokens={pendingTokens} onDismiss={signIn.reset} />
+      <PendingTermsModal pending={pendingSignIn} onDismiss={signIn.reset} />
     </AuthLayout>
   );
 }
