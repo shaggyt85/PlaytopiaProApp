@@ -18,8 +18,7 @@ export class AvailabilityService implements IAvailabilityService {
   constructor(private readonly http: IHttpClient) {}
 
   async replace(dbId: number, clubId: number, week: WeeklyHours): Promise<ClubAvailability> {
-    const data = await this.http.put<unknown>(ENDPOINTS.MOBILE_TEACHER.AVAILABILITY(dbId, clubId), { week });
-    return ClubAvailabilitySchema.parse(data);
+    return this.http.put(ENDPOINTS.MOBILE_TEACHER.AVAILABILITY(dbId, clubId), { week }, ClubAvailabilitySchema);
   }
 }
 

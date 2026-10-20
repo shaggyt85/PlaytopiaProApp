@@ -32,6 +32,7 @@ const pt: Translations = {
   errors: {
     network: "Sem conexão. Verifique sua rede e tente novamente.",
     timeout: "A conexão demorou demais. Tente novamente.",
+    contract: "Não conseguimos ler a resposta. Atualiza a app ou tenta mais tarde.",
     unknown: "Algo deu errado. Tente novamente.",
     byStatus: {
       "400": "Os dados enviados não são válidos.",

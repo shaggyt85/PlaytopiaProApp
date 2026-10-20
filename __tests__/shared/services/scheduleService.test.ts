@@ -8,6 +8,8 @@ import {
   scheduleQuery,
   type ScheduleReader,
 } from "@/shared/services/scheduleService";
+import { AttendanceMarkSchema } from "@/shared/schemas/schedule.schema";
+import { PreviousClassResponseSchema, ScheduleResponseSchema } from "@/shared/schemas/schedule.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../helpers/fakeHttpClient";
 import { attendanceMark, scheduleClass, scheduleResponse } from "../../helpers/scheduleFactories";
@@ -19,7 +21,7 @@ describe("ScheduleService", () => {
 
     const result = await new ScheduleService(http).getClasses("2026-10-05", "2026-10-11");
 
-    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/classes", {
+    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/classes", ScheduleResponseSchema, {
       params: { from: "2026-10-05", to: "2026-10-11" },
     });
     expect(result).toEqual(body);
@@ -40,7 +42,7 @@ describe("ScheduleService", () => {
       "absent",
     );
 
-    expect(http.put).toHaveBeenCalledWith("/MobileTeacher/classes/4/90/attendance/55", { status: "absent" });
+    expect(http.put).toHaveBeenCalledWith("/MobileTeacher/classes/4/90/attendance/55", { status: "absent" }, AttendanceMarkSchema);
     expect(result).toEqual(body);
   });
 
@@ -76,7 +78,7 @@ describe("ScheduleService: la clase anterior del grupo", () => {
 
     const result = await new ScheduleService(http).getPreviousClass(4, 31);
 
-    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/classes/4/31/previous");
+    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/classes/4/31/previous", PreviousClassResponseSchema);
     expect(result).toEqual(previous);
   });
 

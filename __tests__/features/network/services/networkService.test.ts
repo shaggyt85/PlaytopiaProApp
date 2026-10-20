@@ -3,6 +3,7 @@ import {
   NetworkService,
   networkKeys,
 } from "@/features/network/services/networkService";
+import { JoinableSchoolsResponseSchema } from "@/features/network/schemas/network.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../../helpers/fakeHttpClient";
 
@@ -23,7 +24,7 @@ describe("NetworkService", () => {
 
     const result = await new NetworkService(http).getJoinableSchools(3);
 
-    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/schools", {
+    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/schools", JoinableSchoolsResponseSchema, {
       params: { page: 3, size: JOINABLE_SCHOOLS_PAGE_SIZE },
     });
     expect(result).toEqual({ schools: [card], pagination });

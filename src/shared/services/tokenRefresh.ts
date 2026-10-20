@@ -19,7 +19,8 @@ export type SessionTokens = z.infer<typeof SessionTokensSchema>;
  * Pide tokens nuevos con un refresh token. Única petición de renovación: la
  * usan la renovación automática del cliente HTTP y la entrada con biometría.
  * Va con axios sin interceptores: un 401 del propio refresh no debe intentar
- * otro refresh. Core rota el refresh token: el que se usa deja de valer.
+ * otro refresh. Por eso valida él mismo con el schema (el resto de peticiones
+ * lo hace en el cliente HTTP). Core rota el refresh token: el que se usa deja de valer.
  */
 export async function requestTokenRefresh(refreshToken: string): Promise<SessionTokens> {
   const { data } = await axios.post(

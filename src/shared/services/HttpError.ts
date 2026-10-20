@@ -9,8 +9,10 @@ import {
  *   Core, su `problem` RFC 9457).
  * - `network`: no hubo respuesta.
  * - `timeout`: la respuesta no llegó a tiempo.
+ * - `contract`: llegó, pero no cumple el schema del contrato (Core y la app
+ *   no cuadran). Lo detecta la app: Core no lo sabe y no manda `type`.
  */
-export type HttpErrorKind = "http" | "network" | "timeout";
+export type HttpErrorKind = "http" | "network" | "timeout" | "contract";
 
 /**
  * Único tipo de error que sale del cliente HTTP. Las pantallas no manejan
@@ -69,6 +71,16 @@ export class HttpError extends Error {
 
   static timeout(): HttpError {
     return new HttpError({ kind: "timeout", message: "Request Timeout" });
+  }
+
+  /**
+   * La respuesta de `url` no cumple su schema. El mensaje (para Sentry) lleva
+   * la ruta y los campos que fallan, nunca sus valores (pueden ser datos del
+   * usuario).
+   */
+  static contract(url: string | undefined, issues: readonly { path: readonly PropertyKey[] }[]): HttpError {
+    const fields = issues.map((issue) => issue.path.map(String).join(".") || "(raíz)");
+    return new HttpError({ kind: "contract", message: `Contract ${url ?? ""}: ${[...new Set(fields)].join(", ")}` });
   }
 }
 

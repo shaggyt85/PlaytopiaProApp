@@ -1,5 +1,6 @@
 import { env } from "@/shared/config/env";
 import { getLocale } from "@/shared/config/i18n";
+import { reportError } from "@/shared/config/sentry";
 import { recordServerDate } from "@/shared/utils/serverClock";
 
 import { BaseHttpClient, type IHttpClient } from "./BaseHttpClient";
@@ -27,6 +28,8 @@ const client = new BaseHttpClient({
   observeResponseHeaders: (headers) => recordServerDate(headers.date),
   // El idioma activo: el del teléfono o, si lo cambió, el que eligió.
   requestLanguage: getLocale,
+  // Core y la app no cuadran (p. ej. tras un despliegue): que se vea en Sentry.
+  onContractError: reportError,
 });
 
 export const httpClient: IHttpClient = client;

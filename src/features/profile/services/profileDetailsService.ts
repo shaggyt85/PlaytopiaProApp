@@ -35,10 +35,9 @@ export class ProfileDetailsService implements IProfileDetailsService {
   constructor(private readonly http: IHttpClient) {}
 
   async get(teacherId: number): Promise<ProfileDetails> {
-    const data = await this.http.get<unknown>(ENDPOINTS.TEACHERS.PROFILE(teacherId), {
+    return this.http.get(ENDPOINTS.TEACHERS.PROFILE(teacherId), ProfileDetailsSchema, {
       params: { include: PROFILE_INCLUDES.join(",") },
     });
-    return ProfileDetailsSchema.parse(data);
   }
 }
 

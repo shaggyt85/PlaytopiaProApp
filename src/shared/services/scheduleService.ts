@@ -56,23 +56,21 @@ export class ScheduleService implements IScheduleService {
   constructor(private readonly http: IHttpClient) {}
 
   async getClasses(from: string, to: string): Promise<ScheduleResponse> {
-    const data = await this.http.get<unknown>(ENDPOINTS.MOBILE_TEACHER.CLASSES, {
+    return this.http.get(ENDPOINTS.MOBILE_TEACHER.CLASSES, ScheduleResponseSchema, {
       params: { from, to },
     });
-    return ScheduleResponseSchema.parse(data);
   }
 
   async markAttendance(
     { dbId, classId, studentId }: AttendanceTarget,
     status: AttendanceStatus,
   ): Promise<AttendanceMark> {
-    const data = await this.http.put<unknown>(ENDPOINTS.MOBILE_TEACHER.ATTENDANCE(dbId, classId, studentId), { status });
-    return AttendanceMarkSchema.parse(data);
+    return this.http.put(ENDPOINTS.MOBILE_TEACHER.ATTENDANCE(dbId, classId, studentId), { status }, AttendanceMarkSchema);
   }
 
   async getPreviousClass(dbId: number, classId: number): Promise<ScheduleClass | null> {
-    const data = await this.http.get<unknown>(ENDPOINTS.MOBILE_TEACHER.PREVIOUS(dbId, classId));
-    return PreviousClassResponseSchema.parse(data).previous_class;
+    const { previous_class } = await this.http.get(ENDPOINTS.MOBILE_TEACHER.PREVIOUS(dbId, classId), PreviousClassResponseSchema);
+    return previous_class;
   }
 }
 

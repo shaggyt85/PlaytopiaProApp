@@ -38,12 +38,11 @@ export class TeacherProfileService implements ITeacherProfileService {
   constructor(private readonly http: IHttpClient) {}
 
   async get(teacherId: number): Promise<TeacherProfile> {
-    return TeacherProfileSchema.parse(await this.http.get<unknown>(ENDPOINTS.TEACHERS.PROFILE(teacherId)));
+    return this.http.get(ENDPOINTS.TEACHERS.PROFILE(teacherId), TeacherProfileSchema);
   }
 
   async update(teacherId: number, changes: TeacherProfileChanges): Promise<TeacherProfile> {
-    const data = await this.http.patch<unknown>(ENDPOINTS.TEACHERS.PROFILE(teacherId), changes);
-    return TeacherProfileSchema.parse(data);
+    return this.http.patch(ENDPOINTS.TEACHERS.PROFILE(teacherId), changes, TeacherProfileSchema);
   }
 }
 

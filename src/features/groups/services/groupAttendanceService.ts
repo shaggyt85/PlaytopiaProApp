@@ -36,8 +36,8 @@ export class GroupAttendanceService implements IGroupAttendanceService {
   constructor(private readonly http: IHttpClient) {}
 
   async getGroupAttendance(dbId: number, classId: number): Promise<StudentAttendance[]> {
-    const data = await this.http.get<unknown>(ENDPOINTS.MOBILE_TEACHER.GROUP_ATTENDANCE(dbId, classId));
-    return GroupAttendanceResponseSchema.parse(data).students;
+    const { students } = await this.http.get(ENDPOINTS.MOBILE_TEACHER.GROUP_ATTENDANCE(dbId, classId), GroupAttendanceResponseSchema);
+    return students;
   }
 }
 

@@ -13,8 +13,7 @@ export class CheckEmailService implements ICheckEmailService {
 
   async checkEmail(email: string): Promise<CheckEmailResponse> {
     // El email va en el cuerpo, no en la URL: así no queda en logs de proxies.
-    const data = await this.http.post<unknown>(ENDPOINTS.AUTH.CHECK_EMAIL, { email });
-    return CheckEmailResponseSchema.parse(data);
+    return this.http.post(ENDPOINTS.AUTH.CHECK_EMAIL, { email }, CheckEmailResponseSchema);
   }
 }
 

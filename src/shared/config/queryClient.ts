@@ -8,12 +8,13 @@ const MAX_QUERY_RETRIES = 3;
 
 /**
  * Solo se reintenta lo pasajero: sin red, timeout o un 5xx. Un 4xx es una
- * respuesta clara de Core, y un error que no es HttpError (validación Zod,
- * un fallo de código) no se arregla repitiendo.
+ * respuesta clara de Core; una respuesta que no cumple el contrato o un error
+ * que no es HttpError (un fallo de código) no se arreglan repitiendo.
  */
 export function shouldRetryQuery(failureCount: number, error: unknown): boolean {
   if (failureCount >= MAX_QUERY_RETRIES || !isHttpError(error)) return false;
-  if (error.kind !== "http") return true;
+  if (error.kind === "network" || error.kind === "timeout") return true;
+  if (error.kind === "contract") return false;
   return (error.status ?? 0) >= 500;
 }
 

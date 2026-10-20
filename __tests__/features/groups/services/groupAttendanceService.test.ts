@@ -7,6 +7,7 @@ import {
 } from "@/features/groups/services/groupAttendanceService";
 import { CachePolicy } from "@/shared/config/cachePolicies";
 import { scheduleKeys } from "@/shared/services/scheduleService";
+import { GroupAttendanceResponseSchema } from "@/features/groups/schemas/groupAttendance.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../../helpers/fakeHttpClient";
 import { studentAttendance } from "../../../helpers/groupAttendanceFactories";
@@ -18,7 +19,7 @@ describe("GroupAttendanceService", () => {
 
     const result = await new GroupAttendanceService(http).getGroupAttendance(4, 31);
 
-    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/classes/4/31/group-attendance");
+    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/classes/4/31/group-attendance", GroupAttendanceResponseSchema);
     expect(result).toEqual(students);
   });
 

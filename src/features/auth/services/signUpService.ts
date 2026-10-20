@@ -21,11 +21,8 @@ export class SignUpService implements ISignUpService {
 
   /** Firma el token justo antes de enviar: caduca a los `TOKEN_SKEW_SECONDS`. */
   async signUp(request: SignUpRequest): Promise<SignUpResponse> {
-    const data = await this.http.post<unknown>(ENDPOINTS.TEACHERS.SIGN_UP, {
-      ...request,
-      registration_token: this.signToken(),
-    });
-    return SignUpResponseSchema.parse(data);
+    const body = { ...request, registration_token: this.signToken() };
+    return this.http.post(ENDPOINTS.TEACHERS.SIGN_UP, body, SignUpResponseSchema);
   }
 }
 

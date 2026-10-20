@@ -6,6 +6,7 @@ import {
   sportsCatalogQuery,
 } from "@/features/profile/services/sportsCatalogService";
 import { CachePolicy } from "@/shared/config/cachePolicies";
+import { SportsCatalogResponseSchema } from "@/features/profile/schemas/sportsCatalog.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../../helpers/fakeHttpClient";
 
@@ -27,7 +28,7 @@ describe("SportsCatalogService", () => {
     const http = fakeHttp({ sports: CATALOG });
 
     expect(await new SportsCatalogService(http).getCatalog()).toEqual(CATALOG);
-    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/sports");
+    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/sports", SportsCatalogResponseSchema);
   });
 
   it("una respuesta sin los nombres no cumple el contrato", async () => {

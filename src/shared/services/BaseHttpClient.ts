@@ -6,6 +6,7 @@ import {
   type CreateAxiosDefaults,
   type InternalAxiosRequestConfig,
 } from "axios";
+import type { z } from "zod";
 
 import { HttpError } from "./HttpError";
 import type { RefreshResult } from "./sessionRefresher";
@@ -18,13 +19,17 @@ declare module "axios" {
   }
 }
 
-/** Lo que usan los services: solo los verbos (ISP). */
+/**
+ * Lo que usan los services: solo los verbos (ISP). Cada uno recibe el schema
+ * de la respuesta y devuelve lo que dice: no se puede pedir nada sin
+ * validarlo. Sin cuerpo que leer, `NoContentSchema`.
+ */
 export interface IHttpClient {
-  get<T>(url: string, config?: AxiosRequestConfig): Promise<T>;
-  post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
-  put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
-  patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
-  delete<T>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  get<S extends z.ZodType>(url: string, schema: S, config?: AxiosRequestConfig): Promise<z.output<S>>;
+  post<S extends z.ZodType>(url: string, data: unknown, schema: S, config?: AxiosRequestConfig): Promise<z.output<S>>;
+  put<S extends z.ZodType>(url: string, data: unknown, schema: S, config?: AxiosRequestConfig): Promise<z.output<S>>;
+  patch<S extends z.ZodType>(url: string, data: unknown, schema: S, config?: AxiosRequestConfig): Promise<z.output<S>>;
+  delete<S extends z.ZodType>(url: string, schema: S, config?: AxiosRequestConfig): Promise<z.output<S>>;
 }
 
 export interface HttpClientDeps {
@@ -40,12 +45,15 @@ export interface HttpClientDeps {
    * desde la siguiente.
    */
   requestLanguage?: () => string;
+  /** Quién se entera de una respuesta que no cumple el contrato (Sentry), aparte del error que recibe la pantalla. */
+  onContractError?: (error: HttpError) => void;
 }
 
 /**
  * Cliente HTTP base. Coordina tres cosas y nada más:
  * - pone el token y el idioma en cada petición;
  * - ante un 401 con sesión, la renueva una vez y reintenta;
+ * - valida la respuesta con su schema;
  * - convierte cualquier fallo en un `HttpError`.
  *
  * No conoce la caché de queries ni la navegación: cuando la sesión muere,
@@ -57,6 +65,7 @@ export class BaseHttpClient implements IHttpClient {
   private readonly refreshSession: () => Promise<RefreshResult>;
   private readonly observeHeaders: (headers: Record<string, unknown>) => void;
   private readonly requestLanguage?: () => string;
+  private readonly onContractError: (error: HttpError) => void;
   private sessionExpiredHandler: () => void = () => {};
 
   constructor(deps: HttpClientDeps) {
@@ -65,6 +74,7 @@ export class BaseHttpClient implements IHttpClient {
     this.refreshSession = deps.refreshSession;
     this.observeHeaders = deps.observeResponseHeaders ?? (() => {});
     this.requestLanguage = deps.requestLanguage;
+    this.onContractError = deps.onContractError ?? (() => {});
     this.instance.interceptors.request.use((config) => this.withToken(config));
     this.instance.interceptors.request.use((config) => this.withLanguage(config));
     this.instance.interceptors.response.use(
@@ -126,29 +136,33 @@ export class BaseHttpClient implements IHttpClient {
     throw HttpError.fromResponse(status, data, headers?.["retry-after"]);
   }
 
-  /** Un solo punto de salida para todos los verbos (DRY). */
-  protected async request<T>(config: AxiosRequestConfig): Promise<T> {
-    const response = await this.instance.request<T>(config);
-    return response.data;
+  /** Un solo punto de salida para todos los verbos (DRY): pide y valida. */
+  protected async request<S extends z.ZodType>(config: AxiosRequestConfig, schema: S): Promise<z.output<S>> {
+    const response = await this.instance.request<unknown>(config);
+    const parsed = schema.safeParse(response.data);
+    if (parsed.success) return parsed.data;
+    const error = HttpError.contract(config.url, parsed.error.issues);
+    this.onContractError(error);
+    throw error;
   }
 
-  get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.request<T>({ ...config, method: "GET", url });
+  get<S extends z.ZodType>(url: string, schema: S, config?: AxiosRequestConfig): Promise<z.output<S>> {
+    return this.request({ ...config, method: "GET", url }, schema);
   }
 
-  post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-    return this.request<T>({ ...config, method: "POST", url, data });
+  post<S extends z.ZodType>(url: string, data: unknown, schema: S, config?: AxiosRequestConfig): Promise<z.output<S>> {
+    return this.request({ ...config, method: "POST", url, data }, schema);
   }
 
-  put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-    return this.request<T>({ ...config, method: "PUT", url, data });
+  put<S extends z.ZodType>(url: string, data: unknown, schema: S, config?: AxiosRequestConfig): Promise<z.output<S>> {
+    return this.request({ ...config, method: "PUT", url, data }, schema);
   }
 
-  patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-    return this.request<T>({ ...config, method: "PATCH", url, data });
+  patch<S extends z.ZodType>(url: string, data: unknown, schema: S, config?: AxiosRequestConfig): Promise<z.output<S>> {
+    return this.request({ ...config, method: "PATCH", url, data }, schema);
   }
 
-  delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.request<T>({ ...config, method: "DELETE", url });
+  delete<S extends z.ZodType>(url: string, schema: S, config?: AxiosRequestConfig): Promise<z.output<S>> {
+    return this.request({ ...config, method: "DELETE", url }, schema);
   }
 }

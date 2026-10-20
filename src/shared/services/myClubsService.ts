@@ -28,7 +28,7 @@ export class MyClubsService implements IMyClubsService {
   constructor(private readonly http: IHttpClient) {}
 
   async getMyClubs(): Promise<MyClubsResponse> {
-    return MyClubsResponseSchema.parse(await this.http.get<unknown>(ENDPOINTS.MOBILE_TEACHER.CLUBS));
+    return this.http.get(ENDPOINTS.MOBILE_TEACHER.CLUBS, MyClubsResponseSchema);
   }
 }
 

@@ -23,11 +23,11 @@ export class AvatarService implements IAvatarService {
     const form = new FormData();
     // React Native sube un fichero con `{ uri, name, type }`, no con un Blob.
     form.append("avatarFile", file as unknown as Blob);
-    const data = await this.http.post<unknown>(ENDPOINTS.MOBILE_TEACHER.AVATAR_UPLOAD, form, {
+    const { url } = await this.http.post(ENDPOINTS.MOBILE_TEACHER.AVATAR_UPLOAD, form, AvatarUploadSchema, {
       headers: { "Content-Type": "multipart/form-data" },
       timeout: UPLOAD_TIMEOUT_MS,
     });
-    return AvatarUploadSchema.parse(data).url;
+    return url;
   }
 }
 

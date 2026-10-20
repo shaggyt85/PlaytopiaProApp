@@ -1,4 +1,5 @@
 import { CheckEmailService } from "@/features/auth/services/checkEmailService";
+import { CheckEmailResponseSchema } from "@/features/auth/schemas/auth.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../../helpers/fakeHttpClient";
 
@@ -14,7 +15,7 @@ describe("CheckEmailService", () => {
 
     const result = await new CheckEmailService(http).checkEmail("ana@club.com");
 
-    expect(http.post).toHaveBeenCalledWith("/auth/check-email", { email: "ana@club.com" });
+    expect(http.post).toHaveBeenCalledWith("/auth/check-email", { email: "ana@club.com" }, CheckEmailResponseSchema);
     expect(result.is_teacher).toBe(true);
   });
 

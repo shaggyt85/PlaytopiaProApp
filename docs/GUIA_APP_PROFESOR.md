@@ -194,8 +194,8 @@ class ProfileService implements IProfileService {
   constructor(private readonly http: IHttpClient) {}
 
   async getProfile(id: number): Promise<TeacherProfile> {
-    const data = await this.http.get<unknown>(ENDPOINTS.TEACHERS.PROFILE(id));
-    return validateTeacherProfile(data);
+    // El cliente valida con el schema y devuelve lo que dice.
+    return this.http.get(ENDPOINTS.TEACHERS.PROFILE(id), TeacherProfileSchema);
   }
 }
 
@@ -284,7 +284,7 @@ features/<x>/services/
   index.ts             export const xService = X_USE_MOCK ? xMockService : xRealService
 ```
 
-- El mock **pasa por el mismo `validate*` del schema**, así el contrato no se desvía.
+- El mock **valida con el mismo schema**, así el contrato no se desvía.
 - El interruptor va por endpoint, no es global: nunca se mockea lo que ya existe.
 - Cada mock lleva el comentario `// MOCK: pendiente en Core, ver docs/endpoints-pendientes/<archivo>.md`, para localizarlos con un grep.
 - Hooks, componentes y pantalla no saben si detrás hay mock o servidor real.
@@ -370,6 +370,8 @@ Se revisa `git status` y el diff para que no entre ningún `.env` ni ninguna cla
 ---
 
 ## 6. Manejo de errores: RFC 9457
+
+**Antes, la respuesta buena se valida en el cliente HTTP.** Cada verbo de `IHttpClient` recibe el schema de la respuesta (`get(url, Schema, config)`, `post(url, data, Schema, config)`…; sin cuerpo, `NoContentSchema`) y devuelve lo que dice: no se puede pedir nada sin validarlo. Si Core responde algo que no cumple el contrato (un 200 con otra forma: Core no lo sabe y no manda `type`), sale un `HttpError` de kind `contract`: no se reintenta, se traduce con `errors.contract` y se avisa a Sentry (`onContractError`, en `httpClient.ts`) con la ruta y los campos que fallan, nunca sus valores. `tokenRefresh` valida él mismo: va con axios sin interceptores. Igual en la app de alumnos.
 
 Core responde **todos** sus errores con RFC 9457 (*Problem Details*, `application/problem+json`). La app trabaja con esa misma forma de principio a fin:
 

@@ -1,4 +1,5 @@
 import { AvailabilityService } from "@/features/profile/services/availabilityService";
+import { ClubAvailabilitySchema } from "@/features/profile/schemas/profileDetails.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../../helpers/fakeHttpClient";
 import { profileClub } from "../../../helpers/profileFactories";
@@ -10,7 +11,7 @@ describe("AvailabilityService", () => {
 
     const result = await new AvailabilityService(http).replace(7, 70, { "1": [17, 16] });
 
-    expect(http.put).toHaveBeenCalledWith("/MobileTeacher/clubs/7/70/availability", { week: { "1": [17, 16] } });
+    expect(http.put).toHaveBeenCalledWith("/MobileTeacher/clubs/7/70/availability", { week: { "1": [17, 16] } }, ClubAvailabilitySchema);
     expect(result).toEqual(saved);
   });
 

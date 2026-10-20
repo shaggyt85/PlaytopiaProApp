@@ -16,8 +16,7 @@ export class SignInService implements ISignInService {
   constructor(private readonly http: IHttpClient) {}
 
   async signIn(request: SignInRequest): Promise<SignInResponse> {
-    const data = await this.http.post<unknown>(ENDPOINTS.AUTH.SIGN_IN, request);
-    return SignInResponseSchema.parse(data);
+    return this.http.post(ENDPOINTS.AUTH.SIGN_IN, request, SignInResponseSchema);
   }
 }
 

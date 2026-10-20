@@ -24,8 +24,8 @@ export class SportsCatalogService implements ISportsCatalogService {
   constructor(private readonly http: IHttpClient) {}
 
   async getCatalog(): Promise<TeacherSport[]> {
-    const data = await this.http.get<unknown>(ENDPOINTS.MOBILE_TEACHER.SPORTS);
-    return SportsCatalogResponseSchema.parse(data).sports;
+    const { sports } = await this.http.get(ENDPOINTS.MOBILE_TEACHER.SPORTS, SportsCatalogResponseSchema);
+    return sports;
   }
 }
 

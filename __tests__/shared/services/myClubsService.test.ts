@@ -7,6 +7,7 @@ import {
   myClubsQuery,
   type IMyClubsService,
 } from "@/shared/services/myClubsService";
+import { MyClubsResponseSchema } from "@/shared/schemas/schoolCard.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../helpers/fakeHttpClient";
 import { schoolCard } from "../../helpers/networkFactories";
@@ -18,7 +19,7 @@ describe("MyClubsService", () => {
 
     const result = await new MyClubsService(http).getMyClubs();
 
-    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/clubs");
+    expect(http.get).toHaveBeenCalledWith("/MobileTeacher/clubs", MyClubsResponseSchema);
     expect(result.clubs).toEqual([card]);
   });
 

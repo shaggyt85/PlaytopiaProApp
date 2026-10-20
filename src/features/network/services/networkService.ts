@@ -35,10 +35,9 @@ export class NetworkService implements INetworkService {
   constructor(private readonly http: IHttpClient) {}
 
   async getJoinableSchools(page: number): Promise<JoinableSchoolsResponse> {
-    const data = await this.http.get<unknown>(ENDPOINTS.MOBILE_TEACHER.JOINABLE_SCHOOLS, {
+    return this.http.get(ENDPOINTS.MOBILE_TEACHER.JOINABLE_SCHOOLS, JoinableSchoolsResponseSchema, {
       params: { page, size: JOINABLE_SCHOOLS_PAGE_SIZE },
     });
-    return JoinableSchoolsResponseSchema.parse(data);
   }
 }
 

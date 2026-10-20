@@ -6,6 +6,7 @@ import {
   teacherKeys,
   teacherProfileQuery,
 } from "@/shared/services/teacherProfileService";
+import { TeacherProfileSchema } from "@/shared/schemas/teacherProfile.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../helpers/fakeHttpClient";
 import { teacherProfile, teacherProfileResponse } from "../../helpers/profileFactories";
@@ -19,7 +20,7 @@ describe("TeacherProfileService", () => {
 
     const result = await new TeacherProfileService(http).get(42);
 
-    expect(http.get).toHaveBeenCalledWith("/UserTeacher/42");
+    expect(http.get).toHaveBeenCalledWith("/UserTeacher/42", TeacherProfileSchema);
     expect(result).toEqual(teacherProfile({ terms_version: null, accepted_terms_at: null }));
   });
 
@@ -28,7 +29,7 @@ describe("TeacherProfileService", () => {
 
     const result = await new TeacherProfileService(http).update(42, { terms_version: "2026-07-01" });
 
-    expect(http.patch).toHaveBeenCalledWith("/UserTeacher/42", { terms_version: "2026-07-01" });
+    expect(http.patch).toHaveBeenCalledWith("/UserTeacher/42", { terms_version: "2026-07-01" }, TeacherProfileSchema);
     expect(result.terms_version).toBe("2026-07-01");
   });
 

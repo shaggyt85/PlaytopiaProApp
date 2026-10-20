@@ -55,5 +55,10 @@ export function initSentry(
   return true;
 }
 
+/** Manda a Sentry un error que la app ya gestiona (no rompe nada, pero hay que verlo). Sin DSN, no hace nada. */
+export const reportError = (error: unknown): void => {
+  Sentry.captureException(error);
+};
+
 /** Envuelve el componente raíz para capturar los errores de render. */
 export const wrapWithSentry = Sentry.wrap;

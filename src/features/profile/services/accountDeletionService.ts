@@ -14,8 +14,7 @@ export class AccountDeletionService implements IAccountDeletionService {
   constructor(private readonly http: IHttpClient) {}
 
   async request(reason: string): Promise<AccountDeletion> {
-    const data = await this.http.post<unknown>(ENDPOINTS.MOBILE.ACCOUNT_DELETE, { reason });
-    return AccountDeletionSchema.parse(data);
+    return this.http.post(ENDPOINTS.MOBILE.ACCOUNT_DELETE, { reason }, AccountDeletionSchema);
   }
 }
 

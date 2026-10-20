@@ -1,4 +1,5 @@
 import type { InternalAxiosRequestConfig } from "axios";
+import { z } from "zod";
 
 import { BaseHttpClient } from "@/shared/services/BaseHttpClient";
 import { HttpError } from "@/shared/services/HttpError";
@@ -6,6 +7,9 @@ import type { RefreshResult } from "@/shared/services/sessionRefresher";
 
 import { createFakeAdapter, type FakeReply } from "../../helpers/fakeAxiosAdapter";
 import { createFakeTokenStorage } from "../../helpers/fakeTokenStorage";
+
+/** Lo que lee cada prueba que no mira la validación: cualquier cuerpo. */
+const ANY = z.unknown();
 
 const PROBLEM_409 = {
   type: "urn:playtopia:problem:email-taken",
@@ -18,6 +22,7 @@ function buildClient(options: {
   access?: string | null;
   refreshResult?: RefreshResult;
   language?: () => string;
+  onContractError?: (error: HttpError) => void;
 }) {
   const tokens = createFakeTokenStorage({ access: options.access ?? null });
   const { adapter, calls } = createFakeAdapter(options.handler);
@@ -33,6 +38,7 @@ function buildClient(options: {
     refreshSession,
     observeResponseHeaders,
     requestLanguage: options.language,
+    onContractError: options.onContractError,
   });
   const sessionExpired = jest.fn();
   client.onSessionExpired(sessionExpired);
@@ -48,7 +54,7 @@ describe("BaseHttpClient", () => {
       handler: () => ({ status: 200, data: { id: 7 } }),
     });
 
-    await expect(client.get("/perfil")).resolves.toEqual({ id: 7 });
+    await expect(client.get("/perfil", ANY)).resolves.toEqual({ id: 7 });
   });
 
   it("pone el token de sesión en cada petición", async () => {
@@ -57,7 +63,7 @@ describe("BaseHttpClient", () => {
       handler: () => ({ status: 200, data: {} }),
     });
 
-    await client.post("/algo", { a: 1 });
+    await client.post("/algo", { a: 1 }, ANY);
 
     expect(authHeader(calls[0])).toBe("Bearer acceso-1");
     expect(calls[0].method).toBe("post");
@@ -68,7 +74,7 @@ describe("BaseHttpClient", () => {
       handler: () => ({ status: 200, data: {} }),
     });
 
-    await client.get("/publico");
+    await client.get("/publico", ANY);
 
     expect(authHeader(calls[0])).toBeUndefined();
   });
@@ -80,9 +86,9 @@ describe("BaseHttpClient", () => {
       handler: () => ({ status: 200, data: {} }),
     });
 
-    await client.get("/perfil");
+    await client.get("/perfil", ANY);
     language = "ca";
-    await client.get("/perfil");
+    await client.get("/perfil", ANY);
 
     expect(calls[0].headers["Accept-Language"]).toBe("es");
     expect(calls[1].headers["Accept-Language"]).toBe("ca");
@@ -93,7 +99,7 @@ describe("BaseHttpClient", () => {
       handler: () => ({ status: 409, data: PROBLEM_409 }),
     });
 
-    const error: unknown = await client.post("/UserTeacher", {}).catch((e: unknown) => e);
+    const error: unknown = await client.post("/UserTeacher", {}, ANY).catch((e: unknown) => e);
 
     expect(error).toBeInstanceOf(HttpError);
     if (!(error instanceof HttpError)) return;
@@ -106,8 +112,8 @@ describe("BaseHttpClient", () => {
     const red = buildClient({ handler: () => ({ network: true }) });
     const lento = buildClient({ handler: () => ({ timeout: true }) });
 
-    await expect(red.client.get("/x")).rejects.toMatchObject({ kind: "network" });
-    await expect(lento.client.get("/x")).rejects.toMatchObject({ kind: "timeout" });
+    await expect(red.client.get("/x", ANY)).rejects.toMatchObject({ kind: "network" });
+    await expect(lento.client.get("/x", ANY)).rejects.toMatchObject({ kind: "timeout" });
   });
 
   it("el 401 del login (sin sesión) es un error normal y no intenta renovar", async () => {
@@ -115,7 +121,7 @@ describe("BaseHttpClient", () => {
       handler: () => ({ status: 401, data: { type: "about:blank", status: 401 } }),
     });
 
-    await expect(client.post("/auth/login/teacher", {})).rejects.toMatchObject({
+    await expect(client.post("/auth/login/teacher", {}, ANY)).rejects.toMatchObject({
       kind: "http",
       status: 401,
     });
@@ -133,7 +139,7 @@ describe("BaseHttpClient", () => {
           : { status: 401, data: {} },
     });
 
-    await expect(client.get("/clases")).resolves.toEqual({ ok: true });
+    await expect(client.get("/clases", ANY)).resolves.toEqual({ ok: true });
     expect(refreshSession).toHaveBeenCalledTimes(1);
     expect(calls).toHaveLength(2);
     expect(authHeader(calls[1])).toBe("Bearer acceso-nuevo");
@@ -146,7 +152,7 @@ describe("BaseHttpClient", () => {
       handler: () => ({ status: 401, data: {} }),
     });
 
-    await expect(client.get("/clases")).rejects.toMatchObject({ status: 401 });
+    await expect(client.get("/clases", ANY)).rejects.toMatchObject({ status: 401 });
     expect(sessionExpired).toHaveBeenCalledTimes(1);
   });
 
@@ -157,7 +163,7 @@ describe("BaseHttpClient", () => {
       handler: () => ({ status: 401, data: {} }),
     });
 
-    await expect(client.get("/clases")).rejects.toMatchObject({ kind: "network" });
+    await expect(client.get("/clases", ANY)).rejects.toMatchObject({ kind: "network" });
     expect(tokens.access).toBe("acceso-caducado");
     expect(sessionExpired).not.toHaveBeenCalled();
   });
@@ -169,7 +175,7 @@ describe("BaseHttpClient", () => {
       handler: () => ({ status: 401, data: {} }),
     });
 
-    await expect(client.get("/clases")).rejects.toMatchObject({ status: 401 });
+    await expect(client.get("/clases", ANY)).rejects.toMatchObject({ status: 401 });
     expect(refreshSession).toHaveBeenCalledTimes(1);
     expect(calls).toHaveLength(2);
   });
@@ -179,10 +185,34 @@ describe("BaseHttpClient", () => {
     const ok = buildClient({ handler: () => ({ status: 200, data: {}, headers: { date } }) });
     const ko = buildClient({ handler: () => ({ status: 409, data: {}, headers: { date } }) });
 
-    await ok.client.get("/x");
-    await ko.client.get("/x").catch(() => undefined);
+    await ok.client.get("/x", ANY);
+    await ko.client.get("/x", ANY).catch(() => undefined);
 
     expect(ok.observeResponseHeaders.mock.calls[0][0].date).toBe(date);
     expect(ko.observeResponseHeaders.mock.calls[0][0].date).toBe(date);
+  });
+
+  it("devuelve lo que dice el schema de la respuesta", async () => {
+    const { client } = buildClient({ handler: () => ({ status: 200, data: { id: 7, sobra: true } }) });
+
+    await expect(client.get("/perfil", z.object({ id: z.number() }))).resolves.toEqual({ id: 7 });
+  });
+
+  it("una respuesta que no cumple el contrato: HttpError «contract», sin valores en el mensaje, y se avisa", async () => {
+    const onContractError = jest.fn();
+    const { client } = buildClient({
+      onContractError,
+      handler: () => ({ status: 200, data: { id: "siete", email: "ana@correo.es" } }),
+    });
+
+    const error: unknown = await client
+      .get("/perfil", z.object({ id: z.number(), name: z.string() }))
+      .catch((e: unknown) => e);
+
+    expect(error).toBeInstanceOf(HttpError);
+    expect(error).toMatchObject({ kind: "contract" });
+    expect((error as Error).message).toBe("Contract /perfil: id, name");
+    expect((error as Error).message).not.toContain("siete");
+    expect(onContractError).toHaveBeenCalledWith(error);
   });
 });

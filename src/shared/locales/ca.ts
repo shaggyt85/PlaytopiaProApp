@@ -32,6 +32,7 @@ const ca: Translations = {
   errors: {
     network: "Sense connexió. Revisa la xarxa i torna-ho a provar.",
     timeout: "La connexió ha trigat massa. Torna-ho a provar.",
+    contract: "No hem pogut llegir la resposta. Actualitza l'app o torna-ho a provar més tard.",
     unknown: "Alguna cosa ha anat malament. Torna-ho a provar.",
     byStatus: {
       "400": "Les dades enviades no són vàlides.",

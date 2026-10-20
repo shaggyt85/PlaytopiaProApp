@@ -12,7 +12,7 @@ describe("AvatarService", () => {
 
     const url = await new AvatarService(http).upload(file);
 
-    const [path, body, config] = jest.mocked(http.post).mock.calls[0];
+    const [path, body, , config] = jest.mocked(http.post).mock.calls[0];
     expect(path).toBe("/MobileTeacher/UploadMobileTeacherAvatar");
     expect(body).toBeInstanceOf(FormData);
     expect(append).toHaveBeenCalledWith("avatarFile", file);

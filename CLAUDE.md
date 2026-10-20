@@ -26,7 +26,7 @@ pnpm release patch      # sube la versión (patch|minor|major), commit + etiquet
 - API: `https://core-dev.playtopiax.com/api` (`EXPO_PUBLIC_API_BASE_URL`).
 - **Antes de escribir un schema, mira el endpoint en Scalar: `https://core-dev.playtopiax.com/docs`.** El contrato de Scalar manda: snake_case, tal cual lo devuelve Core.
 - Login: `POST /api/auth/login/teacher` (role_id = 4). Registro: `POST /api/UserTeacher` con `registration_token` HMAC y `terms_version`; tras el alta se vuelve al login. Tras el login, si `terms_version` (de `GET /api/UserTeacher/{id}`) no es `TERMS_VERSION`, se aceptan en el `LegalModal` con `PATCH` antes de abrir la sesión; con la sesión abierta, los vuelve a mirar `OpenSessionTermsGate` al volver a la app (perfil en `LIVE`). El perfil (`shared/services/teacherProfileService`) queda en la caché al entrar y al aceptar: Hoy no lo vuelve a pedir al entrar. Recuperación: `POST /api/PassRecovery/request` **con `scope: "teacher"`**.
-- **Si falta el endpoint o no devuelve lo necesario, no pares la pantalla:** schema con el contrato esperado + `xService.mock.ts` que implementa la misma interfaz y pasa por el mismo `validate*` + interruptor `X_USE_MOCK` por endpoint + comentario `// MOCK: pendiente en Core, ver docs/endpoints-pendientes/<archivo>.md` + petición en `docs/endpoints-pendientes/<feature>-<accion>.md`. Actualiza la tabla "Endpoints en uso" de la guía.
+- **Si falta el endpoint o no devuelve lo necesario, no pares la pantalla:** schema con el contrato esperado + `xService.mock.ts` que implementa la misma interfaz y valida con el mismo schema + interruptor `X_USE_MOCK` por endpoint + comentario `// MOCK: pendiente en Core, ver docs/endpoints-pendientes/<archivo>.md` + petición en `docs/endpoints-pendientes/<feature>-<accion>.md`. Actualiza la tabla "Endpoints en uso" de la guía.
 
 ## Estructura
 
@@ -59,6 +59,7 @@ docs/                  GUIA_APP_PROFESOR.md + endpoints-pendientes/
 ## Reglas duras
 
 - **Secretos:** ninguno al repo. Solo se sube `.env.example`. Todo por env, validado en `shared/config/env.ts`; nunca leas `process.env` fuera de ahí. `EXPO_PUBLIC_*` va dentro del bundle: solo valores públicos (la firma HMAC del registro es la excepción documentada). Secretos reales (Sentry auth token, tiendas, EAS) solo en variables de EAS. `google-services.json` como variable de fichero de EAS.
+- **Respuestas validadas:** el service pasa el schema de la respuesta al cliente HTTP (`http.get(url, Schema)`; sin cuerpo, `NoContentSchema`), que la valida. Si no cumple el contrato, `HttpError` de kind `contract`: sin reintentos, con su texto (`errors.contract`) y aviso a Sentry con la ruta y los campos, sin valores.
 - **Errores RFC 9457:** todo fallo pasa por `HttpError` con su `ProblemDetail` (`shared/schemas/problemDetail.schema.ts`). Se traduce con `getErrorMessage(error)` (`errors.byType.<clave>` → `errors.byStatus.<status>` → genérico), **nunca se muestra el `detail`**. Para ramificar, usa `type` y los extension members, nunca el texto.
 - **Caché:** cada query usa una `CachePolicy` de `shared/config/cachePolicies.ts` (`STATIC`, `STANDARD`, `LIVE`, `POLLING(ms, cuándo)`, `ALWAYS_FRESH`). Nada de `staleTime` a mano sin un comentario que explique el porqué. Tras mutar, se invalida.
 - **Estado:** servidor solo en TanStack Query; Zustand solo para UI (`features/<x>/store/` o `shared/store/`).

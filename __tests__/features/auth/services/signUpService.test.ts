@@ -1,6 +1,7 @@
 import type { SignUpRequest } from "@/features/auth/schemas/signUp.schema";
 import { SignUpService } from "@/features/auth/services/signUpService";
 import { HttpError } from "@/shared/services/HttpError";
+import { SignUpResponseSchema } from "@/features/auth/schemas/signUp.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../../helpers/fakeHttpClient";
 
@@ -25,7 +26,7 @@ describe("SignUpService", () => {
     expect(http.post).toHaveBeenCalledWith("/UserTeacher", {
       ...request,
       registration_token: "v1.1790000000.firma",
-    });
+    }, SignUpResponseSchema);
     expect(result).toEqual({ id: 42, email: "ana@club.com" });
   });
 

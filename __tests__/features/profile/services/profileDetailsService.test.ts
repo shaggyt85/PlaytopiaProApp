@@ -9,6 +9,7 @@ import {
 import { CachePolicy } from "@/shared/config/cachePolicies";
 import { HttpError } from "@/shared/services/HttpError";
 import { teacherKeys } from "@/shared/services/teacherProfileService";
+import { ProfileDetailsSchema } from "@/features/profile/schemas/profileDetails.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../../helpers/fakeHttpClient";
 import { profileDetails, teacherProfileResponse } from "../../../helpers/profileFactories";
@@ -24,7 +25,7 @@ describe("ProfileDetailsService", () => {
 
     const result = await new ProfileDetailsService(http).get(42);
 
-    expect(http.get).toHaveBeenCalledWith("/UserTeacher/42", { params: { include: "hours,availability" } });
+    expect(http.get).toHaveBeenCalledWith("/UserTeacher/42", ProfileDetailsSchema, { params: { include: "hours,availability" } });
     expect(result).toEqual(profileDetails());
   });
 

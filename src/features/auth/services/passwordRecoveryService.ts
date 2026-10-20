@@ -20,11 +20,7 @@ export class PasswordRecoveryService implements IPasswordRecoveryService {
    * de alumno o admin, Core recupera esa otra cuenta (admin > alumno > profesor).
    */
   async requestRecovery(email: string): Promise<PasswordRecoveryResponse> {
-    const data = await this.http.post<unknown>(ENDPOINTS.AUTH.PASSWORD_RECOVERY, {
-      email,
-      scope: "teacher",
-    });
-    return PasswordRecoveryResponseSchema.parse(data);
+    return this.http.post(ENDPOINTS.AUTH.PASSWORD_RECOVERY, { email, scope: "teacher" }, PasswordRecoveryResponseSchema);
   }
 }
 

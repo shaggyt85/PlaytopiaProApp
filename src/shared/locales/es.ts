@@ -32,6 +32,7 @@ const es = {
   errors: {
     network: "Sin conexión. Revisa tu red e inténtalo de nuevo.",
     timeout: "La conexión tardó demasiado. Inténtalo de nuevo.",
+    contract: "No hemos podido leer la respuesta. Actualiza la app o inténtalo más tarde.",
     unknown: "Algo salió mal. Inténtalo de nuevo.",
     // Texto genérico por status, cuando el error no trae un `type` traducido.
     byStatus: {

@@ -1,4 +1,5 @@
 import { AccountDeletionService } from "@/features/profile/services/accountDeletionService";
+import { AccountDeletionSchema } from "@/features/profile/schemas/accountDeletion.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../../helpers/fakeHttpClient";
 
@@ -10,7 +11,7 @@ describe("AccountDeletionService", () => {
 
     const result = await new AccountDeletionService(http).request("Dejo de dar clases");
 
-    expect(http.post).toHaveBeenCalledWith("/Mobile/Account/Delete", { reason: "Dejo de dar clases" });
+    expect(http.post).toHaveBeenCalledWith("/Mobile/Account/Delete", { reason: "Dejo de dar clases" }, AccountDeletionSchema);
     expect(result).toEqual(deletion);
   });
 

@@ -1,4 +1,5 @@
 import { VersionCheckService } from "@/features/app-update/services/versionCheckService";
+import { VersionCheckSchema } from "@/features/app-update/schemas/versionCheck.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../../helpers/fakeHttpClient";
 
@@ -17,7 +18,7 @@ describe("VersionCheckService", () => {
 
     const result = await new VersionCheckService(http).check("ios", "1.0.0");
 
-    expect(http.get).toHaveBeenCalledWith("/App/version-check", {
+    expect(http.get).toHaveBeenCalledWith("/App/version-check", VersionCheckSchema, {
       params: { platform: "ios", current_version: "1.0.0", app: "teacher" },
     });
     expect(result).toEqual({ update_type: "soft", store_url: response.store_url });

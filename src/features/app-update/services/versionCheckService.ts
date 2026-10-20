@@ -26,10 +26,9 @@ export class VersionCheckService implements IVersionCheckService {
   constructor(private readonly http: IHttpClient) {}
 
   async check(platform: StorePlatform, currentVersion: string): Promise<VersionCheck> {
-    const data = await this.http.get<unknown>(ENDPOINTS.SYSTEM.VERSION_CHECK, {
+    return this.http.get(ENDPOINTS.SYSTEM.VERSION_CHECK, VersionCheckSchema, {
       params: { platform, current_version: currentVersion, app: MOBILE_APP },
     });
-    return VersionCheckSchema.parse(data);
   }
 }
 

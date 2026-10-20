@@ -1,4 +1,5 @@
 import { SignInService } from "@/features/auth/services/signInService";
+import { SignInResponseSchema } from "@/features/auth/schemas/auth.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../../helpers/fakeHttpClient";
 
@@ -20,7 +21,7 @@ describe("SignInService", () => {
     expect(http.post).toHaveBeenCalledWith("/auth/login/teacher", {
       username: "ana@club.com",
       password: "secreta",
-    });
+    }, SignInResponseSchema);
     expect(result.refresh_token).toBe("refresco");
   });
 });

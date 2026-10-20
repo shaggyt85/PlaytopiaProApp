@@ -1,4 +1,5 @@
 import { PasswordRecoveryService } from "@/features/auth/services/passwordRecoveryService";
+import { PasswordRecoveryResponseSchema } from "@/features/auth/schemas/auth.schema";
 
 import { createFakeHttpClient as fakeHttp } from "../../../helpers/fakeHttpClient";
 
@@ -11,7 +12,7 @@ describe("PasswordRecoveryService", () => {
     expect(http.post).toHaveBeenCalledWith("/PassRecovery/request", {
       email: "ana@club.com",
       scope: "teacher",
-    });
+    }, PasswordRecoveryResponseSchema);
     expect(result).toEqual({ status: "ok" });
   });
 
