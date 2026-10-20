@@ -25,7 +25,6 @@ export const useStyles = makeStyles((theme) => ({
     borderWidth: 1,
     borderColor: theme.colors.primary,
     backgroundColor: theme.colors.field,
-    color: theme.colors.text,
   },
   row: {
     flexDirection: "row",

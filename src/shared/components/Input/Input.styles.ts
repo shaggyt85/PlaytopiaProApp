@@ -26,11 +26,9 @@ export const useStyles = makeStyles((theme) => ({
   multilineInput: { height: undefined, paddingVertical: theme.spacing.sm + theme.spacing.xs },
   fieldError: fieldInvalid(theme),
   input: {
-    ...theme.typography.input,
     flex: 1,
     height: "100%",
     paddingHorizontal: theme.spacing.md,
-    color: theme.colors.text,
   },
   accessory: { paddingRight: theme.spacing.xs },
   // Lo escrito de lo que cabe, a la derecha bajo el campo.

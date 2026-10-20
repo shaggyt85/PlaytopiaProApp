@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Pressable, TextInput, View } from "react-native";
+import { Pressable, View } from "react-native";
 
+import { AppTextInput } from "@/shared/components/AppTextInput";
 import { FormField } from "@/shared/components/FormField";
 import { Text } from "@/shared/components/Text";
-import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import { callingCodeOf, countryByCode, flagEmoji } from "./countries";
@@ -35,7 +35,6 @@ export function PhoneInput({
   error,
 }: PhoneInputProps) {
   const styles = useStyles();
-  const theme = useTheme();
   const { t, locale } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
   const label = t("phone.label");
@@ -55,11 +54,9 @@ export function PhoneInput({
             +{callingCodeOf(country)}
           </Text>
         </Pressable>
-        <TextInput
+        <AppTextInput
           accessibilityLabel={label}
           placeholder={t("phone.placeholder")}
-          placeholderTextColor={theme.colors.textSecondary}
-          selectionColor={theme.colors.primary}
           keyboardType="phone-pad"
           textContentType="telephoneNumber"
           autoComplete="tel"

@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
-import { FlatList, Modal, Pressable, TextInput, View } from "react-native";
+import { FlatList, Modal, Pressable, View } from "react-native";
 
+import { AppTextInput } from "@/shared/components/AppTextInput";
 import { Text } from "@/shared/components/Text";
 import { CloseButton } from "@/shared/components/CloseButton";
-import { useTheme } from "@/shared/hooks/useTheme";
 import { useTranslation } from "@/shared/hooks/useTranslation";
 
 import { COUNTRIES, flagEmoji } from "./countries";
@@ -20,7 +20,6 @@ interface CountryPickerModalProps {
 /** Lista de países con buscador por nombre, código o prefijo. */
 export function CountryPickerModal({ visible, selected, onSelect, onClose }: CountryPickerModalProps) {
   const styles = useStyles();
-  const theme = useTheme();
   const { t, locale } = useTranslation();
   const [query, setQuery] = useState("");
 
@@ -57,10 +56,9 @@ export function CountryPickerModal({ visible, selected, onSelect, onClose }: Cou
           <CloseButton onPress={close} />
         </View>
 
-        <TextInput
+        <AppTextInput
           style={styles.search}
           placeholder={t("countryPicker.searchPlaceholder")}
-          placeholderTextColor={theme.colors.textSecondary}
           accessibilityLabel={t("countryPicker.searchPlaceholder")}
           value={query}
           onChangeText={setQuery}

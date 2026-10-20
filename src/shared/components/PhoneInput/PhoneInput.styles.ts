@@ -25,7 +25,6 @@ export const useStyles = makeStyles((theme) => {
       ...theme.typography.body,
       flex: 1,
       paddingHorizontal: theme.spacing.md,
-      color: theme.colors.text,
     },
     fieldError: fieldInvalid(theme),
   };

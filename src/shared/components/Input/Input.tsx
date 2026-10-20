@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import { TextInput, View, type TextInputProps } from "react-native";
+import { View, type TextInputProps } from "react-native";
 
+import { AppTextInput } from "@/shared/components/AppTextInput";
 import { FormField } from "@/shared/components/FormField";
 import { Text } from "@/shared/components/Text";
-import { useTheme } from "@/shared/hooks/useTheme";
 
 import { useStyles } from "./Input.styles";
 
@@ -35,7 +35,6 @@ export function Input({
   ...rest
 }: InputProps) {
   const styles = useStyles();
-  const theme = useTheme();
 
   return (
     <FormField label={label} error={error}>
@@ -48,9 +47,8 @@ export function Input({
         ]}
         testID="input-field"
       >
-        <TextInput
+        <AppTextInput
           accessibilityLabel={label}
-          placeholderTextColor={theme.colors.textSecondary}
           style={[styles.input, variant === "solid" && styles.solidInput, rest.multiline && styles.multilineInput, style]}
           numberOfLines={rest.multiline ? MULTILINE_ROWS : undefined}
           textAlignVertical={rest.multiline ? "top" : undefined}
