@@ -89,7 +89,12 @@ export const ScheduleClassSchema = z.object({
   /** `null` si la clase no tiene pista. */
   track_name: z.string().nullable(),
   class_type: z.number().int(),
-  is_private: z.boolean(),
+  /**
+   * Sí/no. El Core de producción (master) aún lo manda como 0/1; core-dev, como
+   * true/false desde `722c0465`. Se aceptan los dos y la app siempre ve un
+   * booleano. Al desplegar dev en producción, se quita el número.
+   */
+  is_private: z.union([z.boolean(), z.number().int()]).transform((value) => value === true || value === 1),
   /** `null` en las clases sueltas antiguas, sin grupo. */
   group_id: z.number().int().nullable(),
   /** Cuántas clases tiene su grupo («una de 40»). */
